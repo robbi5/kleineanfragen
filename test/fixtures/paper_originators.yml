@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  paper_id: 
+  originator_id: 
+  originator_type: Originator
+
+two:
+  paper_id: 
+  originator_id: 
+  originator_type: Originator
