@@ -43,3 +43,5 @@ gem 'rails-i18n', '~> 4.0.0'
 
 gem 'wombat',  '~> 2.2.1'
 
+# slugs
+gem 'friendly_id', '~> 5.0.0'
