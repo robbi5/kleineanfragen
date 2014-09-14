@@ -48,7 +48,7 @@ module BayernLandtagScraper
       end
       #text 'xpath=(following-sibling::tr[2]/td[contains(@class, "pad_bot0")])[1]'
       title 'xpath=following-sibling::tr[2]/td[3]' do |text|
-        text.gsub(/\s+/, ' ').strip.gsub(/\n/, '-').strip unless text.nil?
+        text.gsub(/\s+/, ' ').strip.gsub(/\n/, '-').gsub('... [mehr]', '').gsub('[weniger]', '').strip unless text.nil?
       end
     end
   end
