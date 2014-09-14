@@ -10,6 +10,9 @@ module BayernLandtagScraper
 
     SEARCH_URL = BASE_URL + '/webangebot1/dokumente.suche.maske.jsp?DOKUMENT_TYPE=EXTENDED&STATE=SHOW_MASK'
 
+    @page = 1
+    @per_page = 50
+
     # override with filter function, because the xpaths still return broken records
     def scrape
       res = crawl
@@ -21,7 +24,8 @@ module BayernLandtagScraper
     search_form = mp.form 'suche'
     legislative_term = search_form.field_with(name: 'DOKUMENT_INTEGER_WAHLPERIODE').value
     search_form.field_with(name: 'DOKUMENT_VORGANGSART').options.find { |opt| opt.text.include? "Schriftliche Anfrage" }.select
-    search_form.field_with(name: 'DOKUMENT_INTEGER_TREFFERANZAHL').value = 50
+    search_form.field_with(name: 'DOKUMENT_INTEGER_TREFFERANZAHL').value = @per_page
+    search_form.add_field!('DOKUMENT_INTEGER_RESULT_START_INDEX', @per_page * (@page - 1)) if @page > 1
     submit_button = search_form.submits.find { |btn| btn.value == 'Suche starten' }
     mp = m.submit(search_form, submit_button)
 
