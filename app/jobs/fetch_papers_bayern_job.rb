@@ -30,8 +30,8 @@ class FetchPapersBayernJob < FetchPapersJob
 
     @papers.each do |paper|
       puts "Loading details for Paper [#{paper.reference}]"
-      org = Organization.find_or_create_by(name: detail[:originator])
       detail = BayernLandtagScraper::Detail.new(paper.legislative_term, paper.reference).scrape
+      org = Organization.where('lower(name) = ?', detail[:originator].mb_chars.downcase.to_s).first_or_create(name: detail[:originator])
       puts "- Originator: #{org.name}"
       unless paper.originator_organizations.include? org
         paper.originator_organizations << org
