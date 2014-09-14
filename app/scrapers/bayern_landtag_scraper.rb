@@ -13,7 +13,7 @@ module BayernLandtagScraper
     # override with filter function, because the xpaths still return broken records
     def scrape
       res = crawl
-      res["papers"].select{ |item| !item["url"].nil? && !item["title"].nil? }
+      res["papers"].select{ |item| !item["url"].nil? && !item["title"].nil? && !item["full_reference"].nil? }
     end
 
     m = Mechanize.new
@@ -33,7 +33,7 @@ module BayernLandtagScraper
     papers 'xpath=//table[not(contains(@class, "marg_"))]//tr[not(contains(@class, "clr_listhead"))]', :iterator do
       #title 'css=b'
       legislative_term legislative_term
-      reference 'css=b' do |text|
+      full_reference 'css=b' do |text|
         text.match(/Nr. ([\d\/]+)/)[1] unless text.nil?
       end
       published_at 'css=b' do |text|
@@ -52,20 +52,25 @@ module BayernLandtagScraper
   class Detail
     SEARCH_URL = BASE_URL + '/webangebot1/dokumente.suche.maske.jsp?STATE=SHOW_MASK&BUTTONSCHLAGWORT=Suche+starten&DOKUMENT_DOKUMENTNR='
 
-    def initialize(reference)
+    def initialize(legislative_term, reference)
+      @legislative_term = legislative_term
       @reference = reference
+    end
+
+    def full_reference
+      @legislative_term.to_s + '/' + @reference.to_s
     end
 
     # doesn't use wombat, mechanize is just fine
     def scrape
       m = Mechanize.new
-      mp = m.get SEARCH_URL + CGI.escape(@reference)
+      mp = m.get SEARCH_URL + CGI.escape(full_reference)
       mp = mp.link_with(href: /\#LASTFOLDER$/).click
       data = mp.search '//div/table//table[1]//td[2]'
 
-      content = data[0].inner_html.strip
+      originator = data[0].inner_html.strip
 
-      {originator: content}
+      {originator: originator}
     end
   end
 end
@@ -73,6 +78,6 @@ end
 ###
 # Usage:
 #   puts BayernLandtagScraper::Overview.new.scrape.inspect
-#   puts BayernLandtagScraper::Detail.new("17/2000").scrape.inspect
+#   puts BayernLandtagScraper::Detail.new(17, 2000).scrape.inspect
 ###
 

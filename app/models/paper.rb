@@ -9,4 +9,8 @@ class Paper < ActiveRecord::Base
   end
 
   validates :reference, uniqueness: { scope: [:body_id, :legislative_term] }
+
+  def full_reference
+    legislative_term.to_s + '/' + reference.to_s
+  end
 end

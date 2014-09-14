@@ -4,7 +4,7 @@
 <ol>
   <% @papers.each do |paper| %>
   <li>
-    <p><%= paper.body.state %> [<%= paper.reference %>] <%= paper.title %></p>
+    <p><%= paper.body.state %> [<%= paper.full_reference %>] <%= paper.title %></p>
     <p>Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> | Veröffentlicht am <%= paper.published_at %></p>
   </li>
   <% end %>
