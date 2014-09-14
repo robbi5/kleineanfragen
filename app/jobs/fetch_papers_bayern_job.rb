@@ -1,12 +1,13 @@
-class FetchPapersBayernJob
+class FetchPapersBayernJob < FetchPapersJob
+
+  @state = 'BY'
 
   def self.perform(*params)
-    @bayern = Body.find_by(state: 'BY')
-    raise 'Required body "Bayern" not found' if @bayern.nil?
-    @papers = []
+    super
 
     import_new_papers
     load_paper_details
+    download_papers
   end
 
   def self.import_new_papers
@@ -14,17 +15,19 @@ class FetchPapersBayernJob
     result.each do |item|
       item['reference'] = item['full_reference'].split("/").last
       item.delete 'full_reference'
-      unless Paper.where(body: @bayern, legislative_term: item['legislative_term'], reference: item['reference']).exists?
+      unless Paper.where(body: @body, legislative_term: item['legislative_term'], reference: item['reference']).exists?
         puts "Got new Paper: [#{item['reference']}] \"#{item['title']}\""
         paper = Paper.new(item)
-        paper.body = @bayern
+        paper.body = @body
         paper.save
-        @papers << paper
       end
     end
   end
 
   def self.load_paper_details
+    @papers = Paper.find_by_sql(
+      ["SELECT p.* FROM papers p LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id) WHERE p.body_id = ? AND o.id IS NULL LIMIT 25", @body.id])
+
     @papers.each do |paper|
       puts "Loading details for Paper [#{paper.reference}]"
       org = Organization.find_or_create_by(name: detail[:originator])

@@ -3,4 +3,8 @@ class Body < ActiveRecord::Base
 
   validates :name, uniqueness: true
   validates :state, uniqueness: true
+
+  def folder_name
+    state.downcase
+  end
 end
