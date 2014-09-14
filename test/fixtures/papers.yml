@@ -5,7 +5,6 @@ one:
   legislative_term: 1
   reference: MyText
   title: MyText
-  abstract: MyText
   contents: MyText
   page_count: 1
   published_date: 2014-09-03
@@ -17,7 +16,6 @@ two:
   legislative_term: 1
   reference: MyText
   title: MyText
-  abstract: MyText
   contents: MyText
   page_count: 1
   published_date: 2014-09-03

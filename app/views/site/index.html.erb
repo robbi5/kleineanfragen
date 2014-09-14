@@ -1,0 +1,11 @@
+<p>Kleine Anfragen sind in vielen Bundesländern möglich, aber die Antworten meist versteckt.</p>
+
+<h2>Zuletzt veröffentlichte kleine Anfragen</h2>
+<ol>
+  <% @papers.each do |paper| %>
+  <li>
+    <p><%= paper.body.state %> [<%= paper.reference %>] <%= paper.title %></p>
+    <p>Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> | Veröffentlicht am <%= paper.published_at %></p>
+  </li>
+  <% end %>
+</ol>
