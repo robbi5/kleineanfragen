@@ -3,7 +3,7 @@
 <ol>
   <% @papers.each do |paper| %>
   <li>
-    <p>[<%= paper.full_reference %>] <%= link_to paper.title, paper_path({body: @body, legislative_term: @legislative_term, paper: paper}) %></p>
+    <p>[<%= paper.full_reference %>] <%= link_to_paper paper %></p>
     <p>Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> | Veröffentlicht am <%= paper.published_at %></p>
   </li>
   <% end %>
