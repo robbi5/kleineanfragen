@@ -45,3 +45,6 @@ gem 'wombat',  '~> 2.2.1'
 
 # slugs
 gem 'friendly_id', '~> 5.0.0'
+
+# fix urls while scraping
+gem 'addressable', '~> 2.3.6', require: "addressable/uri"

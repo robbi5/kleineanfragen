@@ -30,4 +30,13 @@ class Paper < ActiveRecord::Base
   def full_reference
     legislative_term.to_s + '/' + reference.to_s
   end
+
+
+  # helper method to fix non-standard urls in the database
+  # apply it with: Paper.find_each(&:normalize_url)
+  def normalize_url
+    normalized_url = Addressable::URI.parse(self.url).normalize.to_s
+    write_attribute(:url, normalized_url)
+    save!
+  end
 end

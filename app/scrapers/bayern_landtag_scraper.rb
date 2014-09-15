@@ -44,7 +44,9 @@ module BayernLandtagScraper
         Date.parse(text.match(/([\d\.]+)$/)[1]) unless text.nil?
       end
       url 'xpath=.//a[not(contains(@href, "LASTFOLDER"))]/@href' do |href|
-        BASE_URL + href unless href.nil?
+        unless href.nil?
+          Addressable::URI.parse(BASE_URL + href).normalize.to_s
+        end
       end
       #text 'xpath=(following-sibling::tr[2]/td[contains(@class, "pad_bot0")])[1]'
       title 'xpath=following-sibling::tr[2]/td[3]' do |text|
