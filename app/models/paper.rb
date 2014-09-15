@@ -23,9 +23,8 @@ class Paper < ActiveRecord::Base
     ]
   end
 
-  def normalize_friendly_id(string)
-    # FIXME: transliterate "&" to "und"
-    super.truncate(120, separator: '-', omission: '')
+  def normalize_friendly_id(value)
+    value.to_s.gsub('&', 'und').parameterize.truncate(120, separator: '-', omission: '')
   end
 
   def full_reference
