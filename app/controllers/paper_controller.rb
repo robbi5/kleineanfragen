@@ -4,6 +4,10 @@ class PaperController < ApplicationController
   before_filter :find_paper
 
   def show
+    respond_to do |format|
+      format.html
+      format.pdf { redirect_to @paper.url }
+    end
   end
 
 
@@ -33,7 +37,6 @@ class PaperController < ApplicationController
   end
 
   def find_paper_by_reference(reference)
-    puts "find_paper_by_reference #{reference.inspect}"
     @paper = Paper.where(body: @body, legislative_term: @legislative_term, reference: reference).first
     raise ActiveRecord::RecordNotFound if @paper.nil?
 
@@ -41,8 +44,9 @@ class PaperController < ApplicationController
   end
 
   def redirect_old_slugs
-    if request.path != paper_path(@body, @legislative_term, @paper)
-      return redirect_to paper_path(@body, @legislative_term, @paper), :status => :moved_permanently
+    canonical_path = paper_path(@body, @legislative_term, @paper, {format: mime_extension(request.format)})
+    if request.path != canonical_path
+      return redirect_to canonical_path, :status => :moved_permanently
     end
   end
 end
