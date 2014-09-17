@@ -15,4 +15,119 @@
  */
 
 @import "bootstrap-sprockets";
+
+// https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_variables.scss
+$font-size-base: 14px;
+$font-size-h2: floor(($font-size-base * 1.85)); // ~30px
+$font-size-h3: floor(($font-size-base * 1.4)); // ~30px
+
+// FIXME: Download webfonts
+// FIXME: reduce Raleway -> "kleineAnfragen.?"
+
+$font-family-sans-serif:  "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-family-base:        $font-family-sans-serif !default;
+
 @import "bootstrap";
+
+.navbar {
+  margin-bottom: 0;
+}
+
+.navbar-brand {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  font-size: 20px; // FIXME variable?
+}
+.navbar-brand span {
+  display: inline-block;
+  margin-right: 2px;
+  color: transparent;
+  text-indent: -0.3em;
+  &:after {
+    content: '?';
+    position: relative;
+    top: 4px;
+    transform: rotate(12deg);
+    display: inline-block;
+    font-weight: 500;
+    color: #757F9A;
+  }
+}
+
+.jumbotron {
+  background: linear-gradient(20deg, #757F9A 10%, #D7DDE8 90%); /* W3C */
+  color: #fff;
+  text-shadow: 0px 1px 0px rgba(0,0,0,.5);
+}
+
+.jumbotron .input-group {
+  width: 100%;
+
+  .form-control {
+    box-shadow: none;
+    height: 2.8em;
+    width: 100%;
+    border: 0;
+    border-radius: 3px;
+    padding-right: 6em;
+  }
+
+  .input-group-btn {
+    width: auto;
+    z-index: 100;
+    right: 3px;
+    /* display: block; */
+    position: absolute;
+
+    .btn {
+      margin-top: 3px;
+      height: 2.4em;
+      margin-top: 0.2em;
+      border-radius: 2px;
+    }
+  }
+}
+
+.latest-interpellations {
+  list-style: none;
+  padding: 0;
+
+  li {
+    margin-bottom: 0.6em;
+  }
+
+  p {
+    margin-bottom: 0;
+    padding-left: 75px;
+  }
+
+  .source {
+    display: inline-block;
+    margin-left: -75px;
+    float: left;
+  }
+
+  .meta {
+    color: #AAA;
+    margin-left: 1.7em;
+    font-size: 0.9em;
+    line-height: 1.8;
+    margin-left: 0;
+  }
+}
+
+.label a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: inherit;
+}
+
+.breadcrumb-fullwidth {
+  background: $breadcrumb-bg;
+
+  .breadcrumb {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

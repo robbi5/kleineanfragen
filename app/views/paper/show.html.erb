@@ -1,17 +1,23 @@
 <% content_for :title do %><%= @paper.title %> (<%= @paper.full_reference %>) &mdash; <%= @body.name %>, <%= @legislative_term %>. Wahlperiode<% end %>
 
-<ol class="breadcrumb">
-  <li><%= link_to @body.name, @body %></li>
-  <li><%= link_to legislative_term_path(@body, @legislative_term) do %>
-    <%= @legislative_term %>. Wahlperiode
-  <% end %></li>
-  <li class="active">Drucksache <%= @paper.reference %></li>
-</ol>
+<% content_for :main_fullwidth do %>
+<div class="breadcrumb-fullwidth">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><%= link_to @body.name, @body %></li>
+      <li><%= link_to legislative_term_path(@body, @legislative_term) do %>
+        <%= @legislative_term %>. Wahlperiode
+      <% end %></li>
+      <li class="active">Drucksache <%= @paper.reference %></li>
+    </ol>
+  </div>
+</div>
+<% end %>
 
 <div class="page-header">
-  <h1><span class="label label-default"><%= @paper.full_reference %></span> <%= @paper.title %></h1>
+  <h1><%= @paper.title %></h1>
 </div>
-<p>Eingereicht von: <%= @paper.originators.collect(&:name).join(', ') %> | Veröffentlicht am <%= @paper.published_at %></p>
+<p><span class="label label-default"><%= @paper.full_reference %></span>  Eingereicht von: <%= @paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <%= @paper.published_at %></p>
 
 
 <p><%= link_to 'Download PDF', paper_path(@body, @legislative_term, @paper, {format: :pdf}), {class: 'btn btn-primary'} %></p>

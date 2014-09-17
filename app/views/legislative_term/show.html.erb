@@ -1,9 +1,15 @@
 <% content_for :title do %><%= @body.name %>, <%= @legislative_term %>. Wahlperiode<% end %>
 
-<ol class="breadcrumb">
-  <li><%= link_to @body.name, @body %></li>
-  <li class="active"><%= @legislative_term %></li>
-</ol>
+<% content_for :main_fullwidth do %>
+<div class="breadcrumb-fullwidth">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><%= link_to @body.name, @body %></li>
+      <li class="active"><%= @legislative_term %>. Wahlperiode</li>
+    </ol>
+  </div>
+</div>
+<% end %>
 
 <div class="page-header">
   <h1><%= @body.name %> &mdash; <%= @legislative_term %>. Wahlperiode</h1>
@@ -12,7 +18,7 @@
 <ol>
   <% @papers.each do |paper| %>
   <li>
-    <p><span class="label label-default"><%= paper.full_reference %></span> <%= link_to_paper paper %></p>
+    <p><span class="label label-default"><%= paper.full_reference %></span> <%= link_to_paper paper.title, paper %></p>
     <p>Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> | Veröffentlicht am <%= paper.published_at %></p>
   </li>
   <% end %>

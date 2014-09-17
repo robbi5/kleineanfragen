@@ -1,11 +1,49 @@
-<p>Kleine Anfragen sind in vielen Bundesländern möglich, aber die Antworten meist versteckt.</p>
+<% content_for :main_fullwidth do %>
+<div class="jumbotron">
+  <div class="container">
+    <p>Suche in kleinen Anfragen:</p>
+    <form class="">
+      <div class="input-group">
+        <input type="search" class="form-control" placeholder="Suche nach Themen wie &quot;Schulen&quot;, &quot;Mobilität&quot;, &hellip; oder Bundesländern" />
+        <span class="input-group-btn">
+          <button class="btn btn-success" type="button">Suchen</button>
+        </span>
+      </div>
+    </form>
+  </div>
+</div>
+<% end %>
 
-<h2>Zuletzt veröffentlichte kleine Anfragen</h2>
-<ol>
-  <% @papers.each do |paper| %>
-  <li>
-    <p><%= link_to paper.body.state, paper.body %> <span class="label label-default"><%= paper.full_reference %></span> <%= link_to_paper paper %></p>
-    <p>Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> | Veröffentlicht am <%= paper.published_at %></p>
-  </li>
-  <% end %>
-</ol>
+<div class="row">
+  <div class="col-sm-6">
+    <h2>Was sind <em>kleine Anfragen</em>?</h2>
+    <p>Mit <em>kleinen Anfragen</em> können Abgeordnete in Parlamenten ihrer jeweiligen Regierung Fragen stellen, die von dieser zeitnah beantwortet und veröffentlicht werden müssen.</p>
+    <p>Diese Seite sammelt alle kleinen Anfragen* der Landesparlamente und des Bundestages zusammen und versucht sie möglichst einfach auffind- und durchsuchbar zu machen.</p>
+    <p>Mehr zu den Anfragearten und den Regelungen in den einzelnen Landtagen auf der <a href="http://de.wikipedia.org/wiki/Kleine_Anfrage_(Deutschland)">Wikipedia-Seite zu kleinen Anfragen</a>.</p>
+    <p><small>* = Natürlich auch große Anfragen und <em>schriftliche Anfragen</em> aus Bayern</small></p>
+    <h3>Warum?</h3>
+    <p>In Antworten auf kleine Anfragen verstecken sich immer wieder interessante Details, die Menschen im jeweiligen Bundesland betreffen (FIXME).</p>
+    <p>So konnte Zeit Online z.B. durch einer Reihe kleiner Anfragen, die die Grünen-Bundestagsfraktion an die Bundesregierung gerichtet hatte, eine <a href="http://www.zeit.de/mobilitaet/2014-09/deutsche-bahn-bruecken-zustand">interaktive Karte über den Zustand von Bahnbrücken</a> erstellen.</p>
+  </div>
+
+  <div class="col-sm-6">
+    <h2>Zuletzt veröffentlichte kleine Anfragen</h2>
+    <ol class="latest-interpellations">
+      <% @papers.each do |paper| %>
+      <li>
+        <p>
+          <span class="source">
+            <%= link_to paper.body.state, paper.body %> <span class="label label-default"><%= link_to_paper paper.full_reference, paper %></span>
+          </span>
+          <%= link_to_paper paper.title, paper %>
+        </p>
+        <p class="meta">
+          Eingereicht von <%= paper.originators.collect(&:name).join(', ') %>
+          &mdash;
+          Veröffentlicht vor <time datetime="<%= paper.published_at.iso8601 %>"><%= time_ago_in_words paper.published_at %>n</time>
+        </p>
+      </li>
+      <% end %>
+    </ol>
+  </div>
+</div>

@@ -2,7 +2,8 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title><%= content_for?(:title) ? yield(:title) + (' &mdash; '.html_safe) : '' %>kleineAnfrage</title>
+  <title><%= content_for?(:title) ? yield(:title) + (' &mdash; '.html_safe) : '' %>kleineAnfragen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
@@ -12,19 +13,19 @@
 <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
   <div class="container">
     <div class="navbar-header">
-      <a href="<%= root_url %>" class="navbar-brand">kleineAnfrage</a>
+      <a href="<%= root_url %>" class="navbar-brand">kleineAnfra<span>g</span>en.</a>
     </div>
     <nav role="navigation">
       <ul class="nav navbar-nav navbar-right">
-        <li>
-          <a href="/blog/">Blog</a>
-        </li>
+        <%# <li><a href="/blog/">Blog</a></li> %>
+        <li><a href="https://twitter.com/kleine_anfragen">Twitter</a></li>
       </ul>
     </nav>
   </div>
 </header>
 
 <main>
+  <%= yield :main_fullwidth %>
   <div class="container">
     <%= yield %>
   </div>
@@ -32,7 +33,7 @@
 
 <footer>
   <div class="container">
-    <p></p>
+    <p><%= Date.today.year %> kleineAnfragen.</p>
   </div>
 </footer>
 
