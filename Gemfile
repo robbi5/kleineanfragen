@@ -48,3 +48,6 @@ gem 'friendly_id', '~> 5.0.0'
 
 # fix urls while scraping
 gem 'addressable', '~> 2.3.6', require: "addressable/uri"
+
+gem 'bootstrap-sass', '~> 3.2.0'
+gem 'autoprefixer-rails', '~> 3.1.0'

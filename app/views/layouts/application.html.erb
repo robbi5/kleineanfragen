@@ -1,14 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Kleineanfrage</title>
+  <meta charset="UTF-8" />
+  <title><%= content_for?(:title) ? yield(:title) + (' &mdash; '.html_safe) : '' %>kleineAnfrage</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
-<%= yield %>
+<header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="<%= root_url %>" class="navbar-brand">kleineAnfrage</a>
+    </div>
+    <nav role="navigation">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="/blog/">Blog</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <%= yield %>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p></p>
+  </div>
+</footer>
 
 </body>
 </html>

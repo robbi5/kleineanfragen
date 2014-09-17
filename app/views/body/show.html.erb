@@ -1,1 +1,5 @@
-<h1><%= @body.name %></h1>
+<% content_for :title do %><%= @body.name %><% end %>
+
+<div class="page-header">
+  <h1><%= @body.name %></h1>
+</div>
