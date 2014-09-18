@@ -4,11 +4,16 @@
   <h1><%= link_to @body.name, @body %> &mdash; <%= @legislative_term %>. Wahlperiode</h1>
 </div>
 
-<ol>
+<ol class="paper-list">
   <% @papers.each do |paper| %>
   <li>
-    <p><span class="label label-default"><%= paper.full_reference %></span> <%= link_to_paper paper.title, paper %></p>
-    <p>Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <%= paper.published_at %></p>
+    <p>
+      <span class="source"><span class="label label-default"><%= paper.full_reference %></span></span>
+      <%= link_to_paper paper.title, paper %>
+    </p>
+    <p class="meta">
+      Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <%= paper.published_at %>
+    </p>
   </li>
   <% end %>
 </ol>

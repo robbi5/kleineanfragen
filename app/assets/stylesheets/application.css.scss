@@ -120,7 +120,7 @@ $font-family-base:        $font-family-sans-serif !default;
   }
 }
 
-.latest-interpellations {
+.paper-list {
   list-style: none;
   padding: 0;
 
@@ -130,12 +130,12 @@ $font-family-base:        $font-family-sans-serif !default;
 
   p {
     margin-bottom: 0;
-    padding-left: 75px;
+    padding-left: 55px;
   }
 
   .source {
     display: inline-block;
-    margin-left: -75px;
+    margin-left: -55px;
     float: left;
   }
 
@@ -146,6 +146,19 @@ $font-family-base:        $font-family-sans-serif !default;
     line-height: 1.8;
     margin-left: 0;
   }
+
+  &.paper-list--with-body {
+    p {
+      padding-left: 75px;
+    }
+    .source {
+      margin-left: -75px;
+    }
+  }
+}
+
+.label {
+  font-weight: normal;
 }
 
 .label a {
