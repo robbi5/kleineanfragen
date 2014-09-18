@@ -18,8 +18,9 @@
 
 // https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_variables.scss
 $font-size-base: 14px;
-$font-size-h2: floor(($font-size-base * 1.85)); // ~30px
-$font-size-h3: floor(($font-size-base * 1.4)); // ~30px
+$font-size-h1: floor(($font-size-base * 2.2)); // ~30px
+$font-size-h2: floor(($font-size-base * 1.85)); // ~25px
+$font-size-h3: floor(($font-size-base * 1.4)); // ~19px
 
 // FIXME: Download webfonts
 // FIXME: reduce Raleway -> "kleineAnfragen.?"
@@ -52,6 +53,17 @@ $font-family-base:        $font-family-sans-serif !default;
     font-weight: 500;
     color: #757F9A;
   }
+}
+
+.app-footer .container {
+  border-top: 1px solid $gray-lighter;
+  margin-top: 10px;
+  padding-top: 10px;
+  color: $gray-light;
+}
+
+.page-header {
+  margin-top: 0;
 }
 
 .jumbotron {
@@ -129,5 +141,37 @@ $font-family-base:        $font-family-sans-serif !default;
     margin: 0;
     padding-left: 0;
     padding-right: 0;
+  }
+}
+
+.legislative-terms-overview {
+  list-style: none;
+  padding: 0;
+
+  li {
+    margin-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid $gray-lighter;
+  }
+
+  li:first-child {
+    margin-top: 0;
+  }
+
+  h2 {
+    margin: 0;
+    line-height: 2.05;
+  }
+
+  .paper-count {
+    display: inline-block;
+    text-align: center;
+    padding: 0 10px;
+    border: 0px solid #EEE;
+    border-width: 0 1px 0 1px;
+
+    span {
+      font-size: 1.6em;
+    }
   }
 }

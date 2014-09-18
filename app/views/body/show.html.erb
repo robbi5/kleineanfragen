@@ -3,3 +3,26 @@
 <div class="page-header">
   <h1><%= @body.name %></h1>
 </div>
+
+<div class="row">
+  <div class="col-md-8">
+    <ol class="legislative-terms-overview">
+      <% @terms.each do |term, count| %>
+      <li class="row">
+        <h2 class="col-xs-9 col-sm-10"><%= link_to "#{term.to_s}. Wahlperiode", legislative_term_path(@body, term) %></h2>
+        <div class="paper-count col-xs-3 col-sm-2">
+          <span><%= count %></span> <br/>
+          <%= t :anfragen, count: count %>
+        </div>
+      </li>
+      <% end %>
+    </ol>
+  </div>
+
+  <div class="col-md-4">
+    <dl class="dl-horizontal">
+      <dt>Kürzel:</dt>
+      <dd><%= @body.state %></dd>
+    </dl>
+  </div>
+</div>

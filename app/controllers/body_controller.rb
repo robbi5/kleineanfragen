@@ -2,6 +2,7 @@ class BodyController < ApplicationController
   before_filter :find_body
 
   def show
+    @terms = Paper.where(body: @body).group(:legislative_term).count.to_a.sort.reverse
   end
 
   def find_body
