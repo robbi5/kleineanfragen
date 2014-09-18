@@ -16,16 +16,35 @@
 
 @import "bootstrap-sprockets";
 
+// From: https://github.com/thoughtbot/bourbon/blob/9fc15d596c770b6a29648255d4b40dfd7476dd77/app/assets/stylesheets/css3/_font-face.scss
+// Order of the includes matters, and it is: normal, bold, italic, bold+italic.
+@mixin font-face($font-family, $file-path, $weight: normal, $style: normal) {
+  @font-face {
+    font-family: $font-family;
+    font-weight: $weight;
+    font-style: $style;
+    src: font-url('#{$file-path}.eot');
+    src: font-url('#{$file-path}.eot?#iefix')          format('embedded-opentype'),
+         font-url('#{$file-path}.woff')                format('woff'),
+         font-url('#{$file-path}.ttf')                 format('truetype'),
+         font-url('#{$file-path}.svg##{$font-family}') format('svg');
+  }
+}
+
+@include font-face(SourceSansPro, 'source-sans-pro/sourcesanspro-regular');
+@include font-face(SourceSansPro, 'source-sans-pro/sourcesanspro-semibold', 600);
+@include font-face(SourceSansPro, 'source-sans-pro/sourcesanspro-it', normal, italic);
+@include font-face(RalewayLogofont, 'raleway-logofont/raleway-logofont', 500);
+
+
 // https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_variables.scss
 $font-size-base: 14px;
 $font-size-h1: floor(($font-size-base * 2.2)); // ~30px
 $font-size-h2: floor(($font-size-base * 1.85)); // ~25px
 $font-size-h3: floor(($font-size-base * 1.4)); // ~19px
+$headings-font-weight: 400; // Source Sans Pro doesn't has 500
 
-// FIXME: Download webfonts
-// FIXME: reduce Raleway -> "kleineAnfragen.?"
-
-$font-family-sans-serif:  "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-family-sans-serif:  "SourceSansPro", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 $font-family-base:        $font-family-sans-serif !default;
 
 @import "bootstrap";
@@ -35,9 +54,10 @@ $font-family-base:        $font-family-sans-serif !default;
 }
 
 .navbar-brand {
-  font-family: 'Raleway', sans-serif;
+  font-family: 'RalewayLogofont', 'Raleway' sans-serif;
   font-weight: 500;
-  font-size: 20px; // FIXME variable?
+  font-size: 20px;
+  color: #2980b9;
 }
 .navbar-brand span {
   display: inline-block;
@@ -67,7 +87,7 @@ $font-family-base:        $font-family-sans-serif !default;
 }
 
 .jumbotron {
-  background: linear-gradient(20deg, #757F9A 10%, #D7DDE8 90%); /* W3C */
+  background: linear-gradient(20deg, #757F9A 10%, #D7DDE8 90%);
   color: #fff;
   text-shadow: 0px 1px 0px rgba(0,0,0,.5);
 }
