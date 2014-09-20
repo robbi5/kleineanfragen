@@ -12,6 +12,8 @@ class PaperController < ApplicationController
 
   def search
     @term = params[:q]
+    redirect_to root_url if @term.blank?
+
     query = Paper.search @term,
               fields:['title^10', :contents],
               page: params[:page],

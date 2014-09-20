@@ -15,6 +15,8 @@
 </div>
 <% end %>
 
+<% if @papers.size > 0 %>
+
 <ol class="paper-list paper-list--with-body">
   <% @papers.with_details.each do |paper, details| %>
   <li>
@@ -37,5 +39,11 @@
   <% end %>
 </ol>
 
-<p class="pagination-total"><%= @papers.total_count %> kleine Anfragen</p>
+<p class="pagination-total"><%= @papers.total_count %> <%= t :kleine_anfragen, count: @papers.total_count %></p>
 <%= paginate @papers %>
+
+<% else %>
+<div class="well">
+  Es wurden leider keine kleinen Anfragen gefunden, die mit Ihrer Suche übereinstimmen.
+</div>
+<% end %>

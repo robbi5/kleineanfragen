@@ -2,6 +2,9 @@ de:
   anfragen:
     one: 'Anfrage'
     other: 'Anfragen'
+  kleine_anfragen:
+    one: 'kleine Anfrage'
+    other: 'kleine Anfragen'
   views:
     pagination:
       first: "&lArr; Erste Seite"
