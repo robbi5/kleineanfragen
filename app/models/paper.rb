@@ -43,7 +43,8 @@ class Paper < ActiveRecord::Base
     {
       title: title,
       reference: full_reference,
-      source: body.name
+      source: body.name,
+      url: Rails.application.routes.url_helpers.paper_path(body, legislative_term, self)
     }
   end
 

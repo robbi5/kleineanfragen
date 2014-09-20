@@ -16,5 +16,9 @@ $(function(){
     templates: {
       suggestion: Handlebars.compile('<p>{{title}} <span class="meta">&mdash; {{source}} ({{reference}})</span></p>')
     }
+  }).on("typeahead:selected", function(ev, suggestion, dataset) {
+    if (suggestion.url) {
+      location.href = suggestion.url;
+    }
   });
 });
