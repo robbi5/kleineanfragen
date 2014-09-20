@@ -208,3 +208,9 @@ $font-family-base:        $font-family-sans-serif !default;
     }
   }
 }
+
+.pagination-total {
+  @extend .pull-right;
+  margin: 20px 0;
+  line-height: 2.5;
+}

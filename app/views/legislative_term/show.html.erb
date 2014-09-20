@@ -8,7 +8,7 @@
   <% @papers.each do |paper| %>
   <li>
     <p>
-      <span class="source"><span class="label label-default"><%= paper.full_reference %></span></span>
+      <span class="source"><span class="label label-default"><%= link_to_paper paper.full_reference, paper %></span></span>
       <%= link_to_paper paper.title, paper %>
     </p>
     <p class="meta">
@@ -18,3 +18,5 @@
   <% end %>
 </ol>
 
+<p class="pagination-total"><%= @papers.total_count %> Anfragen</p>
+<%= paginate @papers %>

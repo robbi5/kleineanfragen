@@ -2,3 +2,19 @@ de:
   anfragen:
     one: 'Anfrage'
     other: 'Anfragen'
+  views:
+    pagination:
+      first: "&lArr; Erste Seite"
+      previous: "&larr; Zurück"
+      next: "Vor &rarr;"
+      last: "Letzte Seite &rArr;"
+      truncate: "..."
+  helpers:
+    page_entries_info:
+      one_page:
+        display_entries:
+          zero: "Keine %{entry_name} gefunden"
+          one: "Zeige <b>1</b> %{entry_name}"
+          other: "Zeige <b>alle %{count}</b> %{entry_name}"
+      more_pages:
+        display_entries: "Zeige %{entry_name} <b>%{first}&nbsp;-&nbsp;%{last}</b> von <b>%{total}</b>"
