@@ -9,6 +9,7 @@ class FetchPapersBayernJob < FetchPapersJob
     load_paper_details
     download_papers
     extract_text_from_papers
+    count_page_numbers
   end
 
   def self.import_new_papers
@@ -40,15 +41,4 @@ class FetchPapersBayernJob < FetchPapersJob
       end
     end
   end
-
-  def self.extract_text_from_papers
-    @papers = Paper.where(body: @body, contents: nil)
-
-    @papers.each do |paper|
-      text = paper.extract_text
-      paper.contents = text
-      paper.save
-    end
-  end
-
 end

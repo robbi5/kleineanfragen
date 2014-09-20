@@ -25,4 +25,23 @@ class FetchPapersJob
     end
   end
 
+  def self.extract_text_from_papers
+    @papers = Paper.where(body: @body, contents: nil).where.not(downloaded_at: nil)
+
+    @papers.each do |paper|
+      text = paper.extract_text
+      paper.contents = text
+      paper.save
+    end
+  end
+
+  def self.count_page_numbers
+    @papers = Paper.where(body: @body, page_count: nil).where.not(downloaded_at: nil)
+
+    @papers.each do |paper|
+      count = paper.extract_page_count
+      paper.page_count = count
+      paper.save
+    end
+  end
 end

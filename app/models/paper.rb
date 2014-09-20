@@ -55,4 +55,8 @@ class Paper < ActiveRecord::Base
   ensure
     FileUtils.remove_entry_secure tempdir if File.exists?(tempdir)
   end
+
+  def extract_page_count
+    Docsplit.extract_length path
+  end
 end
