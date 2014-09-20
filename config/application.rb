@@ -23,5 +23,8 @@ module Kleineanfrage
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
     config.i18n.available_locales = :de
     config.i18n.default_locale = :de
+
+    # path for storing paper pdfs
+    config.paper_storage = Rails.root.join('data')
   end
 end

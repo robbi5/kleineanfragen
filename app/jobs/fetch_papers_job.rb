@@ -11,7 +11,7 @@ class FetchPapersJob
   def self.download_papers
     @papers = Paper.where(body: @body, downloaded_at: nil).limit(50)
 
-    @data_folder = Rails.root.join('data')
+    @data_folder = Rails.application.config.paper_storage
     @papers.each do |paper|
       folder = @data_folder.join(@body.folder_name, paper.legislative_term.to_s)
       FileUtils.mkdir_p folder

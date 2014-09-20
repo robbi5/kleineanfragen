@@ -39,4 +39,20 @@ class Paper < ActiveRecord::Base
     write_attribute(:url, normalized_url)
     save!
   end
+
+  def path
+    Rails.application.config.paper_storage.join(body.folder_name, legislative_term.to_s, reference.to_s + '.pdf')
+  end
+
+  def extract_text
+    tempdir = Dir.mktmpdir
+
+    Docsplit.extract_text(path, :ocr => false, :output => tempdir)
+    resultfile = "#{tempdir}/#{reference.to_s}.txt"
+    return false unless File.exists?(resultfile)
+
+    File.read resultfile
+  ensure
+    FileUtils.remove_entry_secure tempdir if File.exists?(tempdir)
+  end
 end

@@ -41,6 +41,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.8.0)
+    docsplit (0.7.5)
     domain_name (0.5.20)
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
@@ -161,6 +162,7 @@ DEPENDENCIES
   autoprefixer-rails (~> 3.1.0)
   bootstrap-sass (~> 3.2.0)
   coffee-rails (~> 4.0.0)
+  docsplit (~> 0.7.5)
   friendly_id (~> 5.0.0)
   jbuilder (~> 2.0)
   jquery-rails

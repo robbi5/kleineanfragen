@@ -8,6 +8,7 @@ class FetchPapersBayernJob < FetchPapersJob
     import_new_papers
     load_paper_details
     download_papers
+    extract_text_from_papers
   end
 
   def self.import_new_papers
@@ -26,7 +27,7 @@ class FetchPapersBayernJob < FetchPapersJob
 
   def self.load_paper_details
     @papers = Paper.find_by_sql(
-      ["SELECT p.* FROM papers p LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id) WHERE p.body_id = ? AND o.id IS NULL LIMIT 25", @body.id])
+      ["SELECT p.* FROM papers p LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id) WHERE p.body_id = ? AND o.id IS NULL", @body.id])
 
     @papers.each do |paper|
       puts "Loading details for Paper [#{paper.reference}]"
@@ -37,6 +38,16 @@ class FetchPapersBayernJob < FetchPapersJob
         paper.originator_organizations << org
         paper.save
       end
+    end
+  end
+
+  def self.extract_text_from_papers
+    @papers = Paper.where(body: @body, contents: nil)
+
+    @papers.each do |paper|
+      text = paper.extract_text
+      paper.contents = text
+      paper.save
     end
   end
 

@@ -54,3 +54,6 @@ gem 'autoprefixer-rails', '~> 3.1.0'
 
 # pagination
 gem 'kaminari', '~> 0.16.0'
+
+# pdf text extraction
+gem 'docsplit', '~> 0.7.5'
