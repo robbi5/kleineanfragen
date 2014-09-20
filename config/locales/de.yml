@@ -28,13 +28,13 @@ de:
         other: etwa %{count} Stunden
       about_x_months:
         one: etwa einem Monat
-        other: etwa %{count} Monate
+        other: etwa %{count} Monaten
       about_x_years:
         one: etwa einem Jahr
-        other: etwa %{count} Jahre
+        other: etwa %{count} Jahren
       almost_x_years:
         one: fast einem Jahr
-        other: fast %{count} Jahre
+        other: fast %{count} Jahren
       half_a_minute: einer halben Minute
       less_than_x_minutes:
         one: weniger als einer Minute
@@ -44,16 +44,16 @@ de:
         other: weniger als %{count} Sekunden
       over_x_years:
         one: mehr als einem Jahr
-        other: mehr als %{count} Jahre
+        other: mehr als %{count} Jahren
       x_days:
         one: einem Tag
-        other: ! '%{count} Tage'
+        other: ! '%{count} Tagen'
       x_minutes:
         one: einer Minute
         other: ! '%{count} Minuten'
       x_months:
         one: einem Monat
-        other: ! '%{count} Monate'
+        other: ! '%{count} Monaten'
       x_seconds:
         one: einer Sekunde
         other: ! '%{count} Sekunden'
