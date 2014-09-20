@@ -2,11 +2,11 @@
 <div class="jumbotron">
   <div class="container">
     <p>Suche in kleinen Anfragen:</p>
-    <form class="">
+    <form action="/search" method="get" role="search">
       <div class="input-group">
-        <input type="search" class="form-control" placeholder="Suche nach Themen wie &quot;Schulen&quot;, &quot;Mobilität&quot;, &hellip; oder Bundesländern" />
+        <input type="search" name="q" class="form-control" placeholder="Suche nach Themen wie &quot;Schulen&quot;, &quot;Mobilität&quot;, &hellip; oder Bundesländern" />
         <span class="input-group-btn">
-          <button class="btn btn-success" type="button">Suchen</button>
+          <button class="btn btn-success" type="submit">Suchen</button>
         </span>
       </div>
     </form>

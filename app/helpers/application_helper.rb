@@ -8,4 +8,7 @@ module ApplicationHelper
     time_ago_in_words(time, scope: :'datetime.distance_in_words_dativ')
   end
 
+  def display_header_search?
+    !current_page?(root_path)
+  end
 end
