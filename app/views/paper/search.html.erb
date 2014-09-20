@@ -1,4 +1,4 @@
-<% content_for :title do %>Suche nach <%= @term %><% end %>
+<% content_for :title do %>Suche nach <%= @term %><% if !@papers.first_page?%> (Seite <%= @papers.current_page %>)<% end %><% end %>
 
 <% content_for :main_fullwidth do %>
 <div class="jumbotron jumbotron--search">
