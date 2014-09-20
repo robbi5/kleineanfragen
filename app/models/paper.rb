@@ -2,6 +2,9 @@ class Paper < ActiveRecord::Base
   extend FriendlyId
   friendly_id :reference_and_title, use: :scoped, scope: [:body, :legislative_term]
 
+  # enable search
+  searchkick language: "German", text_start: [:title]
+
   belongs_to :body
   has_many :paper_originators
   has_many :originator_people, :through => :paper_originators, :source => :originator, :source_type => 'Person'
@@ -12,6 +15,8 @@ class Paper < ActiveRecord::Base
   end
 
   validates :reference, uniqueness: { scope: [:body_id, :legislative_term] }
+
+  # friendly id helpers
 
   def should_generate_new_friendly_id?
     title_changed? || super
@@ -27,16 +32,31 @@ class Paper < ActiveRecord::Base
     value.to_s.gsub('&', 'und').parameterize.truncate(120, separator: '-', omission: '')
   end
 
+  # searchkick helpers
+
+  def search_data
+    # or: https://github.com/ankane/searchkick#personalized-results
+    as_json only: [:body_id, :legislative_term, :reference, :title, :contents, :published_at]
+  end
+
+  def autocomplete_data
+    {
+      title: title,
+      reference: full_reference,
+      source: body.name
+    }
+  end
+
+
   def full_reference
     legislative_term.to_s + '/' + reference.to_s
   end
-
 
   # helper method to fix non-standard urls in the database
   # apply it with: Paper.find_each(&:normalize_url)
   def normalize_url
     normalized_url = Addressable::URI.parse(self.url).normalize.to_s
-    write_attribute(:url, normalized_url)
+    self[:url] = normalized_url
     save!
   end
 

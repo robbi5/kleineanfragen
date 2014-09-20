@@ -1,7 +1,7 @@
 class PaperController < ApplicationController
-  before_filter :find_body
-  before_filter :find_legislative_term
-  before_filter :find_paper
+  before_filter :find_body, only: [:show]
+  before_filter :find_legislative_term, only: [:show]
+  before_filter :find_paper, only: [:show]
 
   def show
     respond_to do |format|
@@ -10,6 +10,16 @@ class PaperController < ApplicationController
     end
   end
 
+  def search
+    @term = params[:q]
+    @papers = Paper.search @term, page: params[:page], per_page: 10
+  end
+
+  def autocomplete
+    render json: Paper.search(params[:q], fields: [{title: :text_start}], limit: 5).map(&:autocomplete_data)
+  end
+
+  private
 
   def find_body
     @body = Body.friendly.find params[:body]

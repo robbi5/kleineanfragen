@@ -17,10 +17,10 @@
     </div>
 
     <% if display_header_search? %>
-    <form class="navbar-form navbar-left" role="search" action="/search" method="get">
+    <form class="navbar-form navbar-left" role="search" action="/search" method="get" class="search">
       <div class="form-group">
         <div class="input-group">
-          <input type="search" name="q" class="form-control" placeholder="Suche nach Themen&hellip;">
+          <input type="search" id="searchq" name="q" class="form-control" placeholder="Suche nach Themen&hellip;"/>
           <span class="input-group-btn">
             <button class="btn btn-success" type="submit">Suchen</button>
           </span>

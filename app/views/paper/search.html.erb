@@ -1,0 +1,35 @@
+<% content_for :title do %>Suche nach <%= @term %><% end %>
+
+<% content_for :main_fullwidth do %>
+<div class="jumbotron jumbotron--search">
+  <div class="container">
+    <form action="/search" method="get" role="search" class="search">
+      <div class="input-group">
+        <input type="text" id="searchq" name="q" class="form-control" placeholder="Suche nach Themen wie &quot;Schulen&quot;, &quot;Mobilität&quot;, &hellip;" value="<%= @term %>"/>
+        <span class="input-group-btn">
+          <button class="btn btn-success" type="submit">Suchen</button>
+        </span>
+      </div>
+    </form>
+  </div>
+</div>
+<% end %>
+
+<ol class="paper-list paper-list--with-body">
+  <% @papers.each do |paper| %>
+  <li>
+    <p>
+      <span class="source">
+      <%= link_to paper.body.state, paper.body %>
+      <span class="label label-default"><%= link_to_paper paper.full_reference, paper %></span></span>
+      <%= link_to_paper paper.title, paper %>
+    </p>
+    <p class="meta">
+      Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <%= paper.published_at %>
+    </p>
+  </li>
+  <% end %>
+</ol>
+
+<p class="pagination-total"><%= @papers.total_count %> kleine Anfragen</p>
+<%= paginate @papers %>

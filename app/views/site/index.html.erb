@@ -1,10 +1,10 @@
 <% content_for :main_fullwidth do %>
 <div class="jumbotron">
   <div class="container">
-    <p>Suche in kleinen Anfragen:</p>
-    <form action="/search" method="get" role="search">
+    <p class="tagline">Suche in kleinen Anfragen:</p>
+    <form action="/search" method="get" role="search" class="search">
       <div class="input-group">
-        <input type="search" name="q" class="form-control" placeholder="Suche nach Themen wie &quot;Schulen&quot;, &quot;Mobilität&quot;, &hellip; oder Bundesländern" />
+        <input type="text" id="searchq" name="q" class="form-control" placeholder="Suche nach Themen wie &quot;Schulen&quot;, &quot;Mobilität&quot;, &hellip;" />
         <span class="input-group-btn">
           <button class="btn btn-success" type="submit">Suchen</button>
         </span>
@@ -33,7 +33,8 @@
       <li>
         <p>
           <span class="source">
-            <%= link_to paper.body.state, paper.body %> <span class="label label-default"><%= link_to_paper paper.full_reference, paper %></span>
+            <%= link_to paper.body.state, paper.body %>
+            <span class="label label-default"><%= link_to_paper paper.full_reference, paper %></span>
           </span>
           <%= link_to_paper paper.title, paper %>
         </p>

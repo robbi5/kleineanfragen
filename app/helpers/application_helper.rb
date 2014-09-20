@@ -9,6 +9,6 @@ module ApplicationHelper
   end
 
   def display_header_search?
-    !current_page?(root_path)
+    !current_page?(root_path) && !current_page?(search_path)
   end
 end

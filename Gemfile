@@ -58,3 +58,7 @@ gem 'kaminari', '~> 0.16.0'
 
 # pdf text extraction
 gem 'docsplit', '~> 0.7.5'
+
+# search!
+gem 'searchkick', '~> 0.8.2'
+gem 'patron', '~> 0.4.18'

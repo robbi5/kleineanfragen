@@ -88,28 +88,41 @@ $font-family-base:        $font-family-sans-serif !default;
 
 .jumbotron {
   background: linear-gradient(20deg, #757F9A 10%, #D7DDE8 90%);
-  color: #fff;
-  text-shadow: 0px 1px 0px rgba(0,0,0,.5);
+
+  .tagline {
+    color: #fff;
+    text-shadow: 0px 1px 0px rgba(0,0,0,.5);
+  }
 }
 
-.jumbotron .input-group {
-  width: 100%;
+.jumbotron--search {
+  padding: 30px;
+}
 
+.search .twitter-typeahead,
+.search .input-group {
+  width: 100%;
+}
+
+.search {
   .form-control {
     box-shadow: none;
     height: 2.8em;
     width: 100%;
     border: 0;
-    border-radius: 3px;
     padding-right: 6em;
   }
 
+  .input-group .form-control {
+    border-radius: 3px;
+  }
+
   .input-group-btn {
+    position: absolute;
+    top: 0;
+    right: 3px;
     width: auto;
     z-index: 100;
-    right: 3px;
-    /* display: block; */
-    position: absolute;
 
     .btn {
       margin-top: 3px;
@@ -118,7 +131,90 @@ $font-family-base:        $font-family-sans-serif !default;
       border-radius: 2px;
     }
   }
+
+  .tt-hint {
+    color: #aaa;
+  }
+
+  span.twitter-typeahead .tt-dropdown-menu {
+    width: 100%;
+    border: 0;
+    border-top: 2px solid #fff;
+    padding: 2px 0;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  span.twitter-typeahead .tt-suggestion p {
+    font-size: 14px;
+    padding: 3px 11px;
+    margin: 0;
+  }
+
+  .tt-suggestion .meta {
+    color: #aaa;
+  }
 }
+
+span.twitter-typeahead {
+  .tt-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    list-style: none;
+    font-size: 14px;
+    text-align: left;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-top: 0;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background-clip: padding-box;
+  }
+  .tt-suggestion {
+    > p {
+      display: block;
+      padding: 3px 20px;
+      clear: both;
+      font-weight: normal;
+      line-height: 1.42857143;
+      color: #333333;
+      white-space: nowrap;
+      &:hover, &:focus {
+        color: #ffffff;
+        text-decoration: none;
+        outline: 0;
+        background-color: #428bca;
+      }
+    }
+    &.tt-cursor {
+      color: #ffffff;
+      background-color: #428bca;
+    }
+  }
+  width: 100%;
+}
+
+.input-group {
+  span.twitter-typeahead {
+    display: block !important;
+    .tt-dropdown-menu {
+      top: 32px !important;
+    }
+  }
+  &.input-group-lg span.twitter-typeahead .tt-dropdown-menu {
+    top: 44px !important;
+  }
+  &.input-group-sm span.twitter-typeahead .tt-dropdown-menu {
+    top: 28px !important;
+  }
+}
+
 
 .paper-list {
   list-style: none;

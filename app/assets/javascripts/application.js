@@ -14,4 +14,6 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap-sprockets
+//= require typeahead.bundle.min
+//= require handlebars-v2.0.0
 //= require_tree .
