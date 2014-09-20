@@ -19,6 +19,8 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
+# Turbolinks <3 jquery
+gem 'jquery-turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
@@ -42,6 +44,7 @@ gem 'spring',        group: :development
 # Get i18n files
 gem 'rails-i18n', '~> 4.0.0'
 
+# scraping
 gem 'wombat',  '~> 2.2.1'
 
 # slugs
@@ -50,6 +53,7 @@ gem 'friendly_id', '~> 5.0.0'
 # fix urls while scraping
 gem 'addressable', '~> 2.3.6', require: "addressable/uri"
 
+# styling
 gem 'bootstrap-sass', '~> 3.2.0'
 gem 'autoprefixer-rails', '~> 3.1.0'
 
