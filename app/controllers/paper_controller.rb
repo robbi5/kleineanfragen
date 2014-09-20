@@ -12,7 +12,21 @@ class PaperController < ApplicationController
 
   def search
     @term = params[:q]
-    @papers = Paper.search @term, page: params[:page], per_page: 10
+    query = Paper.search @term,
+              fields:['title^10', :contents],
+              page: params[:page],
+              per_page: 10,
+              highlight: {tag: "<mark>"},
+              execute: false
+
+    query.body[:highlight][:fields]["contents.analyzed"] = {
+      "type" => "fvh",
+      "fragment_size" => 250,
+      "number_of_fragments" => 3,
+      "no_match_size" => 250,
+      "fragment_offset" => 2
+    }
+    @papers = query.execute
   end
 
   def autocomplete

@@ -306,6 +306,17 @@ span.twitter-typeahead {
   }
 }
 
+.searchresult-title mark {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-weight: bold;
+}
+
+.searchresult-snippet mark {
+  font-weight: bold;
+}
+
 .pagination-total {
   @extend .pull-right;
   margin: 20px 0;

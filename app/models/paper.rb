@@ -3,7 +3,9 @@ class Paper < ActiveRecord::Base
   friendly_id :reference_and_title, use: :scoped, scope: [:body, :legislative_term]
 
   # enable search
-  searchkick language: "German", text_start: [:title]
+  searchkick  language: "German",
+              text_start: [:title],
+              highlight: [:title, :contents]
 
   belongs_to :body
   has_many :paper_originators

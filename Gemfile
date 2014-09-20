@@ -60,5 +60,5 @@ gem 'kaminari', '~> 0.16.0'
 gem 'docsplit', '~> 0.7.5'
 
 # search!
-gem 'searchkick', '~> 0.8.2'
+gem 'searchkick', :github => 'ankane/searchkick' # using master, until 9d067a7 is released
 gem 'patron', '~> 0.4.18'
