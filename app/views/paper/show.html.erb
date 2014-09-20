@@ -26,6 +26,9 @@
     <p><span class="label label-default h3"><%= @paper.full_reference %></span></p>
     <p>Eingereicht von:<br/><%= @paper.originators.collect(&:name).join(', ') %></p>
     <p>Veröffentlicht am <%= @paper.published_at %></p>
-    <p><%= link_to 'Download PDF', paper_path(@body, @legislative_term, @paper, {format: :pdf}), {class: 'btn btn-primary'} %></p>
+    <p>
+      <%= link_to 'Download PDF', paper_path(@body, @legislative_term, @paper, {format: :pdf}), {class: 'btn btn-primary'} %>
+      <br/><small>(<%= @paper.page_count %> Seiten)</small>
+    </p>
   </div>
 </div>
