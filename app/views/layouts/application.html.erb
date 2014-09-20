@@ -16,25 +16,23 @@
       <a href="<%= root_url %>" class="navbar-brand" data-no-turbolink='true'>kleineAnfra<span>g</span>en.</a>
     </div>
 
-    <% if display_header_search? %>
-    <form class="navbar-form navbar-left" role="search" action="/search" method="get" class="search">
-      <div class="form-group">
-        <div class="input-group">
-          <input type="search" id="searchq" name="q" class="form-control" placeholder="Suche nach Themen&hellip;"/>
-          <span class="input-group-btn">
-            <button class="btn btn-success" type="submit">Suchen</button>
-          </span>
-        </div>
-      </div>
-    </form>
-    <% end %>
-
     <nav role="navigation">
       <ul class="nav navbar-nav navbar-right">
         <%# <li><a href="/blog/">Blog</a></li> %>
         <li><a href="https://twitter.com/kleine_anfragen">Twitter</a></li>
       </ul>
     </nav>
+
+    <% if display_header_search? %>
+    <form class="navbar-form navbar-left search search--navbar" role="search" action="/search" method="get" class="search">
+      <div class="input-group">
+        <input type="search" id="searchq" name="q" class="form-control" placeholder="Suche nach Themen&hellip;"/>
+        <span class="input-group-btn">
+          <button class="btn btn-success" type="submit">Suchen</button>
+        </span>
+      </div>
+    </form>
+    <% end %>
   </div>
 </header>
 
