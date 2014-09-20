@@ -21,6 +21,25 @@ class PaperController < ApplicationController
               highlight: {tag: "<mark>"},
               execute: false
 
+    # boost newer papers
+    unboosted_query = query.body[:query]
+    query.body[:query] = {
+      function_score: {
+        query: unboosted_query,
+        functions: [
+          { boost_factor: 1 },
+          {
+            gauss: {
+              published_at: {
+                scale: "4w"
+              }
+            }
+          }
+        ],
+        score_mode: "sum"
+      }
+    }
+
     query.body[:highlight][:fields]["contents.analyzed"] = {
       "type" => "fvh",
       "fragment_size" => 250,
