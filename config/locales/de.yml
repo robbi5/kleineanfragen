@@ -18,3 +18,39 @@ de:
           other: "Zeige <b>alle %{count}</b> %{entry_name}"
       more_pages:
         display_entries: "Zeige %{entry_name} <b>%{first}&nbsp;-&nbsp;%{last}</b> von <b>%{total}</b>"
+  datetime:
+    distance_in_words_dativ:
+      about_x_hours:
+        one: etwa einer Stunde
+        other: etwa %{count} Stunden
+      about_x_months:
+        one: etwa einem Monat
+        other: etwa %{count} Monate
+      about_x_years:
+        one: etwa einem Jahr
+        other: etwa %{count} Jahre
+      almost_x_years:
+        one: fast einem Jahr
+        other: fast %{count} Jahre
+      half_a_minute: einer halben Minute
+      less_than_x_minutes:
+        one: weniger als einer Minute
+        other: weniger als %{count} Minuten
+      less_than_x_seconds:
+        one: weniger als einer Sekunde
+        other: weniger als %{count} Sekunden
+      over_x_years:
+        one: mehr als einem Jahr
+        other: mehr als %{count} Jahre
+      x_days:
+        one: einem Tag
+        other: ! '%{count} Tage'
+      x_minutes:
+        one: einer Minute
+        other: ! '%{count} Minuten'
+      x_months:
+        one: einem Monat
+        other: ! '%{count} Monate'
+      x_seconds:
+        one: einer Sekunde
+        other: ! '%{count} Sekunden'
