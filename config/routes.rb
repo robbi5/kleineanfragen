@@ -5,8 +5,7 @@ Rails.application.routes.draw do
   get 'search' => 'paper#search'
   get 'search/autocomplete' => 'paper#autocomplete'
 
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
+  get 'recent' => 'paper#recent'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase

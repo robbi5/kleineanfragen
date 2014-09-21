@@ -1,0 +1,32 @@
+<% content_for :title do %>Anfragen der letzten <%= @days %> Tage<% end %>
+
+<div class="page-header">
+  <h1>Anfragen der letzten <%= @days %> Tage</h1>
+</div>
+
+<ol class="recent-list">
+  <% @recent.each do |day, papers| %>
+  <li>
+    <h2><%= l day %></h2>
+    <ol class="paper-list paper-list--with-body">
+      <% papers.each do |paper| %>
+      <li>
+        <p>
+          <span class="source">
+            <%= link_to paper.body.state, paper.body, title: paper.body.name %>
+            <span class="label label-default"><%= link_to_paper paper.full_reference, paper %></span>
+          </span>
+          <%= link_to_paper paper.title, paper %>
+        </p>
+        <p class="meta">
+          Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <%= paper.published_at %>
+        </p>
+      </li>
+      <% end %>
+    </ol>
+  </li>
+  <% end %>
+</ol>
+
+<p class="pagination-total"><%= @papers.total_count %> <%= t :kleine_anfragen, count: @papers.total_count %></p>
+<%= paginate @papers %>

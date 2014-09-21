@@ -54,6 +54,14 @@ class PaperController < ApplicationController
     render json: Paper.search(params[:q], fields: [{title: :text_start}], limit: 5).map(&:autocomplete_data)
   end
 
+  def recent
+    @days = 14
+    @papers = Paper.where("published_at >= ?", Date.today - @days.days)
+              .order(published_at: :desc, reference: :desc)
+              .page(params[:page])
+    @recent = @papers.to_a.group_by(&:published_at)
+  end
+
   private
 
   def find_body

@@ -304,6 +304,12 @@ span.twitter-typeahead {
   font-weight: inherit;
 }
 
+.recent-link {
+  width: 100%;
+  font-size: 0.9em;
+}
+
+
 .breadcrumb-fullwidth {
   background: $breadcrumb-bg;
 
@@ -365,4 +371,18 @@ span.twitter-typeahead {
 
 .well {
   box-shadow: none;
+}
+
+.recent-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  h2 {
+    @extend .h3;
+  }
+
+  .paper-list {
+    margin-left: 15px;
+  }
 }
