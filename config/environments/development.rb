@@ -36,4 +36,4 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 end
 
-ENV["ELASTICSEARCH_URL"] |= "http://localhost:9200/"
+ENV["ELASTICSEARCH_URL"] = "http://localhost:9200/" if ENV["ELASTICSEARCH_URL"].blank?
