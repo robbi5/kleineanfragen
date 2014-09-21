@@ -33,7 +33,7 @@
       <li>
         <p>
           <span class="source">
-            <%= link_to paper.body.state, paper.body %>
+            <%= link_to paper.body.state, paper.body, title: paper.body.name %>
             <span class="label label-default"><%= link_to_paper paper.full_reference, paper %></span>
           </span>
           <%= link_to_paper paper.title, paper %>
