@@ -23,7 +23,7 @@
     <iframe src="http://mozilla.github.io/pdf.js/web/viewer.html?file=<%= @paper.url %>" width="100%" height="600px" frameborder="0"></iframe>
   </div>
   <div class="col-md-3">
-    <p><span class="label label-default h3"><%= @paper.full_reference %></span></p>
+    <p><span class="label label-default label-big"><%= @paper.full_reference %></span></p>
     <p>Eingereicht von:<br/><%= @paper.originators.collect(&:name).join(', ') %></p>
     <p>Veröffentlicht am <%= l @paper.published_at %></p>
     <p>
