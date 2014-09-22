@@ -5,6 +5,9 @@ de:
   kleine_anfragen:
     one: 'kleine Anfrage'
     other: 'kleine Anfragen'
+  pages:
+    one: 'Seite'
+    other: 'Seiten'
   views:
     pagination:
       first: "&lArr; Erste Seite"
