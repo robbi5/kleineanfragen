@@ -12,7 +12,7 @@
       <%= link_to_paper paper.title, paper %>
     </p>
     <p class="meta">
-      Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <%= paper.published_at %>
+      Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <%= l paper.published_at %>
     </p>
   </li>
   <% end %>

@@ -32,7 +32,7 @@
       <%= link_to_paper title, paper, class: 'searchresult-title' %>
     </p>
     <p class="meta">
-      Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <%= paper.published_at %>
+      Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <%= l paper.published_at %>
     </p>
     <p class="searchresult-snippet"><%= snippet.gsub(/[\t\n]/, ' ').html_safe %></p>
   </li>
