@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
+  get ':body/:legislative_term/:paper/embed.pdf' => 'paper#downloaded_pdf', as: :paper_downloaded_pdf, constraints: { legislative_term: /[0-9]+/ }, format: false
   get ':body/:legislative_term/:paper' => 'paper#show', as: :paper, constraints: { legislative_term: /[0-9]+/ }
   get ':body/:legislative_term' => 'legislative_term#show', as: :legislative_term, constraints: { legislative_term: /[0-9]+/ }
   get ':body' => 'body#show', as: :body, body: /[^0-9\/]+/, format: false

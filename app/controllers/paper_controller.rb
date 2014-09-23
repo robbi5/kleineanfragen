@@ -1,13 +1,30 @@
 class PaperController < ApplicationController
-  before_filter :find_body, only: [:show]
-  before_filter :find_legislative_term, only: [:show]
-  before_filter :find_paper, only: [:show]
+  before_filter :find_body, only: [:show, :downloaded_pdf]
+  before_filter :find_legislative_term, only: [:show, :downloaded_pdf]
+  before_filter :find_paper, only: [:show, :downloaded_pdf]
+  before_filter :redirect_old_slugs, only: [:show]
 
   def show
     respond_to do |format|
       format.html
       format.pdf { redirect_to @paper.url }
     end
+  end
+
+  def downloaded_pdf
+    if request.headers["HTTP_ORIGIN"] # FIXME
+      headers['Access-Control-Allow-Origin'] = request.headers["HTTP_ORIGIN"]
+      headers['Access-Control-Expose-Headers'] = 'ETag, Accept-Ranges'
+      headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS, HEAD'
+    end
+
+    if @paper.downloaded_at.nil? || !File.exists?(@paper.path)
+      render plain: "404 Not Found", status: 404
+      return
+    end
+
+    response.headers["X-Notice"] = "Please do not link this url, its for embedding only"
+    send_file @paper.path, filename: "#{@paper.reference}-embed.pdf", type: "application/pdf"
   end
 
   def search
@@ -85,15 +102,11 @@ class PaperController < ApplicationController
       end
       raise e
     end
-
-    redirect_old_slugs
   end
 
   def find_paper_by_reference(reference)
     @paper = Paper.where(body: @body, legislative_term: @legislative_term, reference: reference).first
     raise ActiveRecord::RecordNotFound if @paper.nil?
-
-    redirect_old_slugs
   end
 
   def redirect_old_slugs

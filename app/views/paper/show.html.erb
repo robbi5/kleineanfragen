@@ -20,7 +20,7 @@
 
 <div class="row">
   <div class="col-md-9">
-    <iframe src="http://mozilla.github.io/pdf.js/web/viewer.html?file=<%= @paper.url %>" width="100%" height="600px" frameborder="0"></iframe>
+    <iframe src="http://mozilla.github.io/pdf.js/web/viewer.html?file=<%= paper_downloaded_pdf_url(@body, @legislative_term, @paper) %>" width="100%" height="600px" frameborder="0"></iframe> <%# FIXME download and vendor pdf.js %>
   </div>
   <div class="col-md-3">
     <p><span class="label label-default label-big"><%= @paper.full_reference %></span></p>
