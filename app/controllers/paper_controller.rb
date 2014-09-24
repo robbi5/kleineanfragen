@@ -60,9 +60,8 @@ class PaperController < ApplicationController
     query.body[:highlight][:fields]["contents.analyzed"] = {
       "type" => "fvh",
       "fragment_size" => 250,
-      "number_of_fragments" => 3,
-      "no_match_size" => 250,
-      "fragment_offset" => 2
+      "number_of_fragments" => 1,
+      "no_match_size" => 250
     }
     @papers = query.execute
   end
