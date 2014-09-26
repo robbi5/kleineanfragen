@@ -100,12 +100,26 @@ $grid-float-breakpoint:   320px;
 }
 
 .jumbotron--home {
-  padding: 15px 0;
+  padding: 15px 0 0;
   margin-bottom: 0;
   @media (min-width: $screen-sm-min) {
-    padding: 30px 0;
+    padding: 30px 0 0;
     margin-bottom: 15px;
   }
+}
+
+.jumbotron--home .container {
+  padding-bottom: 55px;
+  @media (min-width: $screen-xs-min) {
+    padding-bottom: 60px;
+  }
+  @media (min-width: $screen-sm-min) {
+    padding-bottom: 90px;
+  }
+  background-image: image-url("papers.png");
+  background-position: center 100px;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .jumbotron--search {
