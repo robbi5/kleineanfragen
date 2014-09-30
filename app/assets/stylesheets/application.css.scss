@@ -272,6 +272,26 @@ span.twitter-typeahead {
 }
 
 
+.bodies-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+  }
+
+  li + li {
+    &:before {
+      content: '•';
+      color: #aaa;
+      padding: 0 6px 0 3px;
+    }
+  }
+}
+
 .paper-list {
   list-style: none;
   padding: 0;
