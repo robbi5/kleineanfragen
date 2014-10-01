@@ -5,3 +5,8 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+Body.create([
+  { name: 'Bayern', state: 'BY' },
+  { name: 'Berlin', state: 'BE' }
+])
