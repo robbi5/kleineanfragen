@@ -13,7 +13,7 @@ class Paper < ActiveRecord::Base
   has_many :originator_organizations, :through => :paper_originators, :source => :originator, :source_type => 'Organization'
 
   def originators
-    paper_originators.collect(&:originator)
+    paper_originators.sort_by { |org| org.originator_type == 'Person' ? 1 : 2 }.collect(&:originator)
   end
 
   validates :reference, uniqueness: { scope: [:body_id, :legislative_term] }

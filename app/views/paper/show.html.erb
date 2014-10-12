@@ -21,7 +21,11 @@
 <div class="row">
   <div class="col-md-3 col-md-push-9">
     <p><span class="label label-default label-big"><%= @paper.full_reference %></span></p>
-    <p>Eingereicht von:<br/><%= @paper.originators.collect(&:name).join(', ') %></p>
+    <p>
+      Eingereicht von:<br/>
+      <%= @paper.originator_people.collect(&:name).join(', ') %><br/>
+      <%= @paper.originator_organizations.collect(&:name).join(', ') %>
+    </p>
     <p>Veröffentlicht am <%= l @paper.published_at %></p>
     <p>
       <%= link_to 'Download PDF', paper_path(@body, @legislative_term, @paper, {format: :pdf}), {class: 'btn btn-primary'} %>
