@@ -1,23 +1,23 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  body_id: 
-  legislative_term: 1
-  reference: MyText
+  body_id: bayern
+  legislative_term: 17
+  reference: "2000"
   title: MyText
   contents: MyText
   page_count: 1
-  published_date: 2014-09-03
-  url: MyText
+  published_at: 2014-09-03
+  url: http://bayern.example.org/pdf/17/2000.pdf
   downloaded_at: 2014-09-03 12:22:33
 
 two:
-  body_id: 
-  legislative_term: 1
-  reference: MyText
+  body_id: berlin
+  legislative_term: 17
+  reference: "1000"
   title: MyText
   contents: MyText
   page_count: 1
-  published_date: 2014-09-03
-  url: MyText
+  published_at: 2014-09-03
+  url: http://berlin.example.org/pdf/17/1000.pdf
   downloaded_at: 2014-09-03 12:22:33

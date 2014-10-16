@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyText
-  state: MyString
-  website: MyText
+bayern:
+  name: Bayern
+  state: BY
+  website: http://bayern.example.org
 
-two:
-  name: MyText
-  state: MyString
-  website: MyText
+berlin:
+  name: Berlin
+  state: BE
+  website: http://berlin.example.org
