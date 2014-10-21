@@ -28,10 +28,20 @@ class BayernPDFExtractorTest < ActiveSupport::TestCase
     assert_equal "BÜNDNIS 90/DIE GRÜNEN", originators[:party]
   end
 
-  # des Abgeordneten Prof. Dr. Peter Paul Gantzer SPD
   # der/des Abgeordneten Annette Karl SPD
   test "one person, broken" do
     paper = Struct.new(:contents).new("der/des Abgeordneten Annette Karl SPD")
+
+    originators = BayernPDFExtractor.new(paper).extract
+
+    assert_equal 1, originators[:people].size
+    assert_equal "Annette Karl", originators[:people][0]
+    assert_equal "SPD", originators[:party]
+  end
+
+  # desr Abgeordneten Annette Karl SPD
+  test "one person, broken" do
+    paper = Struct.new(:contents).new("desr Abgeordneten Annette Karl SPD")
 
     originators = BayernPDFExtractor.new(paper).extract
 
