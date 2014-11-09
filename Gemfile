@@ -45,7 +45,7 @@ gem 'spring',        group: :development
 gem 'rails-i18n', '~> 4.0.0'
 
 # scraping
-gem 'wombat',  '~> 2.2.1'
+gem 'mechanize',  '~> 2.7.2'
 
 # slugs
 gem 'friendly_id', '~> 5.0.0'

@@ -16,10 +16,9 @@ class FetchPapersBayernJob < FetchPapersJob
   def self.import_new_papers
     result = BayernLandtagScraper::Overview.new.scrape
     result.each do |item|
-      item['reference'] = item['full_reference'].split("/").last
-      item.delete 'full_reference'
-      unless Paper.where(body: @body, legislative_term: item['legislative_term'], reference: item['reference']).exists?
-        puts "Got new Paper: [#{item['reference']}] \"#{item['title']}\""
+      item.delete :full_reference
+      unless Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
+        puts "Got new Paper: [#{item[:reference]}] \"#{item[:title]}\""
         paper = Paper.new(item)
         paper.body = @body
         paper.save

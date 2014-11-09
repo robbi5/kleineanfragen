@@ -1,4 +1,3 @@
-require 'wombat'
 require 'mechanize'
 require 'date'
 
@@ -6,52 +5,53 @@ module BayernLandtagScraper
   BASE_URL = 'http://www1.bayern.landtag.de'
 
   class Overview
-    include Wombat::Crawler
-
     SEARCH_URL = BASE_URL + '/webangebot1/dokumente.suche.maske.jsp?DOKUMENT_TYPE=EXTENDED&STATE=SHOW_MASK'
 
-    @page = 1
-    @per_page = 50
-
-    # override with filter function, because the xpaths still return broken records
-    def scrape
-      res = crawl
-      res["papers"].select{ |item| !item["url"].nil? && !item["title"].nil? && !item["full_reference"].nil? }
+    def initialize
+      @per_page = 50
     end
 
-    m = Mechanize.new
-    mp = m.get SEARCH_URL
-    search_form = mp.form 'suche'
-    legislative_term = search_form.field_with(name: 'DOKUMENT_INTEGER_WAHLPERIODE').value
-    search_form.field_with(name: 'DOKUMENT_VORGANGSART').options.find { |opt| opt.text.include? "Schriftliche Anfrage" }.select
-    search_form.field_with(name: 'DOKUMENT_INTEGER_TREFFERANZAHL').value = @per_page
-    search_form.add_field!('DOKUMENT_INTEGER_RESULT_START_INDEX', @per_page * (@page - 1)) if @page > 1
-    submit_button = search_form.submits.find { |btn| btn.value == 'Suche starten' }
-    mp = m.submit(search_form, submit_button)
+    def scrape(page = 1)
+      m = Mechanize.new
+      mp = m.get SEARCH_URL
+      search_form = mp.form 'suche'
+      legislative_term = search_form.field_with(name: 'DOKUMENT_INTEGER_WAHLPERIODE').value
+      search_form.field_with(name: 'DOKUMENT_VORGANGSART').options.find { |opt| opt.text.include? "Schriftliche Anfrage" }.select
+      search_form.field_with(name: 'DOKUMENT_INTEGER_TREFFERANZAHL').value = @per_page
+      search_form.add_field!('DOKUMENT_INTEGER_RESULT_START_INDEX', @per_page * (page - 1)) if page > 1
+      submit_button = search_form.submits.find { |btn| btn.value == 'Suche starten' }
+      mp = m.submit(search_form, submit_button)
 
-    # wombat: use mechanized page
-    page mp
+      papers = []
+      mp.search('//table[not(contains(@class, "marg_"))]//tr[not(contains(@class, "clr_listhead"))]').each do |item|
+        meta_element = item.at_css('b')
+        next if meta_element.nil?
 
-    #debug mp.inspect
+        full_reference = meta_element.text.match(/Nr. ([\d\/]+)/)[1]
+        reference = full_reference.split('/').last
+        published_at = Date.parse(meta_element.text.match(/([\d\.]+)$/)[1])
 
-    papers 'xpath=//table[not(contains(@class, "marg_"))]//tr[not(contains(@class, "clr_listhead"))]', :iterator do
-      #title 'css=b'
-      legislative_term legislative_term
-      full_reference 'css=b' do |text|
-        text.match(/Nr. ([\d\/]+)/)[1] unless text.nil?
+        link_el = item.search('.//a[not(contains(@href, "LASTFOLDER"))]')[0]
+        next if link_el.nil?
+
+        url = Addressable::URI.parse(BASE_URL + link_el.attributes["href"].value).normalize.to_s
+
+        title_el = item.search('.//following-sibling::tr[2]/td[3]')
+        next if title_el.nil?
+
+        title = title_el.text.gsub(/\s+/, ' ').strip.gsub(/\n/, '-').gsub('... [mehr]', '').gsub('[weniger]', '').strip
+
+        papers << {
+          :legislative_term => legislative_term,
+          :full_reference => full_reference,
+          :reference => reference,
+          :published_at => published_at,
+          :url => url,
+          :title => title
+        }
       end
-      published_at 'css=b' do |text|
-        Date.parse(text.match(/([\d\.]+)$/)[1]) unless text.nil?
-      end
-      url 'xpath=.//a[not(contains(@href, "LASTFOLDER"))]/@href' do |href|
-        unless href.nil?
-          Addressable::URI.parse(BASE_URL + href).normalize.to_s
-        end
-      end
-      #text 'xpath=(following-sibling::tr[2]/td[contains(@class, "pad_bot0")])[1]'
-      title 'xpath=following-sibling::tr[2]/td[3]' do |text|
-        text.gsub(/\s+/, ' ').strip.gsub(/\n/, '-').gsub('... [mehr]', '').gsub('[weniger]', '').strip unless text.nil?
-      end
+
+      papers
     end
   end
 
@@ -67,7 +67,6 @@ module BayernLandtagScraper
       @legislative_term.to_s + '/' + @reference.to_s
     end
 
-    # doesn't use wombat, mechanize is just fine
     def scrape
       m = Mechanize.new
       mp = m.get SEARCH_URL + CGI.escape(full_reference)
