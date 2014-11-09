@@ -14,14 +14,21 @@ class FetchPapersBayernJob < FetchPapersJob
   end
 
   def self.import_new_papers
-    result = BayernLandtagScraper::Overview.new.scrape
-    result.each do |item|
-      item.delete :full_reference
-      unless Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
-        puts "Got new Paper: [#{item[:reference]}] \"#{item[:title]}\""
-        paper = Paper.new(item)
-        paper.body = @body
-        paper.save
+    (1...5).each do |page|
+      found_new_paper = false
+      result = BayernLandtagScraper::Overview.new.scrape(page)
+      result.each do |item|
+        item.delete :full_reference
+        unless Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
+          puts "Got new Paper: [#{item[:reference]}] \"#{item[:title]}\""
+          paper = Paper.new(item)
+          paper.body = @body
+          paper.save
+          found_new_paper = true
+        end
+      end
+      if !found_new_paper
+        break
       end
     end
   end

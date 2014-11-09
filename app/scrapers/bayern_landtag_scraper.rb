@@ -23,21 +23,21 @@ module BayernLandtagScraper
       mp = m.submit(search_form, submit_button)
 
       papers = []
-      mp.search('//table[not(contains(@class, "marg_"))]//tr[not(contains(@class, "clr_listhead"))]').each do |item|
-        meta_element = item.at_css('b')
-        next if meta_element.nil?
+      mp.search('//table[not(contains(@class, "marg_"))]//tr[not(contains(@class, "clr_listhead"))]/td/b').each do |item|
+        meta_element = item
+        row = item.parent.parent
 
         full_reference = meta_element.text.match(/Nr. ([\d\/]+)/)[1]
         reference = full_reference.split('/').last
         published_at = Date.parse(meta_element.text.match(/([\d\.]+)$/)[1])
 
-        link_el = item.search('.//a[not(contains(@href, "LASTFOLDER"))]')[0]
-        next if link_el.nil?
+        link_el = row.at_css('a')
+        next if warn_broken(link_el.nil?, 'link_el not found', item)
 
         url = Addressable::URI.parse(BASE_URL + link_el.attributes["href"].value).normalize.to_s
 
-        title_el = item.search('.//following-sibling::tr[2]/td[3]')
-        next if title_el.nil?
+        title_el = row.next_element.next_element.search('./td[3]')
+        next if warn_broken(title_el.nil?, 'title_el not found', item)
 
         title = title_el.text.gsub(/\s+/, ' ').strip.gsub(/\n/, '-').gsub('... [mehr]', '').gsub('[weniger]', '').strip
 
@@ -51,7 +51,16 @@ module BayernLandtagScraper
         }
       end
 
+      warn_broken(papers.size != @per_page, "Got only #{papers.size} of #{@per_page} papers")
+
       papers
+    end
+
+    def warn_broken(bool, reason, item = nil)
+      return false if !bool
+      Rails.logger.warn reason
+      Rails.logger.debug { item.to_s.gsub(/\n|\s\s+/, "") } unless item.nil?
+      true
     end
   end
 
