@@ -5,6 +5,7 @@ class BayernPDFExtractor
   end
 
   def extract
+    return nil if @contents.nil?
     people = []
     party = ""
     if m = @contents.match(/Abgeordneten ([\D\n]+?)\s(\p{Lu}[\p{Lu} \d\/]+)\b/m)
