@@ -5,9 +5,7 @@
   <div class="container">
     <ol class="breadcrumb">
       <li><%= link_to @body.name, @body %></li>
-      <li><%= link_to legislative_term_path(@body, @legislative_term) do %>
-        <%= @legislative_term %>. Wahlperiode
-      <% end %></li>
+      <li><%= link_to "#{@legislative_term.to_s}. Wahlperiode", legislative_term_path(@body, @legislative_term) %></li>
       <li class="active">Drucksache <%= @paper.reference %></li>
     </ol>
   </div>
@@ -33,6 +31,6 @@
     </p>
   </div>
   <div class="col-md-9 col-md-pull-3">
-    <iframe src="http://mozilla.github.io/pdf.js/web/viewer.html?file=<%= paper_downloaded_pdf_url(@body, @legislative_term, @paper) %>" width="100%" height="600px" frameborder="0"></iframe> <%# FIXME download and vendor pdf.js %>
+    <iframe src="https://mozilla.github.io/pdf.js/web/viewer.html?file=<%= paper_downloaded_pdf_url(@body, @legislative_term, @paper) %>" width="100%" height="600px" frameborder="0"></iframe> <%# FIXME download and vendor pdf.js %>
   </div>
 </div>
