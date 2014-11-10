@@ -23,7 +23,7 @@ class PaperController < ApplicationController
       return
     end
 
-    response.headers["X-Notice"] = "Please do not link this url, its for embedding only"
+    response.headers["X-Notice"] = "Please do not link this url, it is for embedding only"
     send_file @paper.path, filename: "#{@paper.reference}-embed.pdf", type: "application/pdf"
   end
 
