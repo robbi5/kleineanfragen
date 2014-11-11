@@ -7,7 +7,10 @@ class LegislativeTermController < ApplicationController
               .where(legislative_term: @legislative_term)
               .order(published_at: :desc, reference: :desc)
               .page params[:page]
+    fresh_when last_modified: @papers.maximum(:updated_at), public: true
   end
+
+  private
 
   def find_body
     @body = Body.friendly.find params[:body]

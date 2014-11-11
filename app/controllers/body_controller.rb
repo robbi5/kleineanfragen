@@ -5,6 +5,8 @@ class BodyController < ApplicationController
     @terms = Paper.where(body: @body).group(:legislative_term).count.to_a.sort.reverse
   end
 
+  private
+
   def find_body
     @body = Body.friendly.find params[:body]
 

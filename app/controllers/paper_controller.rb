@@ -5,9 +5,11 @@ class PaperController < ApplicationController
   before_filter :redirect_old_slugs, only: [:show]
 
   def show
-    respond_to do |format|
-      format.html
-      format.pdf { redirect_to @paper.url }
+    if stale?(@paper, public: true)
+      respond_to do |format|
+        format.html
+        format.pdf { redirect_to @paper.url }
+      end
     end
   end
 
@@ -76,6 +78,7 @@ class PaperController < ApplicationController
               .order(published_at: :desc, reference: :desc)
               .page(params[:page])
     @recent = @papers.to_a.group_by(&:published_at)
+    fresh_when last_modified: @papers.maximum(:updated_at), public: true
   end
 
   private
