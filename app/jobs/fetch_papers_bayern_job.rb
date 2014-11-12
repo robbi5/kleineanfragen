@@ -1,8 +1,9 @@
 class FetchPapersBayernJob < FetchPapersJob
 
   @state = 'BY'
+  @scraper = BayernLandtagScraper
 
-  def self.perform(*params)
+  def perform(legislative_term = 17)
     super
 
     import_new_papers
@@ -13,27 +14,19 @@ class FetchPapersBayernJob < FetchPapersJob
     extract_people_names
   end
 
-  def self.import_new_papers
-    (1...5).each do |page|
-      found_new_paper = false
-      result = BayernLandtagScraper::Overview.new.scrape(page)
-      result.each do |item|
-        item.delete :full_reference
-        unless Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
-          puts "Got new Paper: [#{item[:reference]}] \"#{item[:title]}\""
-          paper = Paper.new(item)
-          paper.body = @body
-          paper.save
-          found_new_paper = true
-        end
-      end
-      if !found_new_paper
-        break
-      end
+  def import_paper(item)
+    item.delete :full_reference
+    unless Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
+      puts "Got new Paper: [#{item[:reference]}] \"#{item[:title]}\""
+      paper = Paper.new(item)
+      paper.body = @body
+      paper.save
+      return paper
     end
+    false
   end
 
-  def self.load_paper_details
+  def load_paper_details
     @papers = Paper.find_by_sql(
       ["SELECT p.* FROM papers p LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id) WHERE p.body_id = ? AND o.id IS NULL", @body.id])
 
@@ -50,7 +43,7 @@ class FetchPapersBayernJob < FetchPapersJob
   end
 
   # FIXME: cleanup
-  def self.extract_people_names
+  def extract_people_names
     @papers = Paper.find_by_sql(
       ["SELECT p.* FROM papers p LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id AND o.originator_type = 'Person') WHERE p.body_id = ? AND o.id IS NULL", @body.id])
 

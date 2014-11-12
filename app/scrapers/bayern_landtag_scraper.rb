@@ -7,21 +7,29 @@ module BayernLandtagScraper
   class Overview
     SEARCH_URL = BASE_URL + '/webangebot1/dokumente.suche.maske.jsp?DOKUMENT_TYPE=EXTENDED&STATE=SHOW_MASK'
 
-    def initialize
+    def initialize(legislative_term)
+      @legislative_term = legislative_term
       @per_page = 50
     end
 
     def scrape(page = 1)
+      mp = search(page)
+      extract(mp)
+    end
+
+    def search(page)
       m = Mechanize.new
       mp = m.get SEARCH_URL
       search_form = mp.form 'suche'
-      legislative_term = search_form.field_with(name: 'DOKUMENT_INTEGER_WAHLPERIODE').value
+      search_form.field_with(name: 'DOKUMENT_INTEGER_WAHLPERIODE').value = @legislative_term
       search_form.field_with(name: 'DOKUMENT_VORGANGSART').options.find { |opt| opt.text.include? "Schriftliche Anfrage" }.select
       search_form.field_with(name: 'DOKUMENT_INTEGER_TREFFERANZAHL').value = @per_page
       search_form.add_field!('DOKUMENT_INTEGER_RESULT_START_INDEX', @per_page * (page - 1)) if page > 1
       submit_button = search_form.submits.find { |btn| btn.value == 'Suche starten' }
-      mp = m.submit(search_form, submit_button)
+      m.submit(search_form, submit_button)
+    end
 
+    def extract(mp)
       papers = []
       mp.search('//table[not(contains(@class, "marg_"))]//tr[not(contains(@class, "clr_listhead"))]/td/b').each do |item|
         meta_element = item
@@ -42,7 +50,7 @@ module BayernLandtagScraper
         title = title_el.text.gsub(/\s+/, ' ').strip.gsub(/\n/, '-').gsub('... [mehr]', '').gsub('[weniger]', '').strip
 
         papers << {
-          :legislative_term => legislative_term,
+          :legislative_term => @legislative_term,
           :full_reference => full_reference,
           :reference => reference,
           :published_at => published_at,

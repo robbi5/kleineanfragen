@@ -2,7 +2,7 @@ class FetchPapersBrandenburgJob < FetchPapersJob
 
   @state = 'BB'
 
-  def self.perform(*params)
+  def perform(*params)
     super
 
     import_new_papers
@@ -11,7 +11,7 @@ class FetchPapersBrandenburgJob < FetchPapersJob
     count_page_numbers
   end
 
-  def self.import_new_papers
+  def import_new_papers
     result = BrandenburgLandtagScraper::Overview.new.scrape
     result.each do |item|
       item[:reference] = item[:full_reference].split("/").last

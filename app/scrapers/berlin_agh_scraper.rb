@@ -7,6 +7,8 @@ module BerlinAghScraper
   class Overview
     SEARCH_URL = BASE_URL + '/starweb/AHAB/servlet.starweb?path=AHAB/lisshfl.web&id=ahabfastlink&search=WP%3d17+AND+%28etyp%3dschriftl%2a%29&format=WEBVORGLFL'
 
+    # FIXME: add support for pagination
+
     def scrape
       m = Mechanize.new
       mp = m.get SEARCH_URL
