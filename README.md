@@ -14,7 +14,6 @@ For extracting text from pdfs:
 * GraphicsMagick
 * Poppler
 * Ghostscript
-* Tesseract
 
 For installation of these, see http://documentcloud.github.io/docsplit/#installation
 
@@ -23,4 +22,4 @@ Jobs
 
 Currently only one job:
 
-`rails r "FetchPapersBayernJob.perform"`
+`rails r "FetchPapersBayernJob.new.perform"`

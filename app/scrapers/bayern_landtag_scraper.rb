@@ -4,7 +4,7 @@ require 'date'
 module BayernLandtagScraper
   BASE_URL = 'http://www1.bayern.landtag.de'
 
-  class Overview
+  class Overview < Scraper
     SEARCH_URL = BASE_URL + '/webangebot1/dokumente.suche.maske.jsp?DOKUMENT_TYPE=EXTENDED&STATE=SHOW_MASK'
 
     def initialize(legislative_term)
@@ -17,8 +17,26 @@ module BayernLandtagScraper
       extract(mp)
     end
 
+    def scrape_all
+      page = 1
+      has_next_page = false
+      papers = []
+      begin
+        has_next_page = false
+        mp = search(page)
+        Rails.logger.debug "[scrape_all] page: #{page}"
+        papers.concat extract(mp)
+        if mp.search('//div[contains(@class, "cbox_content")]//a[contains(text(), "nächste Treffer")]').size > 0
+          page += 1
+          has_next_page = true
+        end
+      end while has_next_page
+      Rails.logger.debug "[scrape_all] done extracting, #{papers.size} papers"
+      papers
+    end
+
     def search(page)
-      m = Mechanize.new
+      m = mechanize
       mp = m.get SEARCH_URL
       search_form = mp.form 'suche'
       search_form.field_with(name: 'DOKUMENT_INTEGER_WAHLPERIODE').value = @legislative_term
@@ -31,6 +49,7 @@ module BayernLandtagScraper
 
     def extract(mp)
       papers = []
+      i = 0
       mp.search('//table[not(contains(@class, "marg_"))]//tr[not(contains(@class, "clr_listhead"))]/td/b').each do |item|
         meta_element = item
         row = item.parent.parent
@@ -38,6 +57,8 @@ module BayernLandtagScraper
         full_reference = meta_element.text.match(/Nr. ([\d\/]+)/)[1]
         reference = full_reference.split('/').last
         published_at = Date.parse(meta_element.text.match(/([\d\.]+)$/)[1])
+
+        Rails.logger.debug "[extract] item #{i+=1}: #{full_reference}"
 
         link_el = row.at_css('a')
         next if warn_broken(link_el.nil?, 'link_el not found', item)
@@ -72,7 +93,7 @@ module BayernLandtagScraper
     end
   end
 
-  class Detail
+  class Detail < Scraper
     SEARCH_URL = BASE_URL + '/webangebot1/dokumente.suche.maske.jsp?STATE=SHOW_MASK&BUTTONSCHLAGWORT=Suche+starten&DOKUMENT_DOKUMENTNR='
 
     def initialize(legislative_term, reference)
@@ -85,8 +106,7 @@ module BayernLandtagScraper
     end
 
     def scrape
-      m = Mechanize.new
-      mp = m.get SEARCH_URL + CGI.escape(full_reference)
+      mp = mechanize.get SEARCH_URL + CGI.escape(full_reference)
       mp = mp.link_with(href: /\#LASTFOLDER$/).click
       data = mp.search '//div/table//table[1]//td[2]'
 
@@ -102,4 +122,3 @@ end
 #   puts BayernLandtagScraper::Overview.new.scrape.inspect
 #   puts BayernLandtagScraper::Detail.new(17, 2000).scrape.inspect
 ###
-

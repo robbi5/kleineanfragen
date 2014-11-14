@@ -6,7 +6,11 @@ class FetchPapersJob
     attr_accessor :state, :scraper
   end
 
-  def perform(legislative_term) # FIXME
+  def perform(legislative_term)
+    setup(legislative_term)
+  end
+
+  def setup(legislative_term) # FIXME
     raise 'State is not defined' unless defined?(self.class.state) && !self.class.state.blank?
     @body = Body.find_by(state: self.class.state)
     raise 'Required body "' + self.class.state + '" not found' if @body.nil?
@@ -29,6 +33,16 @@ class FetchPapersJob
       end
       page += 1
     end while found_new_paper
+  end
+
+  def import_all_papers
+    raise 'scraper is not defined' unless defined?(self.class.scraper) && !self.class.scraper.blank?
+    scraper = self.class.scraper::Overview.new(@legislative_term)
+    i = 0
+    scraper.scrape_all.each do |item|
+      Rails.logger.debug "[import_all_papers] item #{i+=1}: #{item[:full_reference]}"
+      import_paper(item)
+    end
   end
 
   def download_papers

@@ -4,7 +4,7 @@ class FetchPapersBayernJob < FetchPapersJob
   @scraper = BayernLandtagScraper
 
   def perform(legislative_term = 17)
-    super
+    setup(legislative_term)
 
     import_new_papers
     load_paper_details
@@ -14,10 +14,15 @@ class FetchPapersBayernJob < FetchPapersJob
     extract_people_names
   end
 
+  def import_all(legislative_term = 17)
+    setup(legislative_term)
+    import_all_papers
+  end
+
   def import_paper(item)
     item.delete :full_reference
     unless Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
-      puts "Got new Paper: [#{item[:reference]}] \"#{item[:title]}\""
+      Rails.logger.debug "[import_paper]  New Paper: [#{item[:reference]}] \"#{item[:title]}\""
       paper = Paper.new(item)
       paper.body = @body
       paper.save
