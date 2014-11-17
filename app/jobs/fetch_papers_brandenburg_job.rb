@@ -19,7 +19,7 @@ class FetchPapersBrandenburgJob < FetchPapersJob
       item.delete :full_reference
       item.delete :originators
       unless Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
-        puts "Got new Paper: [#{item[:reference]}] \"#{item[:title]}\""
+        Rails.logger.info "Got new Paper: [#{item[:reference]}] \"#{item[:title]}\""
         paper = Paper.new(item)
         paper.body = @body
         paper.save
@@ -28,7 +28,7 @@ class FetchPapersBrandenburgJob < FetchPapersJob
         unless originators[:party].nil?
           party = originators[:party]
           org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
-          puts "- [O] Party: #{org.name}"
+          Rails.logger.info "- [O] Party: #{org.name}"
           unless paper.originator_organizations.include? org
             paper.originator_organizations << org
             paper.save
@@ -38,7 +38,7 @@ class FetchPapersBrandenburgJob < FetchPapersJob
         originators[:people].split(',').each do |name|
           # person
           person = Person.where('lower(name) = ?', name.mb_chars.downcase.to_s).first_or_create(name: name)
-          puts "- [O] Person: #{person.name}"
+          Rails.logger.info "- [O] Person: #{person.name}"
           unless paper.originator_people.include? person
             paper.originator_people << person
             paper.save

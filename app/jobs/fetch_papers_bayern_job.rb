@@ -36,10 +36,10 @@ class FetchPapersBayernJob < FetchPapersJob
       ["SELECT p.* FROM papers p LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id) WHERE p.body_id = ? AND o.id IS NULL", @body.id])
 
     @papers.each do |paper|
-      puts "Loading details for Paper [#{paper.reference}]"
+      Rails.logger.info "Loading details for Paper [#{paper.reference}]"
       detail = BayernLandtagScraper::Detail.new(paper.legislative_term, paper.reference).scrape
       org = Organization.where('lower(name) = ?', detail[:originator].mb_chars.downcase.to_s).first_or_create(name: detail[:originator])
-      puts "- Originator: #{org.name}"
+      Rails.logger.info "- Originator: #{org.name}"
       unless paper.originator_organizations.include? org
         paper.originator_organizations << org
         paper.save

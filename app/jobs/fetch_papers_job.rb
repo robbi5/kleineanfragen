@@ -94,7 +94,7 @@ class FetchPapersJob
 
     @papers.each do |paper|
       get_or_download_pdf(paper)
-      puts "Extracting text from [#{paper.reference}] \"#{paper.title}\""
+      Rails.logger.info "Extracting text from [#{paper.reference}] \"#{paper.title}\""
       text = paper.extract_text
       paper.contents = text
       paper.save
@@ -106,7 +106,7 @@ class FetchPapersJob
 
     @papers.each do |paper|
       get_or_download_pdf(paper)
-      puts "Counting pages in [#{paper.reference}] \"#{paper.title}\""
+      Rails.logger.info "Counting pages in [#{paper.reference}] \"#{paper.title}\""
       count = paper.extract_page_count
       paper.page_count = count
       paper.save
