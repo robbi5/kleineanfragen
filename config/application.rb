@@ -25,7 +25,10 @@ module Kleineanfrage
     config.i18n.available_locales = :de
     config.i18n.default_locale = :de
 
+    # applicaton config:
     # path for storing paper pdfs
     config.paper_storage = Rails.root.join('data')
+    # User-Agent for scraping and download
+    config.user_agent = 'kleineanfragen-scraper (scraper@kleineanfragen.de)'
   end
 end

@@ -48,19 +48,36 @@ class FetchPapersJob
   def download_papers
     @papers = Paper.where(body: @body, downloaded_at: nil).limit(50)
 
+    sess = Patron::Session.new
+    # sess.timeout = 15
+    sess.headers['User-Agent'] = Rails.application.config.user_agent
+
     @data_folder = Rails.application.config.paper_storage
     @papers.each do |paper|
       folder = @data_folder.join(@body.folder_name, paper.legislative_term.to_s)
       FileUtils.mkdir_p folder
       filename = paper.reference.to_s + '.pdf'
-      path = folder.join(filename)
-      `wget -O "#{path}" "#{paper.url}"` # FIXME: use ruby
-      if $?.to_i == 0 && File.exists?(path)
-        paper.downloaded_at = DateTime.now
-        paper.save
-      else
+      filepath = folder.join(filename)
+
+      resp = sess.get(paper.url)
+      if resp.status != 200
         puts "Download failed for Paper #{paper.reference}"
+        next
       end
+
+      # TODO: use fog
+      f = File.open(filepath, 'wb')
+      begin
+        f.write(resp.body)
+      rescue
+        puts "Cannot write file for Paper #{paper.reference}"
+        next
+      ensure
+        f.close if f
+      end
+
+      paper.downloaded_at = DateTime.now
+      paper.save
     end
   end
 
