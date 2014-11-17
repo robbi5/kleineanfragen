@@ -53,6 +53,7 @@ class FetchPapersBayernJob < FetchPapersJob
       ["SELECT p.* FROM papers p LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id AND o.originator_type = 'Person') WHERE p.body_id = ? AND o.id IS NULL", @body.id])
 
     @papers.each do |paper|
+      get_or_download_pdf(paper)
       originators = BayernPDFExtractor.new(paper).extract
       next if originators.nil?
 

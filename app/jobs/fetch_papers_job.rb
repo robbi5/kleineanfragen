@@ -47,35 +47,43 @@ class FetchPapersJob
 
   def download_papers
     @papers = Paper.where(body: @body, downloaded_at: nil).limit(50)
+    session = patron_session
+    @papers.each do |paper|
+      download_paper(paper, session)
+    end
+  end
 
+  def patron_session
     sess = Patron::Session.new
     # sess.timeout = 15
     sess.headers['User-Agent'] = Rails.application.config.user_agent
+    sess
+  end
 
-    @data_folder = Rails.application.config.paper_storage
-    @papers.each do |paper|
-      folder = @data_folder.join(@body.folder_name, paper.legislative_term.to_s)
-      FileUtils.mkdir_p folder
-      filename = paper.reference.to_s + '.pdf'
-      filepath = folder.join(filename)
+  def download_paper(paper, session = nil)
+    session ||= patron_session
+    filepath = paper.path
+    folder = filepath.dirname
+    FileUtils.mkdir_p folder
 
-      resp = sess.get(paper.url)
-      if resp.status != 200
-        puts "Download failed for Paper #{paper.reference}"
-        next
-      end
+    resp = session.get(paper.url)
+    if resp.status != 200
+      Rails.logger.debug "Download failed for Paper #{paper.reference}"
+      return
+    end
 
-      # TODO: use fog
-      f = File.open(filepath, 'wb')
-      begin
-        f.write(resp.body)
-      rescue
-        puts "Cannot write file for Paper #{paper.reference}"
-        next
-      ensure
-        f.close if f
-      end
+    # TODO: use fog
+    f = File.open(filepath, 'wb')
+    begin
+      f.write(resp.body)
+    rescue
+      Rails.logger.debug "Cannot write file for Paper #{paper.reference}"
+      return
+    ensure
+      f.close if f
+    end
 
+    if paper.downloaded_at.nil?
       paper.downloaded_at = DateTime.now
       paper.save
     end
@@ -85,6 +93,7 @@ class FetchPapersJob
     @papers = Paper.where(body: @body, contents: nil).where.not(downloaded_at: nil)
 
     @papers.each do |paper|
+      get_or_download_pdf(paper)
       puts "Extracting text from [#{paper.reference}] \"#{paper.title}\""
       text = paper.extract_text
       paper.contents = text
@@ -96,10 +105,16 @@ class FetchPapersJob
     @papers = Paper.where(body: @body, page_count: nil).where.not(downloaded_at: nil)
 
     @papers.each do |paper|
+      get_or_download_pdf(paper)
       puts "Counting pages in [#{paper.reference}] \"#{paper.title}\""
       count = paper.extract_page_count
       paper.page_count = count
       paper.save
     end
+  end
+
+  def get_or_download_pdf(paper)
+    download_paper(paper) unless File.exist? paper.path
+    paper.path
   end
 end
