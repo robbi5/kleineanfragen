@@ -73,7 +73,6 @@ class FetchPapersJob
       return
     end
 
-    # TODO: use fog
     f = File.open(filepath, 'wb')
     begin
       f.write(resp.body)

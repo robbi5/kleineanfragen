@@ -17,4 +17,4 @@ test:
 production:
   <<: *credentials
   host: s3.kleine-anfragen.de
-  bucket: ka
+  bucket: ka-prod
