@@ -1,0 +1,20 @@
+credentials: &credentials
+  provider: AWS
+  aws_access_key_id: <%= ENV['S3_ACCESS_KEY'] %>
+  aws_secret_access_key: <%= ENV['S3_SECRET_KEY'] %>
+  path_style: true
+
+development:
+  <<: *credentials
+  host: matecluster
+  bucket: ka-dev
+
+test:
+  <<: *credentials
+  host: matecluster
+  bucket: ka-test
+
+production:
+  <<: *credentials
+  host: s3.kleine-anfragen.de
+  bucket: ka

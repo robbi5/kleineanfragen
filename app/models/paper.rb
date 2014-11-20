@@ -50,7 +50,6 @@ class Paper < ActiveRecord::Base
     }
   end
 
-
   def full_reference
     legislative_term.to_s + '/' + reference.to_s
   end
@@ -64,13 +63,21 @@ class Paper < ActiveRecord::Base
   end
 
   def path
-    Rails.application.config.paper_storage.join(body.folder_name, legislative_term.to_s, reference.to_s + '.pdf')
+    File.join(body.folder_name, legislative_term.to_s, reference.to_s + '.pdf')
+  end
+
+  def local_path
+    Rails.application.config.paper_storage.join(path)
+  end
+
+  def public_url
+    FogStorageBucket.files.head(path).try(:public_url)
   end
 
   def extract_text
     tempdir = Dir.mktmpdir
 
-    Docsplit.extract_text(path, :ocr => false, :output => tempdir)
+    Docsplit.extract_text(local_path, :ocr => false, :output => tempdir)
     resultfile = "#{tempdir}/#{reference.to_s}.txt"
     return false unless File.exists?(resultfile)
 
@@ -80,6 +87,6 @@ class Paper < ActiveRecord::Base
   end
 
   def extract_page_count
-    Docsplit.extract_length path
+    Docsplit.extract_length local_path
   end
 end

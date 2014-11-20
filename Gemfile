@@ -52,7 +52,7 @@ gem 'mechanize',  '~> 2.7.2'
 gem 'friendly_id', '~> 5.0.0'
 
 # fix urls while scraping
-gem 'addressable', '~> 2.3.6', require: "addressable/uri"
+gem 'addressable', '~> 2.3.6', require: 'addressable/uri'
 
 # styling
 gem 'bootstrap-sass', '~> 3.2.0'
@@ -67,3 +67,6 @@ gem 'docsplit', '~> 0.7.5'
 # search!
 gem 'searchkick', '~> 0.8.3'
 gem 'patron', '~> 0.4.18'
+
+# storage
+gem 'fog', '~> 1.24.0'

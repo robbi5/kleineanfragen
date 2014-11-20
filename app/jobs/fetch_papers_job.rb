@@ -50,6 +50,7 @@ class FetchPapersJob
     session = patron_session
     @papers.each do |paper|
       download_paper(paper, session)
+      store_paper(paper)
     end
   end
 
@@ -62,7 +63,7 @@ class FetchPapersJob
 
   def download_paper(paper, session = nil)
     session ||= patron_session
-    filepath = paper.path
+    filepath = paper.local_path
     folder = filepath.dirname
     FileUtils.mkdir_p folder
 
@@ -87,6 +88,13 @@ class FetchPapersJob
       paper.downloaded_at = DateTime.now
       paper.save
     end
+  end
+
+  def store_paper(paper)
+    return false unless FogStorageBucket.files.head(paper.path).nil?
+    local_path = get_or_download_pdf(paper)
+    file = FogStorageBucket.files.new({ key: paper.path, public: true, body: File.open(local_path) })
+    file.save
   end
 
   def extract_text_from_papers
@@ -114,7 +122,7 @@ class FetchPapersJob
   end
 
   def get_or_download_pdf(paper)
-    download_paper(paper) unless File.exist? paper.path
-    paper.path
+    download_paper(paper) unless File.exist? paper.local_path
+    paper.local_path
   end
 end

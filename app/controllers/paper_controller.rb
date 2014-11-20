@@ -14,19 +14,9 @@ class PaperController < ApplicationController
   end
 
   def downloaded_pdf
-    if request.headers["HTTP_ORIGIN"] # FIXME
-      headers['Access-Control-Allow-Origin'] = request.headers["HTTP_ORIGIN"]
-      headers['Access-Control-Expose-Headers'] = 'ETag, Accept-Ranges'
-      headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS, HEAD'
-    end
-
-    if @paper.downloaded_at.nil? || !File.exists?(@paper.path)
-      render plain: "404 Not Found", status: 404
-      return
-    end
-
-    response.headers["X-Notice"] = "Please do not link this url, it is for embedding only"
-    send_file @paper.path, filename: "#{@paper.reference}-embed.pdf", type: "application/pdf"
+    public_url = @paper.public_url
+    return render status: 404 if @paper.downloaded_at.nil? || public_url.nil?
+    redirect_to public_url
   end
 
   def search
