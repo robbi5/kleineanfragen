@@ -31,13 +31,6 @@
     </p>
   </div>
   <div class="col-md-9 col-md-pull-3">
-    <% if !@paper.downloaded_at.nil? %>
-    <iframe src="https://mozilla.github.io/pdf.js/web/viewer.html?file=<%= @paper.public_url %>" width="100%" height="600px" frameborder="0"></iframe> <%# FIXME download and vendor pdf.js %>
-    <% else %>
-    <p>
-      Leider kann für diese Anfrage noch keine Vorschau angezeigt werden.<br/>
-      <%= link_to 'PDF herunterladen', paper_path(@body, @legislative_term, @paper, {format: :pdf}), {class: 'btn btn-primary'} %>
-    </p>
-    <% end %>
+    <iframe src="<%= paper_pdf_viewer_path %>" width="100%" height="600px" frameborder="0"></iframe> <%# FIXME download and vendor pdf.js %>
   </div>
 </div>

@@ -1,7 +1,7 @@
 class PaperController < ApplicationController
-  before_filter :find_body, only: [:show, :downloaded_pdf]
-  before_filter :find_legislative_term, only: [:show, :downloaded_pdf]
-  before_filter :find_paper, only: [:show, :downloaded_pdf]
+  before_filter :find_body, only: [:show, :viewer]
+  before_filter :find_legislative_term, only: [:show, :viewer]
+  before_filter :find_paper, only: [:show, :viewer]
   before_filter :redirect_old_slugs, only: [:show]
 
   def show
@@ -13,10 +13,10 @@ class PaperController < ApplicationController
     end
   end
 
-  def downloaded_pdf
+  def viewer
     public_url = @paper.public_url
-    return render status: 404 if @paper.downloaded_at.nil? || public_url.nil?
-    redirect_to public_url
+    return redirect_to "https://mozilla.github.io/pdf.js/web/viewer.html?file=#{public_url}" unless @paper.downloaded_at.nil? || public_url.blank?
+    render layout: false
   end
 
   def search
