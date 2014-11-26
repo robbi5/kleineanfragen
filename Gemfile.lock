@@ -29,9 +29,9 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.3.6)
     arel (5.0.1.20140414130214)
-    autoprefixer-rails (3.1.0.20140911)
+    autoprefixer-rails (4.0.1)
       execjs
-    bootstrap-sass (3.2.0.0)
+    bootstrap-sass (3.3.1.0)
       sass (~> 3.2)
     builder (3.2.2)
     coffee-rails (4.0.1)
@@ -219,8 +219,8 @@ PLATFORMS
 
 DEPENDENCIES
   addressable (~> 2.3.6)
-  autoprefixer-rails (~> 3.1.0)
-  bootstrap-sass (~> 3.2.0)
+  autoprefixer-rails (~> 4.0.1)
+  bootstrap-sass (~> 3.3.1.0)
   coffee-rails (~> 4.0.0)
   docsplit (~> 0.7.5)
   fog (~> 1.24.0)
