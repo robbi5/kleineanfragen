@@ -11,8 +11,6 @@ class BodyController < ApplicationController
     @body = Body.friendly.find params[:body]
 
     # Add support for renamed slugs
-    if request.path != body_path(@body)
-      return redirect_to @body, :status => :moved_permanently
-    end
+    return redirect_to @body, status: :moved_permanently if request.path != body_path(@body)
   end
 end

@@ -1,5 +1,4 @@
 class FetchPapersBayernJob < FetchPapersJob
-
   @state = 'BY'
   @scraper = BayernLandtagScraper
 
@@ -33,9 +32,9 @@ class FetchPapersBayernJob < FetchPapersJob
 
   def load_paper_details
     @papers = Paper.find_by_sql(
-      ["SELECT p.* FROM papers p LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id) WHERE p.body_id = ? AND o.id IS NULL", @body.id])
+      ['SELECT p.* FROM papers p LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id) WHERE p.body_id = ? AND o.id IS NULL', @body.id])
 
-    @papers.each do |paper|
+    @papers.find_each do |paper|
       Rails.logger.info "Loading details for Paper [#{paper.reference}]"
       detail = BayernLandtagScraper::Detail.new(paper.legislative_term, paper.reference).scrape
       org = Organization.where('lower(name) = ?', detail[:originator].mb_chars.downcase.to_s).first_or_create(name: detail[:originator])
@@ -52,12 +51,12 @@ class FetchPapersBayernJob < FetchPapersJob
     @papers = Paper.find_by_sql(
       ["SELECT p.* FROM papers p LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id AND o.originator_type = 'Person') WHERE p.body_id = ? AND o.id IS NULL", @body.id])
 
-    @papers.each do |paper|
+    @papers.find_each do |paper|
       get_or_download_pdf(paper)
       originators = BayernPDFExtractor.new(paper).extract
       next if originators.nil?
 
-      if !originators[:party].empty?
+      unless originators[:party].empty?
         # write org
         party = originators[:party]
         org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
@@ -67,7 +66,7 @@ class FetchPapersBayernJob < FetchPapersJob
         end
       end
 
-      if !originators[:people].empty?
+      unless originators[:people].empty?
         # write people
         originators[:people].each do |name|
           person = Person.where('lower(name) = ?', name.mb_chars.downcase.to_s).first_or_create(name: name)

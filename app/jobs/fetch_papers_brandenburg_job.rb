@@ -1,5 +1,4 @@
 class FetchPapersBrandenburgJob < FetchPapersJob
-
   @state = 'BB'
 
   def perform(*params)
@@ -14,35 +13,35 @@ class FetchPapersBrandenburgJob < FetchPapersJob
   def import_new_papers
     result = BrandenburgLandtagScraper::Overview.new.scrape
     result.each do |item|
-      item[:reference] = item[:full_reference].split("/").last
+      item[:reference] = item[:full_reference].split('/').last
       originators = item[:originators]
       item.delete :full_reference
       item.delete :originators
-      unless Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
-        Rails.logger.info "Got new Paper: [#{item[:reference]}] \"#{item[:title]}\""
-        paper = Paper.new(item)
-        paper.body = @body
-        paper.save
+      next if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
 
-        # party
-        unless originators[:party].nil?
-          party = originators[:party]
-          org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
-          Rails.logger.info "- [O] Party: #{org.name}"
-          unless paper.originator_organizations.include? org
-            paper.originator_organizations << org
-            paper.save
-          end
+      Rails.logger.info "Got new Paper: [#{item[:reference]}] \"#{item[:title]}\""
+      paper = Paper.new(item)
+      paper.body = @body
+      paper.save
+
+      # party
+      unless originators[:party].nil?
+        party = originators[:party]
+        org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
+        Rails.logger.info "- [O] Party: #{org.name}"
+        unless paper.originator_organizations.include? org
+          paper.originator_organizations << org
+          paper.save
         end
+      end
 
-        originators[:people].split(',').each do |name|
-          # person
-          person = Person.where('lower(name) = ?', name.mb_chars.downcase.to_s).first_or_create(name: name)
-          Rails.logger.info "- [O] Person: #{person.name}"
-          unless paper.originator_people.include? person
-            paper.originator_people << person
-            paper.save
-          end
+      originators[:people].split(',').each do |name|
+        # person
+        person = Person.where('lower(name) = ?', name.mb_chars.downcase.to_s).first_or_create(name: name)
+        Rails.logger.info "- [O] Person: #{person.name}"
+        unless paper.originator_people.include? person
+          paper.originator_people << person
+          paper.save
         end
       end
     end

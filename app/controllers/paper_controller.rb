@@ -24,11 +24,11 @@ class PaperController < ApplicationController
     redirect_to root_url if @term.blank?
 
     query = Paper.search @term,
-              fields:['title^10', :contents],
-              page: params[:page],
-              per_page: 10,
-              highlight: {tag: "<mark>"},
-              execute: false
+                         fields: ['title^10', :contents],
+                         page: params[:page],
+                         per_page: 10,
+                         highlight: { tag: '<mark>' },
+                         execute: false
 
     # boost newer papers
     unboosted_query = query.body[:query]
@@ -40,31 +40,31 @@ class PaperController < ApplicationController
           {
             gauss: {
               published_at: {
-                scale: "4w"
+                scale: '4w'
               }
             }
           }
         ],
-        score_mode: "sum"
+        score_mode: 'sum'
       }
     }
 
-    query.body[:highlight][:fields]["contents.analyzed"] = {
-      "type" => "fvh",
-      "fragment_size" => 250,
-      "number_of_fragments" => 1,
-      "no_match_size" => 250
+    query.body[:highlight][:fields]['contents.analyzed'] = {
+      'type' => 'fvh',
+      'fragment_size' => 250,
+      'number_of_fragments' => 1,
+      'no_match_size' => 250
     }
     @papers = query.execute
   end
 
   def autocomplete
-    render json: Paper.search(params[:q], fields: [{title: :text_start}], limit: 5).map(&:autocomplete_data)
+    render json: Paper.search(params[:q], fields: [{ title: :text_start }], limit: 5).map(&:autocomplete_data)
   end
 
   def recent
     @days = 14
-    @papers = Paper.where("published_at >= ?", Date.today - @days.days)
+    @papers = Paper.where('published_at >= ?', Date.today - @days.days)
               .order(published_at: :desc, reference: :desc)
               .page(params[:page])
     @recent = @papers.to_a.group_by(&:published_at)
@@ -98,13 +98,13 @@ class PaperController < ApplicationController
 
   def find_paper_by_reference(reference)
     @paper = Paper.where(body: @body, legislative_term: @legislative_term, reference: reference).first
-    raise ActiveRecord::RecordNotFound if @paper.nil?
+    fail ActiveRecord::RecordNotFound if @paper.nil?
   end
 
   def redirect_old_slugs
-    canonical_path = paper_path(@body, @legislative_term, @paper, {format: mime_extension(request.format)})
+    canonical_path = paper_path(@body, @legislative_term, @paper, { format: mime_extension(request.format) })
     if request.path != canonical_path
-      return redirect_to canonical_path, :status => :moved_permanently
+      return redirect_to canonical_path, status: :moved_permanently
     end
   end
 end

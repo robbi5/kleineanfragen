@@ -8,7 +8,6 @@ module BerlinAghScraper
     SEARCH_URL = BASE_URL + '/starweb/AHAB/servlet.starweb?path=AHAB/lisshfl.web&id=ahabfastlink&search=WP%3d17+AND+%28etyp%3dschriftl%2a%29&format=WEBVORGLFL'
 
     # FIXME: add support for pagination
-
     def scrape
       m = Mechanize.new
       mp = m.get SEARCH_URL
@@ -19,9 +18,9 @@ module BerlinAghScraper
       papers = []
 
       body.search('//td[contains(@colspan, 3)]').each do |item|
-        titleEl = item.search('../following-sibling::tr[1]/td[2]/b')
-        next if titleEl.length == 0
-        title = titleEl.inner_html.gsub(/\<br\>/, ' ')
+        title_el = item.search('../following-sibling::tr[1]/td[2]/b')
+        next if title_el.length == 0
+        title = title_el.inner_html.gsub(/\<br\>/, ' ')
         container = item.search('../following-sibling::tr[4]/td[2]')
 
         # we hit the subtitle row
@@ -43,7 +42,7 @@ module BerlinAghScraper
         end
 
         originators = link.previous_element.previous.text
-        path = link.attributes["href"].value
+        path = link.attributes['href'].value
         full_reference = link.text.match(/([\d\/]+)/)[1]
         date = container.text.match(/.*vom ([\d\.]+)/m)[1]
         published_at = Date.parse(date)

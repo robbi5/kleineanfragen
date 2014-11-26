@@ -7,11 +7,11 @@ class ApplicationController < ActionController::Base
   def mime_extension(mime_type)
     case mime_type
     when Mime::HTML
-      ""
+      ''
     when Mime::PDF
-      "pdf"
+      'pdf'
     else
-      ""
+      ''
     end
   end
 end

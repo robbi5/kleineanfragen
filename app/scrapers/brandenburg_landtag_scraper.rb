@@ -5,7 +5,7 @@ module BrandenburgLandtagScraper
   BASE_URL = 'http://www.parldok.brandenburg.de'
 
   class Overview
-    #SEARCH_URL = BASE_URL + '/starweb/LTBB/servlet.starweb?path=LTBB/lisshfl.web&id=ltbbfastlink&search=WP%3d5+AND+%28DTYP%3dKleine+Anfrage%29&format=WEBVORGLFL'
+    # SEARCH_URL = BASE_URL + '/starweb/LTBB/servlet.starweb?path=LTBB/lisshfl.web&id=ltbbfastlink&search=WP%3d5+AND+%28DTYP%3dKleine+Anfrage%29&format=WEBVORGLFL'
     SEARCH_URL = BASE_URL + '/starweb/LTBB/servlet.starweb?path=LTBB/lisshfl.web&id=LTBBFASTLINK&search=TODAY%3dX+AND+WP%3d5+AND+%28DTYP%3dKleine+Anfrage%29&format=WEBVORGLFL'
 
     def scrape
@@ -21,14 +21,14 @@ module BrandenburgLandtagScraper
         link = item.at_css("a[href*='parladoku']")
         next if link.nil?
 
-        titleEl = item.at(".//th/../following-sibling::tr[1]/td[2]")
-        title = titleEl.text
+        title_el = item.at('.//th/../following-sibling::tr[1]/td[2]')
+        title = title_el.text
 
         row = link.previous.text
         data = row.strip.match(/(.+) \((.+)\)\s+([\d\.]+) Drs$/)
-        path = link.attributes["href"].value
+        path = link.attributes['href'].value
         full_reference = link.text
-        originators = {people: data[1], party: data[2]}
+        originators = { people: data[1], party: data[2] }
         date = data[3]
         published_at = Date.parse(date)
 
