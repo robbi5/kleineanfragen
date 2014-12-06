@@ -51,7 +51,7 @@ class FetchPapersJob
     @papers = Paper.where(body: @body, downloaded_at: nil).limit(50)
     session = patron_session
     @papers.find_each do |paper|
-      Rails.logger.debug "[download_papers] #{paper[:full_reference]}"
+      Rails.logger.debug "[download_papers] #{@body.state} #{paper.full_reference}"
       download_paper(paper, session)
       store_paper(paper)
     end
