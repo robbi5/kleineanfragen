@@ -37,11 +37,13 @@ class FetchPapersBayernJob < FetchPapersJob
     @papers.each do |paper|
       Rails.logger.info "Loading details for Paper [#{paper.reference}]"
       detail = BayernLandtagScraper::Detail.new(paper.legislative_term, paper.reference).scrape
-      org = Organization.where('lower(name) = ?', detail[:originator].mb_chars.downcase.to_s).first_or_create(name: detail[:originator])
-      Rails.logger.info "- Originator: #{org.name}"
-      unless paper.originator_organizations.include? org
-        paper.originator_organizations << org
-        paper.save
+      detail[:originators][:parties].each do |originator|
+        org = Organization.where('lower(name) = ?', originator.mb_chars.downcase.to_s).first_or_create(name: originator)
+        Rails.logger.info "- Originator: #{org.name}"
+        unless paper.originator_organizations.include? org
+          paper.originator_organizations << org
+          paper.save
+        end
       end
     end
   end
@@ -56,7 +58,7 @@ class FetchPapersBayernJob < FetchPapersJob
       originators = BayernPDFExtractor.new(paper).extract
       next if originators.nil?
 
-      unless originators[:party].empty?
+      unless originators[:party].blank?
         # write org
         party = originators[:party]
         org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
@@ -66,7 +68,7 @@ class FetchPapersBayernJob < FetchPapersJob
         end
       end
 
-      unless originators[:people].empty?
+      unless originators[:people].blank?
         # write people
         originators[:people].each do |name|
           person = Person.where('lower(name) = ?', name.mb_chars.downcase.to_s).first_or_create(name: name)

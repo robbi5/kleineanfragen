@@ -1,6 +1,13 @@
+require 'resque/server'
+
 Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
+
+  resque_web_constraint = ->(_req, _) { Rails.env.development? }
+  constraints resque_web_constraint do
+    mount Resque::Server.new, at: '/resque'
+  end
 
   get 'search' => 'paper#search'
   get 'search/autocomplete' => 'paper#autocomplete'
@@ -31,5 +38,4 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'site#index'
-
 end

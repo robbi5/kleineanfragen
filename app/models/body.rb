@@ -13,4 +13,13 @@ class Body < ActiveRecord::Base
   def should_generate_new_friendly_id?
     name_changed? || super
   end
+
+  def scraper
+    case state
+    when 'BY' then BayernLandtagScraper
+    when 'BE' then BerlinAghScraper
+    when 'BB' then BrandenburgLandtagScraper
+    else nil
+    end
+  end
 end

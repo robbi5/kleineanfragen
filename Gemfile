@@ -75,3 +75,7 @@ gem 'patron', '~> 0.4.18'
 # pinned to 1.24.0 until radosgw speaks AWS Signature v4
 # or a fallback is available: https://github.com/fog/fog/issues/3299
 gem 'fog', '1.24.0'
+
+# jobs
+gem 'activejob_backport', '~> 0.0.3'
+gem 'resque', '~> 1.25.2'

@@ -108,11 +108,22 @@ module BayernLandtagScraper
     def scrape
       mp = mechanize.get SEARCH_URL + CGI.escape(full_reference)
       mp = mp.link_with(href: /\#LASTFOLDER$/).click
-      data = mp.search '//div/table//table[1]//td[2]'
+      table = mp.search('//div/table//table[1]').first
+      data = mp.search('//div/table//table[1]//td[2]').first
 
-      originator = data[0].inner_html.strip
+      title_el = table.parent.parent.previous_element.search('./td[3]')
+      title = title_el.text.gsub(/\s+/, ' ').strip.gsub(/\n/, '-').gsub('... [mehr]', '').gsub('[weniger]', '').strip
 
-      { originator: originator }
+      party = data.inner_html.strip
+      {
+        legislative_term: @legislative_term,
+        full_reference: full_reference,
+        reference: @reference,
+        title: title,
+        # published_at: published_at, # FIXME
+        # url: url, # FIXME
+        originators: { parties: [party] }
+      }
     end
   end
 end
