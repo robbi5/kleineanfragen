@@ -6,18 +6,27 @@ class BayernPDFExtractor
   def extract
     return nil if @contents.nil?
     people = []
-    party = ''
-    # if m = @contents.match(/Abgeordneten ([\D\n]+?)\s([[:upper:] \d\/]+)/m)
-    if m = @contents.match(/Abgeordneten ([\D\n]+?)\s(\p{Lu}[\p{Lu} \d\/]+)\b/m)
-      person = m[1]
-      person = person.gsub("\n", '').gsub(' und', ', ')
+    parties = []
+    [
+      /Abgeordneten ([\D\n]+?)\s(\p{Lu}[\p{Lu} \d\/]+)\b/m,
+      /Abgeordneten ([\D\n]+?)\p{Zs}(\p{Lu}[\p{Lu} \d\/]+)\b/m,
+      /Abgeordneten ([\D\n]+?)\n(\p{Lu}[\p{Ll}\p{Lu} \d\/]+)\b/m,
+      # /Abgeordneten ([\D\n]+?)\s([[:upper:] \d\/]+)/m
+    ].each do |regex|
+      m = @contents.match(regex)
+      next unless m
+
+      person = m[1].gsub(/\p{Zs}/, ' ').gsub("\n", '').gsub(' und', ', ')
       if person.include?(',')
-        people = person.split(',').map(&:strip)
+        people.concat person.split(',').map(&:strip)
       else
-        people = [person]
+        people << person
       end
-      party = m[2]
+      parties << m[2]
+
+      # only one regex must match
+      break
     end
-    { people: people, party: party }
+    { people: people, parties: parties }
   end
 end

@@ -2,6 +2,12 @@ class FetchPapersBayernJob < FetchPapersJob
   @state = 'BY'
   @scraper = BayernLandtagScraper
 
+
+#
+# https://www1.bayern.landtag.de/webangebot1/dokumente.suche.maske.jsp?STATE=SHOW_MASK&DOKUMENT_TYPE=SIMPLE&DOKUMENT_INTEGER_WAHLPERIODE=17&DOKUMENT_DOKUMENTNR=17%2F3323&DOKUMENT_BOOLEAN_DRS=true&BUTTONSCHLAGWORT=Suche+starten
+# single document
+#
+
   def perform(legislative_term = 17)
     setup(legislative_term)
 
@@ -58,13 +64,14 @@ class FetchPapersBayernJob < FetchPapersJob
       originators = BayernPDFExtractor.new(paper).extract
       next if originators.nil?
 
-      unless originators[:party].blank?
+      unless originators[:parties].blank?
         # write org
-        party = originators[:party]
-        org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
-        unless paper.originator_organizations.include? org
-          paper.originator_organizations << org
-          paper.save
+        originators[:parties].each do |party|
+          org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
+          unless paper.originator_organizations.include? org
+            paper.originator_organizations << org
+            paper.save
+          end
         end
       end
 
