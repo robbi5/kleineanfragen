@@ -2,12 +2,12 @@ class ImportNewPapersJob < ActiveJob::Base
   queue_as :import
 
   def perform(body, legislative_term)
-    fail "No scraper found for body #{body}" if body.scraper.nil?
+    fail "No scraper found for body #{body.state}" if body.scraper.nil?
     scraper = body.scraper::Overview.new(legislative_term)
     page = 1
     found_new_paper = false
     loop do
-      Rails.logger.info "Importing #{body} - Page #{page}"
+      Rails.logger.info "Importing #{body.state} - Page #{page}"
       found_new_paper = false
       scraper.scrape(page).each do |item|
         next if Paper.where(body: body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
@@ -20,6 +20,6 @@ class ImportNewPapersJob < ActiveJob::Base
       page += 1
       break unless found_new_paper
     end
-    Rails.logger.info "Importing #{body} done. Scraped #{page} Pages"
+    Rails.logger.info "Importing #{body.state} done. Scraped #{page} Pages"
   end
 end
