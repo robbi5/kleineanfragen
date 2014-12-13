@@ -8,6 +8,7 @@ class BayernPDFExtractor
     people = []
     parties = []
     [
+      /Abgeordneten ([\D\n]+?)\s(\p{Lu}[\p{Lu} \d\/\n]+)\b/m,
       /Abgeordneten ([\D\n]+?)\s(\p{Lu}[\p{Lu} \d\/]+)\b/m,
       /Abgeordneten ([\D\n]+?)\p{Zs}(\p{Lu}[\p{Lu} \d\/]+)\b/m,
       /Abgeordneten ([\D\n]+?)\n(\p{Lu}[\p{Ll}\p{Lu} \d\/]+)\b/m,
@@ -22,7 +23,7 @@ class BayernPDFExtractor
       else
         people << person
       end
-      parties << m[2]
+      parties << m[2].gsub("\n", ' ').strip
 
       # only one regex must match
       break

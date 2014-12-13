@@ -27,6 +27,17 @@ class BayernPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'BÜNDNIS 90/DIE GRÜNEN', originators[:parties].first
   end
 
+  # der Abgeordneten Christine Kamm BÜNDNIS 90/DIE\nGRÜNEN
+  test 'one person, newline in party' do
+    paper = Struct.new(:contents).new("der Abgeordneten Christine Kamm BÜNDNIS 90/DIE\nGRÜNEN")
+
+    originators = BayernPDFExtractor.new(paper).extract
+
+    assert_equal 1, originators[:people].size
+    assert_equal 'Christine Kamm', originators[:people].first
+    assert_equal 'BÜNDNIS 90/DIE GRÜNEN', originators[:parties].first
+  end
+
   # des Abgeordneten Markus Ganserer\nBündnis 90/Die Grünen
   test 'one person, newline between name and mixed case party' do
     paper = Struct.new(:contents).new("des Abgeordneten Markus Ganserer\nBündnis 90/Die Grünen")
