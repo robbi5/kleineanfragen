@@ -4,9 +4,9 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
-  resque_web_constraint = ->(_req, _) { Rails.env.development? }
+  resque_web_constraint = ->(_, request) { request.remote_ip == '127.0.0.1' }
   constraints resque_web_constraint do
-    mount Resque::Server.new, at: '/resque'
+    mount Resque::Server.new, at: '/.resque'
   end
 
   get 'search' => 'paper#search'
