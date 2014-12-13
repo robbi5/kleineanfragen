@@ -25,6 +25,17 @@ namespace :papers do
     end
   end
 
+  desc 'Extract names from papers'
+  task parse_all: :environment do
+    limit = ENV['limit'] || 50
+    papers = Paper.find_by_sql(
+      ["SELECT p.* FROM papers p LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id AND o.originator_type = 'Person') WHERE o.id IS NULL LIMIT ?", limit])
+    papers.each do |paper|
+      Rails.logger.info "Adding job for extracting names from paper [#{paper.body.state} #{paper.full_reference}]"
+      ExtractPeopleNamesJob.perform_later(paper)
+    end
+  end
+
   desc 'Import single paper'
   task :import, [:state, :legislative_term, :reference] => [:environment] do |_t, args|
     body = Body.find_by_state(args[:state])
