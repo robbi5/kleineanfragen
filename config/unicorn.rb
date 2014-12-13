@@ -27,6 +27,8 @@ working_directory "#{ENV['HOME']}/current"
 # Listen on both a Unix domain socket and a TCP port.
 # If you are load-balancing multiple Unicorn masters, lower the backlog
 # setting to e.g. 64 for faster failover.
+listen '127.0.0.1:5000'
+listen '[::1]:5000'
 listen "#{ENV['HOME']}/run/kleineanfragen.socket", backlog: 1024
 
 timeout 60
