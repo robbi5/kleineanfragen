@@ -306,40 +306,6 @@ html[dir='rtl'] .innerCenter {
   position: relative;
 }
 
-#sidebarContainer {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 200px;
-  visibility: hidden;
-  -webkit-transition-duration: 200ms;
-  -webkit-transition-timing-function: ease;
-  transition-duration: 200ms;
-  transition-timing-function: ease;
-
-}
-html[dir='ltr'] #sidebarContainer {
-  -webkit-transition-property: left;
-  transition-property: left;
-  left: -200px;
-}
-html[dir='rtl'] #sidebarContainer {
-  -webkit-transition-property: right;
-  transition-property: right;
-  right: -200px;
-}
-
-#outerContainer.sidebarMoving > #sidebarContainer,
-#outerContainer.sidebarOpen > #sidebarContainer {
-  visibility: visible;
-}
-html[dir='ltr'] #outerContainer.sidebarOpen > #sidebarContainer {
-  left: 0px;
-}
-html[dir='rtl'] #outerContainer.sidebarOpen > #sidebarContainer {
-  right: 0px;
-}
-
 #mainContainer {
   position: absolute;
   top: 0;
@@ -351,34 +317,6 @@ html[dir='rtl'] #outerContainer.sidebarOpen > #sidebarContainer {
   -webkit-transition-timing-function: ease;
   transition-duration: 200ms;
   transition-timing-function: ease;
-}
-html[dir='ltr'] #outerContainer.sidebarOpen > #mainContainer {
-  -webkit-transition-property: left;
-  transition-property: left;
-  left: 200px;
-}
-html[dir='rtl'] #outerContainer.sidebarOpen > #mainContainer {
-  -webkit-transition-property: right;
-  transition-property: right;
-  right: 200px;
-}
-
-#sidebarContent {
-  top: 32px;
-  bottom: 0;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  position: absolute;
-  width: 200px;
-  background-color: hsla(0,0%,0%,.1);
-}
-html[dir='ltr'] #sidebarContent {
-  left: 0;
-  box-shadow: inset -1px 0 0 hsla(0,0%,0%,.25);
-}
-html[dir='rtl'] #sidebarContent {
-  right: 0;
-  box-shadow: inset 1px 0 0 hsla(0,0%,0%,.25);
 }
 
 #viewerContainer {
@@ -408,26 +346,6 @@ html[dir='rtl'] #viewerContainer {
 
 #toolbarContainer {
   width: 100%;
-}
-
-#toolbarSidebar {
-  width: 200px;
-  height: 32px;
-  background-color: #424242; /* fallback */
-  background-image: url(<%= asset_path 'pdfjs/texture.png' %>),
-                    linear-gradient(hsla(0,0%,30%,.99), hsla(0,0%,25%,.95));
-}
-html[dir='ltr'] #toolbarSidebar {
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.25),
-              inset 0 -1px 0 hsla(0,0%,100%,.05),
-              0 1px 0 hsla(0,0%,0%,.15),
-              0 0 1px hsla(0,0%,0%,.1);
-}
-html[dir='rtl'] #toolbarSidebar {
-  box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.25),
-              inset 0 1px 0 hsla(0,0%,100%,.05),
-              0 1px 0 hsla(0,0%,0%,.15),
-              0 0 1px hsla(0,0%,0%,.1);
 }
 
 #toolbarContainer, .findbar, .secondaryToolbar {
@@ -979,13 +897,6 @@ html[dir="rtl"] .secondaryToolbarButton::before {
   right: 4px;
 }
 
-html[dir='ltr'] .toolbarButton#sidebarToggle::before {
-  content: url(<%= asset_path 'pdfjs/toolbarButton-sidebarToggle.png' %>);
-}
-html[dir='rtl'] .toolbarButton#sidebarToggle::before {
-  content: url(<%= asset_path 'pdfjs/toolbarButton-sidebarToggle-rtl.png' %>);
-}
-
 html[dir='ltr'] .toolbarButton#secondaryToolbarToggle::before {
   content: url(<%= asset_path 'pdfjs/toolbarButton-secondaryToolbarToggle.png' %>);
 }
@@ -1032,21 +943,6 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
 .toolbarButton.presentationMode::before,
 .secondaryToolbarButton.presentationMode::before {
   content: url(<%= asset_path 'pdfjs/toolbarButton-presentationMode.png' %>);
-}
-
-.toolbarButton.print::before,
-.secondaryToolbarButton.print::before {
-  content: url(<%= asset_path 'pdfjs/toolbarButton-print.png' %>);
-}
-
-.toolbarButton.openFile::before,
-.secondaryToolbarButton.openFile::before {
-  content: url(<%= asset_path 'pdfjs/toolbarButton-openFile.png' %>);
-}
-
-.toolbarButton.download::before,
-.secondaryToolbarButton.download::before {
-  content: url(<%= asset_path 'pdfjs/toolbarButton-download.png' %>);
 }
 
 .toolbarButton.bookmark,
@@ -1141,10 +1037,6 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 
 .secondaryToolbarButton.handTool::before {
   content: url(<%= asset_path 'pdfjs/secondaryToolbarButton-handTool.png' %>);
-}
-
-.secondaryToolbarButton.documentProperties::before {
-  content: url(<%= asset_path 'pdfjs/secondaryToolbarButton-documentProperties.png' %>);
 }
 
 .verticalToolbarSeparator {
@@ -1528,30 +1420,6 @@ html[dir='rtl'] .attachmentsItem > button {
   width: 200px;
 }
 
-#documentPropertiesOverlay > .dialog {
-  text-align: left;
-}
-#documentPropertiesOverlay .row > * {
-  min-width: 100px;
-}
-html[dir='ltr'] #documentPropertiesOverlay .row > * {
-  text-align: left;
-}
-html[dir='rtl'] #documentPropertiesOverlay .row > * {
-  text-align: right;
-}
-#documentPropertiesOverlay .row > span {
-  width: 125px;
-  word-wrap: break-word;
-}
-#documentPropertiesOverlay .row > p {
-  max-width: 225px;
-  word-wrap: break-word;
-}
-#documentPropertiesOverlay .buttonRow {
-  margin-top: 10px;
-}
-
 .clearBoth {
   clear: both;
 }
@@ -1696,13 +1564,6 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     background-size: 7px 16px;
   }
 
-  html[dir='ltr'] .toolbarButton#sidebarToggle::before {
-    content: url(<%= asset_path 'pdfjs/toolbarButton-sidebarToggle@2x.png' %>);
-  }
-  html[dir='rtl'] .toolbarButton#sidebarToggle::before {
-    content: url(<%= asset_path 'pdfjs/toolbarButton-sidebarToggle-rtl@2x.png' %>);
-  }
-
   html[dir='ltr'] .toolbarButton#secondaryToolbarToggle::before {
     content: url(<%= asset_path 'pdfjs/toolbarButton-secondaryToolbarToggle@2x.png' %>);
   }
@@ -1751,21 +1612,6 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     content: url(<%= asset_path 'pdfjs/toolbarButton-presentationMode@2x.png' %>);
   }
 
-  .toolbarButton.print::before,
-  .secondaryToolbarButton.print::before {
-    content: url(<%= asset_path 'pdfjs/toolbarButton-print@2x.png' %>);
-  }
-
-  .toolbarButton.openFile::before,
-  .secondaryToolbarButton.openFile::before {
-    content: url(<%= asset_path 'pdfjs/toolbarButton-openFile@2x.png' %>);
-  }
-
-  .toolbarButton.download::before,
-  .secondaryToolbarButton.download::before {
-    content: url(<%= asset_path 'pdfjs/toolbarButton-download@2x.png' %>);
-  }
-
   .toolbarButton.bookmark::before,
   .secondaryToolbarButton.bookmark::before {
     content: url(<%= asset_path 'pdfjs/toolbarButton-bookmark@2x.png' %>);
@@ -1809,10 +1655,6 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   .secondaryToolbarButton.handTool::before {
     content: url(<%= asset_path 'pdfjs/secondaryToolbarButton-handTool@2x.png' %>);
   }
-
-  .secondaryToolbarButton.documentProperties::before {
-    content: url(<%= asset_path 'pdfjs/secondaryToolbarButton-documentProperties@2x.png' %>);
-  }
 }
 
 @media print {
@@ -1822,7 +1664,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   }
 
   /* Rules for browsers that don't support mozPrintCallback. */
-  #sidebarContainer, #secondaryToolbar, .toolbar, #loadingBox, #errorWrapper, .textLayer {
+  #secondaryToolbar, .toolbar, #loadingBox, #errorWrapper, .textLayer {
     display: none;
   }
   #viewerContainer {
@@ -1873,57 +1715,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   display: none;
 }
 
-@media all and (max-width: 960px) {
-  html[dir='ltr'] #outerContainer.sidebarMoving .outerCenter,
-  html[dir='ltr'] #outerContainer.sidebarOpen .outerCenter {
-    float: left;
-    left: 205px;
-  }
-  html[dir='rtl'] #outerContainer.sidebarMoving .outerCenter,
-  html[dir='rtl'] #outerContainer.sidebarOpen .outerCenter {
-    float: right;
-    right: 205px;
-  }
-}
-
-@media all and (max-width: 900px) {
-  .sidebarOpen .hiddenLargeView {
-    display: none;
-  }
-  .sidebarOpen .visibleLargeView {
-    display: inherit;
-  }
-}
-
-@media all and (max-width: 860px) {
-  .sidebarOpen .hiddenMediumView {
-    display: none;
-  }
-  .sidebarOpen .visibleMediumView {
-    display: inherit;
-  }
-}
-
 @media all and (max-width: 770px) {
-  #sidebarContainer {
-    top: 32px;
-    z-index: 100;
-  }
-  .loadingInProgress #sidebarContainer {
-    top: 37px;
-  }
-  #sidebarContent {
-    top: 32px;
-    background-color: hsla(0,0%,0%,.7);
-  }
-
-  html[dir='ltr'] #outerContainer.sidebarOpen > #mainContainer {
-    left: 0px;
-  }
-  html[dir='rtl'] #outerContainer.sidebarOpen > #mainContainer {
-    right: 0px;
-  }
-
   html[dir='ltr'] .outerCenter {
     float: left;
     left: 205px;
@@ -1967,16 +1759,6 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   }
   .visibleSmallView {
     display: inherit;
-  }
-  html[dir='ltr'] #outerContainer.sidebarMoving .outerCenter,
-  html[dir='ltr'] #outerContainer.sidebarOpen .outerCenter,
-  html[dir='ltr'] .outerCenter {
-    left: 156px;
-  }
-  html[dir='rtl'] #outerContainer.sidebarMoving .outerCenter,
-  html[dir='rtl'] #outerContainer.sidebarOpen .outerCenter,
-  html[dir='rtl'] .outerCenter {
-    right: 156px;
   }
   .toolbarButtonSpacer {
     width: 0;
