@@ -1,0 +1,8 @@
+// Initializing PDFJS global object (if still undefined)
+if (typeof PDFJS === 'undefined') {
+  (typeof window !== 'undefined' ? window : this).PDFJS = {};
+}
+
+// Set worker path
+PDFJS.workerSrc = "<%= asset_path('pdfjs/pdf.worker.js') %>";
+PDFJS.imageResourcesPath = '../';

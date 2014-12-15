@@ -14,9 +14,13 @@ class PaperController < ApplicationController
   end
 
   def viewer
-    public_url = @paper.public_url
-    return redirect_to "https://mozilla.github.io/pdf.js/web/viewer.html?file=#{public_url}" unless @paper.downloaded_at.nil? || public_url.blank?
-    render layout: false
+    @paper_pdf_url = @paper.public_url
+    if !@paper.downloaded_at.nil? && !@paper_pdf_url.blank?
+      render :viewer, layout: false
+      # return redirect_to "https://mozilla.github.io/pdf.js/web/viewer.html?file=#{public_url}"
+    else
+      render :viewer_notavailable, layout: false
+    end
   end
 
   def search
