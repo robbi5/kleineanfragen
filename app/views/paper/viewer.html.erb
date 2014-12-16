@@ -25,7 +25,7 @@ http://sourceforge.net/adobe/cmap/wiki/License/
   <title>[PDF] <%= @paper.title %> (<%= @paper.full_reference %>) &mdash; <%= @body.name %>, <%= @legislative_term %>. Wahlperiode - kleineAnfragen</title>
 
   <%= stylesheet_link_tag    'viewer', media: 'all', 'data-turbolinks-track' => true %>
-  <link rel="resource" type="application/l10n" href="<%= asset_url('pdfjs/locale/locale.properties') %>"/>
+  <link rel="resource" type="application/l10n" href="<%= asset_url('pdfjs/locale/de/viewer.properties') %>" lang="de"/>
   <script>
     var PAPER_URL = "<%= @paper_pdf_url %>";
   </script>
