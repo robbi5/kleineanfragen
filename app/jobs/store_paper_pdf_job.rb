@@ -20,7 +20,7 @@ class StorePaperPDFJob < ActiveJob::Base
 
   def patron_session
     sess = Patron::Session.new
-    # sess.timeout = 15
+    sess.timeout = 15
     sess.headers['User-Agent'] = Rails.application.config.user_agent
     sess
   end
