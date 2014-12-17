@@ -1,67 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>The page you were looking for doesn't exist (404)</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>Nicht gefunden (404) - kleineanfragen</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
   body {
-    background-color: #EFEFEF;
-    color: #2E2F30;
+    font-family: "SourceSansPro", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #333;
+    background-color: #FFF;
     text-align: center;
-    font-family: arial, sans-serif;
     margin: 0;
   }
 
   div.dialog {
-    width: 95%;
-    max-width: 33em;
-    margin: 4em auto 0;
+    width: 100%;
+    margin: 2em auto 0;
+    background: -webkit-linear-gradient(70deg, #757F9A 10%, #D7DDE8 90%);
+    background: linear-gradient(20deg, #757F9A 10%, #D7DDE8 90%);
+    background-color: #A5AABA;
   }
 
   div.dialog > div {
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #BBB;
-    border-top: #B00100 solid 4px;
-    border-top-left-radius: 9px;
-    border-top-right-radius: 9px;
-    background-color: white;
     padding: 7px 12% 0;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
+  }
+
+  big {
+    font-weight: 500;
+    font-size: 50px;
+    color: #757F9A;
   }
 
   h1 {
-    font-size: 100%;
-    color: #730E15;
-    line-height: 1.5em;
+    margin: 2em auto 0;
+    font-family: 'RalewayLogofont', 'Raleway' sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+    color: #2980B9;
+  }
+
+  h1 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  h2 {
+    font-size: 21px;
+    font-weight: 200;
+    color: #fff;
+    line-height: 1.5;
+    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
   }
 
   div.dialog > p {
     margin: 0 0 1em;
     padding: 1em;
-    background-color: #F7F7F7;
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #999;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-top-color: #DADADA;
-    color: #666;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
+    color: #fff;
   }
   </style>
 </head>
-
 <body>
-  <!-- This file lives in public/404.html -->
+  <h1><a href="/" target="_top">kleineAnfragen.</a></h1>
   <div class="dialog">
     <div>
-      <h1>The page you were looking for doesn't exist.</h1>
-      <p>You may have mistyped the address or the page may have moved.</p>
+      <big>:(</big>
+      <h2>Die Seite wurde nicht gefunden</h2>
     </div>
-    <p>If you are the application owner check the logs for more information.</p>
+    <p>Versuche doch die Suche auf der <a href="/" target="_top">Startseite</a></p>
   </div>
 </body>
 </html>
