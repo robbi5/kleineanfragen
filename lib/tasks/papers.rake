@@ -50,6 +50,14 @@ namespace :papers do
     ImportNewPapersJob.perform_later(body, args[:legislative_term])
   end
 
+  desc 'Download and store paper in s3'
+  task :store, [:state, :legislative_term, :reference] => [:environment] do |_t, args|
+    body = Body.find_by_state(args[:state])
+    paper = Paper.where(body: body, legislative_term: args[:legislative_term], reference: args[:reference]).first
+    Rails.logger.info "Adding job for uploading paper [#{paper.body.state} #{paper.full_reference}]"
+    StorePaperPDFJob.perform_later(paper)
+  end
+
   desc 'Extract text from paper'
   task :extract_text, [:state, :legislative_term, :reference] => [:environment] do |_t, args|
     body = Body.find_by_state(args[:state])
