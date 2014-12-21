@@ -75,6 +75,11 @@ class PaperController < ApplicationController
     fresh_when last_modified: @papers.maximum(:updated_at), public: true
   end
 
+  def redirect_by_id
+    @paper = Paper.find(params[:paper].to_i)
+    redirect_to paper_path(@paper.body, @paper.legislative_term, @paper)
+  end
+
   private
 
   def find_body
