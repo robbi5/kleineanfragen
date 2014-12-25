@@ -60,7 +60,7 @@ class FetchPapersJob
   def patron_session
     sess = Patron::Session.new
     # sess.timeout = 15
-    sess.headers['User-Agent'] = Rails.application.config.user_agent
+    sess.headers['User-Agent'] = Rails.configuration.x.user_agent
     sess
   end
 

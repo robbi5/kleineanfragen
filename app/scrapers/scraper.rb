@@ -5,7 +5,7 @@ class Scraper
       Rails.logger.debug "[scraper] mechanize throttle (uri=#{request.path})"
       sleep 2
     end
-    mech.user_agent = Rails.application.config.user_agent
+    mech.user_agent = Rails.configuration.x.user_agent
     mech
   end
 end

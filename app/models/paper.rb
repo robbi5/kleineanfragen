@@ -67,7 +67,7 @@ class Paper < ActiveRecord::Base
   end
 
   def local_path
-    Rails.application.config.paper_storage.join(path)
+    Rails.configuration.x.paper_storage.join(path)
   end
 
   def public_url
