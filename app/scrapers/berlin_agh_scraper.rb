@@ -41,7 +41,8 @@ module BerlinAghScraper
           next
         end
 
-        originators = link.previous_element.previous.text
+        names = link.previous_element.previous.text
+        originators = NamePartyExtractor.new(names).extract
         path = link.attributes['href'].value
         full_reference = link.text.match(/([\d\/]+)/)[1]
         date = container.text.match(/.*vom ([\d\.]+)/m)[1]
