@@ -1,4 +1,3 @@
-require 'mechanize'
 require 'date'
 
 module BerlinAghScraper

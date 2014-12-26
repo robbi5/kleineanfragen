@@ -1,3 +1,5 @@
+require 'mechanize'
+
 class Scraper
   def initialize(legislative_term)
     @legislative_term = legislative_term

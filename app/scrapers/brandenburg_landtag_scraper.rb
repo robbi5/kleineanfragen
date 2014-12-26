@@ -1,10 +1,9 @@
-require 'mechanize'
 require 'date'
 
 module BrandenburgLandtagScraper
   BASE_URL = 'http://www.parldok.brandenburg.de'
 
-  class Overview
+  class Overview < Scraper
     # SEARCH_URL = BASE_URL + '/starweb/LTBB/servlet.starweb?path=LTBB/lisshfl.web&id=ltbbfastlink&search=WP%3d5+AND+%28DTYP%3dKleine+Anfrage%29&format=WEBVORGLFL'
     SEARCH_URL = BASE_URL + '/starweb/LTBB/servlet.starweb?path=LTBB/lisshfl.web&id=LTBBFASTLINK&search=TODAY%3dX+AND+WP%3d5+AND+%28DTYP%3dKleine+Anfrage%29&format=WEBVORGLFL'
 
