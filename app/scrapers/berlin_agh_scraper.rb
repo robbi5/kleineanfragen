@@ -4,17 +4,17 @@ require 'date'
 module BerlinAghScraper
   BASE_URL = 'http://pardok.parlament-berlin.de'
 
-  class Overview
-    SEARCH_URL = BASE_URL + '/starweb/AHAB/servlet.starweb?path=AHAB/lisshfl.web&id=ahabfastlink&search=WP%3d17+AND+%28etyp%3dschriftl%2a%29&format=WEBVORGLFL'
+  class Overview < Scraper
+    SEARCH_URL = BASE_URL + '/starweb/AHAB/servlet.starweb?path=AHAB/lisshfl.web&id=ahabfastlink&format=WEBVORGLFL&search='
 
     # FIXME: add support for pagination
     def scrape
-      m = Mechanize.new
-      mp = m.get SEARCH_URL
+      mp = mechanize.get SEARCH_URL + CGI.escape('WP=' + @legislative_term + ' AND (etyp=schriftl*)')
 
       body = mp.search "//table[contains(@summary, 'Hauptbereich')]"
       legterm = body.search("//th[contains(@class, 'gross2')]").inner_html.strip
       legislative_term = legterm.match(/(\d+). Wahlperiode/)[1]
+      # WARN if legislative_term.to_i != @legislative_term
       papers = []
 
       body.search('//td[contains(@colspan, 3)]').each do |item|
@@ -38,6 +38,7 @@ module BerlinAghScraper
 
         if link.nil? || container.search('a').length == 0
           # skip broken records (no pdf)
+          warn_broken(true, 'link_el not found', item)
           next
         end
 
@@ -45,14 +46,16 @@ module BerlinAghScraper
         originators = NamePartyExtractor.new(names).extract
         path = link.attributes['href'].value
         full_reference = link.text.match(/([\d\/]+)/)[1]
+        reference = full_reference.split('/').last
         date = container.text.match(/.*vom ([\d\.]+)/m)[1]
         published_at = Date.parse(date)
 
         url =  Addressable::URI.parse(BASE_URL + path).normalize.to_s
 
         papers << {
-          legislative_term: legislative_term,
+          legislative_term: @legislative_term,
           full_reference: full_reference,
+          reference: reference,
           title: title,
           url: url,
           published_at: published_at,
