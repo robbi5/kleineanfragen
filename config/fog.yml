@@ -10,8 +10,8 @@ development:
   bucket: ka-dev
 
 test:
-  <<: *credentials
-  host: matecluster
+  provider: Local
+  local_root: <%= Rails.root.join 'tmp' %>
   bucket: ka-test
 
 production:
