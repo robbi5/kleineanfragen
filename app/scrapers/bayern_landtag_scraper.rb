@@ -7,9 +7,8 @@ module BayernLandtagScraper
   class Overview < Scraper
     SEARCH_URL = BASE_URL + '/webangebot1/dokumente.suche.maske.jsp?DOKUMENT_TYPE=EXTENDED&STATE=SHOW_MASK'
 
-    def initialize(legislative_term)
-      @legislative_term = legislative_term
-      @per_page = 50
+    def supports_pagination?
+      true
     end
 
     def scrape(page = 1)
@@ -83,13 +82,6 @@ module BayernLandtagScraper
       warn_broken(papers.size != @per_page, "Got only #{papers.size} of #{@per_page} papers")
 
       papers
-    end
-
-    def warn_broken(bool, reason, item = nil)
-      return false if !bool
-      Rails.logger.warn reason
-      Rails.logger.debug { item.to_s.gsub(/\n|\s\s+/, '') } unless item.nil?
-      true
     end
   end
 
