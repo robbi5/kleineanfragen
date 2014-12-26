@@ -29,6 +29,10 @@
       <%= link_to 'Download PDF', paper_path(@body, @legislative_term, @paper, {format: :pdf}), {class: 'btn btn-primary'} %>
       <br/><small>(<%= @paper.page_count || '?' %> <%= t :pages, count: @paper.page_count || 0 %>)</small>
     </p>
+    <p>
+      <small>Kurz-URL:</small><br/>
+      <input type="text" name="shorturl" value="<%= paper_short_url(@paper) %>" readonly="readonly" class="shorturl-input"/>
+    </p>
   </div>
   <div class="col-md-9 col-md-pull-3">
     <iframe src="<%= paper_pdf_viewer_path %>" width="100%" height="600px" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
