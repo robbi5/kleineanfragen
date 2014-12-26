@@ -41,8 +41,35 @@ class ImportNewPapersJob < ActiveJob::Base
 
   def on_item(item)
     Rails.logger.info "New Paper: [#{item[:reference]}] \"#{item[:title]}\""
-    paper = Paper.create!(item.except(:full_reference).merge({ body: @body }))
-    LoadPaperDetailsJob.perform_later(paper) if paper.originators.blank? && @load_details
+    paper = Paper.create!(item.except(:full_reference).except(:originators).merge({ body: @body }))
+    if item[:originators].blank?
+      LoadPaperDetailsJob.perform_later(paper) if @load_details
+    else
+      originators = item[:originators]
+      unless originators[:parties].blank?
+        # write parties
+        originators[:parties].each do |party|
+          Rails.logger.debug "+ Originator: #{party}"
+          org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
+          unless paper.originator_organizations.include? org
+            paper.originator_organizations << org
+            paper.save
+          end
+        end
+      end
+
+      unless originators[:people].blank?
+        # write people
+        originators[:people].each do |name|
+          Rails.logger.debug "+ Originator: #{name}"
+          person = Person.where('lower(name) = ?', name.mb_chars.downcase.to_s).first_or_create(name: name)
+          unless paper.originator_people.include? person
+            paper.originator_people << person
+            paper.save
+          end
+        end
+      end
+    end
     StorePaperPDFJob.perform_later(paper)
   end
 end
