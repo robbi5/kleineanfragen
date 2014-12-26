@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
-  resque_web_constraint = ->(_, request) { request.remote_ip == '127.0.0.1' }
+  resque_web_constraint = ->(_, request) { ['::1', '127.0.0.1'].include?(request.remote_ip) }
   constraints resque_web_constraint do
     mount Resque::Server.new, at: '/.resque'
   end
