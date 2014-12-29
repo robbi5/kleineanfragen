@@ -9,5 +9,6 @@
 Body.create([
   { name: 'Bayern', state: 'BY' },
   { name: 'Berlin', state: 'BE' },
-  { name: 'Brandenburg', state: 'BB' }
+  { name: 'Brandenburg', state: 'BB' },
+  { name: 'Bundestag', state: 'BT' }
 ])
