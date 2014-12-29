@@ -34,7 +34,7 @@ class StorePaperPDFJob < ActiveJob::Base
 
     resp = session.get(paper.url)
     if resp.status != 200
-      Rails.logger.debug "Download failed for Paper [#{paper.body.state} #{paper.full_reference}]"
+      Rails.logger.warn "Download failed for Paper [#{paper.body.state} #{paper.full_reference}]"
       return
     end
 
@@ -42,7 +42,7 @@ class StorePaperPDFJob < ActiveJob::Base
     begin
       f.write(resp.body)
     rescue
-      Rails.logger.debug "Cannot write file for Paper [#{paper.body.state} #{paper.full_reference}]"
+      Rails.logger.warn "Cannot write file for Paper [#{paper.body.state} #{paper.full_reference}]"
       return
     ensure
       f.close if f
