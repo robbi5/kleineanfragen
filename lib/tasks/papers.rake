@@ -1,8 +1,7 @@
 namespace :papers do
-
   desc 'switch logger to stdout'
   task to_stdout: :environment do
-   Rails.logger = Logger.new(STDOUT)
+    Rails.logger = Logger.new(STDOUT)
   end
 
   desc 'Download and store papers in s3'
