@@ -30,6 +30,7 @@ Just generate a fresh secret_key_base.
 
 ### .env
 
+    export DATABASE_URL="postgres://user:pass@localhost/kleineanfragen"
     export ELASTICSEARCH_URL="http://127.0.0.1:9200/"
     export S3_ACCESS_KEY="x"
     export S3_SECRET_KEY="x"
@@ -42,6 +43,7 @@ This file contains the connection details to your s3 server/bucket. Test uses th
 
 Jobs
 ----
+Jobs are run by ActiveJob / Resque.
 
 You may need to prefix them with `foreman run bundle exec`, so the environment variables are loaded and the correct gems are used.
 
