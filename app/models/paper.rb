@@ -5,7 +5,8 @@ class Paper < ActiveRecord::Base
   # enable search
   searchkick language: 'German',
              text_start: [:title],
-             highlight: [:title, :contents]
+             highlight: [:title, :contents],
+             index_prefix: 'kleineanfragen'
 
   belongs_to :body
   has_many :paper_originators
