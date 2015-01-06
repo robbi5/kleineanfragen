@@ -10,6 +10,7 @@ Dependencies
 * postgres
 * elasticsearch (for search)
 * redis (for resque)
+* nodejs (for asset compiling)
 
 For extracting text from pdfs:
 
