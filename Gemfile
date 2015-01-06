@@ -35,9 +35,8 @@ gem 'unicorn', '~> 4.8.3', group: :production
 # Use newrelic
 gem 'newrelic_rpm', group: :production
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
 gem 'foreman', '~> 0.76.0', group: :development
+gem 'dotenv-rails', '~> 1.0.2'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

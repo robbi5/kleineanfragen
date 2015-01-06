@@ -63,6 +63,8 @@ GEM
     domain_name (0.5.23)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (1.0.2)
+    dotenv-rails (1.0.2)
+      dotenv (= 1.0.2)
     elasticsearch (1.0.6)
       elasticsearch-api (= 1.0.6)
       elasticsearch-transport (= 1.0.6)
@@ -281,6 +283,7 @@ DEPENDENCIES
   byebug
   coffee-rails (~> 4.1.0)
   docsplit (~> 0.7.6)
+  dotenv-rails (~> 1.0.2)
   fog (= 1.24.0)
   foreman (~> 0.76.0)
   friendly_id (~> 5.0.0)
