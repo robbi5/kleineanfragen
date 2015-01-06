@@ -22,25 +22,25 @@ worker_processes 2
 
 # Help ensure your application will always spawn in the symlinked
 # "current" directory that Capistrano sets up.
-working_directory "#{ENV['HOME']}/current"
+working_directory "#{ENV['APP_HOME']}/current"
 
 # Listen on both a Unix domain socket and a TCP port.
 # If you are load-balancing multiple Unicorn masters, lower the backlog
 # setting to e.g. 64 for faster failover.
 listen '127.0.0.1:5000'
 listen '[::1]:5000'
-listen "#{ENV['HOME']}/run/kleineanfragen.socket", backlog: 1024
+listen "#{ENV['APP_HOME']}/shared/run/kleineanfragen.socket", backlog: 1024
 
 timeout 60
 
 # feel free to point this anywhere accessible on the filesystem
-pid "#{ENV['HOME']}/run/kleineanfragen.pid"
+pid "#{ENV['APP_HOME']}/shared/run/kleineanfragen.pid"
 
 # By default, the Unicorn logger will write to stderr.
 # Additionally, some applications/frameworks log to stderr or stdout,
 # so prevent them from going to /dev/null when daemonized here:
-stderr_path "#{ENV['HOME']}/current/log/unicorn.stderr.log"
-stdout_path "#{ENV['HOME']}/current/log/unicorn.stdout.log"
+stderr_path "#{ENV['APP_HOME']}/shared/log/unicorn.stderr.log"
+stdout_path "#{ENV['APP_HOME']}/shared/log/unicorn.stdout.log"
 
 # combine Ruby 2.0.0dev or REE with "preload_app true" for memory savings
 # http://rubyenterpriseedition.com/faq.html#adapt_apps_for_cow
