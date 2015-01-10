@@ -75,18 +75,6 @@ class Paper < ActiveRecord::Base
     FogStorageBucket.files.head(path).try(:public_url)
   end
 
-  def extract_text
-    tempdir = Dir.mktmpdir
-
-    Docsplit.extract_text(local_path, ocr: false, output: tempdir)
-    resultfile = "#{tempdir}/#{reference}.txt"
-    return false unless File.exist?(resultfile)
-
-    File.read resultfile
-  ensure
-    FileUtils.remove_entry_secure tempdir if File.exist?(tempdir)
-  end
-
   def extract_page_count
     Docsplit.extract_length local_path
   end

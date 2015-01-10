@@ -33,5 +33,7 @@ module Kleineanfragen
     config.x.paper_storage = Rails.root.join('data')
     # User-Agent for scraping and download
     config.x.user_agent = 'kleineanfragen-scraper (scraper@kleineanfragen.de)'
+    # Tika Server URL for extracting text from papers
+    config.x.tika_server = ENV['TIKA_SERVER_URL'] || false
   end
 end

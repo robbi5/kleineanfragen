@@ -4,18 +4,41 @@ class ExtractTextFromPaperJob < ActiveJob::Base
   def perform(paper)
     Rails.logger.info "Extracting Text of the Paper [#{paper.body.state} #{paper.full_reference}]"
 
-    # FIXME: not multi host capable
-    fail "No local copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] found" unless File.exist?(paper.local_path)
-
-    text = paper.extract_text
-    if text.blank?
-      Rails.logger.warn "Can't extract text from Paper [#{paper.body.state} #{paper.full_reference}]"
-      return
+    if !Rails.configuration.x.tika_server.blank?
+      text = extract_tika(paper)
+    else
+      text = extract_local(paper)
     end
+
+    fail "Can't extract text from Paper [#{paper.body.state} #{paper.full_reference}]" if text.blank?
 
     paper.contents = text
     paper.save
 
     ExtractPeopleNamesJob.perform_later(paper)
+  end
+
+  def extract_local(paper)
+    # FIXME: not multi host capable
+    fail "No local copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] found" unless File.exist?(paper.local_path)
+
+    tempdir = Dir.mktmpdir
+    Docsplit.extract_text(paper.local_path, ocr: false, output: tempdir)
+    resultfile = "#{tempdir}/#{paper.reference}.txt" # fixme, use last of localpath
+    return false unless File.exist?(resultfile)
+    File.read resultfile
+  ensure
+    FileUtils.remove_entry_secure tempdir if File.exist?(tempdir)
+  end
+
+  def extract_tika(paper)
+    pdf = Excon.get(paper.public_url)
+    fail 'Couldn\'t download PDF' if pdf.status != 200
+    text = Excon.put(Rails.configuration.x.tika_server,
+                     body: pdf.body,
+                     headers: { 'Content-Type' => 'application/pdf', 'Accept' => 'text/plain' })
+    fail 'Couldn\'t get text' if text.status != 200
+    # reason for force_encoding: https://github.com/excon/excon/issues/189
+    text.body.force_encoding('utf-8').strip
   end
 end

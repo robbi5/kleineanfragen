@@ -12,7 +12,7 @@ Dependencies
 * redis (for resque)
 * nodejs (for asset compiling)
 
-For extracting text from pdfs:
+For extracting text from pdfs you can use a server instance of [Tika](http://tika.apache.org) (see https://github.com/mattfullerton/tika-tesseract-docker) or install:
 
 * GraphicsMagick
 * Poppler
@@ -37,6 +37,7 @@ Just generate a fresh secret_key_base.
     export S3_SECRET_KEY="x"
     export NEWRELIC_LICENSE_KEY="x"
     export REDIS_URL="redis://localhost:6379"
+    export TIKA_SERVER_URL="http://localhost:9998/tika"
 
 ### config/fog.yml
 
