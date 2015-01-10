@@ -7,9 +7,21 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 Body.create([
-  { name: 'Bayern', state: 'BY' },
-  { name: 'Berlin', state: 'BE' },
+  { name: 'Bayern',      state: 'BY' },
+  { name: 'Berlin',      state: 'BE' },
   { name: 'Brandenburg', state: 'BB' },
-  { name: 'Bundestag', state: 'BT' },
-  { name: 'Hamburg', state: 'HH' }
+  { name: 'Bundestag',   state: 'BT' },
+  { name: 'Hamburg',     state: 'HH' }
+])
+
+berlin = Body.find_by_name('Berlin')
+Ministry.create([
+  { body: berlin, short_name: 'SenArbIntFrau',   name: 'Senatsverwaltung für Arbeit, Integration und Frauen' },
+  { body: berlin, short_name: 'SenBildJugWiss',  name: 'Senatsverwaltung für Bildung, Jugend und Wissenschaft' },
+  { body: berlin, short_name: 'SenFin',          name: 'Senatsverwaltung für Finanzen' },
+  { body: berlin, short_name: 'SenGesSoz',       name: 'Senatsverwaltung für Gesundheit und Soziales' },
+  { body: berlin, short_name: 'SenInn',          name: 'Senatsverwaltung für Inneres und Sport' },
+  { body: berlin, short_name: 'SenJustV',        name: 'Senatsverwaltung für Justiz und Verbraucherschutz' },
+  { body: berlin, short_name: 'SenStadtUm',      name: 'Senatsverwaltung für Stadtentwicklung und Umwelt' },
+  { body: berlin, short_name: 'SenWiTechForsch', name: 'Senatsverwaltung für Wirtschaft, Technolgie und Forschung' }
 ])

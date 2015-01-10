@@ -39,11 +39,13 @@ class ImportNewPapersJob < ActiveJob::Base
     end
   end
 
+  # TODO: rewrite
   def on_item(item)
     Rails.logger.info "New Paper: [#{item[:reference]}] \"#{item[:title]}\""
-    paper = Paper.create!(item.except(:full_reference).except(:originators).merge({ body: @body }))
+    paper = Paper.create!(item.except(:full_reference, :originators, :answerers).merge({ body: @body }))
+    should_trigger_load_paper_details = false
     if item[:originators].blank?
-      LoadPaperDetailsJob.perform_later(paper) if @load_details
+      should_trigger_load_paper_details = true
     else
       originators = item[:originators]
       unless originators[:parties].blank?
@@ -70,6 +72,28 @@ class ImportNewPapersJob < ActiveJob::Base
         end
       end
     end
+    if item[:answerers].blank?
+      should_trigger_load_paper_details = true
+    else
+      answerers = item[:answerers]
+      unless answerers[:ministries].blank?
+        # write ministries
+        answerers[:ministries].each do |ministry|
+          Rails.logger.debug "+ Ministry: #{ministry}"
+          unless ministry.is_a? Ministry
+            ministry = Ministry
+                       .where(body: paper.body)
+                       .where('lower(name) = ?', ministry.mb_chars.downcase.to_s)
+                       .first_or_create(body: paper.body, name: ministry)
+          end
+          unless paper.answerer_ministries.include? ministry
+            paper.answerer_ministries << ministry
+            paper.save
+          end
+        end
+      end
+    end
+    LoadPaperDetailsJob.perform_later(paper) if should_trigger_load_paper_details && @load_details
     StorePaperPDFJob.perform_later(paper)
   end
 end
