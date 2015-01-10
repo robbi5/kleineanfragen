@@ -67,4 +67,5 @@ The two import tasks should be enough for daily usage, if you need to (re-)uploa
 
     rake 'papers:store[BE, 17, 1234]'
     rake 'papers:extract_text[BE, 17, 1234]'
-    rake 'papers:extract_names[BE, 17, 1234]'
+    rake 'papers:extract_originators[BE, 17, 1234]'
+    rake 'papers:extract_answerers[BE, 17, 1234]'

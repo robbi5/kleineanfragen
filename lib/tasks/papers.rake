@@ -24,14 +24,14 @@ namespace :papers do
     end
   end
 
-  desc 'Extract names from papers'
+  desc 'Extract originators from papers'
   task parse_all: :environment do
     limit = ENV['limit'] || 50
     papers = Paper.find_by_sql(
       ["SELECT p.* FROM papers p LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id AND o.originator_type = 'Person') WHERE o.id IS NULL LIMIT ?", limit])
     papers.each do |paper|
-      Rails.logger.info "Adding job for extracting names from paper [#{paper.body.state} #{paper.full_reference}]"
-      ExtractPeopleNamesJob.perform_later(paper)
+      Rails.logger.info "Adding job for extracting originators from paper [#{paper.body.state} #{paper.full_reference}]"
+      ExtractOriginatorsJob.perform_later(paper)
     end
   end
 
@@ -65,11 +65,19 @@ namespace :papers do
     ExtractTextFromPaperJob.perform_later(paper)
   end
 
-  desc 'Extract names from paper'
-  task :extract_names, [:state, :legislative_term, :reference] => [:environment] do |_t, args|
+  desc 'Extract originators from paper'
+  task :extract_originators, [:state, :legislative_term, :reference] => [:environment] do |_t, args|
     body = Body.find_by_state(args[:state])
     paper = Paper.where(body: body, legislative_term: args[:legislative_term], reference: args[:reference]).first
-    Rails.logger.info "Adding job for extracting names of paper [#{paper.body.state} #{paper.full_reference}]"
-    ExtractPeopleNamesJob.perform_later(paper)
+    Rails.logger.info "Adding job for extracting originators of paper [#{paper.body.state} #{paper.full_reference}]"
+    ExtractOriginatorsJob.perform_later(paper)
+  end
+
+  desc 'Extract answerers from paper'
+  task :extract_answerers, [:state, :legislative_term, :reference] => [:environment] do |_t, args|
+    body = Body.find_by_state(args[:state])
+    paper = Paper.where(body: body, legislative_term: args[:legislative_term], reference: args[:reference]).first
+    Rails.logger.info "Adding job for extracting answerers of paper [#{paper.body.state} #{paper.full_reference}]"
+    ExtractAnswerersJob.perform_later(paper)
   end
 end

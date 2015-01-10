@@ -17,7 +17,8 @@ class ExtractTextFromPaperJob < ActiveJob::Base
     paper.contents = text
     paper.save
 
-    ExtractPeopleNamesJob.perform_later(paper)
+    ExtractOriginatorsJob.perform_later(paper)
+    ExtractAnswerersJob.perform_later(paper)
   end
 
   def extract_local(paper)
