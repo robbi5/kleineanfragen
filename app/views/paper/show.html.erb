@@ -24,6 +24,12 @@
       <%= @paper.originator_people.collect(&:name).join(', ') %><br/>
       <%= @paper.originator_organizations.collect(&:name).join(', ') %>
     </p>
+    <% if @paper.answerer_ministries.size > 0 %>
+    <p>
+      Beantwortet von:<br/>
+      <%= @paper.answerer_ministries.collect(&:name).join(', ') %>
+    </p>
+    <% end %>
     <p>Veröffentlicht am <%= l @paper.published_at %></p>
     <p>
       <%= link_to 'PDF herunterladen', paper_path(@body, @legislative_term, @paper, {format: :pdf}), {class: 'btn btn-primary'} %>
