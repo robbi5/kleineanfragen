@@ -12,9 +12,17 @@ class Paper < ActiveRecord::Base
   has_many :paper_originators
   has_many :originator_people, through: :paper_originators, source: :originator, source_type: 'Person'
   has_many :originator_organizations, through: :paper_originators, source: :originator, source_type: 'Organization'
+  has_many :paper_answerers
+  has_many :answerer_people, through: :paper_answerers, source: :answerer, source_type: 'Person'
+  # has_many :answerer_organizations, through: :paper_answerers, source: :answerer, source_type: 'Organization'
+  has_many :answerer_ministries, through: :paper_answerers, source: :answerer, source_type: 'Ministry'
 
   def originators
     paper_originators.sort_by { |org| org.originator_type == 'Person' ? 1 : 2 }.collect(&:originator)
+  end
+
+  def answerers
+    paper_answerers.sort_by { |answerer| answerer.answerer_type == 'Person' ? 1 : 2 }.collect(&:answerer)
   end
 
   validates :reference, uniqueness: { scope: [:body_id, :legislative_term] }

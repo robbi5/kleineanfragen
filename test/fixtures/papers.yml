@@ -1,6 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
+paper_by_17_2000:
   body_id: bayern
   legislative_term: 17
   reference: "2000"
@@ -11,7 +11,7 @@ one:
   url: http://bayern.example.org/pdf/17/2000.pdf
   downloaded_at: 2014-09-03 12:22:33
 
-two:
+paper_be_17_1000:
   body_id: berlin
   legislative_term: 17
   reference: "1000"

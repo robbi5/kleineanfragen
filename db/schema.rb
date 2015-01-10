@@ -11,29 +11,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140914212954) do
+ActiveRecord::Schema.define(version: 20150110181612) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "bodies", force: true do |t|
+  create_table "bodies", force: :cascade do |t|
     t.text     "name"
     t.string   "state",      limit: 2
     t.text     "website"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "slug"
+    t.string   "slug",       limit: 255
   end
 
   add_index "bodies", ["name"], name: "index_bodies_on_name", unique: true, using: :btree
   add_index "bodies", ["slug"], name: "index_bodies_on_slug", unique: true, using: :btree
   add_index "bodies", ["state"], name: "index_bodies_on_state", unique: true, using: :btree
 
-  create_table "friendly_id_slugs", force: true do |t|
-    t.string   "slug",                      null: false
-    t.integer  "sluggable_id",              null: false
+  create_table "friendly_id_slugs", force: :cascade do |t|
+    t.string   "slug",           limit: 255, null: false
+    t.integer  "sluggable_id",               null: false
     t.string   "sluggable_type", limit: 50
-    t.string   "scope"
+    t.string   "scope",          limit: 255
     t.datetime "created_at"
   end
 
@@ -42,29 +42,48 @@ ActiveRecord::Schema.define(version: 20140914212954) do
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
-  create_table "organizations", force: true do |t|
+  create_table "ministries", force: :cascade do |t|
+    t.integer  "body_id"
     t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "ministries", ["body_id", "name"], name: "index_ministries_on_body_id_and_name", unique: true, using: :btree
+  add_index "ministries", ["body_id"], name: "index_ministries_on_body_id", using: :btree
+
+  create_table "organizations", force: :cascade do |t|
+    t.string   "name",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "organizations_people", id: false, force: true do |t|
+  create_table "organizations_people", id: false, force: :cascade do |t|
     t.integer "organization_id"
     t.integer "person_id"
   end
 
   add_index "organizations_people", ["organization_id", "person_id"], name: "organizations_people_index", unique: true, using: :btree
 
-  create_table "paper_originators", force: true do |t|
+  create_table "paper_answerers", force: :cascade do |t|
+    t.integer "paper_id"
+    t.integer "answerer_id"
+    t.string  "answerer_type"
+  end
+
+  add_index "paper_answerers", ["answerer_type", "answerer_id"], name: "index_paper_answerers_on_answerer_type_and_answerer_id", using: :btree
+  add_index "paper_answerers", ["paper_id"], name: "index_paper_answerers_on_paper_id", using: :btree
+
+  create_table "paper_originators", force: :cascade do |t|
     t.integer "paper_id"
     t.integer "originator_id"
-    t.string  "originator_type"
+    t.string  "originator_type", limit: 255
   end
 
   add_index "paper_originators", ["originator_id", "originator_type"], name: "index_paper_originators_on_originator_id_and_originator_type", using: :btree
   add_index "paper_originators", ["paper_id"], name: "index_paper_originators_on_paper_id", using: :btree
 
-  create_table "papers", force: true do |t|
+  create_table "papers", force: :cascade do |t|
     t.integer  "body_id"
     t.integer  "legislative_term"
     t.text     "reference"
@@ -76,18 +95,20 @@ ActiveRecord::Schema.define(version: 20140914212954) do
     t.datetime "downloaded_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "slug"
+    t.string   "slug",             limit: 255
   end
 
   add_index "papers", ["body_id", "legislative_term", "reference"], name: "index_papers_on_body_id_and_legislative_term_and_reference", unique: true, using: :btree
   add_index "papers", ["body_id"], name: "index_papers_on_body_id", using: :btree
   add_index "papers", ["slug"], name: "index_papers_on_slug", unique: true, using: :btree
 
-  create_table "people", force: true do |t|
+  create_table "people", force: :cascade do |t|
     t.text     "name"
     t.text     "party"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_foreign_key "ministries", "bodies"
+  add_foreign_key "paper_answerers", "papers"
 end

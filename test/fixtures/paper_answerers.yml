@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  paper: paper_by_17_2000
+  answerer: by_stmuv (Ministry)
+
+two:
+  paper: paper_by_17_2000
+  answerer: by_km (Ministry)
