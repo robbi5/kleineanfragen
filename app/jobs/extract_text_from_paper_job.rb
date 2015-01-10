@@ -12,6 +12,8 @@ class ExtractTextFromPaperJob < ActiveJob::Base
 
     fail "Can't extract text from Paper [#{paper.body.state} #{paper.full_reference}]" if text.blank?
 
+    text = clean_text(text)
+
     paper.contents = text
     paper.save
 
@@ -40,5 +42,11 @@ class ExtractTextFromPaperJob < ActiveJob::Base
     fail 'Couldn\'t get text' if text.status != 200
     # reason for force_encoding: https://github.com/excon/excon/issues/189
     text.body.force_encoding('utf-8').strip
+  end
+
+  def clean_text(text)
+    # "be-\npflanzt" -> "bepflanzt\n"
+    text.gsub!(/(\p{L}+)\-\n(\p{L}+)/m, "\\1\\2\n")
+    text
   end
 end
