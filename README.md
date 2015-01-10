@@ -51,7 +51,7 @@ You may need to prefix them with `foreman run bundle exec`, so the environment v
 
 If you want to see the output on _STDOUT_, use `rake papers:to_stdout papers:import...`.
 
-The typical arguments are [State, LegislativeTerm, Reference]
+The typical arguments are `[State, LegislativeTerm, Reference]`
 
 ### Import new papers
 
@@ -59,12 +59,12 @@ The typical arguments are [State, LegislativeTerm, Reference]
 
 ### Import single paper
 
-    rake papers:to_stdout 'papers:import[BE, 17, 1234]'
+    rake 'papers:import[BE, 17, 1234]'
 
 ### Other
 
 The two import tasks should be enough for daily usage, if you need to (re-)upload the papers to s3 again or extract the text / names, you can use these:
 
-    rake papers:to_stdout 'papers:store[BE, 17, 1234]'
-    rake papers:to_stdout 'papers:extract_text[BE, 17, 1234]'
-    rake papers:to_stdout 'papers:extract_names[BE, 17, 1234]'
+    rake 'papers:store[BE, 17, 1234]'
+    rake 'papers:extract_text[BE, 17, 1234]'
+    rake 'papers:extract_names[BE, 17, 1234]'
