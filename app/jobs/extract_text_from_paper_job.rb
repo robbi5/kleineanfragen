@@ -46,8 +46,8 @@ class ExtractTextFromPaperJob < ActiveJob::Base
   end
 
   def clean_text(text)
-    # "be-\npflanzt" -> "bepflanzt\n"
-    text.gsub!(/(\p{L}+)\-\n(\p{L}+)/m, "\\1\\2\n")
+    # "be-\npflanzt" -> "bepflanzt\n", "be- \npflanzt" -> "bepflanzt\n"
+    text.gsub!(/(\p{L}+)\-\p{Zs}*\n(\p{L}+)/m, "\\1\\2\n")
     text
   end
 end
