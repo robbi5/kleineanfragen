@@ -21,7 +21,7 @@ class BayernPDFExtractor
       if person.include?(',')
         people.concat person.split(',').map(&:strip)
       else
-        people << person
+        people << person.strip
       end
       parties << m[2].gsub("\n", ' ').strip
 
