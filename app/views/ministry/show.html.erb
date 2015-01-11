@@ -1,0 +1,21 @@
+<% content_for :title do %><%= @body.name %>: <%= @ministry.name %><% end %>
+<div class="page-header">
+  <h1><%= link_to @body.name, @body %> &mdash; <%= @ministry.name %></h1>
+</div>
+
+<ol class="paper-list">
+  <% @papers.each do |paper| %>
+  <li>
+    <p>
+      <span class="source"><span class="label label-default"><%= link_to_paper paper.full_reference, paper %></span></span>
+      <%= link_to_paper paper.title, paper %>
+    </p>
+    <p class="meta">
+      Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <%= l paper.published_at %>
+    </p>
+  </li>
+  <% end %>
+</ol>
+
+<p class="pagination-total"><%= @papers.total_count %> kleine Anfragen</p>
+<%= paginate @papers %>

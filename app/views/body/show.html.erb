@@ -1,11 +1,11 @@
 <% content_for :title do %><%= @body.name %><% end %>
 
 <div class="page-header">
-  <h1><%= @body.name %></h1>
+  <h1><%= @body.name %> <small><code>(<%= @body.state %>)</code></small></h1>
 </div>
 
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-6">
     <ol class="legislative-terms-overview">
       <% @terms.each do |term, count| %>
       <li class="row">
@@ -19,10 +19,12 @@
     </ol>
   </div>
 
-  <div class="col-md-4">
-    <dl class="dl-horizontal">
-      <dt>Kürzel:</dt>
-      <dd><%= @body.state %></dd>
-    </dl>
+  <div class="col-md-6">
+    <h3>Behörden:</h3>
+    <ul>
+      <% @body.ministries.each do |ministry| %>
+      <li><%= link_to ministry.name, ministry_path(@body, ministry) %></li>
+      <% end %>
+    </ul>
   </div>
 </div>

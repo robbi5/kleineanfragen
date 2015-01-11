@@ -27,7 +27,12 @@
     <% if @paper.answerer_ministries.size > 0 %>
     <p>
       Beantwortet von:<br/>
-      <%= @paper.answerer_ministries.collect(&:name).join(', ') %>
+      <%
+        ministries = @paper.answerer_ministries
+        ministries.each do |ministry|
+      %>
+      <%= link_to ministry.name, ministry_path(@body, ministry) %><%= ',' unless ministry == ministries.last %>
+      <% end %>
     </p>
     <% end %>
     <p>Veröffentlicht am <%= l @paper.published_at %></p>
