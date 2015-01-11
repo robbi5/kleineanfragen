@@ -9,6 +9,7 @@ class PaperController < ApplicationController
       respond_to do |format|
         format.html
         format.pdf { redirect_to @paper.url }
+        format.txt { render plain: @paper.contents }
       end
     end
   end

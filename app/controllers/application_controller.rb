@@ -10,6 +10,8 @@ class ApplicationController < ActionController::Base
       ''
     when Mime::PDF
       'pdf'
+    when Mime::TXT
+      'txt'
     else
       ''
     end
