@@ -19,7 +19,7 @@ module BerlinAghScraper
       body.search('//td[contains(@colspan, 3)]').each do |item|
         title_el = item.search('../following-sibling::tr[1]/td[2]/b')
         next if title_el.length == 0
-        title = title_el.inner_html.gsub(/\<br\>/, ' ')
+        title = title_el.text.gsub("\n", ' ')
         container = item.search('../following-sibling::tr[4]/td[2]')
 
         # we hit the subtitle row
@@ -90,7 +90,7 @@ module BerlinAghScraper
       body = mp.search "//table[contains(@summary, 'Hauptbereich')]"
       item = body.search('//td[contains(@colspan, 3)]')
       title_el = item.search('../following-sibling::tr[1]/td[2]/b')
-      title = title_el.inner_html.gsub(/\<br\>/, ' ')
+      title = title_el.text.gsub("\n", ' ')
 
       container = item.search('../following-sibling::tr[4]/td[2]')
       # FIXME duplicate code, cleanup!
