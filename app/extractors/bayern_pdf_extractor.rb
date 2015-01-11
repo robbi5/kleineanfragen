@@ -43,7 +43,7 @@ class BayernPDFExtractor
     # Antwort\ndes Staatsministeriums des Innern, für Bau und Verkehr\nvom 10.10.2014
     m = @contents.match(/Antwort\ndes (Staatsministeriums?\s[\p{L}\s\,\-]+)\s+vom/m)
     if m
-      ministry = m[1].gsub("\n", '')
+      ministry = m[1].gsub(/(\p{L}+)\-\n(\p{L}+)/m, '\1\2').gsub("\n", '').strip
       ministry.gsub!(/^Staatsministeriums/, 'Staatsministerium') # remove Genitiv
       ministries << ministry
     end
