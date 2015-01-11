@@ -73,7 +73,7 @@ module BerlinAghScraper
     end
   end
 
-  class Details < Scraper
+  class Detail < Scraper
     SEARCH_URL = BASE_URL + '/starweb/AHAB/servlet.starweb?path=AHAB/lisshfl.web&id=ahabfastlink&format=WEBVORGLFL&search='
 
     def initialize(legislative_term, reference)
@@ -144,5 +144,5 @@ end
 ###
 # Usage:
 #   puts BerlinAghScraper::Overview.new.scrape.inspect
-#   puts BerlinAghScraper::Details.new(17, 2000).scrape.inspect
+#   puts BerlinAghScraper::Detail.new(17, 2000).scrape.inspect
 ###
