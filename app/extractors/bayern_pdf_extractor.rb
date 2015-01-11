@@ -35,7 +35,7 @@ class BayernPDFExtractor
     return nil if @contents.nil?
     ministries = []
 
-    # FIXME add people
+    # FIXME: add people
     # [dD]e[rs]\s([\p{L}\s\,]+)\s+vom
     # Antwort\nder Staatsministerin für Gesundheit und Pflege\nvom 20.08.2014
     # Antwort\nDes Leiters der Bayerischen Staatskanzlei Staatsministerin für Bundesangelegenheiten und Sonderaufgaben\n\nvom 21.08.2014
@@ -43,7 +43,7 @@ class BayernPDFExtractor
     # Antwort\ndes Staatsministeriums des Innern, für Bau und Verkehr\nvom 10.10.2014
     m = @contents.match(/Antwort\ndes (Staatsministeriums?\s[\p{L}\s\,\-]+)\s+vom/m)
     if m
-      ministry = m[1].gsub(/(\p{L}+)\-\n(\p{L}+)/m, '\1\2').gsub("\n", '').strip
+      ministry = m[1].gsub(/(\p{L}+)\-\p{Zs}*\n(\p{L}+)/m, '\1\2').gsub("\n", '').strip
       ministry.gsub!(/^Staatsministeriums/, 'Staatsministerium') # remove Genitiv
       ministries << ministry
     end
