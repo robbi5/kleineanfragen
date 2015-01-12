@@ -25,14 +25,18 @@ class PaperController < ApplicationController
   end
 
   def search
-    @term = params[:q]
-    redirect_to root_url if @term.blank?
+    @term = params[:q].presence
+    @conditions = {}
+    @conditions[:contains_table] = true if params[:table].present?
+    redirect_to root_url if @term.blank? && @conditions.blank?
 
-    query = Paper.search @term,
+    query = Paper.search (@term || '*'),
+                         where: @conditions,
                          fields: ['title^10', :contents],
                          page: params[:page],
                          per_page: 10,
                          highlight: { tag: '<mark>' },
+                         facets: [:contains_table],
                          execute: false
 
     # boost newer papers

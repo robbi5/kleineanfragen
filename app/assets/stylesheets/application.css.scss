@@ -115,6 +115,7 @@ $grid-float-breakpoint:   320px;
 
 .jumbotron--search {
   padding: 30px;
+  margin-bottom: 0;
 }
 
 .search .twitter-typeahead,
@@ -380,6 +381,19 @@ span.twitter-typeahead {
       font-size: 1.6em;
     }
   }
+}
+
+.facetbar {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+  padding: 5px 0;
+
+  .form-group label {
+    margin-bottom: 0;
+  }
+}
+.facetbar-heading {
+  margin-right: 15px;
 }
 
 .searchresult-title mark {
