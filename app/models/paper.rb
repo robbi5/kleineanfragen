@@ -47,7 +47,7 @@ class Paper < ActiveRecord::Base
 
   def search_data
     # or: https://github.com/ankane/searchkick#personalized-results
-    as_json only: [:body_id, :legislative_term, :reference, :title, :contents, :published_at]
+    as_json only: [:body_id, :legislative_term, :reference, :title, :contents, :contains_table, :published_at]
   end
 
   def autocomplete_data

@@ -17,6 +17,7 @@ class ExtractTextFromPaperJob < ActiveJob::Base
     paper.contents = text
     paper.save
 
+    ContainsTableJob.perform_later(paper)
     ExtractOriginatorsJob.perform_later(paper)
     ExtractAnswerersJob.perform_later(paper)
   end
