@@ -37,7 +37,7 @@
     <% end %>
     <p>Veröffentlicht am <%= l @paper.published_at %></p>
     <p>
-      <%= link_to 'PDF herunterladen', paper_path(@body, @legislative_term, @paper, {format: :pdf}), {class: 'btn btn-primary'} %>
+      <%= link_to 'PDF herunterladen', paper_path(@body, @legislative_term, @paper, {format: :pdf}), {class: 'btn btn-primary', target: '_blank'} %>
       <br/><small>(<%= @paper.page_count || '?' %> <%= t :pages, count: @paper.page_count || 0 %>)</small>
     </p>
     <p>
