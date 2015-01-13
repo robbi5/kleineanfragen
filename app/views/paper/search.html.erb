@@ -37,8 +37,8 @@
   <% @papers.with_details.each do |paper, details| %>
   <li>
     <%
-      title = details[:highlight][:title].try(:html_safe) || paper.title
-      snippet = details[:highlight][:contents] || ""
+      title = details[:highlight].try(:fetch, :title, nil).try(:html_safe) || paper.title
+      snippet = details[:highlight].try(:fetch, :contents, nil) || ''
       snippet += "&hellip;" unless snippet.blank?
     %>
     <p>
