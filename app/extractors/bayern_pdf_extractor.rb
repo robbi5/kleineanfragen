@@ -17,13 +17,13 @@ class BayernPDFExtractor
       m = @contents.match(regex)
       next unless m
 
-      person = m[1].gsub(/\p{Zs}/, ' ').gsub("\n", '').gsub(' und', ', ')
+      person = m[1].gsub(/\p{Z}/, ' ').gsub("\n", '').gsub(' und', ', ')
       if person.include?(',')
-        people.concat person.split(',').map(&:strip)
+        people.concat person.split(',').map { |s| s.gsub(/\p{Z}+/, ' ').strip }
       else
-        people << person.strip
+        people << person.gsub(/\p{Z}+/, ' ').strip
       end
-      parties << m[2].gsub("\n", ' ').strip
+      parties << m[2].gsub(/[\n\p{Z}]+/, ' ').strip
 
       # only one regex must match
       break
@@ -39,6 +39,9 @@ class BayernPDFExtractor
     # [dD]e[rs]\s([\p{L}\s\,]+)\s+vom
     # Antwort\nder Staatsministerin für Gesundheit und Pflege\nvom 20.08.2014
     # Antwort\nDes Leiters der Bayerischen Staatskanzlei Staatsministerin für Bundesangelegenheiten und Sonderaufgaben\n\nvom 21.08.2014
+
+    # FIXME: add special ministries
+    # Antwort der Bayerischen Staatskanzlei (17/804)
 
     # Antwort\ndes Staatsministeriums des Innern, für Bau und Verkehr\nvom 10.10.2014
     m = @contents.match(/Antwort\ndes (Staatsministeriums?\s[\p{L}\s\,\-]+)\s+vom/m)

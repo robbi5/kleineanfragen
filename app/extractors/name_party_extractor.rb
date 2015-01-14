@@ -10,8 +10,8 @@ class NamePartyExtractor
 
     pairs.each do |line|
       m = line.match(/(.+)\s\((.+)\)/)
-      people << m[1]
-      parties << m[2]
+      people << m[1].strip.gsub(/\p{Z}+/, ' ')
+      parties << m[2].strip.gsub(/\p{Z}+/, ' ')
     end
 
     { people: people, parties: parties.uniq }
