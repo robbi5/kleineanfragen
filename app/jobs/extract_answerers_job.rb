@@ -35,6 +35,6 @@ class ExtractAnswerersJob < ActiveJob::Base
 
   def normalize(name, prefix, body = nil)
     return name if Rails.configuration.x.nomenklatura_api_key.blank?
-    Nomenklatura::Dataset.new("ka-#{prefix}" + (!body.nil? ? "-#{body.state}" : '')).lookup(name)
+    Nomenklatura::Dataset.new("ka-#{prefix}" + (!body.nil? ? "-#{body.state.downcase}" : '')).lookup(name)
   end
 end
