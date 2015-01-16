@@ -17,6 +17,7 @@ class ExtractAnswerersJob < ActiveJob::Base
     unless answerers[:ministries].blank?
       # write ministry
       answerers[:ministries].each do |ministry|
+        ministry = normalize(ministry, 'ministries', paper.body)
         Rails.logger.debug "+ Ministry: #{ministry}"
         min = Ministry
               .where(body: paper.body)
@@ -30,5 +31,10 @@ class ExtractAnswerersJob < ActiveJob::Base
     else
       Rails.logger.warn "No Ministries found in Paper [#{paper.body.state} #{paper.full_reference}]"
     end
+  end
+
+  def normalize(name, prefix, body = nil)
+    return name if Rails.configuration.x.nomenklatura_api_key.blank?
+    Nomenklatura::Dataset.new("ka-#{prefix}" + (!body.nil? ? "-#{body.state}" : '')).lookup(name)
   end
 end
