@@ -51,7 +51,8 @@ class ImportNewPapersJob < ActiveJob::Base
       unless originators[:parties].blank?
         # write parties
         originators[:parties].each do |party|
-          Rails.logger.debug "+ Originator: #{party}"
+          party = normalize(party, 'parties')
+          Rails.logger.debug "+ Originator (Party): #{party}"
           org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
           unless paper.originator_organizations.include? org
             paper.originator_organizations << org
@@ -63,7 +64,8 @@ class ImportNewPapersJob < ActiveJob::Base
       unless originators[:people].blank?
         # write people
         originators[:people].each do |name|
-          Rails.logger.debug "+ Originator: #{name}"
+          name = normalize(name, 'people', paper.body)
+          Rails.logger.debug "+ Originator (Person): #{name}"
           person = Person.where('lower(name) = ?', name.mb_chars.downcase.to_s).first_or_create(name: name)
           unless paper.originator_people.include? person
             paper.originator_people << person
@@ -79,13 +81,14 @@ class ImportNewPapersJob < ActiveJob::Base
       unless answerers[:ministries].blank?
         # write ministries
         answerers[:ministries].each do |ministry|
-          Rails.logger.debug "+ Ministry: #{ministry}"
           unless ministry.is_a? Ministry
+            ministry = normalize(ministry, 'ministries', paper.body)
             ministry = Ministry
                        .where(body: paper.body)
                        .where('lower(name) = ?', ministry.mb_chars.downcase.to_s)
                        .first_or_create(body: paper.body, name: ministry)
           end
+          Rails.logger.debug "+ Ministry: #{ministry.name}"
           unless paper.answerer_ministries.include? ministry
             paper.answerer_ministries << ministry
             paper.save
@@ -95,5 +98,10 @@ class ImportNewPapersJob < ActiveJob::Base
     end
     LoadPaperDetailsJob.perform_later(paper) if should_trigger_load_paper_details && @load_details
     StorePaperPDFJob.perform_later(paper)
+  end
+
+  def normalize(name, prefix, body = nil)
+    return name if Rails.configuration.x.nomenklatura_api_key.blank?
+    Nomenklatura::Dataset.new("ka-#{prefix}" + (!body.nil? ? "-#{body.state}" : '')).lookup(name)
   end
 end

@@ -11,7 +11,8 @@ class LoadPaperDetailsJob < ActiveJob::Base
     unless originators[:parties].blank?
       # write parties
       originators[:parties].each do |party|
-        Rails.logger.debug "+ Originator: #{party}"
+        party = normalize(party, 'parties')
+        Rails.logger.debug "+ Originator (Party): #{party}"
         org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
         unless paper.originator_organizations.include? org
           paper.originator_organizations << org
@@ -23,7 +24,8 @@ class LoadPaperDetailsJob < ActiveJob::Base
     unless originators[:people].blank?
       # write people
       originators[:people].each do |name|
-        Rails.logger.debug "+ Originator: #{name}"
+        name = normalize(name, 'people', paper.body)
+        Rails.logger.debug "+ Originator (Person): #{name}"
         person = Person.where('lower(name) = ?', name.mb_chars.downcase.to_s).first_or_create(name: name)
         unless paper.originator_people.include? person
           paper.originator_people << person
@@ -31,5 +33,10 @@ class LoadPaperDetailsJob < ActiveJob::Base
         end
       end
     end
+  end
+
+  def normalize(name, prefix, body = nil)
+    return name if Rails.configuration.x.nomenklatura_api_key.blank?
+    Nomenklatura::Dataset.new("ka-#{prefix}" + (!body.nil? ? "-#{body.state}" : '')).lookup(name)
   end
 end

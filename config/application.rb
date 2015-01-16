@@ -12,6 +12,7 @@ module Kleineanfragen
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    config.autoload_paths += %W(#{Rails.root}/lib)
     config.autoload_paths += %W(#{Rails.root}/app/jobs)
     config.autoload_paths += %W(#{Rails.root}/app/scrapers)
     config.autoload_paths += %W(#{Rails.root}/app/extractors)
@@ -35,5 +36,7 @@ module Kleineanfragen
     config.x.user_agent = 'kleineanfragen-scraper (scraper@kleineanfragen.de)'
     # Tika Server URL for extracting text from papers
     config.x.tika_server = ENV['TIKA_SERVER_URL'] || false
+    # Nomenklatura API Key
+    config.x.nomenklatura_api_key = ENV['NOMENKLATURA_APIKEY'] || false
   end
 end

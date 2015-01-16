@@ -20,6 +20,10 @@ For extracting text from pdfs you can use a server instance of [Tika](http://tik
 
 For installation of these, see http://documentcloud.github.io/docsplit/#installation
 
+* [Nomenklatura](https://github.com/pudo/nomenklatura) Instance
+
+  Used for normalization of people names, ministries and parties.
+
 Configuration
 -------------
 
@@ -38,6 +42,8 @@ Just generate a fresh secret_key_base.
     export NEWRELIC_LICENSE_KEY="x"
     export REDIS_URL="redis://localhost:6379"
     export TIKA_SERVER_URL="http://localhost:9998/tika"
+    export NOMENKLATURA_HOST="http://localhost:9000"
+    export NOMENKLATURA_APIKEY="x"
 
 ### config/fog.yml
 

@@ -80,3 +80,6 @@ gem 'fog', '1.24.0'
 
 # jobs
 gem 'resque', '~> 1.25.2'
+
+# for nomenklatura
+gem 'httparty', '~> 0.13.3'
