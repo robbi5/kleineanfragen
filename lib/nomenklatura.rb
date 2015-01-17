@@ -35,8 +35,19 @@ module Nomenklatura
     end
   end
 
-  class InvalidRequest < StandardError; end
-  class NoMatch < StandardError; end
+  class Error < StandardError
+    attr_reader :raw, :status, :errors
+
+    def initialize(data = {})
+      @raw = data
+      @status = data.try(:[], 'status')
+      @errors = data.try(:[], 'errors')
+      super(data.try(:[], 'description') || "Unknown error: #{data}")
+    end
+  end
+
+  class InvalidRequest < Error; end
+  class NoMatch < Error; end
 
   class Dataset
     def initialize(name, client_options = {})
@@ -49,8 +60,8 @@ module Nomenklatura
     #   @client.post('/datasets', data)
     # end
 
-    def entity_by_name(entityname)
-      resp = @client.get(format('/datasets/%s/find', @name), name: entityname)
+    def entity_by_name(entityname, params = {})
+      resp = @client.get(format('/datasets/%s/find', @name), params.merge(name: entityname))
       if resp.code == 404
         fail NoMatch, resp.parsed_response
       elsif resp.code != 200
@@ -77,12 +88,19 @@ module Nomenklatura
 
     # PORT from API version 1
     #
-    # look for an entity by name, if it doens't exist, create one. return cleaned/same name
+    # look for an entity by name, if it doesn't exist, create one. return cleaned/same name
     def lookup(name)
       entity = entity_by_name(name).dereference
       return entity.name
     rescue NoMatch
-      create_entity(name)
+      begin
+        create_entity(name)
+      rescue InvalidRequest => inv
+        # caching problem on api side
+        raise unless inv.errors.try(:[], 'name') == 'Entity already exists.'
+        entity = entity_by_name(name, cachebreaker: Time.now.to_i).dereference
+        return entity.name
+      end
       return name
     end
   end
