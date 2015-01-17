@@ -83,3 +83,6 @@ gem 'resque', '~> 1.25.2'
 
 # for nomenklatura
 gem 'httparty', '~> 0.13.3'
+
+# simple title and opengraph/twitter cards view helpers
+gem 'tophat', '~>2.2.0'

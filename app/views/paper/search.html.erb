@@ -1,4 +1,4 @@
-<% content_for :title do %>Suche nach <%= @term %><% if !@papers.first_page?%> (Seite <%= @papers.current_page %>)<% end %><% end %>
+<% title "Suche nach #{@term}" + (!@papers.first_page? ? " (Seite #{@papers.current_page})" : '') %>
 
 <% content_for :main_fullwidth do %>
 <%= form_tag "/search", method: :get, role: 'search', class: 'search' do %>

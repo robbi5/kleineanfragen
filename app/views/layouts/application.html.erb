@@ -2,13 +2,13 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title><%= content_for?(:title) ? yield(:title) + (' &mdash; '.html_safe) : '' %>kleineAnfragen</title>
+  <%= title site: 'kleineAnfragen', separator: '—', reverse: true %>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%# = csrf_meta_tags #%>
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:site" content="@kleineanfragen" />
+  <%= description %>
+  <%= opengraph { |graph| graph.site_name 'kleineAnfragen' } -%>
+  <%= twitter_card('summary') { |card| card.site '@kleineanfragen' } -%>
 </head>
 <body>
 

@@ -1,5 +1,19 @@
-<% content_for :title do %><%= @paper.title %> (<%= @paper.full_reference %>) &mdash; <%= @body.name %>, <%= @legislative_term %>. Wahlperiode<% end %>
-
+<%
+  title "#{@paper.title} (#{@paper.full_reference}) &mdash; #{@body.name}, #{@legislative_term}. Wahlperiode"
+  desc = "kleine Anfrage aus #{@body.name}, #{@legislative_term}. Wahlperiode. " +
+         "Eingereicht von #{@paper.originator_people.collect(&:name).join(', ')}, " +
+         "#{@paper.originator_organizations.collect(&:name).join(', ')}. " +
+         (@paper.page_count.present? ? "#{@paper.page_count} #{t(:pages, count: @paper.page_count)}." : '')
+  description desc
+  opengraph do |graph|
+    graph.title @paper.title
+    graph.description desc
+  end
+  twitter_card('summary') do |card|
+    card.title @paper.title
+    card.description desc
+  end
+%>
 <% content_for :main_fullwidth do %>
 <div class="breadcrumb-fullwidth">
   <div class="container">

@@ -1,4 +1,4 @@
-<% content_for :title do %><%= @body.name %>, <%= @legislative_term %>. Wahlperiode<% end %>
+<% title "#{@body.name}, #{@legislative_term}. Wahlperiode" %>
 
 <div class="page-header">
   <h1><%= link_to @body.name, @body %> &mdash; <%= @legislative_term %>. Wahlperiode</h1>
