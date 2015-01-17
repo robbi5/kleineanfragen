@@ -9,20 +9,7 @@
   <li>
     <h2><%= l day %></h2>
     <ol class="paper-list paper-list--with-body">
-      <% papers.each do |paper| %>
-      <li>
-        <p>
-          <span class="source">
-            <%= link_to paper.body.state, paper.body, title: paper.body.name %>
-            <span class="label label-default"><%= link_to_paper paper.full_reference, paper %></span>
-          </span>
-          <%= link_to_paper paper.title, paper %>
-        </p>
-        <p class="meta">
-          Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <time datetime="<%= paper.published_at.iso8601 %>"><%= l paper.published_at %></time>
-        </p>
-      </li>
-      <% end %>
+      <%= render partial: 'paper/paper', collection: papers, locals: { show_body: true } %>
     </ol>
   </li>
   <% end %>
