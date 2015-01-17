@@ -20,13 +20,13 @@
   <div class="col-md-3 col-md-push-9">
     <p><span class="label label-default label-big"><%= @paper.full_reference %></span></p>
     <p>
-      Eingereicht von:<br/>
-      <%= @paper.originator_people.collect(&:name).join(', ') %><br/>
+      Eingereicht von:<br class="hidden-xs hidden-sm"/>
+      <%= @paper.originator_people.collect(&:name).join(', ') %><br class="hidden-xs hidden-sm"/>
       <%= @paper.originator_organizations.collect(&:name).join(', ') %>
     </p>
     <% if @paper.answerer_ministries.size > 0 %>
     <p>
-      Beantwortet von:<br/>
+      Beantwortet von:<br class="hidden-xs hidden-sm"/>
       <%
         ministries = @paper.answerer_ministries
         ministries.each do |ministry|
