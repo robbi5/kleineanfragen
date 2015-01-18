@@ -43,6 +43,7 @@ $font-family-base:        $font-family-sans-serif !default;
 $grid-float-breakpoint:   320px;
 
 @import "bootstrap";
+@import "bootstrap-select";
 
 .navbar {
   margin-bottom: 0;
@@ -389,11 +390,29 @@ span.twitter-typeahead {
   padding: 5px 0;
 
   .form-group label {
+    vertical-align: middle;
     margin-bottom: 0;
   }
+
+  .btn {
+    background: #ECECEC;
+    height: 2.1em;
+    padding-right: 28px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 }
-.facetbar-heading {
+.facetbar-heading, .facetbar-group {
   margin-right: 15px;
+}
+
+.facetbar-group select {
+  vertical-align: middle;
+}
+
+.selectpicker > li.selected > a {
+  background: #757F9A;
+  color: #fff;
 }
 
 .searchresult-title mark {

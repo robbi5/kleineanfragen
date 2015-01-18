@@ -30,14 +30,21 @@ class PaperController < ApplicationController
     @conditions[:contains_table] = true if params[:table].present?
     redirect_to root_url if @term.blank? && @conditions.blank?
 
+    @bodies = Body.all.map { |body| OpenStruct.new(name: body.name, state: body.state) }
+    if params[:body].present?
+      @conditions[:body] = @bodies.select { |body| params[:body].include? body.state }.map(&:state)
+      @conditions.delete :body if params[:body].include? ''
+    end
+
     query = Paper.search (@term || '*'),
                          where: @conditions,
                          fields: ['title^10', :contents],
                          page: params[:page],
                          per_page: 10,
                          highlight: { tag: '<mark>' },
-                         facets: [:contains_table],
-                         execute: false
+                         facets: [:contains_table, :body],
+                         execute: false,
+                         misspellings: false
 
     # boost newer papers
     unboosted_query = query.body[:query]

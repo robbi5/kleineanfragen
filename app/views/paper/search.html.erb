@@ -21,10 +21,18 @@
       <div class="facetbar-heading form-group">
         <label>Suche einschränken:</label>
       </div>
-      <div class="checkbox">
+      <div class="checkbox facetbar-group">
         <label>
           <%= check_box_tag :table, 1, @conditions[:contains_table].presence, id: nil %> enthält Tabelle <%= write_facet_count('contains_table', 'T') %>
         </label>
+      </div>
+      <div class="form-group facetbar-group">
+        <label for="body">Parlament:</label>
+        <% @bodies.map! {|body| body.name = body.name + ' ' + write_facet_count('body', body.state); body }%>
+        <%= select_tag :body, options_from_collection_for_select(@bodies, 'state', 'name', @conditions[:body]),
+                       multiple: true,
+                       class: 'selectpicker',
+                       title: 'alle Parlamente' %>
       </div>
     </div>
   </div>

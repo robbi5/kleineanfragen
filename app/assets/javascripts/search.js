@@ -21,4 +21,8 @@ $(function(){
       location.href = suggestion.url;
     }
   });
+  $('.selectpicker').selectpicker({
+      iconBase: '',
+      tickIcon: 'selected-tick'
+  });
 });
