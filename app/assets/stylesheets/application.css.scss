@@ -115,7 +115,10 @@ $grid-float-breakpoint:   320px;
 }
 
 .jumbotron--search {
-  padding: 30px;
+  padding: 15px 0;
+  @media (min-width: $screen-sm-min) {
+    padding: 30px 0;
+  }
   margin-bottom: 0;
 }
 
@@ -290,12 +293,18 @@ span.twitter-typeahead {
   padding: 0;
 
   li {
-    margin-bottom: 0.6em;
+    margin-bottom: 1.6em;
+    @media (min-width: $screen-xs-min) {
+      margin-bottom: 0.6em;
+    }
   }
 
   p {
     margin-bottom: 0;
-    padding-left: 55px;
+    padding-left: 0;
+    @media (min-width: $screen-xs-min) {
+      padding-left: 55px;
+    }
   }
 
   .source {
@@ -314,6 +323,12 @@ span.twitter-typeahead {
 
   &.paper-list--with-body {
     p {
+      padding-left: 0;
+      @media (min-width: $screen-xs-min) {
+        padding-left: 75px;
+      }
+    }
+    .source-and-title {
       padding-left: 75px;
     }
     .source {

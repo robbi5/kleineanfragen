@@ -49,7 +49,7 @@
       snippet = details[:highlight].try(:fetch, :contents, nil) || ''
       snippet += "&hellip;" unless snippet.blank?
     %>
-    <p>
+    <p class="source-and-title">
       <span class="source">
       <%= link_to paper.body.state, paper.body, title: paper.body.name %>
       <span class="label label-default"><%= link_to_paper paper.full_reference, paper %></span></span>

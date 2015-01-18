@@ -39,7 +39,7 @@
     <ol class="paper-list paper-list--with-body">
       <% @papers.each do |paper| %>
       <li>
-        <p>
+        <p class="source-and-title">
           <span class="source">
             <%= link_to paper.body.state, paper.body, title: paper.body.name %>
             <span class="label label-default"><%= link_to_paper paper.full_reference, paper %></span>

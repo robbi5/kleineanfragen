@@ -2,7 +2,7 @@
 show_body = false if show_body.nil?
 %>
 <li>
-  <p>
+  <p class="source-and-title">
     <span class="source">
       <%= link_to paper.body.state, paper.body, title: paper.body.name if show_body -%>
       <span class="label label-default"><%= link_to_paper paper.full_reference, paper %></span>
