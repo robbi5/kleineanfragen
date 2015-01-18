@@ -14,27 +14,9 @@ class ExtractAnswerersJob < ActiveJob::Base
       return
     end
 
-    unless answerers[:ministries].blank?
-      # write ministry
-      answerers[:ministries].each do |ministry|
-        ministry = normalize(ministry, 'ministries', paper.body)
-        Rails.logger.debug "+ Ministry: #{ministry}"
-        min = Ministry
-              .where(body: paper.body)
-              .where('lower(name) = ?', ministry.mb_chars.downcase.to_s)
-              .first_or_create(body: paper.body, name: ministry)
-        unless paper.answerer_ministries.include? min
-          paper.answerer_ministries << min
-          paper.save
-        end
-      end
-    else
-      Rails.logger.warn "No Ministries found in Paper [#{paper.body.state} #{paper.full_reference}]"
-    end
-  end
+    Rails.logger.warn "No Ministries found in Paper [#{paper.body.state} #{paper.full_reference}]" if answerers[:ministries].blank?
 
-  def normalize(name, prefix, body = nil)
-    return name if Rails.configuration.x.nomenklatura_api_key.blank?
-    Nomenklatura::Dataset.new("ka-#{prefix}" + (!body.nil? ? "-#{body.state.downcase}" : '')).lookup(name)
+    paper.answerers = answerers
+    paper.save
   end
 end

@@ -14,39 +14,10 @@ class ExtractOriginatorsJob < ActiveJob::Base
       return
     end
 
-    unless originators[:parties].blank?
-      # write org
-      originators[:parties].each do |party|
-        party = normalize(party, 'parties')
-        Rails.logger.debug "+ Originator: #{party}"
-        org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
-        unless paper.originator_organizations.include? org
-          paper.originator_organizations << org
-          paper.save
-        end
-      end
-    else
-      Rails.logger.warn "No Parties found in Paper [#{paper.body.state} #{paper.full_reference}]"
-    end
+    Rails.logger.warn "No Parties found in Paper [#{paper.body.state} #{paper.full_reference}]" if originators[:parties].blank?
+    Rails.logger.warn "No People found in Paper [#{paper.body.state} #{paper.full_reference}]" if originators[:people].blank?
 
-    unless originators[:people].blank?
-      # write people
-      originators[:people].each do |name|
-        name = normalize(name, 'people', paper.body)
-        Rails.logger.debug "+ Originator: #{name}"
-        person = Person.where('lower(name) = ?', name.mb_chars.downcase.to_s).first_or_create(name: name)
-        unless paper.originator_people.include? person
-          paper.originator_people << person
-          paper.save
-        end
-      end
-    else
-      Rails.logger.warn "No People found in Paper [#{paper.body.state} #{paper.full_reference}]"
-    end
-  end
-
-  def normalize(name, prefix, body = nil)
-    return name if Rails.configuration.x.nomenklatura_api_key.blank?
-    Nomenklatura::Dataset.new("ka-#{prefix}" + (!body.nil? ? "-#{body.state.downcase}" : '')).lookup(name)
+    paper.originators = originators
+    paper.save
   end
 end

@@ -39,69 +39,10 @@ class ImportNewPapersJob < ActiveJob::Base
     end
   end
 
-  # TODO: rewrite
   def on_item(item)
     Rails.logger.info "New Paper: [#{item[:reference]}] \"#{item[:title]}\""
-    paper = Paper.create!(item.except(:full_reference, :originators, :answerers).merge({ body: @body }))
-    should_trigger_load_paper_details = false
-    if item[:originators].blank?
-      should_trigger_load_paper_details = true
-    else
-      originators = item[:originators]
-      unless originators[:parties].blank?
-        # write parties
-        originators[:parties].each do |party|
-          party = normalize(party, 'parties')
-          Rails.logger.debug "+ Originator (Party): #{party}"
-          org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
-          unless paper.originator_organizations.include? org
-            paper.originator_organizations << org
-            paper.save
-          end
-        end
-      end
-
-      unless originators[:people].blank?
-        # write people
-        originators[:people].each do |name|
-          name = normalize(name, 'people', paper.body)
-          Rails.logger.debug "+ Originator (Person): #{name}"
-          person = Person.where('lower(name) = ?', name.mb_chars.downcase.to_s).first_or_create(name: name)
-          unless paper.originator_people.include? person
-            paper.originator_people << person
-            paper.save
-          end
-        end
-      end
-    end
-    if item[:answerers].blank?
-      should_trigger_load_paper_details = true
-    else
-      answerers = item[:answerers]
-      unless answerers[:ministries].blank?
-        # write ministries
-        answerers[:ministries].each do |ministry|
-          unless ministry.is_a? Ministry
-            ministry = normalize(ministry, 'ministries', paper.body)
-            ministry = Ministry
-                       .where(body: paper.body)
-                       .where('lower(name) = ?', ministry.mb_chars.downcase.to_s)
-                       .first_or_create(body: paper.body, name: ministry)
-          end
-          Rails.logger.debug "+ Ministry: #{ministry.name}"
-          unless paper.answerer_ministries.include? ministry
-            paper.answerer_ministries << ministry
-            paper.save
-          end
-        end
-      end
-    end
-    LoadPaperDetailsJob.perform_later(paper) if should_trigger_load_paper_details && @load_details
+    paper = Paper.create!(item.except(:full_reference).merge(body: @body))
+    LoadPaperDetailsJob.perform_later(paper) if (item[:originators].blank? || item[:answerers].blank?) && @load_details
     StorePaperPDFJob.perform_later(paper)
-  end
-
-  def normalize(name, prefix, body = nil)
-    return name if Rails.configuration.x.nomenklatura_api_key.blank?
-    Nomenklatura::Dataset.new("ka-#{prefix}" + (!body.nil? ? "-#{body.state.downcase}" : '')).lookup(name)
   end
 end

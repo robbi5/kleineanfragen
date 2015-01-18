@@ -8,7 +8,7 @@ module BerlinAghScraper
 
     # FIXME: find search with pagination, add support for pagination
     def scrape
-      mp = mechanize.get SEARCH_URL + CGI.escape('WP=' + @legislative_term + ' AND (etyp=schriftl*)')
+      mp = mechanize.get SEARCH_URL + CGI.escape("WP=#{@legislative_term} AND (etyp=schriftl*)")
 
       body = mp.search "//table[contains(@summary, 'Hauptbereich')]"
       legterm = body.search("//th[contains(@class, 'gross2')]").inner_html.strip

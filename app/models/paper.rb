@@ -71,14 +71,6 @@ class Paper < ActiveRecord::Base
     legislative_term.to_s + '/' + reference.to_s
   end
 
-  # helper method to fix non-standard urls in the database
-  # apply it with: Paper.find_each(&:normalize_url)
-  def normalize_url
-    normalized_url = Addressable::URI.parse(url).normalize.to_s
-    self[:url] = normalized_url
-    save!
-  end
-
   def path
     File.join(body.folder_name, legislative_term.to_s, reference.to_s + '.pdf')
   end
@@ -93,5 +85,52 @@ class Paper < ActiveRecord::Base
 
   def extract_page_count
     Docsplit.extract_length local_path
+  end
+
+  def originators_parties=(parties)
+    parties.each do |party|
+      party = normalize(party, 'parties')
+      Rails.logger.debug "+ Originator (Party): #{party}" # TODO: refactor
+      org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
+      originator_organizations << org unless originator_organizations.include? org
+    end
+  end
+
+  def originators_people=(people)
+    people.each do |name|
+      name = normalize(name, 'people', body)
+      Rails.logger.debug "+ Originator (Person): #{name}" # TODO: refactor
+      person = Person.where('lower(name) = ?', name.mb_chars.downcase.to_s).first_or_create(name: name)
+      originator_people << person unless originator_people.include? person
+    end
+  end
+
+  def originators=(originators)
+    self.originators_parties = originators[:parties] unless originators[:parties].blank?
+    self.originators_people = originators[:people] unless originators[:people].blank?
+  end
+
+  def answerers_ministries=(ministries)
+    ministries.each do |ministry|
+      unless ministry.is_a? Ministry
+        name = normalize(ministry, 'ministries', body)
+        ministry = Ministry.where(body: body)
+                   .where('lower(name) = ?', name.mb_chars.downcase.to_s)
+                   .first_or_create(body: body, name: name)
+      end
+      Rails.logger.debug "+ Ministry: #{ministry.name}" # TODO: refactor
+      answerer_ministries << ministry unless answerer_ministries.include? ministry
+    end
+  end
+
+  def answerers=(answerers)
+    self.answerers_ministries = answerers[:ministries] unless answerers[:ministries].blank?
+  end
+
+  private
+
+  def normalize(name, prefix, body = nil)
+    return name if Rails.configuration.x.nomenklatura_api_key.blank?
+    Nomenklatura::Dataset.new("ka-#{prefix}" + (!body.nil? ? "-#{body.state.downcase}" : '')).lookup(name)
   end
 end
