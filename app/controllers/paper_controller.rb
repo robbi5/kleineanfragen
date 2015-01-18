@@ -43,6 +43,7 @@ class PaperController < ApplicationController
                          per_page: 10,
                          highlight: { tag: '<mark>' },
                          facets: [:contains_table, :body],
+                         smart_facets: true,
                          execute: false,
                          misspellings: false
 
