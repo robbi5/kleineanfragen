@@ -80,7 +80,10 @@ class Paper < ActiveRecord::Base
   end
 
   def public_url
-    FogStorageBucket.files.head(path).try(:public_url)
+    AppStorage.bucket.files.head(path).try(:public_url)
+  rescue => error
+    Rails.logger.warn "Cannot get public_url of paper [#{body.state} #{full_reference}]: #{error}"
+    nil
   end
 
   def extract_page_count

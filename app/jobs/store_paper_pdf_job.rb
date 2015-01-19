@@ -3,15 +3,16 @@ class StorePaperPDFJob < ActiveJob::Base
 
   def perform(paper)
     Rails.logger.info "Downloading PDF for Paper [#{paper.body.state} #{paper.full_reference}]"
+    fail 'AppStorage: Bucket not available!' if AppStorage.bucket.nil?
 
     download_paper(paper)
 
-    unless FogStorageBucket.files.head(paper.path).nil?
+    unless AppStorage.bucket.files.head(paper.path).nil?
       Rails.logger.info "PDF for Paper [#{paper.body.state} #{paper.full_reference}] already exists in Storage"
       return
     end
 
-    file = FogStorageBucket.files.new(key: paper.path, public: true, body: File.open(paper.local_path))
+    file = AppStorage.bucket.files.new(key: paper.path, public: true, body: File.open(paper.local_path))
     file.save
 
     CountPageNumbersJob.perform_later(paper) if paper.page_count.blank?
