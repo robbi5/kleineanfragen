@@ -75,6 +75,8 @@ module BayernLandtagScraper
           published_at: published_at,
           url: url,
           title: title
+          # originators not available
+          # answerers not available
         }
       end
 
@@ -100,20 +102,27 @@ module BayernLandtagScraper
       mp = mechanize.get SEARCH_URL + CGI.escape(full_reference)
       mp = mp.link_with(href: /\#LASTFOLDER$/).click
       table = mp.search('//div/table//table[1]').first
-      data = mp.search('//div/table//table[1]//td[2]').first
+      party_el = mp.search('//div/table//table[1]//td[2]').first
+      published_at_el = party_el.previous_element
+      answer_el = party_el.parent.next_element.search('./td[2]')
 
       title_el = table.parent.parent.previous_element.search('./td[3]')
       title = title_el.text.gsub(/\s+/, ' ').strip.gsub(/\n/, '-').gsub('... [mehr]', '').gsub('[weniger]', '').strip
+      party = party_el.inner_html.strip
+      published_at = published_at_el.inner_html.strip
+      link_el = answer_el.at_css('a')
 
-      party = data.inner_html.strip
+      url = Addressable::URI.parse(BASE_URL + link_el.attributes['href'].value).normalize.to_s
+
       {
         legislative_term: @legislative_term,
         full_reference: full_reference,
         reference: @reference,
         title: title,
-        # published_at: published_at, # FIXME
-        # url: url, # FIXME
+        published_at: published_at,
+        url: url,
         originators: { parties: [party] }
+        # answerers not available
       }
     end
   end
