@@ -1,100 +1,88 @@
 require 'date'
 
-# TODO: look into offenesparlament: scrape.py
-# http://dipbt.bundestag.de/extrakt/ba/WP#{@legislative_term}/
-
 module BundestagScraper
   BASE_URL = 'http://dipbt.bundestag.de'
-  START_URL = BASE_URL + '/dip21.web/bt'
-  SEARCH_URL = BASE_URL + '/dip21.web/searchProcedures.do'
 
   class Overview < Scraper
+    # http://dipbt.bundestag.de/extrakt/ba/WP#{@legislative_term}/
+    OVERVIEW_URL = BASE_URL + '/extrakt/ba'
+
+    TYPES = ['Kleine Anfrage', 'Große Anfrage']
+
     def scrape
       m = mechanize
-      # need to open start page first, it sets some required session cookies
-      m.get START_URL
-      # then we can access the search
-      mp = m.get SEARCH_URL
-
-      search_form = mp.forms[0]
-      search_form.field_with(name: 'vorgangstyp').options.find { |opt| opt.text.include? 'Kleine Anfrage' }.select
-      submit_button = search_form.submits.find { |btn| btn.value == 'Suchen' }
-      mp = m.submit(search_form, submit_button)
+      mp = m.get "#{OVERVIEW_URL}/WP#{@legislative_term}/"
+      table = mp.search "//table[contains(@summary, 'Beratungsabläufe')]"
 
       papers = []
-      i = 0
+      table.css('tbody tr').each do |row|
+        type = row.css('td')[0].text
+        link = row.at_css('td a')
+        date = row.css('td')[2].text
+        detail_url = link.attributes['href'].value
 
-      mp.root.css("table[summary='Ergebnisliste'] tbody tr").each do |row|
-        i += 1
-        next if i < 40 # DEBUG
-        break if i > 60 # DEBUG
-        link = row.at('.//td[3]/a')
-        # url = link.attributes['href'].value
-        acronym = row.at('.//td[3]//acronym')
-        if !acronym.nil?
-          title = acronym.attributes['title'].value
-        else
-          title = link.text
-        end
-        date = row.at('.//td[4]').text
-        published_at = Date.parse(date)
+        next unless TYPES.include?(type)
 
-        puts "+ #{title}"
-
-        originators = []
-        full_reference = nil
-        url = nil
-
-        page = m.click link
+        page = m.get "#{OVERVIEW_URL}/WP#{@legislative_term}/#{detail_url}"
         comment_start = page.content.index '<?xml'
         comment_end = page.content.index('-->', comment_start)
         xml = page.content[comment_start...comment_end]
         xml = xml.strip.gsub(/<-.*->/, '') # remove nested "comments"
 
-        # puts xml
         doc = Nokogiri.parse xml
-        legislative_term = doc.css('VORGANG WAHLPERIODE').text.to_i
-        status = doc.css('VORGANG AKTUELLER_STAND').text
-        unless (originator = doc.css('VORGANG INITIATIVE')).empty?
-          originators << originator.text
+        status = doc.at_css('VORGANG AKTUELLER_STAND').text
+
+        unless status == 'Beantwortet'
+          Rails.logger.info "#{detail_url}: ignored, status: #{status}"
+          next
         end
 
-        # skip if no documents are available
-        next if doc.css('VORGANG WICHTIGE_DRUCKSACHE').empty?
+        title = doc.at_css('VORGANG TITEL').text.strip
+        legislative_term = doc.at_css('VORGANG WAHLPERIODE').text.to_i
 
-        doc.css('VORGANG WICHTIGE_DRUCKSACHE').each do |drs|
-          art = drs.css('DRS_TYP').text
-          next if art == 'Kleine Anfrage'
-          url = drs.css('DRS_LINK').text
-          full_reference = drs.css('DRS_NUMMER').text
+        url = nil
+        full_reference = ''
+        found = false
+        doc.css('WICHTIGE_DRUCKSACHE').each do |node|
+          next unless node.at_css('DRS_TYP').text == 'Antwort'
+          found = true
+          url = node.at_css('DRS_LINK').try(:text)
+          full_reference = node.at_css('DRS_NUMMER').text
         end
 
-        puts "  Status: #{status}"
-        puts "  URL: #{url}"
-
-        next if status == 'Noch nicht beantwortet'
-        next if full_reference.blank?
-
-        if status == 'Beantwortet'
-          first = doc.css('VORGANG WICHTIGE_DRUCKSACHE')
-          if first.length == 1 && first.css('DRS_TYP').text == 'Kleine Anfrage'
-            puts '  ⚠️  Nur Anfrage, keine Antwort'
-            next
-          end
-          if url.blank? && !full_reference.blank?
-            puts '  ⚠️  Antwort vorhanden aber nicht veröffentlicht'
-            next
-          end
+        unless found && !url.blank?
+          Rails.logger.info "#{detail_url}: ignored, no paper found"
+          next
         end
-
-        # FIXME: add incomplete papers to "watchlist"
-
-        # last resort
-        next if url.blank?
 
         reference = full_reference.split('/').last
 
-        # puts xml
+        url = Addressable::URI.parse(url).normalize.to_s
+
+        originators = { people: [], parties: [] }
+        answerers = { ministries: [] }
+        doc.css('VORGANGSABLAUF VORGANGSPOSITION').each do |node|
+          urheber = node.at_css('URHEBER').text
+          if urheber.starts_with? 'Kleine Anfrage'
+            node.css('PERSOENLICHER_URHEBER').each do |unode|
+              originators[:people] << "#{unode.at_css('VORNAME').text} #{unode.at_css('NACHNAME').text}"
+              party = unode.at_css('FRAKTION').text
+              originators[:parties] << party unless originators[:parties].include? party
+            end
+          elsif urheber.starts_with? 'Antwort'
+            _, ministry = urheber.match(/: ([^(]*)/).to_a
+            if !ministry.nil?
+              ministry = ministry.strip.sub(/^Bundesregierung, /, '')
+              answerers[:ministries] << ministry
+            else
+              Rails.logger.info "#{full_reference}: no ministry found"
+            end
+            # got date already on overview page, else it could be in FUNDSTELLE
+          end
+        end
+
+        published_at = Date.parse(date)
+
         papers << {
           legislative_term: legislative_term,
           full_reference: full_reference,
@@ -102,20 +90,12 @@ module BundestagScraper
           title: title,
           url: url,
           published_at: published_at,
-          originators: originators
+          originators: originators,
+          answerers: answerers
         }
       end
-
-      # FIXME: navigate to next page
-
-      puts papers.inspect
 
       papers
     end
   end
 end
-
-###
-# Usage:
-#   puts BundestagScraper::Overview.new.scrape.inspect
-###
