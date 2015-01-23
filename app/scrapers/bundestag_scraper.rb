@@ -7,7 +7,12 @@ module BundestagScraper
   class Overview < Scraper
     TYPES = ['Kleine Anfrage', 'Große Anfrage']
 
+    def supports_streaming?
+      true
+    end
+
     def scrape
+      streaming = block_given?
       m = mechanize
       mp = m.get "#{OVERVIEW_URL}/WP#{@legislative_term}/"
       table = mp.search "//table[contains(@summary, 'Beratungsabläufe')]"
@@ -21,10 +26,15 @@ module BundestagScraper
         next unless TYPES.include?(type)
 
         paper = BundestagScraper.scrape_vorgang(m, "#{OVERVIEW_URL}/WP#{@legislative_term}/#{detail_url}")
-        papers << paper if paper.present?
+        next if paper == false
+        if streaming
+          yield paper
+        else
+          papers << paper
+        end
       end
 
-      papers
+      papers unless streaming
     end
   end
 

@@ -10,6 +10,10 @@ class Scraper
     false
   end
 
+  def supports_streaming?
+    false
+  end
+
   def mechanize
     mech = Mechanize.new
     mech.pre_connect_hooks << lambda do |_agent, request|

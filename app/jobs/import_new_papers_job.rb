@@ -33,9 +33,14 @@ class ImportNewPapersJob < ActiveJob::Base
 
   def scrape_single_page
     Rails.logger.info "Importing #{@body.state} - Single Page"
-    @scraper.scrape.each do |item|
-      next if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
+    block = lambda do |item|
+      return if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
       on_item(item)
+    end
+    if @scraper.supports_streaming?
+      @scraper.scrape(&block)
+    else
+      @scraper.scrape.each block
     end
   end
 
