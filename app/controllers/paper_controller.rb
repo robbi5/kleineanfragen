@@ -26,15 +26,16 @@ class PaperController < ApplicationController
 
   def search
     @query = params[:q].presence
-    redirect_to root_url if @query.blank?
+    redirect_to(root_url) && return if @query.blank?
 
     if params[:table].present? || params[:body].present?
       query = params_to_nice_query
       redirect_to search_path(params: { q: query })
+      return
     end
 
-    @terms = SearchTerms.new(@query, ['table', 'body'])
-    @term = @terms.query || '*'
+    @terms = SearchTerms.new(@query || '', %w(table body))
+    @term = @terms.query.presence || '*'
     @conditions = {}
     @conditions[:contains_table] = true if @terms['table']
 
