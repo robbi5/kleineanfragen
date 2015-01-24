@@ -82,6 +82,20 @@ $grid-float-breakpoint:   320px;
   margin-top: 0;
 }
 
+.page-header--has-feed {
+  padding-right: 30px;
+  .feed {
+    float: right;
+    margin-top: -2.6em;
+    margin-right: -30px;
+  }
+}
+
+.feed-icon {
+  width: 24px;
+  height: 24px;
+}
+
 .jumbotron {
   background: linear-gradient(20deg, #757F9A 10%, #D7DDE8 90%);
 

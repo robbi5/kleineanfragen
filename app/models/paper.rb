@@ -86,6 +86,17 @@ class Paper < ActiveRecord::Base
     nil
   end
 
+  def description
+    desc = []
+    desc << "kleine Anfrage #{full_reference} aus #{body.name}. "
+    if originator_people.size > 0
+      desc << "Eingereicht von #{originator_people.collect(&:name).join(', ')}, " +
+              "#{originator_organizations.collect(&:name).join(', ')}. "
+    end
+    desc << "#{page_count} #{ActionController::Base.helpers.t(:pages, count: page_count)}." if page_count.present?
+    desc.join('')
+  end
+
   def extract_page_count
     Docsplit.extract_length local_path
   end

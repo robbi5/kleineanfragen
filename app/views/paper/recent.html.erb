@@ -1,7 +1,9 @@
-<% title "Anfragen der letzten #{@days} Tage" %>
+<% title "Anfragen der letzten #{@days} Tage" -%>
+<%- content_for :head do %><%= auto_discovery_link_tag(:atom, recent_url(:format => :atom)) %><% end -%>
 
-<div class="page-header">
+<div class="page-header page-header--has-feed">
   <h1>Anfragen der letzten <%= @days %> Tage</h1>
+  <%= link_to image_tag("feed-icon.svg", class: 'feed-icon'), recent_url(format: "atom"), class: 'feed' %>
 </div>
 
 <ol class="recent-list">

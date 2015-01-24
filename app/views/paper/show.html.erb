@@ -1,17 +1,13 @@
 <%
   title "#{@paper.title} (#{@paper.full_reference}) &mdash; #{@body.name}, #{@legislative_term}. Wahlperiode"
-  desc = "kleine Anfrage aus #{@body.name}, #{@legislative_term}. Wahlperiode. " +
-         "Eingereicht von #{@paper.originator_people.collect(&:name).join(', ')}, " +
-         "#{@paper.originator_organizations.collect(&:name).join(', ')}. " +
-         (@paper.page_count.present? ? "#{@paper.page_count} #{t(:pages, count: @paper.page_count)}." : '')
-  description desc
+  description @paper.description
   opengraph do |graph|
     graph.title @paper.title
-    graph.description desc
+    graph.description @paper.description
   end
   twitter_card('summary') do |card|
     card.title @paper.title
-    card.description desc
+    card.description @paper.description
   end
 %>
 <% content_for :main_fullwidth do %>
