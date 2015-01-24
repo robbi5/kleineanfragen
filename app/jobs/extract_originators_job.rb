@@ -1,14 +1,18 @@
 class ExtractOriginatorsJob < ActiveJob::Base
   queue_as :meta
 
+  EXTRACTORS = {
+    'BY' => BayernPDFExtractor,
+    'BT' => BundestagPDFExtractor
+  }
+
   def perform(paper)
-    # FIXME: generic?
-    return unless paper.body.state == 'BY'
+    return unless EXTRACTORS.keys.include?(paper.body.state)
     logger.info "Extracting Originators from Paper [#{paper.body.state} #{paper.full_reference}]"
 
     fail "No Text for Paper [#{paper.body.state} #{paper.full_reference}]" if paper.contents.blank?
 
-    originators = BayernPDFExtractor.new(paper).extract_originators
+    originators = EXTRACTORS[paper.body.state].new(paper).extract_originators
     if originators.nil?
       logger.warn "No Names found in Paper [#{paper.body.state} #{paper.full_reference}]"
       return
