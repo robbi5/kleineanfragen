@@ -2,7 +2,7 @@ class ExtractTextFromPaperJob < ActiveJob::Base
   queue_as :meta
 
   def perform(paper)
-    Rails.logger.info "Extracting Text of the Paper [#{paper.body.state} #{paper.full_reference}]"
+    logger.info "Extracting Text of the Paper [#{paper.body.state} #{paper.full_reference}]"
 
     if !Rails.configuration.x.tika_server.blank?
       text = extract_tika(paper)

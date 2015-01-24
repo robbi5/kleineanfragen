@@ -2,7 +2,7 @@ class ContainsTableJob < ActiveJob::Base
   queue_as :meta
 
   def perform(paper)
-    Rails.logger.info "Looking for Tables in Paper [#{paper.body.state} #{paper.full_reference}]"
+    logger.info "Looking for Tables in Paper [#{paper.body.state} #{paper.full_reference}]"
     probability = 0.0
 
     fail "No Text for Paper [#{paper.body.state} #{paper.full_reference}]" if paper.contents.blank?
@@ -28,7 +28,7 @@ class ContainsTableJob < ActiveJob::Base
       probability += 0.5
     end
 
-    Rails.logger.info "Probability of Table(s) in Paper [#{paper.body.state} #{paper.full_reference}]: #{probability}"
+    logger.info "Probability of Table(s) in Paper [#{paper.body.state} #{paper.full_reference}]: #{probability}"
 
     paper.contains_table = probability >= 1
     paper.save

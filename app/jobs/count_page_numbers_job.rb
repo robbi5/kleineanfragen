@@ -2,7 +2,7 @@ class CountPageNumbersJob < ActiveJob::Base
   queue_as :meta
 
   def perform(paper)
-    Rails.logger.info "Counting Pages of the Paper [#{paper.body.state} #{paper.full_reference}]"
+    logger.info "Counting Pages of the Paper [#{paper.body.state} #{paper.full_reference}]"
 
     # FIXME: not multi host capable
     unless File.exist? paper.local_path

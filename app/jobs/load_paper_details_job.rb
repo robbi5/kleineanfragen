@@ -6,7 +6,7 @@ class LoadPaperDetailsJob < ActiveJob::Base
   def perform(paper)
     return unless paper.body.scraper.const_defined? :Detail
 
-    Rails.logger.info "Loading details for Paper [#{paper.body.state} #{paper.full_reference}]"
+    logger.info "Loading details for Paper [#{paper.body.state} #{paper.full_reference}]"
     detail = paper.body.scraper::Detail.new(paper.legislative_term, paper.reference).scrape
 
     detail.each do |key, value|

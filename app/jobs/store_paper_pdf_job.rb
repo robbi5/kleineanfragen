@@ -2,13 +2,13 @@ class StorePaperPDFJob < ActiveJob::Base
   queue_as :store
 
   def perform(paper)
-    Rails.logger.info "Downloading PDF for Paper [#{paper.body.state} #{paper.full_reference}]"
+    logger.info "Downloading PDF for Paper [#{paper.body.state} #{paper.full_reference}]"
     fail 'AppStorage: Bucket not available!' if AppStorage.bucket.nil?
 
     download_paper(paper)
 
     unless AppStorage.bucket.files.head(paper.path).nil?
-      Rails.logger.info "PDF for Paper [#{paper.body.state} #{paper.full_reference}] already exists in Storage"
+      logger.info "PDF for Paper [#{paper.body.state} #{paper.full_reference}] already exists in Storage"
       return
     end
 
@@ -35,7 +35,7 @@ class StorePaperPDFJob < ActiveJob::Base
 
     resp = session.get(paper.url)
     if resp.status != 200
-      Rails.logger.warn "Download failed for Paper [#{paper.body.state} #{paper.full_reference}]"
+      logger.warn "Download failed for Paper [#{paper.body.state} #{paper.full_reference}]"
       return
     end
 
@@ -43,7 +43,7 @@ class StorePaperPDFJob < ActiveJob::Base
     begin
       f.write(resp.body)
     rescue
-      Rails.logger.warn "Cannot write file for Paper [#{paper.body.state} #{paper.full_reference}]"
+      logger.warn "Cannot write file for Paper [#{paper.body.state} #{paper.full_reference}]"
       return
     ensure
       f.close if f

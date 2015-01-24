@@ -12,14 +12,14 @@ class ImportNewPapersJob < ActiveJob::Base
     else
       scrape_single_page
     end
-    Rails.logger.info "Importing #{@body.state} done."
+    logger.info "Importing #{@body.state} done."
   end
 
   def scrape_paginated
     page = 1
     found_new_paper = false
     loop do
-      Rails.logger.info "Importing #{@body.state} - Page #{page}"
+      logger.info "Importing #{@body.state} - Page #{page}"
       found_new_paper = false
       @scraper.scrape(page).each do |item|
         next if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
@@ -32,7 +32,7 @@ class ImportNewPapersJob < ActiveJob::Base
   end
 
   def scrape_single_page
-    Rails.logger.info "Importing #{@body.state} - Single Page"
+    logger.info "Importing #{@body.state} - Single Page"
     block = lambda do |item|
       return if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
       on_item(item)
@@ -45,7 +45,7 @@ class ImportNewPapersJob < ActiveJob::Base
   end
 
   def on_item(item)
-    Rails.logger.info "New Paper: [#{item[:reference]}] \"#{item[:title]}\""
+    logger.info "New Paper: [#{item[:reference]}] \"#{item[:title]}\""
     paper = Paper.create!(item.except(:full_reference).merge(body: @body))
     LoadPaperDetailsJob.perform_later(paper) if (item[:originators].blank? || item[:answerers].blank?) && @load_details
     StorePaperPDFJob.perform_later(paper)
