@@ -120,7 +120,12 @@ module BundestagScraper
       urheber = node.at_css('URHEBER').text
       if urheber.starts_with? 'Kleine Anfrage'
         node.css('PERSOENLICHER_URHEBER').each do |unode|
-          originators[:people] << "#{unode.at_css('PERSON_TITEL').try(:text)} #{unode.at_css('VORNAME').text} #{unode.at_css('NACHNAME').text}".strip
+          originators[:people] << [
+            unode.at_css('PERSON_TITEL').try(:text),
+            unode.at_css('VORNAME').text,
+            unode.at_css('NAMENSZUSATZ').try(:text),
+            unode.at_css('NACHNAME').text
+          ].compact.join(' ')
           party = unode.at_css('FRAKTION').text
           originators[:parties] << party unless originators[:parties].include? party
         end
