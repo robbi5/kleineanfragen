@@ -3,6 +3,7 @@ class ThumbnailFirstPageJob < ActiveJob::Base
 
   def perform(paper, force: false)
     logger.info "Creating thumbnail of first page of the Paper [#{paper.body.state} #{paper.full_reference}]"
+    fail 'AppStorage: Bucket not available!' if AppStorage.bucket.nil?
 
     # FIXME: not multi host capable
     unless File.exist? paper.local_path
