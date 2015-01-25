@@ -29,6 +29,9 @@ module Kleineanfragen
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
+    # Disable image optim for assets
+    config.assets.image_optim = false
+
     # applicaton config:
     # path for storing paper pdfs
     config.x.paper_storage = Rails.root.join('data')
