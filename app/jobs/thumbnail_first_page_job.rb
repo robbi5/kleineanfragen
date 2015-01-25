@@ -16,7 +16,7 @@ class ThumbnailFirstPageJob < ActiveJob::Base
 
     image_optim = ImageOptim.new(nice: 20, skip_missing_workers: true, pngout: false, svgo: false)
 
-    imagedata = `pdftoppm -png -l 1 -singlefile -r 600 -scale-to-y 445 -scale-to-x 315 -thinlinemode shape #{paper.local_path}`
+    imagedata = `pdftoppm -png -l 1 -singlefile -r 600 -scale-to-y 445 -scale-to-x 315 #{paper.local_path}`
     imagedata = image_optim.optimize_image_data(imagedata) || imagedata
 
     file = AppStorage.bucket.files.new(key: paper.thumbnail_path, public: true, body: imagedata)
