@@ -1,7 +1,9 @@
-<% title "#{@body.name}: #{@ministry.name}" %>
+<% title "#{@body.name}: #{@ministry.name}" -%>
+<%- content_for :head do %><%= auto_discovery_link_tag(:atom, ministry_url(body: @body, ministry: @ministry, format: :atom)) %><% end -%>
 
-<div class="page-header">
+<div class="page-header page-header--has-feed">
   <h1><%= link_to @body.name, @body %> &mdash; <%= @ministry.name %></h1>
+  <%= link_to image_tag('feed-icon.svg', class: 'feed-icon'), ministry_url(body: @body, ministry: @ministry, format: :atom), class: 'feed' %>
 </div>
 
 <ol class="paper-list">
