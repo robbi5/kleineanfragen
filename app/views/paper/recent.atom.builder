@@ -1,6 +1,7 @@
 atom_feed(language:  'de-DE', root_url: recent_url, url: recent_url(format: 'atom')) do |feed|
   feed.title "kleineAnfragen: Anfragen der letzten #{@days} Tage"
   feed.updated @papers.maximum(:updated_at)
+  feed.author { |author| author.name 'kleineAnfragen' }
 
   @papers.each do |paper|
     url = paper_url(body: paper.body, legislative_term: paper.legislative_term, paper: paper)
@@ -10,7 +11,6 @@ atom_feed(language:  'de-DE', root_url: recent_url, url: recent_url(format: 'ato
         entry.author { |author| author.name name }
       end
       entry.category(term: paper.body.state, label: paper.body.name)
-      entry.url url
       entry.summary paper.description
     end
   end
