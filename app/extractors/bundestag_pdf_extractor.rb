@@ -3,17 +3,20 @@ class BundestagPDFExtractor
     @contents = paper.contents
   end
 
+  ORIGINATORS = /der Abgeordneten (.+?)(?:,\s+weiterer\s+Abgeordneter)?\s+und\s+der\s+Fraktion\s+(?:der\s+)?(.{0,30}?)\.?\n/m
+
   def extract_originators
     return nil if @contents.nil?
     people = []
     parties = []
-    m = @contents.match(/auf die Kleine Anfrage der Abgeordneten\s(.+)\sund der Fraktion\s(.{3,30})\p{Z}*\n/m)
 
-    m[1].split(',').each do |person|
-      person = person.gsub(/\p{Z}/, ' ').gsub("\n", ' ').gsub(/\s+/, ' ').strip
-      people << person unless person == 'weiterer Abgeordneter'
+    @contents.scan(ORIGINATORS).each do |m|
+      m[0].split(',').each do |person|
+        person = person.gsub(/\p{Z}/, ' ').gsub("\n", ' ').gsub(/\s+/, ' ').strip.gsub(/\s\(.+\)$/, '')
+        people << person unless person == 'weiterer Abgeordneter'
+      end
+      parties << m[1].gsub("\n", ' ').strip.sub(/^der\s/, '').sub(/\.$/, '')
     end
-    parties << m[2].gsub("\n", ' ').strip.sub(/\.$/, '')
 
     { people: people, parties: parties }
   end

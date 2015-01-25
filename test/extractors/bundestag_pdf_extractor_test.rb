@@ -45,22 +45,26 @@ class BundestagPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'BÜNDNIS 90/DIE GRÜNEN', originators[:parties].first
   end
 
+
   # Antwort
   # der Bundesregierung
   #
-  # auf die Kleine Anfrage der Abgeordneten Dr. Rosemarie Hein, Nicole Gohlke,
-  # Ralph Lenkert, weiterer Abgeordneter und der Fraktion DIE LINKE.
-  test 'three people, newline in party name' do
+  # auf die Kleine Anfrage der Abgeordneten Stephan Mayer (Altötting),
+  # Armin Schuster (Weil am Rhein), Marian Wendt, weiterer Abgeordneter und
+  # der Fraktion der CDU/CSU
+  # sowie der Abgeordneten Dr. Lars Castellucci, Gabriele Fograscher, Uli Grötsch,
+  # weiterer Abgeordneter und der Fraktion der SPD
+  test 'two groups, six people, two parties' do
     paper = Struct.new(:contents).new(
-      PREFIX + "Dr. Rosemarie Hein, Nicole Gohlke,\n" +
-      "Ralph Lenkert, weiterer Abgeordneter und der Fraktion DIE\nLINKE.\n")
+      PREFIX + "Stephan Mayer (Altötting),\n" +
+      "Armin Schuster (Weil am Rhein), Marian Wendt, weiterer Abgeordneter und\n" +
+      "der Fraktion der CDU/CSU\n" +
+      "sowie der Abgeordneten Dr. Lars Castellucci, Gabriele Fograscher, Uli Grötsch,\n" +
+      "weiterer Abgeordneter und der Fraktion der SPD\n")
 
     originators = BundestagPDFExtractor.new(paper).extract_originators
-
-    assert_equal 3, originators[:people].size
-    assert_equal 'Dr. Rosemarie Hein', originators[:people].first
-    assert_equal 'Nicole Gohlke', originators[:people].second
-    assert_equal 'Ralph Lenkert', originators[:people].third
-    assert_equal 'DIE LINKE', originators[:parties].first
+    assert_equal 6, originators[:people].size
+    assert_equal 'Stephan Mayer', originators[:people].first
+    assert_equal 2, originators[:parties].size
   end
 end
