@@ -75,6 +75,10 @@ class Paper < ActiveRecord::Base
     File.join(body.folder_name, legislative_term.to_s, reference.to_s + '.pdf')
   end
 
+  def thumbnail_path
+    File.join(body.folder_name, legislative_term.to_s, reference.to_s + '.png')
+  end
+
   def local_path
     Rails.configuration.x.paper_storage.join(path)
   end
@@ -83,6 +87,13 @@ class Paper < ActiveRecord::Base
     AppStorage.bucket.files.head(path).try(:public_url)
   rescue => error
     Rails.logger.warn "Cannot get public_url of paper [#{body.state} #{full_reference}]: #{error}"
+    nil
+  end
+
+  def thumbnail_url
+    AppStorage.bucket.files.head(thumbnail_path).try(:public_url)
+  rescue => error
+    Rails.logger.warn "Cannot get public_url of thumbnail of paper [#{body.state} #{full_reference}]: #{error}"
     nil
   end
 

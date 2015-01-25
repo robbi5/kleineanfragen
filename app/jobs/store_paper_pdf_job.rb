@@ -1,13 +1,13 @@
 class StorePaperPDFJob < ActiveJob::Base
   queue_as :store
 
-  def perform(paper)
+  def perform(paper, force: false)
     logger.info "Downloading PDF for Paper [#{paper.body.state} #{paper.full_reference}]"
     fail 'AppStorage: Bucket not available!' if AppStorage.bucket.nil?
 
     download_paper(paper)
 
-    unless AppStorage.bucket.files.head(paper.path).nil?
+    if !AppStorage.bucket.files.head(paper.path).nil? && !force
       logger.info "PDF for Paper [#{paper.body.state} #{paper.full_reference}] already exists in Storage"
       return
     end
@@ -15,6 +15,7 @@ class StorePaperPDFJob < ActiveJob::Base
     file = AppStorage.bucket.files.new(key: paper.path, public: true, body: File.open(paper.local_path))
     file.save
 
+    ThumbnailFirstPageJob.perform_later(paper) if paper.thumbnail_url.blank?
     CountPageNumbersJob.perform_later(paper) if paper.page_count.blank?
     ExtractTextFromPaperJob.perform_later(paper) if paper.contents.blank?
   end

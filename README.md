@@ -12,17 +12,18 @@ Dependencies
 * redis (for resque)
 * nodejs (for asset compiling)
 
-For extracting text from pdfs you can use a server instance of [Tika](http://tika.apache.org) (see https://github.com/mattfullerton/tika-tesseract-docker) or install:
+For extracting text from pdfs you can use a server instance of [Tika](http://tika.apache.org) (see [mattfullerton/tika-tesseract-docker](https://github.com/mattfullerton/tika-tesseract-docker)) or install:
 
-* GraphicsMagick
-* Poppler
-* Ghostscript
+* GraphicsMagick, Poppler and Ghostscript
 
-For installation of these, see http://documentcloud.github.io/docsplit/#installation
+  For installation of these, see http://documentcloud.github.io/docsplit/#installation
 
 * [Nomenklatura](https://github.com/pudo/nomenklatura) Instance
 
   Used for normalization of people names, ministries and parties.
+
+* Poppler / pdftoppm (for thumbnailing)
+* [image_optim binaries](https://github.com/toy/image_optim#binaries-installation)
 
 Configuration
 -------------
@@ -47,7 +48,7 @@ Just generate a fresh secret_key_base.
 
 ### config/fog.yml
 
-This file contains the connection details to your s3 server/bucket. Test uses the `tmp` folder, so you need no connection to an running s3 compatible storage.
+This file contains the connection details to your s3 server/bucket. Test uses the `tmp` folder, so you don't need a connection to a running s3 compatible storage.
 
 Jobs
 ----

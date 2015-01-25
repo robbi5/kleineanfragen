@@ -1,13 +1,16 @@
 <%
   title "#{@paper.title} (#{@paper.full_reference}) &mdash; #{@body.name}, #{@legislative_term}. Wahlperiode"
   description @paper.description
+  thumb = @paper.thumbnail_url
   opengraph do |graph|
     graph.title @paper.title
     graph.description @paper.description
+    graph.image thumb unless thumb.nil?
   end
   twitter_card('summary') do |card|
     card.title @paper.title
     card.description @paper.description
+    card.image thumb unless thumb.nil?
   end
 %>
 <% content_for :main_fullwidth do %>
