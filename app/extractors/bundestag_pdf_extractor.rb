@@ -16,12 +16,13 @@ class BundestagPDFExtractor
                  .gsub("\n", ' ')
                  .gsub(/\s+/, ' ')
                  .strip
+                 .gsub(/\p{Other}/, '') # invisible chars & private use unicode
                  .sub(/^der\s/, '')
                  .sub(/\s\(.+\)$/, '') # remove city
                  .sub(/^Kleine\s+Anfrage\s+der\s+Abgeordneten\s+/, '') # duplicate prefix
         people << person unless person.blank? || person == 'weiterer Abgeordneter'
       end
-      parties << m[1].gsub("\n", ' ').strip.sub(/^der\s/, '').sub(/\.$/, '')
+      parties << m[1].gsub("\n", ' ').strip.gsub(/\p{Other}/, '').sub(/^der\s/, '').sub(/\.$/, '')
     end
 
     { people: people, parties: parties }
