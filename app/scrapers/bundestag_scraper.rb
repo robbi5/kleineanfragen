@@ -111,14 +111,24 @@ module BundestagScraper
 
     reference = full_reference.split('/').last
 
-    url = Addressable::URI.parse(url).normalize.to_s
+    normalized_url = Addressable::URI.parse(url).normalize.to_s
     date = nil
 
     originators = { people: [], parties: [] }
     answerers = { ministries: [] }
     doc.css('VORGANGSABLAUF VORGANGSPOSITION').each do |node|
       urheber = node.at_css('URHEBER').text
-      if urheber.starts_with? 'Kleine Anfrage'
+      if urheber.starts_with?('Antwort') || node.at_css('FUNDSTELLE_LINK').try(:text) == url
+        _, ministry = urheber.match(/: ([^(]*)/).to_a
+        if !ministry.nil?
+          ministry = ministry.strip.sub(/^Bundesregierung, /, '')
+          answerers[:ministries] << ministry
+        else
+          Rails.logger.info "#{full_reference}: no ministry found"
+        end
+        fundstelle = node.at_css('FUNDSTELLE').text
+        _, date = fundstelle.match(/(\d+\.\d+\.\d+)\s/).to_a
+      elsif urheber.starts_with? 'Kleine Anfrage'
         node.css('PERSOENLICHER_URHEBER').each do |unode|
           originators[:people] << [
             unode.at_css('PERSON_TITEL').try(:text),
@@ -129,16 +139,6 @@ module BundestagScraper
           party = unode.at_css('FRAKTION').text
           originators[:parties] << party unless originators[:parties].include? party
         end
-      elsif urheber.starts_with? 'Antwort'
-        _, ministry = urheber.match(/: ([^(]*)/).to_a
-        if !ministry.nil?
-          ministry = ministry.strip.sub(/^Bundesregierung, /, '')
-          answerers[:ministries] << ministry
-        else
-          Rails.logger.info "#{full_reference}: no ministry found"
-        end
-        fundstelle = node.at_css('FUNDSTELLE').text
-        _, date = fundstelle.match(/(\d+\.\d+\.\d+)\s/).to_a
       end
     end
 
@@ -154,7 +154,7 @@ module BundestagScraper
       full_reference: full_reference,
       reference: reference,
       title: title,
-      url: url,
+      url: normalized_url,
       published_at: published_at,
       originators: originators,
       answerers: answerers
