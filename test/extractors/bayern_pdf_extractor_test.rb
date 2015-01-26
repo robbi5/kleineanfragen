@@ -127,6 +127,19 @@ class BayernPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'BÜNDNIS 90/DIE GRÜNEN', originators[:parties].first
   end
 
+  # der Abgeordneten Ludwig Hartmann, Martin Stümpfig\n und Kerstin Celina BÜNDNIS 90/DIE GRÜNEN
+  test 'three people, split with newline und' do
+    paper = Struct.new(:contents).new("der Abgeordneten Ludwig Hartmann, Martin Stümpfig\nund Kerstin Celina BÜNDNIS 90/DIE GRÜNEN")
+
+    originators = BayernPDFExtractor.new(paper).extract_originators
+
+    assert_equal 3, originators[:people].size
+    assert_equal 'Ludwig Hartmann', originators[:people][0]
+    assert_equal 'Martin Stümpfig', originators[:people][1]
+    assert_equal 'Kerstin Celina', originators[:people][2]
+    assert_equal 'BÜNDNIS 90/DIE GRÜNEN', originators[:parties].first
+  end
+
   # der Abgeordneten Herbert Woerlein, Dr. Linus Förster, Dr. Simone Strohmayr, Harald Güller SPD
   # der Abgeordneten Natascha Kohnen, Harry Scheuenstuhl, Annette Karl, Florian von Brunn, Susann Biedefeld, Johanna Werner-Muggendorfer, Doris Rauscher SPD
   test 'seven people, split with comma' do
