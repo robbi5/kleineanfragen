@@ -142,7 +142,12 @@ module BundestagScraper
       end
     end
 
-    published_at = Date.parse(date)
+    published_at = nil
+    if !date.nil?
+      published_at = Date.parse(date)
+    else
+      Rails.logger.warn "#{full_reference}: no date found"
+    end
 
     {
       legislative_term: legislative_term,
