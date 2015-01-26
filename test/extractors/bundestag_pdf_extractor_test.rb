@@ -45,6 +45,21 @@ class BundestagPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'BÜNDNIS 90/DIE GRÜNEN', originators[:parties].first
   end
 
+  # Antwort
+  # der Bundesregierung
+  #
+  # auf die Kleine Anfrage der Abgeordneten Tom Koenigs, Luise Amtsberg, Omid
+  # Nouripour, Uwe Kekeritz und der Fraktion der BÜNDNIS 90/DIE GRÜNEN
+  test 'article before party' do
+    paper = Struct.new(:contents).new(
+      PREFIX + "Tom Koenigs, Luise Amtsberg, Omid\n" +
+      "Nouripour, Uwe Kekeritz und der Fraktion der BÜNDNIS 90/DIE GRÜNEN\n")
+
+    originators = BundestagPDFExtractor.new(paper).extract_originators
+    assert_equal 4, originators[:people].size
+    assert_equal 1, originators[:parties].size
+    assert_equal 'BÜNDNIS 90/DIE GRÜNEN', originators[:parties].first
+  end
 
   # Antwort
   # der Bundesregierung
@@ -66,5 +81,51 @@ class BundestagPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 6, originators[:people].size
     assert_equal 'Stephan Mayer', originators[:people].first
     assert_equal 2, originators[:parties].size
+  end
+
+  # Antwort
+  # der Bundesregierung
+  #
+  # auf die Kleine Anfrage der Abgeordneten Dr. Valerie Wilms, Dr. Harald Terpe,
+  # Anja Hajduk, , weiterer Abgeordneter und der Fraktion BÜNDNIS 90/DIE GRÜNEN
+  test 'duplicate comma, empty name' do
+    paper = Struct.new(:contents).new(
+      PREFIX + "Dr. Valerie Wilms, Dr. Harald Terpe,\n" +
+      "Anja Hajduk, , weiterer Abgeordneter und der Fraktion BÜNDNIS 90/DIE GRÜNEN\n")
+
+    originators = BundestagPDFExtractor.new(paper).extract_originators
+    assert_equal 3, originators[:people].size
+  end
+
+  # Antwort
+  # der Bundesregierung
+  #
+  # auf die Kleine Anfrage der Abgeordneten der Martina Renner, Jan Korte,
+  # Ulla Jelpke, weiterer Abgeordneter und der Fraktion DIE LINKE.
+  test 'article before name' do
+    paper = Struct.new(:contents).new(
+      PREFIX + "der Martina Renner, Jan Korte,\n" +
+      "Ulla Jelpke, weiterer Abgeordneter und der Fraktion DIE LINKE\n")
+
+    originators = BundestagPDFExtractor.new(paper).extract_originators
+    assert_equal 3, originators[:people].size
+    assert_equal 'Martina Renner', originators[:people].first
+  end
+
+  # Antwort
+  # der Bundesregierung
+  #
+  # auf die Kleine Anfrage der Abgeordneten Kleine Anfrage der Abgeordneten
+  # Uwe Kekeritz, Claudia Roth (Augsburg), Omid Nouripour, weiterer Abgeordneter
+  # und der Fraktion BÜNDNIS 90/DIE GRÜNEN
+  test 'duplicate prefix' do
+    paper = Struct.new(:contents).new(
+      PREFIX + "Kleine Anfrage der Abgeordneten\n" +
+      "Uwe Kekeritz, Claudia Roth (Augsburg), Omid Nouripour, weiterer Abgeordneter\n" +
+      "und der Fraktion BÜNDNIS 90/DIE GRÜNEN\n")
+
+    originators = BundestagPDFExtractor.new(paper).extract_originators
+    assert_equal 3, originators[:people].size
+    assert_equal 'Uwe Kekeritz', originators[:people].first
   end
 end

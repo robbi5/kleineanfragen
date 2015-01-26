@@ -12,8 +12,14 @@ class BundestagPDFExtractor
 
     @contents.scan(ORIGINATORS).each do |m|
       m[0].split(',').each do |person|
-        person = person.gsub(/\p{Z}/, ' ').gsub("\n", ' ').gsub(/\s+/, ' ').strip.gsub(/\s\(.+\)$/, '')
-        people << person unless person == 'weiterer Abgeordneter'
+        person = person.gsub(/\p{Z}/, ' ')
+                 .gsub("\n", ' ')
+                 .gsub(/\s+/, ' ')
+                 .strip
+                 .sub(/^der\s/, '')
+                 .sub(/\s\(.+\)$/, '') # remove city
+                 .sub(/^Kleine\s+Anfrage\s+der\s+Abgeordneten\s+/, '') # duplicate prefix
+        people << person unless person.blank? || person == 'weiterer Abgeordneter'
       end
       parties << m[1].gsub("\n", ' ').strip.sub(/^der\s/, '').sub(/\.$/, '')
     end
