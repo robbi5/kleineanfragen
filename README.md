@@ -50,6 +50,15 @@ Just generate a fresh secret_key_base.
 
 This file contains the connection details to your s3 server/bucket. Test uses the `tmp` folder, so you don't need a connection to a running s3 compatible storage.
 
+Development
+-----------
+
+For an easy setup of an local development environment, [fig](http://fig.sh) is used. Install fig and run
+
+    fig up
+
+Fig downloads the required services (postgres, elasticsearch, redis, ...) and installs the needed dependencies in a fresh docker container.
+
 Jobs
 ----
 Jobs are run by ActiveJob / Resque.

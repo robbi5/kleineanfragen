@@ -47,6 +47,9 @@ group :development, :test do
   gem 'spring'
 end
 
+gem 'sqlite3', group: :test
+gem 'memory_test_fix', group: :test
+
 # Get i18n files
 gem 'rails-i18n', '~> 4.0.0'
 

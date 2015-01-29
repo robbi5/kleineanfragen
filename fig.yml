@@ -1,0 +1,38 @@
+web:
+  build: .
+  command: foreman start
+  ports:
+    - "5000:5000"
+  volumes:
+    - .:/app
+  links:
+    - db:database
+    - redis
+    - tika
+    - elasticsearch
+  environment:
+    ELASTICSEARCH_URL: http://elasticsearch:9200/
+    REDIS_URL: redis://redis:6379
+    DATABASE_URL: postgres://kleineanfragen:@database/kleineanfragen
+    TIKA_SERVER_URL: http://tika:9998/tika
+
+db:
+  image: postgres
+  environment:
+    POSTGRES_USER: kleineanfragen
+# ports:
+#   - "5432:5432"
+
+redis:
+  image: redis
+
+## FIXME: use matts image when released
+tika:
+  image: logicalspark/docker-tikaserver
+
+elasticsearch:
+  image: dockerfile/elasticsearch
+# ports:
+#   - "9200:9200"
+
+## FIXME: add image for nomenklatura
