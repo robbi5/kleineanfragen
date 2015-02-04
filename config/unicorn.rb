@@ -1,10 +1,3 @@
-# Sample verbose configuration file for Unicorn (not Rack)
-#
-# This configuration file documents many features of Unicorn
-# that may not be needed for some applications. See
-# http://unicorn.bogomips.org/examples/unicorn.conf.minimal.rb
-# for a much simpler configuration file.
-#
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html for complete
 # documentation.
 
@@ -12,13 +5,6 @@
 # more will usually help for _short_ waits on databases/caches.
 # The minimum is 2
 worker_processes 2
-
-# Since Unicorn is never exposed to outside clients, it does not need to
-# run on the standard HTTP port (80), there is no reason to start Unicorn
-# as root unless it's from system init scripts.
-# If running the master process as root and the workers as an unprivileged
-# user, do this to switch euid/egid in the workers (also chowns logs):
-# user "unprivileged_user", "unprivileged_group"
 
 # Help ensure your application will always spawn in the symlinked
 # "current" directory that Capistrano sets up.
@@ -55,6 +41,11 @@ GC.respond_to?(:copy_on_write_friendly=) and
 # host unicorn runs on, and unlikely to detect disconnects even on a
 # fast LAN.
 check_client_connection false
+
+before_exec do |server|
+  # Make sure all the .env properties are updated
+  ENV.update Dotenv::Environment.new('.env')
+end
 
 before_fork do |server, worker|
   # the following is highly recomended for Rails + "preload_app true"
