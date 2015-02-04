@@ -7,11 +7,12 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 Body.create([
-  { name: 'Bayern',      state: 'BY' },
-  { name: 'Berlin',      state: 'BE' },
-  { name: 'Brandenburg', state: 'BB' },
-  { name: 'Bundestag',   state: 'BT' },
-  { name: 'Hamburg',     state: 'HH' }
+  { name: 'Bayern',          state: 'BY' },
+  { name: 'Berlin',          state: 'BE' },
+  { name: 'Brandenburg',     state: 'BB' },
+  { name: 'Bundestag',       state: 'BT' },
+  { name: 'Hamburg',         state: 'HH' },
+  { name: 'Rheinland-Pfalz', state: 'RP' }
 ])
 
 berlin = Body.find_by_name('Berlin')
