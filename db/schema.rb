@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150112071510) do
+ActiveRecord::Schema.define(version: 20150204073802) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,8 @@ ActiveRecord::Schema.define(version: 20150112071510) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "organizations", ["name"], name: "index_organizations_on_name", unique: true, using: :btree
 
   create_table "organizations_people", id: false, force: :cascade do |t|
     t.integer "organization_id"
@@ -112,6 +114,8 @@ ActiveRecord::Schema.define(version: 20150112071510) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "people", ["name"], name: "index_people_on_name", unique: true, using: :btree
 
   add_foreign_key "ministries", "bodies"
   add_foreign_key "paper_answerers", "papers"

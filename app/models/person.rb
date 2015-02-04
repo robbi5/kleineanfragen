@@ -3,4 +3,6 @@ class Person < ActiveRecord::Base
 
   has_many :paper_originators, as: :originator
   has_many :papers, through: :paper_originators
+
+  validates :name, uniqueness: true
 end
