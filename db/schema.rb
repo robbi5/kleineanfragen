@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 20150204073802) do
     t.text     "website"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "slug",       limit: 255
+    t.string   "slug"
   end
 
   add_index "bodies", ["name"], name: "index_bodies_on_name", unique: true, using: :btree
@@ -30,10 +30,10 @@ ActiveRecord::Schema.define(version: 20150204073802) do
   add_index "bodies", ["state"], name: "index_bodies_on_state", unique: true, using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
-    t.string   "slug",           limit: 255, null: false
-    t.integer  "sluggable_id",               null: false
+    t.string   "slug",                      null: false
+    t.integer  "sluggable_id",              null: false
     t.string   "sluggable_type", limit: 50
-    t.string   "scope",          limit: 255
+    t.string   "scope"
     t.datetime "created_at"
   end
 
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 20150204073802) do
   add_index "ministries", ["slug"], name: "index_ministries_on_slug", unique: true, using: :btree
 
   create_table "organizations", force: :cascade do |t|
-    t.string   "name",       limit: 255
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -82,10 +82,10 @@ ActiveRecord::Schema.define(version: 20150204073802) do
   create_table "paper_originators", force: :cascade do |t|
     t.integer "paper_id"
     t.integer "originator_id"
-    t.string  "originator_type", limit: 255
+    t.string  "originator_type"
   end
 
-  add_index "paper_originators", ["originator_id", "originator_type"], name: "index_paper_originators_on_originator_id_and_originator_type", using: :btree
+  add_index "paper_originators", ["originator_type", "originator_id"], name: "index_paper_originators_on_originator_type_and_originator_id", using: :btree
   add_index "paper_originators", ["paper_id"], name: "index_paper_originators_on_paper_id", using: :btree
 
   create_table "papers", force: :cascade do |t|
@@ -100,7 +100,7 @@ ActiveRecord::Schema.define(version: 20150204073802) do
     t.datetime "downloaded_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "slug",             limit: 255
+    t.string   "slug"
     t.boolean  "contains_table"
   end
 
