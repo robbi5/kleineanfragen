@@ -5,7 +5,12 @@ module RheinlandPfalzLandtagScraper
     SEARCH_URL = BASE_URL + '/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSH.web'
     TYPE = 'KLEINE ANFRAGE UND ANTWORT'
 
+    def supports_streaming?
+      true
+    end
+
     def scrape
+      streaming = block_given?
       m = mechanize
       mp = m.get SEARCH_URL
       search_form = mp.form '__form'
@@ -27,7 +32,15 @@ module RheinlandPfalzLandtagScraper
 
       papers = []
       loop do
-        papers.concat extract_page(mp)
+        mp.search('//tbody[@name="RecordRepeater"]').each do |item|
+          paper = RheinlandPfalzLandtagScraper.extract(item)
+          if streaming
+            yield paper
+          else
+            papers << paper
+          end
+        end
+
         # submit form for next page
         search_form = mp.form '__form'
         search_form.field_with(name: '__action').value = 48
@@ -37,15 +50,7 @@ module RheinlandPfalzLandtagScraper
           break
         end
       end
-      papers
-    end
-
-    def extract_page(mp)
-      papers = []
-      mp.search('//tbody[@name="RecordRepeater"]').each do |item|
-        papers << RheinlandPfalzLandtagScraper.extract(item)
-      end
-      papers
+      papers unless streaming
     end
   end
 
