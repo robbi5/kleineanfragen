@@ -40,7 +40,7 @@ class ImportNewPapersJob < ActiveJob::Base
     if @scraper.supports_streaming?
       @scraper.scrape(&block)
     else
-      @scraper.scrape.each block
+      @scraper.scrape.each(&block)
     end
   end
 
