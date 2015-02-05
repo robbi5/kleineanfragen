@@ -13,6 +13,10 @@ For a simple and quick development environment, [fig](http://fig.sh) is used. In
 Fig downloads the required services (postgres, elasticsearch, redis, ...) as docker containers and links them with the app.
 If you want to look into postgres or elasticsearch, uncomment the `ports` section in `fig.yml`.
 
+To get a rails console, run:
+
+    fig run web rails c
+
 Dependencies
 ------------
 
