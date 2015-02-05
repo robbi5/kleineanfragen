@@ -5,6 +5,7 @@ module MeckPommLandtagScraper
 
   class Overview < Scraper
     SEARCH_URL = BASE_URL + '/Parldok/formalkriterien'
+    TYPES = ['Kleine Anfrage und Antwort', 'Große Anfrage und Antwort']
 
     def supports_streaming?
       true
@@ -33,7 +34,7 @@ module MeckPommLandtagScraper
             papers << paper
           end
         end
-        
+
         break unless next_page_el(mp)
         mp = m.click next_page_el(mp)
       end
@@ -43,17 +44,13 @@ module MeckPommLandtagScraper
     def fill_search_form(form)
       form.field_with(name: 'LegislaturperiodenNummer').value = @legislative_term
       form.field_with(name: 'DokumententypId').options.each do |opt|
-        if anfrage?(opt.text)
+        if TYPES.include? opt.text.strip
           opt.select
         else
           opt.unselect
         end
       end
       form
-    end
-
-    def anfrage?(text)
-      text.include?('Kleine Anfrage') || text.include?('Große Anfrage') && !text.include?('Plenum')
     end
 
     def next_page_el(mp)
@@ -77,9 +74,9 @@ module MeckPommLandtagScraper
     match_ministry = originators.match(/(.+), Landesregierung \((.+)\)/)
     if match_ministry
       ministries << match_ministry[2]
-      originators =  NamePartyExtractor.new(match_ministry[1]).extract
+      originators = NamePartyExtractor.new(match_ministry[1]).extract
     else
-      originators =  NamePartyExtractor.new(originators).extract
+      originators = NamePartyExtractor.new(originators).extract
     end
 
     {
