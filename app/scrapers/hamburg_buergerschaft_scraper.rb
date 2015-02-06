@@ -26,7 +26,7 @@ module HamburgBuergerschaftScraper
       field = form.field_with(name: 'LegislaturperiodenNummer')
       field.value = @legislative_term
       option_text = field.options.find { |option| option.text.include? "#{@legislative_term}. Wahlperiode" }.text
-      dates = extract_date_ranges(option_text)
+      dates = HamburgBuergerschaftScraper.extract_date_ranges(option_text)
       dates.each do |daterange|
         mp = submit_search(m, daterange)
         result_url = mp.uri
@@ -58,8 +58,8 @@ module HamburgBuergerschaftScraper
       mp = m.get SEARCH_URL
       form = mp.forms.second
       form.field_with(name: 'LegislaturperiodenNummer').value = @legislative_term
-      form.field_with(name: 'DatumVon').value = daterange.first.strftime("%d.%m.%Y")
-      form.field_with(name: 'DatumBis').value = daterange.last.strftime("%d.%m.%Y")
+      form.field_with(name: 'DatumVon').value = daterange.first.strftime('%d.%m.%Y')
+      form.field_with(name: 'DatumBis').value = daterange.last.strftime('%d.%m.%Y')
       form.field_with(name: 'Dokumententyp').options.each do |opt|
         if TYPES.include? opt.text.strip
           opt.select
@@ -73,21 +73,21 @@ module HamburgBuergerschaftScraper
       submit_button = form.submits.find { |btn| btn.value == 'Dokumente anzeigen' }
       m.submit(form, submit_button)
     end
+  end
 
-    def extract_date_ranges(option_text)
-      only_start_date = !(option_text.match(/\(.+\)/))
-      if only_start_date
-        start_time = Date.parse(option_text.split(' ').last.match(/([\d\.]+)$/)[1])
-        end_time = Date.today
-      else
-        option_parts = option_text.match(/\((.+)\)/)[1].split('-')
-        # FIXME: clean
-        start_time = Date.strptime(option_parts.first.match(/([\d\.]+)/)[1], '%d.%m.%y')
-        end_time = Date.strptime(option_parts.second.match(/([\d\.]+)/)[1], '%d.%m.%y')
-      end
-      dates = start_time.step(end_time).to_a
-      dates.each_slice((dates.size / SEARCH_PARTS.to_f).round).map { |group| [group.first, group.last] }
+  def self.extract_date_ranges(option_text)
+    only_start_date = !(option_text.match(/\(.+\)/))
+    if only_start_date
+      start_time = Date.parse(option_text.split(' ').last.match(/([\d\.]+)$/)[1])
+      end_time = Date.today
+    else
+      option_parts = option_text.match(/\((.+)\)/)[1].split('-')
+      # FIXME: clean
+      start_time = Date.strptime(option_parts.first.match(/([\d\.]+)/)[1], '%d.%m.%Y')
+      end_time = Date.strptime(option_parts.second.match(/([\d\.]+)/)[1], '%d.%m.%Y')
     end
+    dates = start_time.step(end_time).to_a
+    dates.each_slice((dates.size / SEARCH_PARTS.to_f).round).map { |group| [group.first, group.last] }
   end
 
   def self.extract(title_el)
@@ -101,7 +101,7 @@ module HamburgBuergerschaftScraper
     url = Addressable::URI.parse(BASE_URL + path).normalize.to_s
 
     originators = next_row.next_element.element_children[1].text.strip
-
+    originators = NamePartyExtractor.new(originators).extract
     {
       legislative_term: legislative_term,
       full_reference: full_reference,
@@ -139,7 +139,6 @@ module HamburgBuergerschaftScraper
       # page which triggeres a redirect,so call redirect url manually
       redir = mp.search("//meta[@http-equiv='refresh']").first
       mp = m.get BASE_URL + redir['content'].gsub(/.+URL=(.+)/m, '\1')
-      puts mp.inspect
       body = mp.search("//table[@id = 'parldokresult']")
       HamburgBuergerschaftScraper.extract(body.at_css('.pd_titel'))
     end
