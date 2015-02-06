@@ -55,10 +55,13 @@ module Nomenklatura
       @client = Client.new(client_options)
     end
 
-    # def create(name, label)
-    #   data = { name: name, label: label }
-    #   @client.post('/datasets', data)
-    # end
+    def self.create(name, label, client_options = {})
+      data = { name: name, label: label }
+      client = Client.new(client_options)
+      resp = client.post('/datasets', data)
+      fail InvalidRequest, resp.parsed_response if resp.code != 200
+      Dataset.new(name, client_options)
+    end
 
     def entity_by_name(entityname, params = {})
       resp = @client.get(format('/datasets/%s/find', @name), params.merge(name: entityname))

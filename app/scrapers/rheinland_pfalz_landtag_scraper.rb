@@ -34,6 +34,7 @@ module RheinlandPfalzLandtagScraper
       loop do
         mp.search('//tbody[@name="RecordRepeater"]').each do |item|
           paper = RheinlandPfalzLandtagScraper.extract(item)
+          next if warn_broken(paper.nil?, 'RP [?]: extract returned nil')
           if streaming
             yield paper
           else
@@ -77,6 +78,12 @@ module RheinlandPfalzLandtagScraper
   def self.extract(item)
     title = item.search('./tr[@name="Repeat_WHET"]/td[2]').first.text
     container = item.search('./tr[@name="Repeat_Fund"]/td[3]').first
+
+    # for broken records like 16D4556
+    if container.nil?
+      Rails.logger.warn "RP [?]: no meta information found. Paper title: #{title}"
+      return
+    end
 
     link = container.at_css('a')
     full_reference = link.text.strip
