@@ -40,6 +40,13 @@ class StorePaperPDFJob < ActiveJob::Base
       return
     end
 
+    # FIXME: add support for weird redirection things like HH uses
+
+    if resp.headers['Content-Type'] != 'application/pdf'
+      logger.warn "File for Paper [#{paper.body.state} #{paper.full_reference}] is not a PDF"
+      return
+    end
+
     f = File.open(filepath, 'wb')
     begin
       f.write(resp.body)
