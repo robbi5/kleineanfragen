@@ -24,6 +24,7 @@ class Body < ActiveRecord::Base
     when 'RP' then RheinlandPfalzLandtagScraper
     when 'MV' then MeckPommLandtagScraper
     when 'NS' then NiedersachsenLandtagScraper
+    when 'HH' then HamburgBuergerschaftScraper
     else nil
     end
   end

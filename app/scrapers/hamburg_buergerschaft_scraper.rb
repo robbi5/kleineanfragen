@@ -1,38 +1,121 @@
 require 'date'
 
 module HamburgBuergerschaftScraper
-  BASE_URL = 'https://www.buergerschaft-hh.de/'
+  BASE_URL = 'http://www.buergerschaft-hh.de'
+  TYPES = ['Schriftliche Kleine Anfrage', 'Große Anfrage']
+  # because hamburg has a limit of displayed documents, we need to split the date range search
+  # when scraping fails because of too much documents, increment this number, should not happen too often
+  SEARCH_PARTS = 4
 
   class Overview < Scraper
-    # SEARCH_URL = BASE_URL + '/starweb/LTBB/servlet.starweb?path=LTBB/lisshfl.web&id=ltbbfastlink&search=WP%3d5+AND+%28DTYP%3dKleine+Anfrage%29&format=WEBVORGLFL'
-    SEARCH_URL = BASE_URL + '/starweb/LTBB/servlet.starweb?path=LTBB/lisshfl.web&id=LTBBFASTLINK&format=WEBVORGLFL&search='
-    # http://www.parldok.brandenburg.de/starweb/LTBB/servlet.starweb?path=LTBB/lisshfl.web&id=LTBBFASTLINK&search=TODAY%3dX+AND+WP%3d6+AND+%28DTYP%3dKleine+Anfrage%29&format=WEB2PDF
+    SEARCH_URL = BASE_URL + '/parldok/tcl/WPParse.tcl?template=FormFormalkriterien.htm'
+
+    def supports_streaming?
+      true
+    end
 
     def scrape
+      streaming = block_given?
       papers = []
-
-      fail 'fixme'
-      # FIXME
-
-      body.css('?').each do |item|
-        # originators = NamePartyExtractor.new(_).extract
-        papers << {
-          legislative_term: @legislative_term,
-          full_reference: full_reference,
-          reference: reference,
-          title: title,
-          url: url,
-          published_at: published_at,
-          originators: originators
-        }
+      m = mechanize
+      # to initialize session
+      m.get SEARCH_URL
+      # search form
+      mp = m.get SEARCH_URL
+      form = mp.forms.second
+      field = form.field_with(name: 'LegislaturperiodenNummer')
+      field.value = @legislative_term
+      option_text = field.options.find { |option| option.text.include? "#{@legislative_term}. Wahlperiode" }.text
+      dates = HamburgBuergerschaftScraper.extract_date_ranges(option_text)
+      dates.each do |daterange|
+        mp = submit_search(m, daterange)
+        result_url = mp.uri
+        result_page_index = 0
+        loop do
+          body = mp.search("//table[@id = 'parldokresult']")
+          body.css('.pd_titel').each do |title_el|
+            paper = HamburgBuergerschaftScraper.extract(title_el)
+            if streaming
+              yield paper
+            else
+              papers << paper
+            end
+          end
+          break unless next_page_el(mp)
+          result_page_index += 1
+          mp = m.get("#{result_url}&pagepos=#{result_page_index}")
+        end
       end
-      papers
+      papers unless streaming
+    end
+
+    def next_page_el(mp)
+      # if there is no next page, a">>" becomes text ">>"
+      mp.search("//a[text()[normalize-space(.)='>>']]").first
+    end
+
+    def submit_search(m, daterange)
+      mp = m.get SEARCH_URL
+      form = mp.forms.second
+      form.field_with(name: 'LegislaturperiodenNummer').value = @legislative_term
+      form.field_with(name: 'DatumVon').value = daterange.first.strftime('%d.%m.%Y')
+      form.field_with(name: 'DatumBis').value = daterange.last.strftime('%d.%m.%Y')
+      form.field_with(name: 'Dokumententyp').options.each do |opt|
+        if TYPES.include? opt.text.strip
+          opt.select
+        else
+          opt.unselect
+        end
+      end
+      submit_button = form.submits.find { |btn| btn.value == 'Suchen' }
+      mp = m.submit(form, submit_button)
+      form = mp.forms.second
+      submit_button = form.submits.find { |btn| btn.value == 'Dokumente anzeigen' }
+      m.submit(form, submit_button)
     end
   end
 
+  def self.extract_date_ranges(option_text)
+    only_start_date = !(option_text.match(/\(.+\)/))
+    if only_start_date
+      start_time = Date.parse(option_text.split(' ').last.match(/([\d\.]+)$/)[1])
+      end_time = Date.today
+    else
+      option_parts = option_text.match(/\((.+)\)/)[1].split('-')
+      # FIXME: clean
+      start_time = Date.strptime(option_parts.first.match(/([\d\.]+)/)[1], '%d.%m.%Y')
+      end_time = Date.strptime(option_parts.second.match(/([\d\.]+)/)[1], '%d.%m.%Y')
+    end
+    dates = start_time.step(end_time).to_a
+    dates.each_slice((dates.size / SEARCH_PARTS.to_f).round).map { |group| [group.first, group.last] }
+  end
+
+  def self.extract(title_el)
+    next_row = title_el.parent.next_element
+    title_text = title_el.text.strip
+    full_reference = next_row.element_children[0].text.strip
+    reference = full_reference.split('/').last
+    legislative_term = full_reference.split('/').first
+    date = Date.parse(next_row.element_children[2].text.strip)
+    path = title_el.element_children[0]['href']
+    url = Addressable::URI.parse(BASE_URL + path).normalize.to_s
+
+    originators = next_row.next_element.element_children[1].text.strip
+    originators = NamePartyExtractor.new(originators).extract
+    {
+      legislative_term: legislative_term,
+      full_reference: full_reference,
+      reference: reference,
+      title: title_text,
+      url: url,
+      published_at: date,
+      originators: originators
+      # answerers are not available
+    }
+  end
+
   class Detail < Scraper
-    SEARCH_URL = BASE_URL + '/parldok/tcl/WPParse.tcl?template=ViewTrefferZahl.htm&ref_template=formdokumentnummer&DokumentenartID=1'
-    # https://www.buergerschaft-hh.de/parldok/tcl/WPParse.tcl?c=14245810310297188579243&template=ViewTrefferZahl.htm&ref_template=formdokumentnummer&DokumentenartID=1&LegislaturperiodenNummer=20&Dokumentennummer=13764
+    SEARCH_URL = BASE_URL + '/parldok/tcl/WPParse.tcl?template=FormDokumentNummer.htm'
 
     def initialize(legislative_term, reference)
       @legislative_term = legislative_term
@@ -44,26 +127,20 @@ module HamburgBuergerschaftScraper
     end
 
     def scrape
-      mp = mechanize.get(SEARCH_URL + "&LegislaturperiodenNummer=#{@legislative_term}&Dokumentennummer=#{@reference}")
-
-      body = mp.root.at_css('#parldokresult')
-      title = body.at_css("td[headers='pd_titel']").text.strip
-      url = body.at_css("td[headers='pd_titel'] a").attributes['href'].value
-      full_reference = body.at_css("td[headers='pd_nummer']").text.strip
-      date = body.at_css("td[headers='pd_datum']").text.strip
-      names = body.at_css("td[headers='pd_urheber']").text.strip
-      originators = NamePartyExtractor.new(names).extract
-
-      url = Addressable::URI.parse(BASE_URL + path).normalize.to_s
-      {
-        legislative_term: @legislative_term,
-        full_reference: full_reference,
-        reference: @reference,
-        title: title,
-        published_at: Date.parse(date),
-        url: url,
-        originators: originators
-      }
+      m = mechanize
+      # get a session
+      m.get SEARCH_URL
+      mp = m.get SEARCH_URL
+      form = mp.forms.second
+      form.field_with(name: 'LegislaturperiodenNummer').value = @legislative_term
+      form.field_with(name: 'Dokumentennummer').value = @reference
+      submit_button = form.submits.find { |btn| btn.value == 'Suchen' }
+      mp = m.submit(form, submit_button)
+      # page which triggeres a redirect,so call redirect url manually
+      redir = mp.search("//meta[@http-equiv='refresh']").first
+      mp = m.get BASE_URL + redir['content'].gsub(/.+URL=(.+)/m, '\1')
+      body = mp.search("//table[@id = 'parldokresult']")
+      HamburgBuergerschaftScraper.extract(body.at_css('.pd_titel'))
     end
   end
 end
