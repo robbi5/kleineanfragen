@@ -74,6 +74,15 @@ module RheinlandPfalzLandtagScraper
     end
   end
 
+  # FIXME: move somewhere else
+  def self.patron_session
+    sess = Patron::Session.new
+    sess.connect_timeout = 5
+    sess.timeout = 60
+    sess.headers['User-Agent'] = Rails.configuration.x.user_agent
+    sess
+  end
+
   # extract paper information
   def self.extract(item)
     title = item.search('./tr[@name="Repeat_WHET"]/td[2]').first.text
@@ -94,7 +103,14 @@ module RheinlandPfalzLandtagScraper
     results = container.text.match(/Kleine Anfrage \d+ (.+) und Antwort (.+) ([\d\.]+) /)
 
     if results.nil?
-      Rails.logger.warn "RLP [#{full_reference}]: no readable meta information found"
+      Rails.logger.warn "RP [#{full_reference}]: no readable meta information found"
+      return
+    end
+
+    # not all papers are available
+    resp = patron_session.head(url)
+    if resp.status == 404 || resp.url.include?('error404.html')
+      Rails.logger.warn "RP [#{full_reference}]: url throws 404"
       return
     end
 
