@@ -13,7 +13,8 @@ Body.create([
   { name: 'Bundestag',       state: 'BT' },
   { name: 'Hamburg',         state: 'HH' },
   { name: 'Rheinland-Pfalz', state: 'RP' },
-  { name: 'Mecklenburg-Vorpommern', state: 'MV' }
+  { name: 'Mecklenburg-Vorpommern', state: 'MV' },
+  { name: 'Niedersachsen',   state: 'NS' }
 ])
 
 berlin = Body.find_by_name('Berlin')
