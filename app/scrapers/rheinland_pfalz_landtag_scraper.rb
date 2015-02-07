@@ -34,7 +34,7 @@ module RheinlandPfalzLandtagScraper
       loop do
         mp.search('//tbody[@name="RecordRepeater"]').each do |item|
           paper = RheinlandPfalzLandtagScraper.extract(item)
-          next if warn_broken(paper.nil?, 'RP [?]: extract returned nil')
+          next if paper.nil?
           if streaming
             yield paper
           else
