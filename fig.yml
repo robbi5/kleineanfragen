@@ -12,8 +12,6 @@ web:
     - elasticsearch
   environment:
     RESQUE_SERVER_OPEN: true
-    RAILS_ENV: development
-    RACK_ENV: development
     ELASTICSEARCH_URL: http://elasticsearch:9200/
     REDIS_URL: redis://redis:6379
     DATABASE_URL: postgres://kleineanfragen:@database/kleineanfragen
