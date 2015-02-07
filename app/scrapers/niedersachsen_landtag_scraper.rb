@@ -18,7 +18,7 @@ module NiedersachsenLandtagScraper
   end
 
   def self.extract_link(container)
-    container.css('a').last
+    container.css('a').select { |el| el.text.include? '/' }.last
   end
 
   def self.extract_full_reference(link)
