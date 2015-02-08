@@ -8,7 +8,7 @@ class StorePaperPDFJob < ActiveJob::Base
     ret = download_paper(paper)
 
     if !ret
-      fail 'Downloading Paper [#{paper.body.state} #{paper.full_reference}] failed'
+      fail "Downloading Paper [#{paper.body.state} #{paper.full_reference}] failed"
     end
 
     if !AppStorage.bucket.files.head(paper.path).nil? && !force
