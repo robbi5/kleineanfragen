@@ -8,7 +8,7 @@ class ContainsTableJob < ActiveJob::Base
     fail "No Text for Paper [#{paper.body.state} #{paper.full_reference}]" if paper.contents.blank?
 
     # Hint 1: "<synonym für nachfolgende> Tabelle"
-    if paper.contents.match(/(?:[bB]eiliegende|beigefügte|anliegende|[Ff]olgende|nachstehende|unten stehende)[nr]? Tabelle/)
+    if paper.contents.match(/(?:[bB]eiliegende|beigefügte|anliegende|[Ff]olgende|vorstehende|nachstehende|unten stehende)[nr]? Tabelle/)
       probability += 1
     end
 
@@ -22,7 +22,17 @@ class ContainsTableJob < ActiveJob::Base
       probability += 1
     end
 
-    # Hint 4: \d\n\d\n\d\n...
+    # Hint 4: "die Tabellen 1 bis 4"
+    if paper.contents.match(/[Dd]ie Tabellen \d bis \d/)
+      probability += 1
+    end
+
+    # Hint 5: "\nTabelle 2:\n"
+    if paper.contents.match(/\nTabelle \d:\n/)
+      probability += 1
+    end
+
+    # Hint 6: \d\n\d\n\d\n...
     if paper.contents.match(/(\d[\d\s]+\n[\d][\s\d]+)+/m)
       # TODO: count matches, add to probability
       probability += 0.5
