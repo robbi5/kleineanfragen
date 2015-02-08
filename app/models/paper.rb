@@ -15,8 +15,7 @@ class Paper < ActiveRecord::Base
     def searchkick_index_options
       o = old_searchkick_index_options
       # remove index: "not_analyzed"
-      o[:mappings][:_default_][:properties]['contents'][:fields].delete("contents")
-      o[:mappings][:_default_][:dynamic_templates][0][:string_template][:mapping][:fields].delete('{name}')
+      o[:mappings][:_default_][:properties]['contents'][:fields].delete('contents')
       o
     end
   end
