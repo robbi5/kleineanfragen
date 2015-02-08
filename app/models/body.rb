@@ -28,4 +28,12 @@ class Body < ActiveRecord::Base
     else nil
     end
   end
+
+  def create_nomenklatura_datasets
+  	return false if Rails.configuration.x.nomenklatura_api_key.blank?
+  	datasets = []
+    datasets << Nomenklatura::Dataset.create("ka-ministries-#{state.downcase}", "kleineAnfragen Ministerien #{state}")
+    datasets << Nomenklatura::Dataset.create("ka-people-#{state.downcase}", "kleineAnfragen Personen #{state}")
+    datasets
+  end
 end
