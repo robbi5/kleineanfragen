@@ -13,7 +13,7 @@ module BerlinAghScraper
       body = mp.search "//table[contains(@summary, 'Hauptbereich')]"
       legterm = body.search("//th[contains(@class, 'gross2')]").inner_html.strip
       legislative_term = legterm.match(/(\d+). Wahlperiode/)[1]
-      # WARN if legislative_term.to_i != @legislative_term
+      warn_broken(legislative_term.to_i != @legislative_term, 'legislative_term not correct', legislative_term)
       papers = []
 
       body.search('//td[contains(@colspan, 3)]').each do |item|
@@ -51,7 +51,7 @@ module BerlinAghScraper
         ministries = []
         ministry_line = container.search('a')[1].try(:previous_element).try(:previous).try(:text)
         if ministry_line
-          ministry = Ministry.where(short_name: ministry_line).first
+          ministry = Ministry.where(short_name: ministry_line.strip).first
           ministries << ministry if ministry
         end
 
