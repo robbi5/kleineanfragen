@@ -5,7 +5,11 @@ class StorePaperPDFJob < ActiveJob::Base
     logger.info "Downloading PDF for Paper [#{paper.body.state} #{paper.full_reference}]"
     fail 'AppStorage: Bucket not available!' if AppStorage.bucket.nil?
 
-    download_paper(paper)
+    ret = download_paper(paper)
+
+    if !ret
+      fail 'Downloading Paper [#{paper.body.state} #{paper.full_reference}] failed'
+    end
 
     if !AppStorage.bucket.files.head(paper.path).nil? && !force
       logger.info "PDF for Paper [#{paper.body.state} #{paper.full_reference}] already exists in Storage"
@@ -37,14 +41,17 @@ class StorePaperPDFJob < ActiveJob::Base
     resp = session.get(paper.url)
     if resp.status != 200
       logger.warn "Download failed for Paper [#{paper.body.state} #{paper.full_reference}]"
-      return
+      return false
     end
 
     # FIXME: add support for weird redirection things like HH uses
 
-    if resp.headers['Content-Type'] != 'application/pdf'
-      logger.warn "File for Paper [#{paper.body.state} #{paper.full_reference}] is not a PDF"
-      return
+    content_type = resp.headers['Content-Type']
+    content_type = content_type.last if content_type.is_a? Array
+
+    if content_type != 'application/pdf'
+      logger.warn "File for Paper [#{paper.body.state} #{paper.full_reference}] is not a PDF: #{content_type}"
+      return false
     end
 
     f = File.open(filepath, 'wb')
