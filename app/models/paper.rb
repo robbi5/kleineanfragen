@@ -8,6 +8,19 @@ class Paper < ActiveRecord::Base
              highlight: [:title, :contents],
              index_prefix: 'kleineanfragen'
 
+  # Fix searchkick "immense term":
+  class << self
+    alias_method :old_searchkick_index_options, :searchkick_index_options
+
+    def searchkick_index_options
+      o = old_searchkick_index_options
+      # remove index: "not_analyzed"
+      o[:mappings][:_default_][:properties]['contents'][:fields].delete("contents")
+      o[:mappings][:_default_][:dynamic_templates][0][:string_template][:mapping][:fields].delete('{name}')
+      o
+    end
+  end
+
   belongs_to :body
   has_many :paper_originators
   has_many :originator_people, through: :paper_originators, source: :originator, source_type: 'Person'

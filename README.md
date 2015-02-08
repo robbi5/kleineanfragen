@@ -16,7 +16,7 @@ If you want to look into postgres or elasticsearch, uncomment the `ports` sectio
 You may be required to execute database migrations. Try this:
 
     fig run web rake db:migrate
-    fig run web rake db:seeds
+    fig run web rake db:seed
 
 To get a rails console, run:
 
