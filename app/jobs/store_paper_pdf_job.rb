@@ -40,7 +40,7 @@ class StorePaperPDFJob < ActiveJob::Base
 
     resp = session.get(paper.url)
     if resp.status != 200
-      logger.warn "Download failed for Paper [#{paper.body.state} #{paper.full_reference}]"
+      logger.warn "Download failed with status #{resp.status} for Paper [#{paper.body.state} #{paper.full_reference}]"
       return false
     end
 
@@ -64,7 +64,7 @@ class StorePaperPDFJob < ActiveJob::Base
       f.close if f
     end
 
-    return unless paper.downloaded_at.nil?
+    return true unless paper.downloaded_at.nil?
     paper.downloaded_at = DateTime.now
     paper.save
   end
