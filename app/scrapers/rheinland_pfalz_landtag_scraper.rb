@@ -77,7 +77,7 @@ module RheinlandPfalzLandtagScraper
   # FIXME: move somewhere else
   def self.patron_session
     sess = Patron::Session.new
-    sess.connect_timeout = 5
+    sess.connect_timeout = 8
     sess.timeout = 60
     sess.headers['User-Agent'] = Rails.configuration.x.user_agent
     sess
@@ -108,9 +108,14 @@ module RheinlandPfalzLandtagScraper
     end
 
     # not all papers are available
-    resp = patron_session.head(url)
-    if resp.status == 404 || resp.url.include?('error404.html')
-      Rails.logger.warn "RP [#{full_reference}]: url throws 404"
+    begin
+      resp = patron_session.head(url)
+      if resp.status == 404 || resp.url.include?('error404.html')
+        Rails.logger.warn "RP [#{full_reference}]: url throws 404"
+        return
+      end
+    rescue => e
+      Rails.logger.warn "RP [#{full_reference}]: url throwed #{e}"
       return
     end
 
