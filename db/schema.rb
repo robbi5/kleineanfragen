@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150204073802) do
+ActiveRecord::Schema.define(version: 20150209092207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,8 +52,8 @@ ActiveRecord::Schema.define(version: 20150204073802) do
   end
 
   add_index "ministries", ["body_id", "name"], name: "index_ministries_on_body_id_and_name", unique: true, using: :btree
+  add_index "ministries", ["body_id", "slug"], name: "index_ministries_on_body_id_and_slug", unique: true, using: :btree
   add_index "ministries", ["body_id"], name: "index_ministries_on_body_id", using: :btree
-  add_index "ministries", ["slug"], name: "index_ministries_on_slug", unique: true, using: :btree
 
   create_table "organizations", force: :cascade do |t|
     t.string   "name"
@@ -105,8 +105,8 @@ ActiveRecord::Schema.define(version: 20150204073802) do
   end
 
   add_index "papers", ["body_id", "legislative_term", "reference"], name: "index_papers_on_body_id_and_legislative_term_and_reference", unique: true, using: :btree
+  add_index "papers", ["body_id", "legislative_term", "slug"], name: "index_papers_on_body_id_and_legislative_term_and_slug", unique: true, using: :btree
   add_index "papers", ["body_id"], name: "index_papers_on_body_id", using: :btree
-  add_index "papers", ["slug"], name: "index_papers_on_slug", unique: true, using: :btree
 
   create_table "people", force: :cascade do |t|
     t.text     "name"
