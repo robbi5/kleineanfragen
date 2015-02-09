@@ -6,7 +6,8 @@ class Paper < ActiveRecord::Base
   searchkick language: 'German',
              text_start: [:title],
              highlight: [:title, :contents],
-             index_prefix: 'kleineanfragen'
+             index_prefix: 'kleineanfragen',
+             include: [:body, :paper_originators, :originator_people, :originator_organizations]
 
   # Fix searchkick "immense term":
   class << self
