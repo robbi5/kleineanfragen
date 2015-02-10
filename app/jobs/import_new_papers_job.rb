@@ -7,12 +7,14 @@ class ImportNewPapersJob < ActiveJob::Base
     @legislative_term = legislative_term
     @scraper = @body.scraper::Overview.new(legislative_term)
     @load_details = @body.scraper.const_defined?(:Detail)
+    @new_papers = 0
+    @old_papers = 0
     if @scraper.supports_pagination?
       scrape_paginated
     else
       scrape_single_page
     end
-    logger.info "Importing #{@body.state} done."
+    logger.info "Importing #{@body.state} #{@legislative_term} done. #{@new_papers} new Papers, #{@old_papers} old Papers."
   end
 
   def scrape_paginated
@@ -22,7 +24,10 @@ class ImportNewPapersJob < ActiveJob::Base
       logger.info "Importing #{@body.state} - Page #{page}"
       found_new_paper = false
       @scraper.scrape(page).each do |item|
-        next if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
+        if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
+          @old_papers += 1
+          next
+        end
         on_item(item)
         found_new_paper = true
       end
@@ -34,7 +39,10 @@ class ImportNewPapersJob < ActiveJob::Base
   def scrape_single_page
     logger.info "Importing #{@body.state} - Single Page"
     block = lambda do |item|
-      return if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
+      if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
+        @old_papers += 1
+        return
+      end
       on_item(item)
     end
     if @scraper.supports_streaming?
@@ -49,5 +57,6 @@ class ImportNewPapersJob < ActiveJob::Base
     paper = Paper.create!(item.except(:full_reference).merge(body: @body))
     LoadPaperDetailsJob.perform_later(paper) if (item[:originators].blank? || item[:answerers].blank?) && @load_details
     StorePaperPDFJob.perform_later(paper)
+    @new_papers += 1
   end
 end
