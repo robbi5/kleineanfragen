@@ -95,6 +95,12 @@ module RheinlandPfalzLandtagScraper
     end
 
     link = container.at_css('a')
+
+    if link.nil?
+      Rails.logger.warn "RP [?]: no link element found"
+      return
+    end
+
     full_reference = link.text.strip
     url = link.attributes['href'].value
     legislative_term = full_reference.split('/').first

@@ -53,8 +53,13 @@ module NiedersachsenLandtagScraper
     title = extract_title(item)
     return if title.nil?
     container = extract_container(item)
-
     link = extract_link(container)
+
+    if link.nil?
+      Rails.logger.warn "NS [?]: no link element found"
+      return
+    end
+
     full_reference = extract_full_reference(link)
     legislative_term, reference = extract_reference(full_reference)
     url = extract_url(link)
