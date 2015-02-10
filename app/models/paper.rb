@@ -121,10 +121,6 @@ class Paper < ActiveRecord::Base
     desc.join('')
   end
 
-  def extract_page_count
-    Docsplit.extract_length local_path
-  end
-
   def originators_parties=(parties)
     parties.each do |party|
       party = normalize(party, 'parties')

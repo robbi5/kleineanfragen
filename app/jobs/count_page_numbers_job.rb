@@ -9,7 +9,7 @@ class CountPageNumbersJob < ActiveJob::Base
       fail "No local copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] found"
     end
 
-    count = paper.extract_page_count
+    count = Docsplit.extract_length paper.local_path
     paper.page_count = count
     paper.save
   end
