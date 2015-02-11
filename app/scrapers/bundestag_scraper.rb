@@ -38,18 +38,9 @@ module BundestagScraper
     end
   end
 
-  class Detail < Scraper
+  class Detail < DetailScraper
     START_URL = BASE_URL + '/dip21.web/bt'
     SEARCH_URL = BASE_URL + '/dip21.web/searchDocuments.do'
-
-    def initialize(legislative_term, reference)
-      @legislative_term = legislative_term
-      @reference = reference
-    end
-
-    def full_reference
-      @legislative_term.to_s + '/' + @reference.to_s
-    end
 
     def scrape
       m = mechanize

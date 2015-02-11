@@ -114,17 +114,8 @@ module HamburgBuergerschaftScraper
     }
   end
 
-  class Detail < Scraper
+  class Detail < DetailScraper
     SEARCH_URL = BASE_URL + '/parldok/tcl/WPParse.tcl?template=FormDokumentNummer.htm'
-
-    def initialize(legislative_term, reference)
-      @legislative_term = legislative_term
-      @reference = reference
-    end
-
-    def full_reference
-      @legislative_term.to_s + '/' + @reference.to_s
-    end
 
     def scrape
       m = mechanize

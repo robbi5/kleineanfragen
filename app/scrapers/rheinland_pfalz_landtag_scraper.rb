@@ -55,17 +55,8 @@ module RheinlandPfalzLandtagScraper
     end
   end
 
-  class Detail < Scraper
+  class Detail < DetailScraper
     SEARCH_URL = BASE_URL + '/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL&format=LISSH_MoreDokument_Report&search='
-
-    def initialize(legislative_term, reference)
-      @legislative_term = legislative_term
-      @reference = reference
-    end
-
-    def full_reference
-      @legislative_term.to_s + '/' + @reference.to_s
-    end
 
     def scrape
       mp = mechanize.get SEARCH_URL + CGI.escape("(DART=D AND WP=#{@legislative_term} AND DNR,KORD=#{@reference})")

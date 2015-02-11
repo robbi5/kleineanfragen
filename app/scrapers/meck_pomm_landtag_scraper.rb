@@ -91,13 +91,8 @@ module MeckPommLandtagScraper
     }
   end
 
-  class Detail < Scraper
+  class Detail < DetailScraper
     SEARCH_URL = BASE_URL + '/Parldok/dokumentennummer'
-
-    def initialize(legislative_term, reference)
-      @legislative_term = legislative_term
-      @reference = reference
-    end
 
     def scrape
       m = mechanize
