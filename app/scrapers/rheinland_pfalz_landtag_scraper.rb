@@ -33,7 +33,12 @@ module RheinlandPfalzLandtagScraper
       papers = []
       loop do
         mp.search('//tbody[@name="RecordRepeater"]').each do |item|
-          paper = RheinlandPfalzLandtagScraper.extract(item)
+          begin
+            paper = RheinlandPfalzLandtagScraper.extract(item)
+          rescue => e
+            logger.warn e
+            next
+          end
           next if paper.nil?
           if streaming
             yield paper
@@ -80,17 +85,10 @@ module RheinlandPfalzLandtagScraper
     container = item.search('./tr[@name="Repeat_Fund"]/td[3]').first
 
     # for broken records like 16D4556
-    if container.nil?
-      Rails.logger.warn "RP [?]: no meta information found. Paper title: #{title}"
-      return
-    end
+    fail "RP [?]: no meta information found. Paper title: #{title}" if container.nil?
 
     link = container.at_css('a')
-
-    if link.nil?
-      Rails.logger.warn "RP [?]: no link element found"
-      return
-    end
+    fail 'RP [?]: no link element found' if link.nil?
 
     full_reference = link.text.strip
     url = link.attributes['href'].value
@@ -98,22 +96,16 @@ module RheinlandPfalzLandtagScraper
     reference = full_reference.split('/').last
 
     results = container.text.match(/Kleine Anfrage \d+ (.+) und Antwort (.+) ([\d\.]+) /)
-
-    if results.nil?
-      Rails.logger.warn "RP [#{full_reference}]: no readable meta information found"
-      return
-    end
+    fail "RP [#{full_reference}]: no readable meta information found" if results.nil?
 
     # not all papers are available
     begin
       resp = patron_session.head(url)
-      if resp.status == 404 || resp.url.include?('error404.html')
-        Rails.logger.warn "RP [#{full_reference}]: url throws 404"
-        return
-      end
     rescue => e
-      Rails.logger.warn "RP [#{full_reference}]: url throwed #{e}"
-      return
+      raise "RP [#{full_reference}]: url throwed #{e}"
+    end
+    if resp.status == 404 || resp.url.include?('error404.html')
+      fail "RP [#{full_reference}]: url throws 404"
     end
 
     originators = NamePartyExtractor.new(results[1].strip).extract

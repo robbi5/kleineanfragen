@@ -51,24 +51,17 @@ module NiedersachsenLandtagScraper
 
   def self.extract_paper(item)
     title = extract_title(item)
-    return if title.nil?
+    fail 'NS [?]: no title element found' if title.nil?
+
     container = extract_container(item)
     link = extract_link(container)
-
-    if link.nil?
-      Rails.logger.warn "NS [?]: no link element found"
-      return
-    end
+    fail 'NS [?]: no link element found' if link.nil?
 
     full_reference = extract_full_reference(link)
     legislative_term, reference = extract_reference(full_reference)
     url = extract_url(link)
     meta = extract_meta(container)
-
-    if meta.nil?
-      Rails.logger.warn "NS [#{full_reference}]: no readable meta information found"
-      return
-    end
+    fail "NS [#{full_reference}]: no readable meta information found" if meta.nil?
 
     ministries = []
     originators = NamePartyExtractor.new(meta[:originators]).extract
@@ -119,7 +112,12 @@ module NiedersachsenLandtagScraper
       papers = []
 
       NiedersachsenLandtagScraper.extract_blocks(mp).each do |item|
-        paper = NiedersachsenLandtagScraper.extract_paper(item)
+        begin
+          paper = NiedersachsenLandtagScraper.extract_paper(item)
+        rescue => e
+          logger.warn e
+          next
+        end
         if streaming
           yield paper
         else

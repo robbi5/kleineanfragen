@@ -25,8 +25,12 @@ module BundestagScraper
 
         next unless TYPES.include?(type)
 
-        paper = BundestagScraper.scrape_vorgang(m, "#{OVERVIEW_URL}/WP#{@legislative_term}/#{detail_url}")
-        next if paper == false
+        begin
+          paper = BundestagScraper.scrape_vorgang(m, "#{OVERVIEW_URL}/WP#{@legislative_term}/#{detail_url}")
+        rescue => e
+          logger.warn e
+          next
+        end
         if streaming
           yield paper
         else
@@ -76,11 +80,7 @@ module BundestagScraper
 
     doc = Nokogiri.parse xml
     status = doc.at_css('VORGANG AKTUELLER_STAND').text
-
-    unless status == 'Beantwortet'
-      Rails.logger.info "#{detail_url}: ignored, status: #{status}"
-      return false
-    end
+    fail "#{detail_url}: ignored, status: #{status}" unless status == 'Beantwortet'
 
     title = doc.at_css('VORGANG TITEL').text.strip
     legislative_term = doc.at_css('VORGANG WAHLPERIODE').text.to_i
@@ -95,10 +95,7 @@ module BundestagScraper
       full_reference = node.at_css('DRS_NUMMER').text
     end
 
-    unless found && !url.blank?
-      Rails.logger.info "#{detail_url}: ignored, no paper found"
-      return false
-    end
+    fail "#{detail_url}: ignored, no paper found" unless found && !url.blank?
 
     reference = full_reference.split('/').last
 
@@ -111,11 +108,9 @@ module BundestagScraper
       urheber = node.at_css('URHEBER').text
       if urheber.starts_with?('Antwort') || node.at_css('FUNDSTELLE_LINK').try(:text) == url
         _, ministry = urheber.match(/: ([^(]*)/).to_a
-        if !ministry.nil?
+        unless ministry.nil?
           ministry = ministry.strip.sub(/^Bundesregierung, /, '')
           answerers[:ministries] << ministry
-        else
-          Rails.logger.info "#{full_reference}: no ministry found"
         end
         fundstelle = node.at_css('FUNDSTELLE').text
         _, date = fundstelle.match(/(\d+\.\d+\.\d+)\s/).to_a
@@ -133,12 +128,8 @@ module BundestagScraper
       end
     end
 
-    published_at = nil
-    if !date.nil?
-      published_at = Date.parse(date)
-    else
-      Rails.logger.warn "#{full_reference}: no date found"
-    end
+    fail "#{full_reference}: no date found" if date.nil?
+    published_at = Date.parse(date)
 
     {
       legislative_term: legislative_term,
