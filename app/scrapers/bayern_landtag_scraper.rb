@@ -21,7 +21,7 @@ module BayernLandtagScraper
       loop do
         has_next_page = false
         mp = search(page)
-        Rails.logger.debug "[scrape_all] page: #{page}"
+        logger.debug "[scrape_all] page: #{page}"
         papers.concat extract(mp)
         if mp.search('//div[contains(@class, "cbox_content")]//a[contains(text(), "nächste Treffer")]').size > 0
           page += 1
@@ -29,7 +29,7 @@ module BayernLandtagScraper
         end
         break unless has_next_page
       end
-      Rails.logger.debug "[scrape_all] done extracting, #{papers.size} papers"
+      logger.debug "[scrape_all] done extracting, #{papers.size} papers"
       papers
     end
 
@@ -56,7 +56,7 @@ module BayernLandtagScraper
         reference = full_reference.split('/').last
         published_at = Date.parse(meta_element.text.match(/([\d\.]+)$/)[1])
 
-        Rails.logger.debug "[extract] item #{i += 1}: #{full_reference}"
+        logger.debug "[extract] item #{i += 1}: #{full_reference}"
 
         link_el = row.at_css('a')
         next if warn_broken(link_el.nil?, 'link_el not found', item)

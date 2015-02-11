@@ -7,9 +7,10 @@ class LoadPaperDetailsJob < ActiveJob::Base
     return unless paper.body.scraper.const_defined? :Detail
 
     logger.info "Loading details for Paper [#{paper.body.state} #{paper.full_reference}]"
-    detail = paper.body.scraper::Detail.new(paper.legislative_term, paper.reference).scrape
+    scraper = paper.body.scraper::Detail.new(paper.legislative_term, paper.reference)
+    scraper.logger = logger
 
-    detail.each do |key, value|
+    scraper.scrape.each do |key, value|
       paper.send("#{key}=", value) if paper.send(key).blank? || OVERWRITEABLE.include?(key)
     end
 

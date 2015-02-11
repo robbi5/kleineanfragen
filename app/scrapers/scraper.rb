@@ -6,6 +6,14 @@ class Scraper
     @per_page = 50
   end
 
+  def logger=(logger)
+    @logger = logger
+  end
+
+  def logger
+    @logger ||= Rails.logger
+  end
+
   def supports_pagination?
     false
   end
@@ -17,7 +25,7 @@ class Scraper
   def mechanize
     mech = Mechanize.new
     mech.pre_connect_hooks << lambda do |_agent, request|
-      Rails.logger.debug "[scraper] mechanize throttle (uri=#{request.path})"
+      logger.debug "[scraper] mechanize throttle (uri=#{request.path})"
       sleep 1
     end
     mech.user_agent = Rails.configuration.x.user_agent
@@ -26,8 +34,8 @@ class Scraper
 
   def warn_broken(bool, reason, item = nil)
     return false if !bool
-    Rails.logger.warn reason
-    Rails.logger.debug { item.to_s.gsub(/\n|\s\s+/, '') } unless item.nil?
+    logger.warn reason
+    logger.debug { item.to_s.gsub(/\n|\s\s+/, '') } unless item.nil?
     true
   end
 end

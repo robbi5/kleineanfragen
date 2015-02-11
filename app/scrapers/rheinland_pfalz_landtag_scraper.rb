@@ -47,7 +47,7 @@ module RheinlandPfalzLandtagScraper
         search_form.field_with(name: '__action').value = 48
         mp = m.submit(search_form)
         if mp.search('//a[@name="NextRecords"]').size == 0
-          puts "Cannot find more pages: #{mp.content}"
+          logger.debug "Cannot find more pages: #{mp.content}"
           break
         end
       end

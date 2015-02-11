@@ -4,6 +4,7 @@ class ImportPaperJob < ActiveJob::Base
   def perform(body, legislative_term, reference)
     fail "No scraper found for body #{body.state}" if body.scraper.nil?
     scraper = body.scraper::Detail.new(legislative_term, reference)
+    scraper.logger = logger
     load_details = body.scraper.const_defined?(:Detail)
     logger.info "Importing single Paper: #{body.state} - #{legislative_term}/#{reference}"
     item = scraper.scrape
