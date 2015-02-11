@@ -30,6 +30,8 @@ class Paper < ActiveRecord::Base
   # has_many :answerer_organizations, through: :paper_answerers, source: :answerer, source_type: 'Organization'
   has_many :answerer_ministries, through: :paper_answerers, source: :answerer, source_type: 'Ministry'
 
+  scope :search_import, -> { includes(:body) }
+
   def originators
     # TODO: why is .delete_if(&:nil?) needed, why can be an originator nil?
     paper_originators.sort_by { |org| org.originator_type == 'Person' ? 1 : 2 }.collect(&:originator).delete_if(&:nil?)
