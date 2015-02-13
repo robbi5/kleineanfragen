@@ -24,7 +24,7 @@ class ImportNewPapersJob < ActiveJob::Base
     loop do
       logger.info "Importing #{@body.state} - Page #{page}"
       found_new_paper = false
-      @scraper.scrape(page).each do |item|
+      @scraper.scrape_paginated(page) do |item|
         if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
           @old_papers += 1
           next
@@ -54,7 +54,7 @@ class ImportNewPapersJob < ActiveJob::Base
   end
 
   def on_item(item)
-    logger.info "New Paper: [#{item[:reference]}] \"#{item[:title]}\""
+    logger.info "[#{@body.state}] New Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
     paper = Paper.create!(item.except(:full_reference).merge(body: @body))
     LoadPaperDetailsJob.perform_later(paper) if (item[:originators].blank? || item[:answerers].blank?) && @load_details
     StorePaperPDFJob.perform_later(paper)

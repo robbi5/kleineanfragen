@@ -10,79 +10,62 @@ module BayernLandtagScraper
       true
     end
 
-    def scrape(page = 1)
-      mp = search(page)
-      extract(mp)
+    def supports_streaming?
+      true
     end
 
-    def scrape_all
+    def scrape(&block)
       page = 1
       papers = []
+      block = -> (paper) { papers << paper } unless block_given?
       loop do
-        has_next_page = false
         mp = search(page)
-        logger.debug "[scrape_all] page: #{page}"
-        papers.concat extract(mp)
-        if mp.search('//div[contains(@class, "cbox_content")]//a[contains(text(), "nächste Treffer")]').size > 0
-          page += 1
-          has_next_page = true
-        end
-        break unless has_next_page
+        logger.debug "[scrape] page: #{page}"
+        scrape_page(mp, &block)
+        break unless mp.search('//div[contains(@class, "cbox_content")]//a[contains(text(), "nächste Treffer")]').size > 0
+        page += 1
       end
-      logger.debug "[scrape_all] done extracting, #{papers.size} papers"
-      papers
+      papers unless block_given?
+    end
+
+    def scrape_paginated(page)
+      papers = []
+      block = -> (paper) { papers << paper } unless block_given?
+      mp = search(page)
+      logger.debug "[scrape_paginated] page: #{page}"
+      scrape_page(mp, &block)
+      papers unless block_given?
+    end
+
+    def scrape_page(mechanize_page)
+      streaming = block_given?
+      papers = []
+      BayernLandtagScraper.extract_first_rows(mechanize_page).each do |row|
+        begin
+          paper = BayernLandtagScraper.extract_paper(row)
+        rescue => e
+          logger.warn e
+          next
+        end
+        if streaming
+          yield paper
+        else
+          papers << paper
+        end
+      end
+      papers unless streaming
     end
 
     def search(page)
-      m = mechanize
-      mp = m.get SEARCH_URL
+      @m ||= mechanize
+      mp = @m.get SEARCH_URL
       search_form = mp.form 'suche'
       search_form.field_with(name: 'DOKUMENT_INTEGER_WAHLPERIODE').value = @legislative_term
       search_form.field_with(name: 'DOKUMENT_VORGANGSART').options.find { |opt| opt.text.include? 'Schriftliche Anfrage' }.select
       search_form.field_with(name: 'DOKUMENT_INTEGER_TREFFERANZAHL').value = @per_page
       search_form.add_field!('DOKUMENT_INTEGER_RESULT_START_INDEX', @per_page * (page - 1)) if page > 1
       submit_button = search_form.submits.find { |btn| btn.value == 'Suche starten' }
-      m.submit(search_form, submit_button)
-    end
-
-    def extract(mp)
-      papers = []
-      i = 0
-      mp.search('//table[not(contains(@class, "marg_"))]//tr[not(contains(@class, "clr_listhead"))]/td/b').each do |item|
-        meta_element = item
-        row = item.parent.parent
-
-        full_reference = meta_element.text.match(/Nr. ([\d\/]+)/)[1]
-        reference = full_reference.split('/').last
-        published_at = Date.parse(meta_element.text.match(/([\d\.]+)$/)[1])
-
-        logger.debug "[extract] item #{i += 1}: #{full_reference}"
-
-        link_el = row.at_css('a')
-        next if warn_broken(link_el.nil?, 'link_el not found', item)
-
-        url = Addressable::URI.parse(BASE_URL + link_el.attributes['href'].value).normalize.to_s
-
-        title_el = row.next_element.next_element.search('./td[3]')
-        next if warn_broken(title_el.nil?, 'title_el not found', item)
-
-        title = title_el.text.gsub(/\s+/, ' ').strip.gsub(/\n/, '-').gsub('... [mehr]', '').gsub('[weniger]', '').strip
-
-        papers << {
-          legislative_term: @legislative_term,
-          full_reference: full_reference,
-          reference: reference,
-          published_at: published_at,
-          url: url,
-          title: title
-          # originators not available
-          # answerers not available
-        }
-      end
-
-      warn_broken(papers.size != @per_page, "Got only #{papers.size} of #{@per_page} papers")
-
-      papers
+      @m.submit(search_form, submit_button)
     end
   end
 
@@ -92,35 +75,93 @@ module BayernLandtagScraper
     def scrape
       mp = mechanize.get SEARCH_URL + CGI.escape(full_reference)
       mp = mp.link_with(href: /\#LASTFOLDER$/).click
-      table = mp.search('//div/table//table[1]').first
-      party_el = mp.search('//div/table//table[1]//td[2]').first
-      published_at_el = party_el.previous_element
-      answer_el = party_el.parent.next_element.search('./td[2]')
-
-      title_el = table.parent.parent.previous_element.search('./td[3]')
-      title = title_el.text.gsub(/\s+/, ' ').strip.gsub(/\n/, '-').gsub('... [mehr]', '').gsub('[weniger]', '').strip
-      party = party_el.inner_html.strip
-      published_at = published_at_el.inner_html.strip
-      link_el = answer_el.at_css('a')
-
-      url = Addressable::URI.parse(BASE_URL + link_el.attributes['href'].value).normalize.to_s
-
-      {
-        legislative_term: @legislative_term,
-        full_reference: full_reference,
-        reference: @reference,
-        title: title,
-        published_at: published_at,
-        url: url,
-        originators: { parties: [party] }
-        # answerers not available
-      }
+      first_row = BayernLandtagScraper.extract_first_rows(mp).first
+      BayernLandtagScraper.extract_paper(first_row)
     end
   end
-end
 
-###
-# Usage:
-#   puts BayernLandtagScraper::Overview.new.scrape.inspect
-#   puts BayernLandtagScraper::Detail.new(17, 2000).scrape.inspect
-###
+  def self.extract_first_rows(page)
+    page.search('//table[not(contains(@class, "marg_"))]//tr[not(contains(@class, "clr_listhead"))]/td/b').map do |item|
+      item.parent.parent
+    end
+  end
+
+  def self.extract_meta(first_row)
+    text = first_row.at_css('b').try(:text)
+    return nil if text.nil?
+    {
+      full_reference: text.match(/Nr. ([\d\/]+)/)[1],
+      published_at: text.match(/([\d\.]+)$/)[1]
+    }
+  end
+
+  def self.extract_reference(full_reference)
+    full_reference.split('/')
+  end
+
+  def self.extract_link(first_row)
+    first_row.css('a').last
+  end
+
+  def self.extract_url(link)
+    rel_url = link.attributes['href'].value
+    return nil if rel_url.nil?
+    Addressable::URI.parse(BASE_URL + rel_url).normalize.to_s
+  end
+
+  def self.extract_party(fourth_row)
+    fourth_row.search('.//table//tr[1]/td[2]').first.try(:text).try(:strip)
+  end
+
+  def self.extract_title(third_row)
+    title_el = third_row.search('./td[3]').first
+    return nil if title_el.nil?
+    title_el.text.gsub(/\s+/, ' ').strip.gsub(/\n/, '-').gsub('... [mehr]', '').gsub('[weniger]', '').strip
+  end
+
+  def self.extract_paper(first_row)
+    begin
+      second_row = first_row.next_element
+      third_row = second_row.next_element
+    rescue
+      raise '[?] needed html structure is not there'
+    end
+
+    # look for detail row
+    begin
+      fourth_row = third_row.next_element
+      detail = !fourth_row.try(:at_css, 'table').nil?
+    rescue
+      detail = false
+    end
+
+    meta = extract_meta(first_row)
+    fail "[#{full_reference}] meta element not found" if meta.nil?
+
+    full_reference = meta[:full_reference]
+    legislative_term, reference = extract_reference(full_reference)
+    published_at = Date.parse(meta[:published_at])
+
+    link = extract_link(first_row)
+    fail "[#{full_reference}] link element not found" if link.nil?
+
+    url = extract_url(link)
+    title = extract_title(third_row)
+    fail "[#{full_reference}] title element not found" if title.nil?
+
+    party = extract_party(fourth_row) if detail
+
+    paper = {
+      legislative_term: legislative_term,
+      full_reference: full_reference,
+      reference: reference,
+      title: title,
+      url: url,
+      published_at: published_at
+      # originators only on detail page
+      # answerers not available
+    }
+    paper[:originators] = { parties: [party] } if detail
+    paper
+  end
+end
