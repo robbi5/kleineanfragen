@@ -48,13 +48,10 @@ module RheinlandPfalzLandtagScraper
         end
 
         # submit form for next page
+        break if mp.search('//a[@name="NextRecords"]').size == 0
         search_form = mp.form '__form'
         search_form.field_with(name: '__action').value = 48
         mp = m.submit(search_form)
-        if mp.search('//a[@name="NextRecords"]').size == 0
-          logger.debug "Cannot find more pages: #{mp.content}"
-          break
-        end
       end
       papers unless streaming
     end
@@ -88,7 +85,7 @@ module RheinlandPfalzLandtagScraper
     fail "RP [?]: no meta information found. Paper title: #{title}" if container.nil?
 
     link = container.at_css('a')
-    fail 'RP [?]: no link element found' if link.nil?
+    fail "RP [?]: no link element found. Paper title: #{title}" if link.nil?
 
     full_reference = link.text.strip
     url = link.attributes['href'].value
