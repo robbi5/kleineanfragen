@@ -88,8 +88,13 @@ module BerlinAghScraper
   class Overview < Scraper
     SEARCH_URL = BASE_URL + '/starweb/AHAB/servlet.starweb?path=AHAB/lisshfl.web&id=ahabfastlink&format=WEBVORGLFL&search='
 
+    def supports_streaming?
+      true
+    end
+
     # FIXME: find search with pagination, add support for pagination
     def scrape
+      streaming = block_given?
       mp = mechanize.get SEARCH_URL + CGI.escape("WP=#{@legislative_term} AND (etyp=schriftl*)")
 
       body = BerlinAghScraper.extract_body(mp)
@@ -101,10 +106,20 @@ module BerlinAghScraper
       papers = []
 
       BerlinAghScraper.extract_seperators(body).each do |seperator|
-        papers << BerlinAghScraper.extract_paper(seperator)
+        begin
+          paper = BerlinAghScraper.extract_paper(seperator)
+        rescue => e
+          logger.warn e
+          next
+        end
+        if streaming
+          yield paper
+        else
+          papers << paper
+        end
       end
 
-      papers
+      papers unless streaming
     end
   end
 
