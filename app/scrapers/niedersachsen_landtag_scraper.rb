@@ -55,7 +55,7 @@ module NiedersachsenLandtagScraper
 
     container = extract_container(item)
     link = extract_link(container)
-    fail 'NS [?]: no link element found' if link.nil?
+    fail "NS [?]: no link element found. Paper title: #{title}" if link.nil?
 
     full_reference = extract_full_reference(link)
     legislative_term, reference = extract_reference(full_reference)
