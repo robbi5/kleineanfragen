@@ -19,7 +19,7 @@ class StorePaperPDFJob < ActiveJob::Base
     file = AppStorage.bucket.files.new(key: paper.path, public: true, body: File.open(paper.local_path))
     file.save
 
-    ThumbnailFirstPageJob.perform_later(paper) if paper.thumbnail_url.blank?
+    ThumbnailFirstPageJob.perform_later(paper, force: force) if paper.thumbnail_url.blank?
     CountPageNumbersJob.perform_later(paper) if paper.page_count.blank?
     ExtractTextFromPaperJob.perform_later(paper) if paper.contents.blank?
   end
