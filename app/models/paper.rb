@@ -147,9 +147,10 @@ class Paper < ActiveRecord::Base
   end
 
   def answerers_ministries=(ministries)
-    ministries.each do |ministry|
-      unless ministry.is_a? Ministry
-        name = normalize(ministry, 'ministries', body)
+    ministries.each do |name|
+      ministry = Ministry.where(body: body).where('lower(short_name) = ?', name.mb_chars.downcase.to_s).first
+      if ministry.nil?
+        name = normalize(name, 'ministries', body)
         ministry = Ministry.where(body: body)
                    .where('lower(name) = ?', name.mb_chars.downcase.to_s)
                    .first_or_create(body: body, name: name)
