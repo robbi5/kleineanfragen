@@ -24,6 +24,7 @@ class Scraper
 
   def mechanize
     mech = Mechanize.new
+    mech.read_timeout = 60
     mech.pre_connect_hooks << lambda do |_agent, request|
       logger.debug "[scraper] mechanize throttle (uri=#{request.path})"
       sleep 1

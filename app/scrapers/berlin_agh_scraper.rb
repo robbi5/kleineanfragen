@@ -4,7 +4,7 @@ module BerlinAghScraper
   BASE_URL = 'http://pardok.parlament-berlin.de'
 
   def self.extract_body(page)
-    page.search "//table[contains(@summary, 'Hauptbereich')]"
+    page.search "//table[contains(@class, 'tabcol')]"
   end
 
   def self.extract_seperators(body)
@@ -97,16 +97,41 @@ module BerlinAghScraper
   end
 
   class Overview < Scraper
-    SEARCH_URL = BASE_URL + '/starweb/AHAB/servlet.starweb?path=AHAB/lisshfl.web&id=ahabfastlink&format=WEBVORGLFL&search='
+    SEARCH_URL = BASE_URL + '/starweb/AHAB/servlet.starweb?path=AHAB/lissh.web'
+    TYPE = 'SCHRIFTLICHE ANFRAGE'
 
     def supports_streaming?
       true
     end
 
-    # FIXME: find search with pagination, add support for pagination
     def scrape
       streaming = block_given?
-      mp = mechanize.get SEARCH_URL + CGI.escape("WP=#{@legislative_term} AND (etyp=schriftl*)")
+      m = mechanize
+      ## FIXME: needed?
+      # m.retry_change_requests = true
+      # get a session
+      m.get BASE_URL + '/starweb/AHAB/'
+      # get search page
+      mp = m.get SEARCH_URL
+      search_form = mp.form '__form'
+
+      fail 'Cannot get search form' if search_form.nil?
+
+      # fill search form
+      search_form.field_with(name: '__action').value = 19
+      search_form.field_with(name: 'wplist').value = @legislative_term
+      search_form.field_with(name: 'Suchzeile6').value = TYPE
+      search_form.field_with(name: 'maxtrefferlist1').options.find { |opt| opt.text.include? 'alle' }.select
+      mp = m.submit(search_form)
+
+      ## Fail if no hits
+      # fail 'search returns no results' if mp.search('//span[@name="HitCountZero"]').size > 0
+
+      # retrieve new search form with more options
+      search_form = mp.form '__form'
+      search_form.field_with(name: '__action').value = 44
+      search_form.add_field!('ReportFormatListDisplay', 'Vorgaenge')
+      mp = m.submit(search_form)
 
       body = BerlinAghScraper.extract_body(mp)
 

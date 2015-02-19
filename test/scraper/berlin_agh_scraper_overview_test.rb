@@ -16,14 +16,15 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
   test 'extract seperators from search result page' do
     body = @scraper.extract_body(@html)
     seperators = @scraper.extract_seperators(body)
-    assert_equal 1000, seperators.size
+    # test fixture contains only 25 papers
+    assert_equal 25, seperators.size
   end
 
   test 'extract title from next row' do
     body = @scraper.extract_body(@html)
     seperator = @scraper.extract_seperators(body).first
     title = @scraper.extract_title(seperator)
-    assert_equal 'Abschaffung der Indologie und Kunstgeschichte Südasiens?', title
+    assert_equal 'Bilanzkosmetik bei der Flughafengesellschaft? (II)', title
   end
 
   test 'extract data cell from next rows' do
@@ -33,18 +34,18 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
     # using * for whitespace:
     html = <<-END.gsub(/^ {6}/, '').gsub(/\*/, ' ')
 
-      *<!--XX-->Stefan*Schlede*(CDU)<br>
+      *<!--XX-->Martin*Delius*(Piraten)<br>
       ************
-      <a*href="/starweb/adis/citat/VT/17/SchrAnfr/s17-14217.pdf">Drucksache*17/14217</a>
-      *vom*14.07.2014
+      <a*href="/starweb/adis/citat/VT/17/SchrAnfr/s17-15458.pdf">Drucksache*17/15458</a>
+      *vom*03.02.2015
       <br><br>
       *<u>Folge**1</u><br>
       Antwort*<!--XX--><br>
       ************
-      SenBildJugWiss<br>
+      RBm<br>
       ************
-      <a*href="/starweb/adis/citat/VT/17/SchrAnfr/s17-14217.pdf">Drucksache*17/14217</a>
-      *vom*17.07.2014
+      <a*href="/starweb/adis/citat/VT/17/SchrAnfr/s17-15458.pdf">Drucksache*17/15458</a>
+      *vom*10.02.2015
     END
     assert_equal html, data_cell.inner_html
   end
@@ -54,7 +55,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
     seperator = @scraper.extract_seperators(body).first
     data_cell = @scraper.extract_data_cell(seperator)
     link = @scraper.extract_link(data_cell)
-    assert_equal '<a href="/starweb/adis/citat/VT/17/SchrAnfr/s17-14217.pdf">Drucksache 17/14217</a>', link.to_html
+    assert_equal '<a href="/starweb/adis/citat/VT/17/SchrAnfr/s17-15458.pdf">Drucksache 17/15458</a>', link.to_html
   end
 
   test 'extract names from data cell' do
@@ -62,7 +63,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
     seperator = @scraper.extract_seperators(body).first
     data_cell = @scraper.extract_data_cell(seperator)
     names = @scraper.extract_names(data_cell)
-    assert_equal 'Stefan Schlede (CDU)', names
+    assert_equal 'Martin Delius (Piraten)', names
   end
 
   test 'extract ministry line from data cell' do
@@ -70,7 +71,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
     seperator = @scraper.extract_seperators(body).first
     data_cell = @scraper.extract_data_cell(seperator)
     ministry_line = @scraper.extract_ministry_line(data_cell)
-    assert_equal 'SenBildJugWiss', ministry_line
+    assert_equal 'RBm', ministry_line
   end
 
   test 'extract published_at from data cell' do
@@ -78,7 +79,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
     seperator = @scraper.extract_seperators(body).first
     data_cell = @scraper.extract_data_cell(seperator)
     date = @scraper.extract_date(data_cell)
-    assert_equal '17.07.2014', date
+    assert_equal '10.02.2015', date
   end
 
   test 'try to never get empty originators' do
@@ -99,13 +100,13 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
     assert_equal(
       {
         legislative_term: '17',
-        full_reference: '17/14217',
-        reference: '14217',
-        title: 'Abschaffung der Indologie und Kunstgeschichte Südasiens?',
-        url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-14217.pdf',
-        published_at: Date.parse('17.07.2014'),
-        originators: { people: ['Stefan Schlede'], parties: ['CDU'] },
-        answerers: { ministries: ['SenBildJugWiss'] }
+        full_reference: '17/15458',
+        reference: '15458',
+        title: 'Bilanzkosmetik bei der Flughafengesellschaft? (II)',
+        url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15458.pdf',
+        published_at: Date.parse('10.02.2015'),
+        originators: { people: ['Martin Delius'], parties: ['Piraten'] },
+        answerers: { ministries: ['RBm'] }
       }, paper)
   end
 
@@ -181,13 +182,13 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
     assert_equal(
       {
         legislative_term: '17',
-        full_reference: '17/13155',
-        reference: '13155',
-        title: 'Expertise Jugendberufshilfe',
-        url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-13155.pdf',
-        published_at: Date.parse('19.02.2014'),
-        originators: { people: ['Marianne Burkert-Eulitz'], parties: ['Grüne'] },
-        answerers: { ministries: ['SenBildJugWiss'] }
+        full_reference: '17/15324',
+        reference: '15324',
+        title: 'Bürgerbeteiligung in Berlins Stadtplanung (2014)',
+        url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15324.pdf',
+        published_at: Date.parse('06.02.2015'),
+        originators: { people: ['Stefan Evers'], parties: ['CDU'] },
+        answerers: { ministries: ['SenStadtUm'] }
       }, paper)
   end
 end
