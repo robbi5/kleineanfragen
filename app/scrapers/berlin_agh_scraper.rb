@@ -27,6 +27,10 @@ module BerlinAghScraper
     data_el.search('./td[2]').first
   end
 
+  def self.extract_url(link)
+    link.attributes['href'].try(:value)
+  end
+
   def self.extract_link(data_cell)
     data_cell.search('a').first
   end
@@ -40,11 +44,15 @@ module BerlinAghScraper
   end
 
   def self.extract_names(data_cell)
-    data_cell.at_css('a').previous_element.previous.text
+    data_cell.elements.first.previous.text.strip
   end
 
   def self.extract_ministry_line(data_cell)
-    data_cell.search('a')[1].try(:previous_element).try(:previous).try(:text).try(:strip)
+    data_cell.search('u').first.next_element.next_element.next.text.strip
+  end
+
+  def self.extract_ministries(ministry_line)
+    ministry_line.split(' -').map(&:strip).reject(&:empty?)
   end
 
   def self.extract_date(data_cell)
@@ -71,7 +79,10 @@ module BerlinAghScraper
     date = extract_date(data_cell)
     published_at = Date.parse(date)
 
-    ministries = extract_ministry_line(data_cell).split(' ')
+    ministry_line = extract_ministry_line(data_cell)
+    fail "[#{full_reference}] no ministry line found" if ministry_line.nil?
+
+    ministries = extract_ministries(ministry_line)
 
     {
       legislative_term: legislative_term,
