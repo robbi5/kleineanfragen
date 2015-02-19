@@ -1,7 +1,9 @@
 class ThumbnailFirstPageJob < ActiveJob::Base
   queue_as :store
 
-  def perform(paper, force: false)
+  def perform(paper, options)
+    options.reverse_merge!(force: false)
+
     logger.info "Creating thumbnail of first page of the Paper [#{paper.body.state} #{paper.full_reference}]"
     fail 'AppStorage: Bucket not available!' if AppStorage.bucket.nil?
 
@@ -10,7 +12,7 @@ class ThumbnailFirstPageJob < ActiveJob::Base
       fail "No local copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] found"
     end
 
-    if !AppStorage.bucket.files.head(paper.thumbnail_path).nil? && !force
+    if !AppStorage.bucket.files.head(paper.thumbnail_path).nil? && !options[:force]
       logger.info "Thumbnail for Paper [#{paper.body.state} #{paper.full_reference}] already exists in Storage"
       return
     end
