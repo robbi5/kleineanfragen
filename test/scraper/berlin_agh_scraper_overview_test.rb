@@ -16,8 +16,8 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
   test 'extract seperators from search result page' do
     body = @scraper.extract_body(@html)
     seperators = @scraper.extract_seperators(body)
-    # test fixture contains only 25 papers
-    assert_equal 25, seperators.size
+    # test fixture contains only 58 papers
+    assert_equal 58, seperators.size
   end
 
   test 'extract title from next row' do

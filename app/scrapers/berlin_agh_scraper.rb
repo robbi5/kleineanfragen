@@ -4,7 +4,7 @@ module BerlinAghScraper
   BASE_URL = 'http://pardok.parlament-berlin.de'
 
   def self.extract_body(page)
-    page.search "//table[contains(@class, 'tabcol')]"
+    page.search("//table[contains(@class, 'tabcol')]").last
   end
 
   def self.extract_seperators(body)
@@ -107,8 +107,6 @@ module BerlinAghScraper
     def scrape
       streaming = block_given?
       m = mechanize
-      ## FIXME: needed?
-      # m.retry_change_requests = true
       # get a session
       m.get BASE_URL + '/starweb/AHAB/'
       # get search page
@@ -130,13 +128,13 @@ module BerlinAghScraper
       # retrieve new search form with more options
       search_form = mp.form '__form'
       search_form.field_with(name: '__action').value = 44
-      search_form.add_field!('ReportFormatListDisplay', 'Vorgaenge')
+      search_form.field_with(name: 'ReportFormatListDisplay').value = 'Vorgaenge'
       mp = m.submit(search_form)
 
       body = BerlinAghScraper.extract_body(mp)
 
-      legterm = body.search("//th[contains(@class, 'gross2')]").inner_html.strip
-      legislative_term = legterm.match(/(\d+). Wahlperiode/)[1]
+      legterm = body.at_css('th.gross2').text.strip
+      legislative_term = legterm.match(/(\d+).\s+Wahlperiode/)[1]
       warn_broken(legislative_term.to_i != @legislative_term, 'legislative_term not correct', legislative_term)
 
       papers = []
