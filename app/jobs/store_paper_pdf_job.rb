@@ -1,7 +1,7 @@
 class StorePaperPDFJob < ActiveJob::Base
   queue_as :store
 
-  def perform(paper, options)
+  def perform(paper, options = {})
     options.reverse_merge!(force: false)
 
     logger.info "Downloading PDF for Paper [#{paper.body.state} #{paper.full_reference}]"

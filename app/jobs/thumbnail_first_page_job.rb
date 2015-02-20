@@ -1,7 +1,7 @@
 class ThumbnailFirstPageJob < ActiveJob::Base
   queue_as :store
 
-  def perform(paper, options)
+  def perform(paper, options = {})
     options.reverse_merge!(force: false)
 
     logger.info "Creating thumbnail of first page of the Paper [#{paper.body.state} #{paper.full_reference}]"
