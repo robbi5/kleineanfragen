@@ -107,7 +107,7 @@ module BundestagScraper
     doc.css('VORGANGSABLAUF VORGANGSPOSITION').each do |node|
       urheber = node.at_css('URHEBER').text
       if urheber.starts_with?('Antwort') || node.at_css('FUNDSTELLE_LINK').try(:text) == url
-        _, ministry = urheber.match(/: ([^(]*)/).to_a
+        _, ministry = urheber.match(/Antwort,(?:\s+Urheber :)?\s+([^(]*)/).to_a
         unless ministry.nil?
           ministry = ministry.strip.sub(/^Bundesregierung, /, '')
           answerers[:ministries] << ministry
