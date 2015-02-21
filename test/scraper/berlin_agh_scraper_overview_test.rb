@@ -174,6 +174,22 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
       }, paper)
   end
 
+  test 'support newline in title like in 17/15272' do
+    paper = paper_from_fixture('15272')
+
+    assert_equal(
+      {
+        legislative_term: '17',
+        full_reference: '17/15272',
+        reference: '15272',
+        title: 'Umsetzung des Partizipations- & Integrationsgesetzes (V) Bezirkliche Integrationsausschüsse',
+        url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15272.pdf',
+        published_at: Date.parse('30.01.2015'),
+        originators: { people: ['Hakan Tas'], parties: ['Die Linke'] },
+        answerers: { ministries: ['SenArbIntFrau'] }
+      }, paper)
+  end
+
   test 'extract last complete paper' do
     body = @scraper.extract_body(@html)
     seperator = @scraper.extract_seperators(body).last

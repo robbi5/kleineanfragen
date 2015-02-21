@@ -12,7 +12,10 @@ module BerlinAghScraper
   end
 
   def self.extract_title(seperator)
-    seperator.next_element.search('./td[2]/b').first.try(:text).try(:gsub, /\n/, ' ')
+    el = seperator.next_element.search('./td[2]/b').first
+    return nil if el.nil?
+    el.css('br').each { |br| br.replace ' ' }
+    el.text
   end
 
   def self.extract_type(seperator)
