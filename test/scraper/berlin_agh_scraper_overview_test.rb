@@ -190,6 +190,22 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
       }, paper)
   end
 
+  test 'support newline in title like in 17/15093' do
+    paper = paper_from_fixture('15093')
+
+    assert_equal(
+      {
+        legislative_term: '17',
+        full_reference: '17/15093',
+        reference: '15093',
+        title: 'Wie ist der aktuelle Stand der Lehrkräfteausstattung in Lichtenberg?',
+        url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15093.pdf',
+        published_at: Date.parse('03.12.2014'),
+        originators: { people: ['Martin Delius'], parties: ['Piraten'] },
+        answerers: { ministries: ['SenBildJugWiss'] }
+      }, paper)
+  end
+
   test 'extract last complete paper' do
     body = @scraper.extract_body(@html)
     seperator = @scraper.extract_seperators(body).last

@@ -51,7 +51,9 @@ module BerlinAghScraper
   end
 
   def self.extract_ministry_line(data_cell)
-    data_cell.search('u').first.next_element.next_element.next.text.strip
+    line = data_cell.search('u').first.next_element.next_element.next
+    line = line.next_element.next if line.text.include? 'Kommentar: '
+    line.text.strip
   end
 
   def self.extract_ministries(ministry_line)
