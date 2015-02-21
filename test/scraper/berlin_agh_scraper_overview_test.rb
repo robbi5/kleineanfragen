@@ -206,6 +206,22 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
       }, paper)
   end
 
+  test 'support duplicate ministry like in 17/15027' do
+    paper = paper_from_fixture('15027')
+
+    assert_equal(
+      {
+        legislative_term: '17',
+        full_reference: '17/15027',
+        reference: '15027',
+        title: 'Gefährliche Bauschäden am sonderpädagogischen Förderzentrum Stötzner-Schule',
+        url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15027.pdf',
+        published_at: Date.parse('05.12.2014'),
+        originators: { people: ['Martin Delius'], parties: ['Piraten'] },
+        answerers: { ministries: ['SenBildJugWiss'] }
+      }, paper)
+  end
+
   test 'extract last complete paper' do
     body = @scraper.extract_body(@html)
     seperator = @scraper.extract_seperators(body).last

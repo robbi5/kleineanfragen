@@ -57,7 +57,7 @@ module BerlinAghScraper
   end
 
   def self.extract_ministries(ministry_line)
-    ministry_line.split(' -').map(&:strip).reject(&:empty?)
+    ministry_line.split(/\s+\-|,/).map(&:strip).reject(&:empty?).uniq
   end
 
   def self.extract_date(data_cell)
