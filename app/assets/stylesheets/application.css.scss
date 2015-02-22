@@ -15,17 +15,16 @@
     font-weight: $weight;
     font-style: $style;
     src: font-url('#{$file-path}.eot');
-    src: font-url('#{$file-path}.eot?#iefix')          format('embedded-opentype'),
-         font-url('#{$file-path}.woff')                format('woff'),
-         font-url('#{$file-path}.ttf')                 format('truetype'),
-         font-url('#{$file-path}.svg##{$font-family}') format('svg');
+    src: font-url('#{$file-path}.eot?#iefix') format('embedded-opentype'),
+         font-url('#{$file-path}.woff2')      format('woff2'),
+         font-url('#{$file-path}.woff')       format('woff'),
+         font-url('#{$file-path}.ttf')        format('truetype');
   }
 }
 
 @include font-face(SourceSansPro, 'source-sans-pro/sourcesanspro-regular');
 @include font-face(SourceSansPro, 'source-sans-pro/sourcesanspro-semibold', 600);
 @include font-face(SourceSansPro, 'source-sans-pro/sourcesanspro-it', normal, italic);
-@include font-face(RalewayLogofont, 'raleway-logofont/raleway-logofont', 500);
 
 
 // https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_variables.scss
@@ -50,25 +49,14 @@ $grid-float-breakpoint:   320px;
 }
 
 .navbar-brand {
-  font-family: 'RalewayLogofont', 'Raleway' sans-serif;
+  font-family: 'Raleway', sans-serif;
   font-weight: 500;
   font-size: 20px;
   color: #2980b9;
-}
-.navbar-brand span {
-  display: inline-block;
-  margin-right: 2px;
-  color: transparent;
-  text-indent: -0.3em;
-  &:after {
-    content: '?';
-    position: relative;
-    top: 4px;
-    transform: rotate(12deg);
-    display: inline-block;
-    font-weight: 500;
-    color: #757F9A;
-  }
+  text-indent: -3000em;
+  background: image-url('kleineanfragen.svg') center no-repeat;
+  background-origin: content-box;
+  min-width: 170px;
 }
 
 .app-footer .container {
