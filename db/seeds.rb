@@ -26,5 +26,7 @@ Ministry.create([
   { body: berlin, short_name: 'SenInnSport',     name: 'Senatsverwaltung für Inneres und Sport' },
   { body: berlin, short_name: 'SenJustV',        name: 'Senatsverwaltung für Justiz und Verbraucherschutz' },
   { body: berlin, short_name: 'SenStadtUm',      name: 'Senatsverwaltung für Stadtentwicklung und Umwelt' },
-  { body: berlin, short_name: 'SenWiTechForsch', name: 'Senatsverwaltung für Wirtschaft, Technolgie und Forschung' }
+  { body: berlin, short_name: 'SenWiTechForsch', name: 'Senatsverwaltung für Wirtschaft, Technolgie und Forschung' },
+  { body: berlin, short_name: 'Skzl',            name: 'Senatskanzlei' },
+  { body: berlin, short_name: 'RBm',             name: 'Regierender Bürgermeister' }
 ])
