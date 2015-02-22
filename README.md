@@ -22,6 +22,24 @@ To get a rails console, run:
 
     fig run web rails c
 
+### Normalizing Names with Nomenklatura
+
+For normalizing names of people, parties and ministries, we use [Nomenklatura](https://github.com/pudo/nomenklatura).
+
+If you want to use nomenklatura while developing, you need to edit fig.yml:
+* Uncomment the nomenklatura link
+* the `NOMENKLATURA_` environment variables
+* the whole nomenklatura image
+* set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to those of a [new Github OAuth application](https://github.com/settings/applications/new).
+
+After your next `fig up` login to your nomenklatura instance (reachable at http://localhost:8080) and get the API key from the _profile_ link. Insert it into fig.yml.
+
+kleineAnfragen needs multiple Datasets with the following identifiers that must be created in Nomenklatura:
+
+* `ka-parties`
+* `ka-people-XX` (replace XX with a two letter state)
+* `ka-ministries-XX` (replace XX with a two letter state)
+
 Dependencies
 ------------
 
