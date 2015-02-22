@@ -10,15 +10,18 @@ web:
     - redis
     - tika
     - elasticsearch
+#   - nomenklatura
   environment:
     RESQUE_SERVER_OPEN: true
     ELASTICSEARCH_URL: http://elasticsearch:9200/
     REDIS_URL: redis://redis:6379
     DATABASE_URL: postgres://kleineanfragen:@database/kleineanfragen
     TIKA_SERVER_URL: http://tika:9998/tika
+#   NOMENKLATURA_HOST: http://nomenklatura:8080
+#   NOMENKLATURA_APIKEY: change_me
 
 database:
-  image: postgres
+  build: contrib/postgres-ka
   environment:
     POSTGRES_USER: kleineanfragen
 # ports:
@@ -27,7 +30,6 @@ database:
 redis:
   image: redis
 
-## FIXME: use matts image when released
 tika:
   image: logicalspark/docker-tikaserver
 # ports:
@@ -35,7 +37,20 @@ tika:
 
 elasticsearch:
   image: dockerfile/elasticsearch
-# ports:
-#   - "9200:9200"
+## if you want to use elasticsearch head (standalone):
+#  command: /elasticsearch/bin/elasticsearch -Des.http.cors.enabled=true
+#  ports:
+#    - "9200:9200"
 
-## FIXME: add image for nomenklatura
+## waiting for https://github.com/pudo/nomenklatura/pull/41 to be merged
+#nomenklatura:
+#  image: robbi5/nomenklatura
+#  links:
+#    - database
+#  environment:
+#    DATABASE_URL: postgres://kleineanfragen:@database/nomenklatura
+#    SECRET_KEY: change_me
+#    GITHUB_CLIENT_ID: change_me
+#    GITHUB_CLIENT_SECRET: change_me
+#  ports:
+#    - "8080:8080"
