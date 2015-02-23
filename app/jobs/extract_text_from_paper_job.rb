@@ -49,6 +49,8 @@ class ExtractTextFromPaperJob < ActiveJob::Base
   def clean_text(text)
     # "be-\npflanzt" -> "bepflanzt\n", "be- \npflanzt" -> "bepflanzt\n"
     text.gsub!(/(\p{L}+)\-\p{Zs}*\n(\p{L}+)/m, "\\1\\2\n")
+    # soft hyphen
+    text.gsub!(/\u00AD/, '')
     text
   end
 end
