@@ -32,9 +32,9 @@ module RheinlandPfalzLandtagScraper
 
       papers = []
       loop do
-        mp.search('//tbody[@name="RecordRepeater"]').each do |item|
+        RheinlandPfalzLandtagScraper.extract_records(mp).each do |item|
           begin
-            paper = RheinlandPfalzLandtagScraper.extract(item)
+            paper = RheinlandPfalzLandtagScraper.extract_paper(item)
           rescue => e
             logger.warn e
             next
@@ -62,8 +62,8 @@ module RheinlandPfalzLandtagScraper
 
     def scrape
       mp = mechanize.get SEARCH_URL + CGI.escape("(DART=D AND WP=#{@legislative_term} AND DNR,KORD=#{@reference})")
-      item = mp.search('//tbody[@name="RecordRepeater"]').first
-      RheinlandPfalzLandtagScraper.extract(item)
+      item = RheinlandPfalzLandtagScraper.extract_records(mp).first
+      RheinlandPfalzLandtagScraper.extract_paper(item)
     end
   end
 
@@ -76,8 +76,12 @@ module RheinlandPfalzLandtagScraper
     sess
   end
 
+  def self.extract_records(page)
+    page.search('//tbody[@name="RecordRepeater"]')
+  end
+
   # extract paper information
-  def self.extract(item)
+  def self.extract_paper(item, check_pdf: true)
     title = item.search('./tr[@name="Repeat_WHET"]/td[2]').first.text
     container = item.search('./tr[@name="Repeat_Fund"]/td[3]').first
 
@@ -92,17 +96,19 @@ module RheinlandPfalzLandtagScraper
     legislative_term = full_reference.split('/').first
     reference = full_reference.split('/').last
 
-    results = container.text.match(/Kleine Anfrage \d+ (.+) und Antwort (.+) ([\d\.]+) /)
+    results = container.at_css('a').previous.text.match(/Kleine Anfrage \d+ (.+) und Antwort (.+) ([\d\.]+) /)
     fail "RP [#{full_reference}]: no readable meta information found" if results.nil?
 
     # not all papers are available
-    begin
-      resp = patron_session.head(url)
-    rescue => e
-      raise "RP [#{full_reference}]: url throwed #{e}"
-    end
-    if resp.status == 404 || resp.url.include?('error404.html')
-      fail "RP [#{full_reference}]: url throws 404"
+    if check_pdf
+      begin
+        resp = patron_session.head(url)
+      rescue => e
+        raise "RP [#{full_reference}]: url throwed #{e}"
+      end
+      if resp.status == 404 || resp.url.include?('error404.html')
+        fail "RP [#{full_reference}]: url throws 404"
+      end
     end
 
     originators = NamePartyExtractor.new(results[1].strip).extract
