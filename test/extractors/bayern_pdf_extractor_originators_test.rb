@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BayernPDFExtractorTest < ActiveSupport::TestCase
+class BayernPDFExtractorOriginatorsTest < ActiveSupport::TestCase
   # testcases:
   ##
   # der Abgeordneten Ruth Müller SPD
