@@ -26,7 +26,6 @@
 @include font-face(SourceSansPro, 'source-sans-pro/sourcesanspro-semibold', 600);
 @include font-face(SourceSansPro, 'source-sans-pro/sourcesanspro-it', normal, italic);
 
-
 // https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_variables.scss
 $font-size-base: 14px;
 $font-size-h1: floor(($font-size-base * 2.2)); // ~30px
