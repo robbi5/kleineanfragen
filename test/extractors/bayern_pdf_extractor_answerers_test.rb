@@ -21,4 +21,53 @@ class BayernPDFExtractorAnswerersTest < ActiveSupport::TestCase
     assert_equal 1, answerers[:ministries].size
     assert_equal 'Staatsministerium für Bildung und Kultus, Wissenschaft und Kunst', answerers[:ministries].first
   end
+
+  test 'Staatsministeriums für Umwelt und Verbraucherschutz' do
+    paper = paper_with_answerer('des Staatsministeriums für Umwelt und Verbraucherschutz')
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Staatsministerium für Umwelt und Verbraucherschutz', answerers[:ministries].first
+  end
+
+  # typo: d_a_s Staats...
+  test 'Staatsministeriums für Gesundheit und Pflege' do
+    paper = paper_with_answerer('das Staatsministeriums für Gesundheit und Pflege')
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Staatsministerium für Gesundheit und Pflege', answerers[:ministries].first
+  end
+
+  test 'Bayerischen Staatskanzlei' do
+    paper = paper_with_answerer('der Bayerischen Staatskanzlei')
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Bayerische Staatskanzlei', answerers[:ministries].first
+  end
+
+  test 'Staatsministerin für Gesundheit und Pflege' do
+    paper = paper_with_answerer('der Staatsministerin für Gesundheit und Pflege')
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Staatsministerium für Gesundheit und Pflege', answerers[:ministries].first
+  end
+
+  test 'Leiterin Bayerische Staatskanzlei' do
+    paper = paper_with_answerer("der Leiterin der Bayerischen Staatskanzlei\nStaatsministerin für Bundesangelegenheiten und Sonderaufgaben")
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Bayerische Staatskanzlei', answerers[:ministries].first
+  end
+
+  test 'Leiters Bayerische Staatskanzlei und' do
+    paper = paper_with_answerer("des Leiters der Bayerischen Staatskanzlei und\nStaatsministers für Bundesangelegenheiten und Sonderaufgaben")
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Bayerische Staatskanzlei', answerers[:ministries].first
+  end
 end
