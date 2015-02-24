@@ -36,17 +36,19 @@ class BayernPDFExtractor
     ministries = []
 
     # Antwort\nder Staatsministerin für Gesundheit und Pflege\nvom 20.08.2014
-    p = @contents.match(/Antwort\n[dD]e[rs]\s+Staatsminister(?:s|in)\s+(für\s+[\p{L}\s\,]+)\s+vom/m)
+    p = @contents.match(/Antwort\n[dD]e[rs]\s+Staatsminister(?:s|in)?\s+(für\s+[\p{L}\s\,]+)\s+vom/m)
     if p
       ministries << "Staatsministerium #{p[1].strip}"
     end
 
     # Antwort\nDer Leiterin der Bayerischen Staatskanzlei\nStaatsministerin für Bundesangelegenheiten und Son-deraufgaben
     # Antwort\ndes Leiters der Bayerischen Staatskanzlei und\nStaatsministers für Bundesangelegenheiten und Son-deraufgaben
+    # Antwort\nder Leiterin der Bayerischen Staatskanzlei Staatsministerin\n für Bundesangelegenheiten und Sonderaufgaben")
     p = @contents.match(/Antwort\n[dD]e[rs]\s+(?:Leiters|Leiterin)\s+der\s+([\p{L}\s\,]+)\s+vom/m)
     if p
-      first_name = p[1].match(/(.+?)(\s+und)?\n/)
-      ministries << 'Bayerische Staatskanzlei' if first_name && first_name[1].strip == 'Bayerischen Staatskanzlei'
+      line = p[1].strip.split("\n").first.strip
+      line.gsub!(/(.+)\s+(?:und|Staatsministeri?n?)/, '\1')
+      ministries << 'Bayerische Staatskanzlei' if line == 'Bayerischen Staatskanzlei'
     end
 
     # Antwort\nder Bayerischen Staatskanzlei\nvom
