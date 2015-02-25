@@ -44,11 +44,13 @@ class BayernPDFExtractor
     # Antwort\nDer Leiterin der Bayerischen Staatskanzlei\nStaatsministerin für Bundesangelegenheiten und Son-deraufgaben
     # Antwort\ndes Leiters der Bayerischen Staatskanzlei und\nStaatsministers für Bundesangelegenheiten und Son-deraufgaben
     # Antwort\nder Leiterin der Bayerischen Staatskanzlei Staatsministerin\n für Bundesangelegenheiten und Sonderaufgaben")
-    p = @contents.match(/Antwort\n[dD]e[rs]\s+(?:Leiters|Leiterin)\s+der\s+([\p{L}\s\,]+)\s+vom/m)
+    # Antwort\ndie Leiterin der Staatskanzlei\nStaatsministerin für Bundesangelegenheiten
+    p = @contents.match(/Antwort\n\s*[dD]i?e[rs]?\s+(?:Leiters|Leiterin)\s+der\s+([\p{L}\s\,]+)\s+vom/m)
     if p
+      stknzl = ['Bayerischen Staatskanzlei', 'Staatskanzlei']
       line = p[1].strip.split("\n").first.strip
-      line.gsub!(/(.+)\s+(?:und|Staatsministeri?n?)/, '\1')
-      ministries << 'Bayerische Staatskanzlei' if line == 'Bayerischen Staatskanzlei'
+      line = line.gsub(/(.+?)(?:\s+und.*|\s+Staatsministeri?n?.*|,.*)?$/, '\1')
+      ministries << 'Bayerische Staatskanzlei' if stknzl.include? line
     end
 
     # Antwort\nder Bayerischen Staatskanzlei\nvom
@@ -57,10 +59,10 @@ class BayernPDFExtractor
     end
 
     # Antwort\ndes Staatsministeriums des Innern, für Bau und Verkehr\nvom 10.10.2014
-    m = @contents.match(/Antwort\nd[ea]s (Staatsministeriums?\s[\p{L}\s\,\-\u00AD]+)\s+vom/m)
+    m = @contents.match(/Antwort\nd[ea]s (St?aatsministeriums?\s[\p{L}\s\,\-\u00AD]+)\s+vom/m)
     if m
       ministry = m[1].gsub(/\u00AD/, '').gsub(/(\p{L}+)\-\p{Zs}*\n(\p{L}+)/m, '\1\2').gsub(/\n/, '').strip
-      ministry.gsub!(/^Staatsministeriums/, 'Staatsministerium') # remove Genitiv
+      ministry.gsub!(/^St?aatsministeriums/, 'Staatsministerium') # remove typo, Genitiv
       ministries << ministry
     end
 
