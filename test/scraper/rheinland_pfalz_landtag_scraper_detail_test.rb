@@ -40,4 +40,25 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] }
       }, paper)
   end
+
+  test 'extract paper with multiple ministries like in 16/3813' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_detail_3813.html')))
+    record = @scraper.extract_records(@html).first
+    paper = @scraper.extract_paper(record, check_pdf: false)
+
+    assert_equal(
+      {
+        legislative_term: '16',
+        full_reference: '16/3813',
+        reference: '3813',
+        title: 'Erstes rheinland-pfälzisches Green Hospital entsteht in Meisenheim',
+        url: 'http://www.landtag.rlp.de/landtag/drucksachen/3813-16.pdf',
+        published_at: Date.parse('25.07.2014'),
+        originators: { people: ['Ulrich Steinbach', 'Andreas Hartenfels'], parties: ['BÜNDNIS 90/DIE GRÜNEN'] },
+        answerers: { ministries: [
+          'Ministerium für Wirtschaft, Klimaschutz, Energie und Landesplanung',
+          'Ministerium für Soziales, Arbeit, Gesundheit und Demografie'
+        ] }
+      }, paper)
+  end
 end

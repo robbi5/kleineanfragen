@@ -112,7 +112,8 @@ module RheinlandPfalzLandtagScraper
     end
 
     originators = NamePartyExtractor.new(results[1].strip).extract
-    ministries = [results[2].strip]
+    ministry_line = results[2].strip
+    ministries = ministry_line.split('Ministerium').map { |m| m.sub(/,\s*$/, '').sub(/^\s/, 'Ministerium ') }.select { |m| !m.blank? }
     published_at = Date.parse(results[3])
 
     {
