@@ -52,6 +52,7 @@ Dependencies
 * [Nomenklatura](https://github.com/pudo/nomenklatura) (for normalization of people names, ministries and parties)
 * Poppler / pdftoppm (for thumbnailing)
 * [image_optim binaries](https://github.com/toy/image_optim#binaries-installation) (for compressing thumbnails)
+* s3 compatible storage like [s3ninja](http://s3ninja.net) (see `contrib/s3ninja` for the modified dockered version)
 
 Configuration
 -------------
