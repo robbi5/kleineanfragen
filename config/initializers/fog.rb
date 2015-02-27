@@ -9,7 +9,18 @@ end
 
 begin
   AppStorage.storage = Fog::Storage.new(fog_config)
-  AppStorage.bucket = AppStorage.storage.directories.get(bucket)
 rescue => error
   Rails.logger.error "Cannot initialize AppStorage: #{error}"
+end
+
+if AppStorage.storage
+  begin
+    AppStorage.bucket = AppStorage.storage.directories.get(bucket)
+    # create bucket in development mode
+    if AppStorage.bucket.nil? && Rails.env.development?
+      AppStorage.bucket = AppStorage.storage.directories.create(key: bucket, public: true)
+    end
+  rescue => error
+    Rails.logger.error "Cannot initialize AppStorage/Bucket: #{error}"
+  end
 end

@@ -11,6 +11,7 @@ web:
     - tika
     - elasticsearch
 #   - nomenklatura
+    - s3
   environment:
     RESQUE_SERVER_OPEN: true
     ELASTICSEARCH_URL: http://elasticsearch:9200/
@@ -54,3 +55,10 @@ elasticsearch:
 #    GITHUB_CLIENT_SECRET: change_me
 #  ports:
 #    - "8080:8080"
+
+s3:
+  build: contrib/s3ninja
+  volumes:
+    - ./tmp/ka-dev:/data
+  ports:
+    - "9444:9444"
