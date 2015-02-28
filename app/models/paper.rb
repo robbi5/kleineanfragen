@@ -164,6 +164,16 @@ class Paper < ActiveRecord::Base
     self.answerers_ministries = answerers[:ministries] unless answerers[:ministries].blank?
   end
 
+  def problems
+    p = []
+    p << :wrong_published_at if published_at > Date.today
+    p << :missing_page_count if page_count.nil?
+    p << :missing_originator_people if originator_people.size == 0
+    p << :missing_originator_organizations if originator_organizations.size == 0
+    p << :missing_answerers if paper_answerers.size == 0
+    p
+  end
+
   private
 
   def normalize(name, prefix, body = nil)

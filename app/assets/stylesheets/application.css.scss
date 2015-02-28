@@ -314,12 +314,25 @@ span.twitter-typeahead {
     float: left;
   }
 
+  .paper-id {
+    float: left;
+  }
+
   .meta {
     color: #AAA;
     margin-left: 1.7em;
     font-size: 0.9em;
     line-height: 1.8;
     margin-left: 0;
+  }
+
+  .paper-problems {
+    display: inline-block;
+    width: 4em;
+    position: relative;
+    line-height: 1;
+    vertical-align: top;
+    padding-top: 7px;
   }
 
   &.paper-list--with-body {
@@ -336,6 +349,24 @@ span.twitter-typeahead {
       margin-left: -75px;
     }
   }
+}
+
+.problem {
+  display: inline-block;
+  position: absolute;
+  font-size: 1.5em;
+  line-height: 0.3;
+  border: 1px solid #C8C8C8;
+  border-radius: 100% 100%;
+  width: 10px;
+  height: 10px;
+  padding-left: 1.5px;
+
+  &.problem-wrong_published_at  { left: 0px;  color: #ff0000; }
+  &.problem-missing_page_count  { left: 12px; color: #8000ff; }
+  &.problem-missing_originator_people        { left: 24px; color: #0080ff; }
+  &.problem-missing_originator_organizations { left: 24px; color: #0080ff; }
+  &.problem-missing_answerers   { left: 36px; color: #ff0080; }
 }
 
 .label {

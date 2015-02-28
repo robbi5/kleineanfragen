@@ -1,0 +1,10 @@
+<%- content_for :head do %><%= noindex() %><% end -%>
+<div class="page-header">
+  <h1>Review</h1>
+</div>
+
+<p>Um nach dem Import von kleinen Anfragen fehlende Daten zu finden, gibt es folgende Seiten:</p>
+<ul>
+<li><%= link_to 'Fehlende Daten an Anfragen', review_papers_path %></li>
+<li><%= link_to 'Möglicherweise kaputte Ministerien', review_ministries_path %></li>
+</ul>

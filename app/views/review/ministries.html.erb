@@ -1,0 +1,13 @@
+<%- content_for :head do %><%= noindex() %><% end -%>
+<div class="page-header">
+  <h1><%= link_to 'Review', review_path %> / Ministerien</h1>
+</div>
+<p><strong><%= @ministries.size %></strong> Ministerien mit zu kurzem/langen Namen:</p>
+<ul>
+  <% @ministries.each do |m| %>
+  <li>
+    <span class="label label-default"><%= link_to m.body.state, m.body %></span>&nbsp;
+    <%= link_to m.name, ministry_path(m.body, m) %> <code><%= m.id %></code>
+  </li>
+  <% end %>
+</ul>

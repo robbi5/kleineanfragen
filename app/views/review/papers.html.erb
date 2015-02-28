@@ -1,0 +1,21 @@
+<%- content_for :head do %><%= noindex() %><% end -%>
+<div class="page-header">
+  <h1><%= link_to 'Review', review_path %> / Anfragen</h1>
+</div>
+
+<% Body.all.each do |b| %>
+<h2><%= link_to b.name, b %>: <%= @incomplete[b.state].size %></h2>
+<ol class="paper-list">
+  <%= render partial: 'paper/paper', collection: @incomplete[b.state], locals: {
+    before_meta: lambda do |paper| -%>
+  <code class="paper-id"><%= paper.try(:id) %></code>
+  <% end,
+    prepend_meta: lambda do |paper| -%>
+    <span class="paper-problems">
+    <% paper.problems.each do |p| %>
+    <span title="<%= p.to_s %>" class="problem problem-<%=p.to_s%>">&bull;</span>
+    <% end %>
+    </span>
+  <% end } -%>
+</ol>
+<% end %>
