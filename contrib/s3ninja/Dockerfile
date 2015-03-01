@@ -23,6 +23,6 @@ RUN sed -i 's#baseDir = "data/s3"#baseDir = "/data"#' /app/app/application.conf
 VOLUME /data
 
 #CMD java -server -Xmx1024m -Djava.net.preferIPv4Stack=true IPL
-CMD /app/sirius.sh start && tail -f /app/logs/*
+CMD /app/sirius.sh start && tail -F /app/logs/stdout.txt
 
 EXPOSE 9444
