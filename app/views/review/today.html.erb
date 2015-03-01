@@ -1,0 +1,38 @@
+<%- content_for :head do %><%= noindex() %><% end -%>
+<div class="page-header">
+  <h1><%= link_to 'Review', review_path %> / Heute</h1>
+</div>
+
+<% Body.all.each do |b| %>
+<h2><%= link_to b.name, b %></h2>
+<h3><%= @papers[b.id].size %> Anfragen</h3>
+<ol class="paper-list">
+  <%= render partial: 'paper/paper', collection: @papers[b.id], locals: {
+    before_meta: lambda do |paper| -%>
+  <code class="paper-id"><%= paper.try(:id) %></code>
+  <% end } -%>
+</ol>
+
+<h3><%= @ministries[b.id].size %> Ministerien</h3>
+<ul>
+  <% @ministries[b.id].each do |ministry| %>
+  <li><code><%= ministry.id %></code>: <%= link_to ministry.name, ministry_path(b, ministry) %> </li>
+  <% end %>
+</ul>
+<% end %>
+
+<hr/>
+
+<h2><%= @people.size %> Personen</h2>
+<ul>
+  <% @people.each do |person| %>
+  <li><code><%= person.id %></code>: <%= person.name %></li>
+  <% end %>
+</ul>
+
+<h2><%= @organizations.size %> Parteien</h2>
+<ul>
+  <% @organizations.each do |org| %>
+  <li><code><%= org.id %></code>: <%= org.name %></li>
+  <% end %>
+</ul>

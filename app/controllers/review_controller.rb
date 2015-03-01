@@ -21,4 +21,15 @@ class ReviewController < ApplicationController
   def ministries
     @ministries = Ministry.where('length(name) > 70 OR length(name) < 12')
   end
+
+  def today
+    @papers = {}
+    @ministries = {}
+    Body.all.each do |b|
+      @papers[b.id] = b.papers.where(['created_at >= ?', Date.today])
+      @ministries[b.id] = b.ministries.where(['created_at >= ?', Date.today])
+    end
+    @people = Person.where(['created_at >= ?', Date.today])
+    @organizations = Organization.where(['created_at >= ?', Date.today])
+  end
 end
