@@ -56,6 +56,8 @@ class StorePaperPDFJob < ActiveJob::Base
       return false
     end
 
+    last_modified = resp.headers.try(:[], 'Last-Modified')
+
     f = File.open(filepath, 'wb')
     begin
       f.write(resp.body)
@@ -66,8 +68,8 @@ class StorePaperPDFJob < ActiveJob::Base
       f.close if f
     end
 
-    return true unless paper.downloaded_at.nil?
-    paper.downloaded_at = DateTime.now
+    paper.pdf_last_modified = DateTime.parse(last_modified) unless last_modified.blank?
+    paper.downloaded_at = DateTime.now unless paper.downloaded_at.nil?
     paper.save
   end
 end
