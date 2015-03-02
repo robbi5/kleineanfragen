@@ -36,6 +36,7 @@ class ExtractTextFromPaperJob < ActiveJob::Base
   end
 
   def extract_tika(paper)
+    fail "No copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] in s3 found" if paper.public_url.nil?
     pdf = Excon.get(paper.public_url)
     fail 'Couldn\'t download PDF' if pdf.status != 200
     text = Excon.put(Rails.configuration.x.tika_server,
