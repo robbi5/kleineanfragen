@@ -1,7 +1,7 @@
 kleineAnfragen.
 ===============
 
-Liberating *kleine Anfragen* from *Parlamentsdokumentationssysteme*.
+Collecting *kleine Anfragen* from *Parlamentsdokumentationssystemen* for easy search- and linkability.
 
 Development
 -----------
