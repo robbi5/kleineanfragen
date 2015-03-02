@@ -7,16 +7,13 @@ class StorePaperPDFJob < ActiveJob::Base
     logger.info "Downloading PDF for Paper [#{paper.body.state} #{paper.full_reference}]"
     fail 'AppStorage: Bucket not available!' if AppStorage.bucket.nil?
 
-    ret = download_paper(paper)
-
-    if !ret
-      fail "Downloading Paper [#{paper.body.state} #{paper.full_reference}] failed"
-    end
-
     if !AppStorage.bucket.files.head(paper.path).nil? && !options[:force]
       logger.info "PDF for Paper [#{paper.body.state} #{paper.full_reference}] already exists in Storage"
       return
     end
+
+    ret = download_paper(paper)
+    fail "Downloading Paper [#{paper.body.state} #{paper.full_reference}] failed" unless ret
 
     file = AppStorage.bucket.files.new(key: paper.path, public: true, body: File.open(paper.local_path))
     file.save
