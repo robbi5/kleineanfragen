@@ -45,16 +45,16 @@ elasticsearch:
 
 ## waiting for https://github.com/pudo/nomenklatura/pull/41 to be merged
 #nomenklatura:
-#  image: robbi5/nomenklatura
-#  links:
-#    - database
-#  environment:
-#    DATABASE_URL: postgres://kleineanfragen:@database/nomenklatura
-#    SECRET_KEY: change_me
-#    GITHUB_CLIENT_ID: change_me
-#    GITHUB_CLIENT_SECRET: change_me
-#  ports:
-#    - "8080:8080"
+# image: robbi5/nomenklatura
+# links:
+#   - database
+# environment:
+#   DATABASE_URL: postgres://kleineanfragen:@database/nomenklatura
+#   SECRET_KEY: change_me
+#   GITHUB_CLIENT_ID: change_me
+#   GITHUB_CLIENT_SECRET: change_me
+# ports:
+#   - "8080:8080"
 
 s3:
   build: contrib/s3ninja

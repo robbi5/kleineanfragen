@@ -6,33 +6,33 @@ Liberating *kleine Anfragen* from *Parlamentsdokumentationssysteme*.
 Development
 -----------
 
-For a simple and quick development environment, [fig](http://fig.sh) is used. Install [docker](https://docs.docker.com/installation/) and [fig](http://www.fig.sh/install.html), then run:
+For a simple and quick development environment, [docker-compose](https://docs.docker.com/compose/) is used. Install [docker](https://docs.docker.com/installation/) and [docker-compose](https://docs.docker.com/compose/install/), then run:
 
-    fig up
+    docker-compose up
 
-Fig downloads the required services (postgres, elasticsearch, redis, ...) as docker containers and links them with the app.
-If you want to look into postgres or elasticsearch, uncomment the `ports` section in `fig.yml`.
+docker-compose downloads the required services (postgres, elasticsearch, redis, ...) as docker containers and links them with the app.
+If you want to look into postgres or elasticsearch, uncomment the `ports` section in `docker-compose.yml`.
 
 You may be required to execute database migrations. Try this:
 
-    fig run web rake db:migrate
-    fig run web rake db:seed
+    docker-compose run web rake db:migrate
+    docker-compose run web rake db:seed
 
 To get a rails console, run:
 
-    fig run web rails c
+    docker-compose run web rails c
 
 ### Normalizing Names with Nomenklatura
 
 For normalizing names of people, parties and ministries, we use [Nomenklatura](https://github.com/pudo/nomenklatura).
 
-If you want to use nomenklatura while developing, you need to edit fig.yml:
+If you want to use nomenklatura while developing, you need to edit docker-compose.yml:
 * Uncomment the nomenklatura link
 * the `NOMENKLATURA_` environment variables
 * the whole nomenklatura image
 * set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to those of a [new Github OAuth application](https://github.com/settings/applications/new).
 
-After your next `fig up` login to your nomenklatura instance (reachable at http://localhost:8080) and get the API key from the _profile_ link. Insert it into fig.yml.
+After your next `docker-compose up` login to your nomenklatura instance (reachable at http://localhost:8080) and get the API key from the _profile_ link. Insert it into docker-compose.yml.
 
 kleineAnfragen needs multiple Datasets with the following identifiers that must be created in Nomenklatura:
 
@@ -63,7 +63,7 @@ Configuration
 
 * `.env`
 
-	In development, the environment variables are set in `fig.yml`. For development without fig (or production), create `.env` and fill it with these:
+	In development, the environment variables are set in `docker-compose.yml`. For development without docker-compose (or production), create `.env` and fill it with these:
 
 	    export DATABASE_URL="postgres://user:pass@localhost/kleineanfragen"
 	    export ELASTICSEARCH_URL="http://127.0.0.1:9200/"
