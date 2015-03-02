@@ -18,7 +18,7 @@ RUN git clone https://github.com/robbi5/s3ninja.git /build && \
     cd /app && unzip /build/target/*.zip && \
     chmod +x sirius.sh
 
-RUN sed -i 's#baseDir = "data/s3"#baseDir = "/data"#' /app/app/application.conf
+RUN sed -i 's#baseDir = "data/s3"#baseDir = "/data"#' -i 's#autocreateBuckets = true#autocreateBuckets = false#' /app/app/application.conf
 
 VOLUME /data
 
