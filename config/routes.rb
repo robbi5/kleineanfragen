@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
   get 'info/daten'
   get 'info/kontakt'
+  get 'info/mitmachen'
 
   get 'review' => 'review#index'
   get 'review/papers'
