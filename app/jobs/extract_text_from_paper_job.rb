@@ -35,11 +35,15 @@ class ExtractTextFromPaperJob < ActiveJob::Base
     FileUtils.remove_entry_secure tempdir if File.exist?(tempdir)
   end
 
+  def tika_endpoint
+    Addressable::URI.parse(Rails.configuration.x.tika_server).join('./tika').normalize.to_s
+  end
+
   def extract_tika(paper)
     fail "No copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] in s3 found" if paper.public_url.nil?
     pdf = Excon.get(paper.public_url)
     fail 'Couldn\'t download PDF' if pdf.status != 200
-    text = Excon.put(Rails.configuration.x.tika_server,
+    text = Excon.put(tika_endpoint,
                      body: pdf.body,
                      headers: { 'Content-Type' => 'application/pdf', 'Accept' => 'text/plain' })
     fail 'Couldn\'t get text' if text.status != 200

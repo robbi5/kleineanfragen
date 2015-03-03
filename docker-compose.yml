@@ -17,7 +17,7 @@ web:
     ELASTICSEARCH_URL: http://elasticsearch:9200/
     REDIS_URL: redis://redis:6379
     DATABASE_URL: postgres://kleineanfragen:@database/kleineanfragen
-    TIKA_SERVER_URL: http://tika:9998/tika
+    TIKA_SERVER_URL: http://tika:9998
 #   NOMENKLATURA_HOST: http://nomenklatura:8080
 #   NOMENKLATURA_APIKEY: change_me
 

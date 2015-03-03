@@ -71,7 +71,7 @@ Configuration
 	    export S3_ACCESS_KEY="FIXME"
 	    export S3_SECRET_KEY="FIXME"
 	    export REDIS_URL="redis://localhost:6379"
-	    export TIKA_SERVER_URL="http://localhost:9998/tika"
+	    export TIKA_SERVER_URL="http://localhost:9998"
 	    export NOMENKLATURA_HOST="http://localhost:9000"
 	    export NOMENKLATURA_APIKEY="FIXME"
 
