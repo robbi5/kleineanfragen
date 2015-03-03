@@ -2,9 +2,9 @@ class Paper < ActiveRecord::Base
   extend FriendlyId
   friendly_id :reference_and_title, use: :scoped, scope: [:body, :legislative_term]
 
-  DOCTYPE_MINOR_INTERPELLATION = "minor"
-  DOCTYPE_MAJOR_INTERPELLATION = "major"
-  DOCTYPE_WRITTEN_INTERPELLATION = "written"
+  DOCTYPE_MINOR_INTERPELLATION = 'minor'
+  DOCTYPE_MAJOR_INTERPELLATION = 'major'
+  DOCTYPE_WRITTEN_INTERPELLATION = 'written'
 
   # enable search
   searchkick language: 'German',
@@ -116,9 +116,22 @@ class Paper < ActiveRecord::Base
     nil
   end
 
+  def doctype_human
+    case doctype
+    when DOCTYPE_MINOR_INTERPELLATION
+      'kleine Anfrage'
+    when DOCTYPE_MAJOR_INTERPELLATION
+      'große Anfrage'
+    when DOCTYPE_WRITTEN_INTERPELLATION
+      'schriftliche Anfrage'
+    else
+      ''
+    end
+  end
+
   def description
     desc = []
-    desc << "kleine Anfrage #{full_reference} aus #{body.name}. "
+    desc << "#{doctype_human.titleize} #{full_reference} aus #{body.name}. "
     if originator_people.size > 0
       desc << "Eingereicht von #{originator_people.collect(&:name).join(', ')}, " +
               "#{originator_organizations.collect(&:name).join(', ')}. "
