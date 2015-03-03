@@ -74,6 +74,13 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
     assert_equal 'RBm', ministry_line
   end
 
+  test 'extract doctype' do
+    body = @scraper.extract_body(@html)
+    seperator = @scraper.extract_seperators(body).first
+    doctype = @scraper.extract_type(seperator)
+    assert_equal Paper::DOCTYPE_WRITTEN_INTERPELLATION, doctype
+  end
+
   test 'extract published_at from data cell' do
     body = @scraper.extract_body(@html)
     seperator = @scraper.extract_seperators(body).first
@@ -102,6 +109,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         legislative_term: '17',
         full_reference: '17/15458',
         reference: '15458',
+        doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
         title: 'Bilanzkosmetik bei der Flughafengesellschaft? (II)',
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15458.pdf',
         published_at: Date.parse('10.02.2015'),
@@ -118,6 +126,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         legislative_term: '17',
         full_reference: '17/13584',
         reference: '13584',
+        doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
         title: 'Wohnungsmarkt Berlin und Brandenburg',
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-13548.pdf',
         published_at: Date.parse('23.04.2014'),
@@ -134,6 +143,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         legislative_term: '17',
         full_reference: '17/13566',
         reference: '13566',
+        doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
         title: 'Denkzeichen - Kohlenhandlung Julius und Annedore Leber',
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-13566.pdf',
         published_at: Date.parse('11.04.2014'),
@@ -150,6 +160,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         legislative_term: '17',
         full_reference: '17/13768',
         reference: '13768',
+        doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
         title: 'Studierende brauchen Wohnheimplätze und keine Luftschlösser',
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-13768.pdf',
         published_at: Date.parse('22.05.2014'),
@@ -166,6 +177,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         legislative_term: '17',
         full_reference: '17/13307',
         reference: '13307',
+        doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
         title: 'Berliner Grillflächen nicht weiter reduzieren',
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-13307.pdf',
         published_at: Date.parse('28.02.2014'),
@@ -182,6 +194,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         legislative_term: '17',
         full_reference: '17/15272',
         reference: '15272',
+        doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
         title: 'Umsetzung des Partizipations- & Integrationsgesetzes (V) Bezirkliche Integrationsausschüsse',
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15272.pdf',
         published_at: Date.parse('30.01.2015'),
@@ -198,6 +211,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         legislative_term: '17',
         full_reference: '17/15093',
         reference: '15093',
+        doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
         title: 'Wie ist der aktuelle Stand der Lehrkräfteausstattung in Lichtenberg?',
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15093.pdf',
         published_at: Date.parse('03.12.2014'),
@@ -214,6 +228,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         legislative_term: '17',
         full_reference: '17/15027',
         reference: '15027',
+        doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
         title: 'Gefährliche Bauschäden am sonderpädagogischen Förderzentrum Stötzner-Schule',
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15027.pdf',
         published_at: Date.parse('05.12.2014'),
@@ -232,6 +247,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         legislative_term: '17',
         full_reference: '17/15324',
         reference: '15324',
+        doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
         title: 'Bürgerbeteiligung in Berlins Stadtplanung (2014)',
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15324.pdf',
         published_at: Date.parse('06.02.2015'),

@@ -119,6 +119,7 @@ module RheinlandPfalzLandtagScraper
     {
       legislative_term: legislative_term,
       full_reference: full_reference,
+      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       reference: reference,
       title: title,
       url: url,

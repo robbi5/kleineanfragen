@@ -100,12 +100,22 @@ module HamburgBuergerschaftScraper
     path = title_el.element_children[0]['href']
     url = Addressable::URI.parse(BASE_URL + path).normalize.to_s
 
+    doctype_el = next_row.element_children[1]
+    if doctype_el.text.scan(/kleine/i).present?
+      doctype = Paper::DOCTYPE_MINOR_INTERPELLATION
+    elsif doctype_el.text.scan(/große/i).present?
+      doctype = Paper::DOCTYPE_MAJOR_INTERPELLATION
+    else
+      fail "doctype unknown for Paper [HH #{full_reference}]"
+    end
+
     originators = next_row.next_element.element_children[1].text.strip
     originators = NamePartyExtractor.new(originators).extract
     {
       legislative_term: legislative_term,
       full_reference: full_reference,
       reference: reference,
+      doctype: doctype,
       title: title_text,
       url: url,
       published_at: date,

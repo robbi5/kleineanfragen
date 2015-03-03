@@ -23,6 +23,7 @@ class HamburgBuergerschaftScraperTest < ActiveSupport::TestCase
         legislative_term: '19',
         full_reference: '19/1745',
         reference: '1745',
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
         title: 'Stadtwerke (1): Finanzierung von „Hamburg Energie“ im Haushaltsplan-Entwurf 2009/2010',
         url: 'http://www.buergerschaft-hh.de/Parldok/tcl/PDDocView.tcl?mode=show&dokid=24592&page=0',
         published_at: Date.parse('8.12.2008'),

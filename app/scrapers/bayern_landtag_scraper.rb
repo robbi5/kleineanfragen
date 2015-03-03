@@ -155,6 +155,7 @@ module BayernLandtagScraper
       legislative_term: legislative_term,
       full_reference: full_reference,
       reference: reference,
+      doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
       title: title,
       url: url,
       published_at: published_at
