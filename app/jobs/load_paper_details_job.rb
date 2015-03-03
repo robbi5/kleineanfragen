@@ -1,7 +1,7 @@
 class LoadPaperDetailsJob < ActiveJob::Base
   queue_as :meta
 
-  OVERWRITEABLE = [:originators, :answerers]
+  OVERWRITEABLE = [:originators, :answerers, :doctype]
 
   def perform(paper)
     return unless paper.body.scraper.const_defined? :Detail
