@@ -1,4 +1,6 @@
 class FillPaperPDFLastModifiedJob < ActiveJob::Base
+  queue_as :meta
+
   # Paper.where(pdf_last_modified: nil).each {|p| FillPaperPDFLastModifiedJob.perform_later(p) }
   def perform(paper)
     session = patron_session
