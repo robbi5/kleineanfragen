@@ -19,7 +19,16 @@ module BerlinAghScraper
   end
 
   def self.extract_type(seperator)
-    seperator.next_element.next_element.search('./td[2]').first.try(:text)
+    doctype_text = seperator.next_element.next_element.search('./td[2]').first.try(:text)
+    if doctype_text.scan(/kleine/i).present?
+      return Paper::DOCTYPE_MINOR_INTERPELLATION
+    end
+    if doctype_text.scan(/große/i).present?
+      return Paper::DOCTYPE_MAJOR_INTERPELLATION
+    end
+    if doctype_text.scan(/schriftliche/i).present?
+      return Paper::DOCTYPE_WRITTEN_INTERPELLATION
+    end
   end
 
   def self.extract_data_cell(seperator)
@@ -81,6 +90,9 @@ module BerlinAghScraper
     names = extract_names(data_cell)
     originators = NamePartyExtractor.new(names).extract
 
+    doctype = extract_type(seperator)
+    fail "[#{full_reference}] no known doctype" if doctype.nil?
+
     date = extract_date(data_cell)
     published_at = Date.parse(date)
 
@@ -93,6 +105,7 @@ module BerlinAghScraper
       legislative_term: legislative_term,
       full_reference: full_reference,
       reference: reference,
+      doctype: doctype,
       title: title,
       url: url,
       published_at: published_at,

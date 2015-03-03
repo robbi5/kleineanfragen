@@ -95,6 +95,7 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
         legislative_term: '17',
         full_reference: '17/1928',
         reference: '1928',
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
         title: '640 000 Euro für Elektromobilität?',
         url: 'http://www.landtag-niedersachsen.de/Drucksachen/Drucksachen%5F17%5F2500/1501-2000/17-1928.pdf',
         published_at: Date.parse('Wed, 06 Aug 2014'),

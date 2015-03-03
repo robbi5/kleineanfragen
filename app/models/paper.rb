@@ -2,6 +2,10 @@ class Paper < ActiveRecord::Base
   extend FriendlyId
   friendly_id :reference_and_title, use: :scoped, scope: [:body, :legislative_term]
 
+  DOCTYPE_MINOR_INTERPELLATION = "minor"
+  DOCTYPE_MAJOR_INTERPELLATION = "major"
+  DOCTYPE_WRITTEN_INTERPELLATION = "written"
+
   # enable search
   searchkick language: 'German',
              text_start: [:title],
