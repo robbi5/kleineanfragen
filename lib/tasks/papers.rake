@@ -80,4 +80,10 @@ namespace :papers do
     Rails.logger.info "Adding job for extracting answerers of paper [#{paper.body.state} #{paper.full_reference}]"
     ExtractAnswerersJob.perform_later(paper)
   end
+
+  desc 'Reimport BT PDFs'
+  task :reimport_pdfs, :environment do
+    Rails.logger.info 'Adding job for reimporting PDFs'
+    ReimportPaperPDFJob.perform_later
+  end
 end
