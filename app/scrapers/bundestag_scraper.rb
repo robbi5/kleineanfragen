@@ -79,8 +79,17 @@ module BundestagScraper
     xml = xml.strip.gsub(/<-.*->/, '') # remove nested "comments"
 
     doc = Nokogiri.parse xml
+    type = doc.at_css('VORGANG VORGANGSTYP').text
     status = doc.at_css('VORGANG AKTUELLER_STAND').text
     fail "#{detail_url}: ignored, status: #{status}" unless status == 'Beantwortet'
+
+    doctype = case type
+              when 'Kleine Anfrage'
+                Paper::DOCTYPE_MINOR_INTERPELLATION
+              when 'Große Anfrage'
+                Paper::DOCTYPE_MAJOR_INTERPELLATION
+              end
+    fail "#{detail_url}: doctype unknown: #{type}" if doctype.blank?
 
     title = doc.at_css('VORGANG TITEL').text.strip
     legislative_term = doc.at_css('VORGANG WAHLPERIODE').text.to_i
@@ -135,6 +144,7 @@ module BundestagScraper
       legislative_term: legislative_term,
       full_reference: full_reference,
       reference: reference,
+      doctype: doctype,
       title: title,
       url: normalized_url,
       published_at: published_at,
