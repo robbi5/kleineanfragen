@@ -54,7 +54,7 @@ module BundestagScraper
       mp = m.get SEARCH_URL
 
       search_form = mp.forms[0]
-      search_form['dokType'] = 'drs'
+      search_form.radiobutton_with(name: 'dokType', value: 'drs').check
       search_form.field_with(name: 'wahlperiode').options.find { |opt| opt.text.strip == @legislative_term.to_s }.select
       search_form['nummer'] = full_reference
       submit_button = search_form.submits.find { |btn| btn.value == 'Suchen' }
