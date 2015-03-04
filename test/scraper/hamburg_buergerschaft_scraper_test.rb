@@ -29,7 +29,7 @@ class HamburgBuergerschaftScraperTest < ActiveSupport::TestCase
         published_at: Date.parse('8.12.2008'),
         originators: {
                 people: ['Dora Heyenn', 'Dr. Joachim Bischoff', 'Wolfgang Joithe-von Krosigk'],
-                parties: ['Fraktion DIE LINKE']
+                parties: ['DIE LINKE']
             },
         },
       @scraper.extract(@html.css('td.pd_titel').first))
