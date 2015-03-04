@@ -69,22 +69,30 @@ module HamburgBuergerschaftScraper
       end
       submit_button = form.submits.find { |btn| btn.value == 'Suchen' }
       mp = m.submit(form, submit_button)
-      form = mp.forms.second
-      submit_button = form.submits.find { |btn| btn.value == 'Dokumente anzeigen' }
-      m.submit(form, submit_button)
+      unless mp.forms.second.nil?
+        form = mp.forms.second
+        submit_button = form.submits.find { |btn| btn.value == 'Dokumente anzeigen' }
+        mp = m.submit(form, submit_button)
+      end
+      if redir = mp.search("//meta[@http-equiv='refresh']").first
+        mp = m.get BASE_URL + redir['content'].gsub(/.+URL=(.+)/m, '\1')
+      end
+      mp
     end
   end
 
   def self.extract_date_ranges(option_text)
-    only_start_date = !(option_text.match(/\(.+\)/))
+    only_start_date = option_text.match(/\(.+\)/).nil?
     if only_start_date
-      start_time = Date.parse(option_text.split(' ').last.match(/([\d\.]+)$/)[1])
+      start_time = Date.strptime(option_text.split(' ').last.match(/([\d\.]+)$/)[1], '%d.%m.%y')
       end_time = Date.today
     else
       option_parts = option_text.match(/\((.+)\)/)[1].split('-')
-      # FIXME: clean
-      start_time = Date.strptime(option_parts.first.match(/([\d\.]+)/)[1], '%d.%m.%Y')
-      end_time = Date.strptime(option_parts.second.match(/([\d\.]+)/)[1], '%d.%m.%Y')
+      start_time = Date.strptime(option_parts.first.match(/([\d\.]+)/)[1], '%d.%m.%y')
+      end_time = Date.strptime(option_parts.second.match(/([\d\.]+)/)[1], '%d.%m.%y')
+    end
+    if (end_time - start_time).to_i < 10
+      return [[start_time, end_time]]
     end
     dates = start_time.step(end_time).to_a
     dates.each_slice((dates.size / SEARCH_PARTS.to_f).round).map { |group| [group.first, group.last] }
