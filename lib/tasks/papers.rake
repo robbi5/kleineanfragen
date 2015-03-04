@@ -84,6 +84,6 @@ namespace :papers do
   desc 'Reimport BT PDFs'
   task :reimport_pdfs, :environment do
     Rails.logger.info 'Adding job for reimporting PDFs'
-    ReimportPaperPDFJob.perform_later
+    ReimportPapersPDFJob.perform_later
   end
 end

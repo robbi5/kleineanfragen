@@ -1,4 +1,4 @@
-class ReimportPaperPDFJob < ActiveJob::Base
+class ReimportPapersPDFJob < ActiveJob::Base
   queue_as :meta
 
   DISTANCE = 5.days
