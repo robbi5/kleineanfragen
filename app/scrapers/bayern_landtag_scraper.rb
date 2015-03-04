@@ -158,7 +158,8 @@ module BayernLandtagScraper
       doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
       title: title,
       url: url,
-      published_at: published_at
+      published_at: published_at,
+      is_answer: true
       # originators only on detail page
       # answerers not available
     }

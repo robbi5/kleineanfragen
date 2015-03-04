@@ -98,6 +98,7 @@ module RheinlandPfalzLandtagScraper
 
     results = container.at_css('a').previous.text.match(/Kleine Anfrage \d+ (.+) und Antwort (.+) ([\d\.]+) /)
     fail "RP [#{full_reference}]: no readable meta information found" if results.nil?
+    is_answer = container.at_css('a').previous.text.scan(/Kleine Anfrage.*und Antwort/).present?
 
     # not all papers are available
     if check_pdf
@@ -125,6 +126,7 @@ module RheinlandPfalzLandtagScraper
       url: url,
       published_at: published_at,
       originators: originators,
+      is_answer: is_answer,
       answerers: { ministries: ministries }
     }
   end

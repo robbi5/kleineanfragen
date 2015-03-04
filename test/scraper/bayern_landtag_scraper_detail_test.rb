@@ -21,7 +21,8 @@ class BayernLandtagScraperDetailTest < ActiveSupport::TestCase
         published_at: Date.parse('09.02.2015'),
         originators: {
           parties: ['BÜNDNIS 90/DIE GRÜNEN']
-        }
+        },
+        is_answer: true
       }, paper)
   end
 end

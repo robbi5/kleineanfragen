@@ -114,6 +114,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15458.pdf',
         published_at: Date.parse('10.02.2015'),
         originators: { people: ['Martin Delius'], parties: ['Piraten'] },
+        is_answer: true,
         answerers: { ministries: ['RBm'] }
       }, paper)
   end
@@ -131,6 +132,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-13548.pdf',
         published_at: Date.parse('23.04.2014'),
         originators: { people: ['Andreas Otto'], parties: ['Grüne'] },
+        is_answer: true,
         answerers: { ministries: ['SenStadtUm'] }
       }, paper)
   end
@@ -148,6 +150,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-13566.pdf',
         published_at: Date.parse('11.04.2014'),
         originators: { people: ['Markus Klaer'], parties: ['CDU'] },
+        is_answer: true,
         answerers: { ministries: ['RBm', 'Skzl'] }
       }, paper)
   end
@@ -165,6 +168,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-13768.pdf',
         published_at: Date.parse('22.05.2014'),
         originators: { people: ['Dr. Wolfgang Albers'], parties: ['Die Linke'] },
+        is_answer: true,
         answerers: { ministries: ['SenBildJugWiss'] }
       }, paper)
   end
@@ -182,6 +186,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-13307.pdf',
         published_at: Date.parse('28.02.2014'),
         originators: { people: ['Stephan Lenz'], parties: ['CDU'] },
+        is_answer: true,
         answerers: { ministries: ['SenStadtUm'] }
       }, paper)
   end
@@ -199,6 +204,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15272.pdf',
         published_at: Date.parse('30.01.2015'),
         originators: { people: ['Hakan Tas'], parties: ['Die Linke'] },
+        is_answer: true,
         answerers: { ministries: ['SenArbIntFrau'] }
       }, paper)
   end
@@ -216,6 +222,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15093.pdf',
         published_at: Date.parse('03.12.2014'),
         originators: { people: ['Martin Delius'], parties: ['Piraten'] },
+        is_answer: true,
         answerers: { ministries: ['SenBildJugWiss'] }
       }, paper)
   end
@@ -233,6 +240,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15027.pdf',
         published_at: Date.parse('05.12.2014'),
         originators: { people: ['Martin Delius'], parties: ['Piraten'] },
+        is_answer: true,
         answerers: { ministries: ['SenBildJugWiss'] }
       }, paper)
   end
@@ -252,6 +260,7 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/SchrAnfr/s17-15324.pdf',
         published_at: Date.parse('06.02.2015'),
         originators: { people: ['Stefan Evers'], parties: ['CDU'] },
+        is_answer: true,
         answerers: { ministries: ['SenStadtUm'] }
       }, paper)
   end

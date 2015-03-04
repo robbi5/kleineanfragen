@@ -149,6 +149,7 @@ module BundestagScraper
       url: normalized_url,
       published_at: published_at,
       originators: originators,
+      is_answer: true,
       answerers: answerers
     }
   end

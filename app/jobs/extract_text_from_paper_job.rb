@@ -20,6 +20,7 @@ class ExtractTextFromPaperJob < ActiveJob::Base
     ContainsTableJob.perform_later(paper)
     ExtractOriginatorsJob.perform_later(paper)
     ExtractAnswerersJob.perform_later(paper)
+    DeterminePaperTypeJob.perform_later(paper) if paper.is_answer.nil?
   end
 
   def extract_local(paper)
