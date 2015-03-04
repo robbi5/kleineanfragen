@@ -44,7 +44,16 @@ class StorePaperPDFJob < ActiveJob::Base
       return false
     end
 
-    # FIXME: add support for weird redirection things like HH uses
+    if paper.body.state == 'HH'
+      js = resp.body.match(/location\.replace\(['"](.+)['"]\)/)
+      fail "Could not extract PDF path for Hamburg Paper [#{paper.body.state} #{paper.full_reference}]" if js.nil?
+      url = Addressable::URI.parse(paper.url).join(js[1]).normalize.to_s
+      resp = session.get(url)
+      if resp.status != 200
+        logger.warn "Download failed with status #{resp.status} for Paper [#{paper.body.state} #{paper.full_reference}]"
+        return false
+      end
+    end
 
     content_type = resp.headers['Content-Type']
     content_type = content_type.last if content_type.is_a? Array
