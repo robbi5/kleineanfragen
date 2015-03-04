@@ -18,7 +18,7 @@ module NiedersachsenLandtagScraper
   end
 
   def self.extract_is_answer(container)
-    container.css('b').last.try(:text).scan(/Beantwortung\s+mit\s+Antwort/m).size>=1
+    container.css('b').last.try(:text).scan(/Beantwortung\s+mit\s+Antwort/m).size >= 1
   end
 
   def self.extract_container(block)

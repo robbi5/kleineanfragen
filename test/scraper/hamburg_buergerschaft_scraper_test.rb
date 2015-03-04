@@ -28,10 +28,10 @@ class HamburgBuergerschaftScraperTest < ActiveSupport::TestCase
         url: 'http://www.buergerschaft-hh.de/Parldok/tcl/PDDocView.tcl?mode=show&dokid=24592&page=0',
         published_at: Date.parse('8.12.2008'),
         originators: {
-                people: ['Dora Heyenn', 'Dr. Joachim Bischoff', 'Wolfgang Joithe-von Krosigk'],
-                parties: ['DIE LINKE']
-            },
-        },
+          people: ['Dora Heyenn', 'Dr. Joachim Bischoff', 'Wolfgang Joithe-von Krosigk'],
+          parties: ['DIE LINKE']
+        }
+      },
       @scraper.extract(@html.css('td.pd_titel').first))
   end
 end

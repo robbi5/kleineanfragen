@@ -35,7 +35,7 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
 
   # Dora Heyenn (Fraktion DIE LINKE), Dr. Joachim Bischoff (Fraktion DIE LINKE), Wolfgang Joithe-von Krosigk (Fraktion DIE LINKE)
   test 'three people, same party, removes Fraktion' do
-  	names = 'Dora Heyenn (Fraktion DIE LINKE), Dr. Joachim Bischoff (Fraktion DIE LINKE), Wolfgang Joithe-von Krosigk (Fraktion DIE LINKE)'
+    names = 'Dora Heyenn (Fraktion DIE LINKE), Dr. Joachim Bischoff (Fraktion DIE LINKE), Wolfgang Joithe-von Krosigk (Fraktion DIE LINKE)'
     pair = NamePartyExtractor.new(names).extract
 
     assert_equal 3, pair[:people].size

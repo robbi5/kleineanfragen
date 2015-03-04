@@ -88,7 +88,7 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
   end
 
   test 'extract broken paper should throw error' do
-    block = Nokogiri::HTML("<div>Nope.</div>")
+    block = Nokogiri::HTML('<div>Nope.</div>')
     assert_raises RuntimeError do
       details = @scraper.extract_references_block(block)
       @scraper.extract_paper(details)
