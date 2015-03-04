@@ -1,7 +1,7 @@
 class Body < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: :slugged
-  has_many :papers
+  has_many :papers, -> { answers }
   has_many :ministries
 
   validates :name, uniqueness: true

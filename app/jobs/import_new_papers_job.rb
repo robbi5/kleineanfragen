@@ -25,7 +25,8 @@ class ImportNewPapersJob < ActiveJob::Base
       logger.info "Importing #{@body.state} - Page #{page}"
       found_new_paper = false
       @scraper.scrape_paginated(page) do |item|
-        if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
+        puts "P #{item[:reference]}"
+        if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference], is_answer: true).exists?
           @old_papers += 1
           next
         end
@@ -40,7 +41,7 @@ class ImportNewPapersJob < ActiveJob::Base
   def scrape_single_page
     logger.info "Importing #{@body.state} - Single Page"
     block = lambda do |item|
-      if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
+      if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference], is_answer: true).exists?
         @old_papers += 1
         return
       end
@@ -54,8 +55,15 @@ class ImportNewPapersJob < ActiveJob::Base
   end
 
   def on_item(item)
-    logger.info "[#{@body.state}] New Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
-    paper = Paper.create!(item.except(:full_reference).merge(body: @body))
+    if Paper.unscoped.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
+      logger.info "[#{@body.state}] Updating Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
+      paper = Paper.unscoped.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).first
+      paper.assign_attributes(item.except(:full_reference, :body, :legislative_term, :reference))
+      paper.save!
+    else
+      logger.info "[#{@body.state}] New Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
+      paper = Paper.create!(item.except(:full_reference).merge(body: @body))
+    end
     LoadPaperDetailsJob.perform_later(paper) if (item[:originators].blank? || item[:answerers].blank?) && @load_details
     StorePaperPDFJob.perform_later(paper)
     @new_papers += 1

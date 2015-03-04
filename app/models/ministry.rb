@@ -6,7 +6,7 @@ class Ministry < ActiveRecord::Base
   friendly_id :name, use: :scoped, scope: :body
 
   has_many :paper_answerers, as: :answerer
-  has_many :papers, through: :paper_answerers
+  has_many :papers, -> { answers }, through: :paper_answerers
 
   validates :name, uniqueness: { scope: [:body_id] }
 end

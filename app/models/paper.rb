@@ -36,6 +36,10 @@ class Paper < ActiveRecord::Base
 
   scope :search_import, -> { includes(:body) }
 
+  # ATTENTION: use .unscoped if you want to access "raw" papers
+  scope :answers, -> { where(is_answer: true) }
+  default_scope { where(is_answer: true) }
+
   def originators
     # TODO: why is .delete_if(&:nil?) needed, why can be an originator nil?
     paper_originators.sort_by { |org| org.originator_type == 'Person' ? 1 : 2 }.collect(&:originator).delete_if(&:nil?)
@@ -64,6 +68,10 @@ class Paper < ActiveRecord::Base
   end
 
   # searchkick helpers
+
+  def should_index?
+    is_answer == true
+  end
 
   def search_data
     {
