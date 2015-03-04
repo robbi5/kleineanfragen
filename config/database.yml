@@ -58,7 +58,7 @@ development:
 #
 # url needs to be set, else it gets overridden by DATABASE_URL.
 test:
-  url: "sqlite3:///:memory:"
+  url: "sqlite3::memory:"
   verbosity: silent
 
 # As with config/secrets.yml, you never want to store sensitive information,
