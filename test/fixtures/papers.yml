@@ -1,18 +1,19 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 paper_by_17_2000:
-  body_id: bayern
+  body: bayern
   legislative_term: 17
   reference: "2000"
-  title: MyText
+  title: "Noch nicht erfolgter Bericht zur Aufklärung über das Ausmaß und die Handhabung des Einsatzes derivativer Finanzierungsinstrumente der bayerischen Kommunen gemäß Landtagsdrucksache 16/18019"
   contents: MyText
   page_count: 1
   published_at: 2014-09-03
   url: http://bayern.example.org/pdf/17/2000.pdf
   downloaded_at: 2014-09-03 12:22:33
+  slug: "2000-noch-nicht-erfolgter-bericht-zur-aufklaerung-ueber-das-ausmass-und-die-handhabung-des-einsatzes-derivativer"
 
 paper_be_17_1000:
-  body_id: berlin
+  body: berlin
   legislative_term: 17
   reference: "1000"
   title: MyText

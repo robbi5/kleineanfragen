@@ -4,8 +4,10 @@ bayern:
   name: Bayern
   state: BY
   website: http://bayern.example.org
+  slug: bayern
 
 berlin:
   name: Berlin
   state: BE
   website: http://berlin.example.org
+  slug: berlin

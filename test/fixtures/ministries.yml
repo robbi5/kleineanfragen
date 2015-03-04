@@ -3,7 +3,9 @@
 by_stmuv:
   body: bayern
   name: Staatsministerium für Umwelt und Verbraucherschutz
+  slug: staatsministerium-fuer-umwelt-und-verbraucherschutz
 
 by_km:
   body: bayern
   name: "Staatsministerium für Bildung und Kultus, Wissenschaft und Kunst"
+  slug: staatsministerium-fuer-bildung-und-kultus-wissenschaft-und-kunst
