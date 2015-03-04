@@ -110,13 +110,14 @@ module BerlinAghScraper
       url: url,
       published_at: published_at,
       originators: originators,
+      is_answer: true,
       answerers: { ministries: ministries }
     }
   end
 
   class Overview < Scraper
     SEARCH_URL = BASE_URL + '/starweb/AHAB/servlet.starweb?path=AHAB/lissh.web'
-    TYPE = 'SCHRIFTLICHE ANFRAGE'
+    TYPE = 'KLEINE ANFRAGE; SCHRIFTLICHE ANFRAGE'
 
     def supports_streaming?
       true
@@ -156,7 +157,6 @@ module BerlinAghScraper
       warn_broken(legislative_term.to_i != @legislative_term, 'legislative_term not correct', legislative_term)
 
       papers = []
-
       BerlinAghScraper.extract_seperators(body).each do |seperator|
         begin
           paper = BerlinAghScraper.extract_paper(seperator)

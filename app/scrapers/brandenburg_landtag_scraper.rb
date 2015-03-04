@@ -41,7 +41,8 @@ module BrandenburgLandtagScraper
           title: title,
           url: url,
           published_at: published_at,
-          originators: originators
+          originators: originators,
+          is_answer: nil
         }
       end
       papers
@@ -67,7 +68,8 @@ module BrandenburgLandtagScraper
         title: title,
         published_at: Date.parse(date),
         url: url,
-        originators: { people: [person], parties: [party] }
+        originators: { people: [person], parties: [party] },
+        is_answer: nil
       }
     end
   end

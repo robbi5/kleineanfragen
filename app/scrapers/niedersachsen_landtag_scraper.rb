@@ -2,15 +2,23 @@ module NiedersachsenLandtagScraper
   BASE_URL = 'http://www.nilas.niedersachsen.de'
 
   def self.extract_blocks(page)
-    page.search('/html/body/form/div/table[@id="listTable"]/tr/td/table[@id="listTable"]')
+    page.search('/html/body/form/div/table[@id="listTable"]/tr/td/table[@id="listTable"]').map(&:previous_element)
+  end
+
+  def self.extract_references_block(block)
+    block.try(:next_element)
   end
 
   def self.extract_detail_block(page)
-    page.search('//table[@summary="Report"]//tr[1]/td[2]/table[2]')
+    page.search('//table[@summary="Report"]//table')
   end
 
   def self.extract_title(block)
     block.css('tr:nth-child(2) td:nth-child(2)').first.try(:text)
+  end
+
+  def self.extract_is_answer(container)
+    container.css('b').last.try(:text).scan(/Beantwortung\s+mit\s+Antwort/m).size>=1
   end
 
   def self.extract_container(block)
@@ -50,17 +58,20 @@ module NiedersachsenLandtagScraper
   end
 
   def self.extract_paper(item)
-    title = extract_title(item)
+    fail 'NS [?]: called extract_paper with null parameter' if item.nil?
+    details = extract_references_block(item)
+    title = extract_title(details)
     fail 'NS [?]: no title element found' if title.nil?
 
-    container = extract_container(item)
-    link = extract_link(container)
+    references = extract_container(details)
+    link = extract_link(references)
     fail "NS [?]: no link element found. Paper title: #{title}" if link.nil?
 
     full_reference = extract_full_reference(link)
+    is_answer = extract_is_answer(item)
     legislative_term, reference = extract_reference(full_reference)
     url = extract_url(link)
-    meta = extract_meta(container)
+    meta = extract_meta(references)
     fail "NS [#{full_reference}]: no readable meta information found" if meta.nil?
 
     ministries = []
@@ -77,6 +88,7 @@ module NiedersachsenLandtagScraper
       url: url,
       published_at: published_at,
       originators: originators,
+      is_answer: is_answer,
       answerers: { ministries: ministries }
     }
   end

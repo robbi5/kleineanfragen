@@ -13,13 +13,15 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
 
   test 'extract title from result block' do
     block = @scraper.extract_blocks(@html).first
-    title = @scraper.extract_title(block)
+    details = @scraper.extract_references_block(block)
+    title = @scraper.extract_title(details)
     assert_equal '640 000 Euro für Elektromobilität?', title
   end
 
   test 'extract container from result block' do
     block = @scraper.extract_blocks(@html).first
-    container = @scraper.extract_container(block)
+    details = @scraper.extract_references_block(block)
+    container = @scraper.extract_container(details)
     html = <<-END.gsub(/^ {6}/, '').sub(/\n$/, '')
        <br>Kleine Anfrage zur schriftlichen Beantwortung Martin Bäumer (CDU)   04.07.2014 Drucksache 
       <a href="http://www.landtag-niedersachsen.de/Drucksachen/Drucksachen%5F17%5F2500/1501-2000/17-1928.pdf" target="new">17/1928</a>  (S.1)<br>Antwort Niedersächsisches Ministerium für Inneres und Sport   06.08.2014 Drucksache 
@@ -30,14 +32,16 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
 
   test 'extract last a-element from container' do
     block = @scraper.extract_blocks(@html).first
-    container = @scraper.extract_container(block)
+    details = @scraper.extract_references_block(block)
+    container = @scraper.extract_container(details)
     link = @scraper.extract_link(container)
     assert_equal '<a href="http://www.landtag-niedersachsen.de/Drucksachen/Drucksachen%5F17%5F2500/1501-2000/17-1928.pdf" target="new">17/1928</a>', link.to_html
   end
 
   test 'extract full reference from link' do
     block = @scraper.extract_blocks(@html).first
-    container = @scraper.extract_container(block)
+    details = @scraper.extract_references_block(block)
+    container = @scraper.extract_container(details)
     link = @scraper.extract_link(container)
     full_reference = @scraper.extract_full_reference(link)
     assert_equal '17/1928', full_reference
@@ -45,7 +49,8 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
 
   test 'extract reference from full reference' do
     block = @scraper.extract_blocks(@html).first
-    container = @scraper.extract_container(block)
+    details = @scraper.extract_references_block(block)
+    container = @scraper.extract_container(details)
     link = @scraper.extract_link(container)
     full_reference = @scraper.extract_full_reference(link)
     legislative_term, reference = @scraper.extract_reference(full_reference)
@@ -56,7 +61,8 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
 
   test 'extract url from link' do
     block = @scraper.extract_blocks(@html).first
-    container = @scraper.extract_container(block)
+    details = @scraper.extract_references_block(block)
+    container = @scraper.extract_container(details)
     link = @scraper.extract_link(container)
     url = @scraper.extract_url(link)
     assert_equal 'http://www.landtag-niedersachsen.de/Drucksachen/Drucksachen%5F17%5F2500/1501-2000/17-1928.pdf', url
@@ -64,7 +70,8 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
 
   test 'extract results from container' do
     block = @scraper.extract_blocks(@html).first
-    container = @scraper.extract_container(block)
+    details = @scraper.extract_references_block(block)
+    container = @scraper.extract_container(details)
     meta = @scraper.extract_meta(container)
     assert_equal 'Martin Bäumer (CDU)', meta[:originators]
     assert_equal 'Niedersächsisches Ministerium für Inneres und Sport', meta[:answerers]
@@ -73,7 +80,8 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
 
   test 'extract results from container all' do
     @scraper.extract_blocks(@html).each do |block|
-      container = @scraper.extract_container(block)
+      details = @scraper.extract_references_block(block)
+      container = @scraper.extract_container(details)
       meta = @scraper.extract_meta(container)
       assert !meta.nil?, container.text
     end
@@ -82,7 +90,8 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
   test 'extract broken paper should throw error' do
     block = Nokogiri::HTML("<div>Nope.</div>")
     assert_raises RuntimeError do
-      @scraper.extract_paper(block)
+      details = @scraper.extract_references_block(block)
+      @scraper.extract_paper(details)
     end
   end
 
@@ -103,6 +112,7 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
           people: ['Martin Bäumer'],
           parties: ['CDU']
         },
+        is_answer: true,
         answerers: {
           ministries: ['Niedersächsisches Ministerium für Inneres und Sport']
         }

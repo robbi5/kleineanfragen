@@ -23,6 +23,7 @@ class NiedersachsenLandtagScraperDetailTest < ActiveSupport::TestCase
           people: ['Jan-Christoph Oetjen'],
           parties: ['FDP']
         },
+        is_answer: true,
         answerers: {
           ministries: ['Niedersächsisches Ministerium für Inneres und Sport']
         }
@@ -47,6 +48,7 @@ class NiedersachsenLandtagScraperDetailTest < ActiveSupport::TestCase
           people: ['Marco Brunotte', 'Kathrin Wahlmann', 'Andrea Schröder-Ehlers'],
           parties: ['SPD']
         },
+        is_answer: true,
         answerers: {
           ministries: ['Niedersächsisches Justizministerium']
         }

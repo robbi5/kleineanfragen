@@ -20,6 +20,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         url: 'http://www.landtag.rlp.de/landtag/drucksachen/4608-16.pdf',
         published_at: Date.parse('13.02.2015'),
         originators: { people: ['Dorothea Schäfer'], parties: ['CDU'] },
+        is_answer: true,
         answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] }
       }, paper)
   end
@@ -39,6 +40,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         url: 'http://www.landtag.rlp.de/landtag/drucksachen/4097-16.pdf',
         published_at: Date.parse('14.10.2014'),
         originators: { people: ['Alexander Licht'], parties: ['CDU'] },
+        is_answer: true,
         answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] }
       }, paper)
   end
@@ -58,6 +60,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         url: 'http://www.landtag.rlp.de/landtag/drucksachen/3813-16.pdf',
         published_at: Date.parse('25.07.2014'),
         originators: { people: ['Ulrich Steinbach', 'Andreas Hartenfels'], parties: ['BÜNDNIS 90/DIE GRÜNEN'] },
+        is_answer: true,
         answerers: { ministries: [
           'Ministerium für Wirtschaft, Klimaschutz, Energie und Landesplanung',
           'Ministerium für Soziales, Arbeit, Gesundheit und Demografie'
