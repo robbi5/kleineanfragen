@@ -54,7 +54,7 @@ module NiedersachsenLandtagScraper
     o_results, a_results = [nil, nil]
     container.children.map(&:text).each do |line|
       match = line.match(/(Kleine|Große)\s+Anfrage(?:\s+zur\s+schriftlichen\s+Beantwortung)?\s+(.+)(?:\s+\d|\))/m)
-      o_results = match if match
+      o_results = match if match && !line.include?('mit Antwort')
       match = line.match(/Antwort\s+(.+)\s+([\d\.]+)/m)
       a_results = match if match
     end
