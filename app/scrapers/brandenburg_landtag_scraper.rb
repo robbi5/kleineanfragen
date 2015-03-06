@@ -74,8 +74,3 @@ module BrandenburgLandtagScraper
     end
   end
 end
-
-###
-# Usage:
-#   puts BrandenburgLandtagScraper::Overview.new.scrape.inspect
-###

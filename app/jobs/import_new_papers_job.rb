@@ -25,7 +25,6 @@ class ImportNewPapersJob < ActiveJob::Base
       logger.info "Importing #{@body.state} - Page #{page}"
       found_new_paper = false
       @scraper.scrape_paginated(page) do |item|
-        puts "P #{item[:reference]}"
         if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference], is_answer: true).exists?
           @old_papers += 1
           next
