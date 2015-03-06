@@ -35,7 +35,8 @@
     <p><%= @paper.doctype_human.titleize %></p>
     <p>
       Eingereicht von:<br class="hidden-xs hidden-sm"/>
-      <%= @paper.originator_people.collect(&:name).join(', ') %><br class="hidden-xs hidden-sm"/>
+      <% o_people = @paper.originator_people.collect(&:name) %>
+      <%= o_people.join(', ') %><% if o_people.size > 0 %><br class="hidden-xs hidden-sm"/><% end %>
       <%= @paper.originator_organizations.collect(&:name).join(', ') %>
     </p>
     <% if @paper.answerer_ministries.size > 0 %>
