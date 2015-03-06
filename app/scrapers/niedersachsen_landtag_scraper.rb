@@ -18,7 +18,7 @@ module NiedersachsenLandtagScraper
   end
 
   def self.extract_is_answer(container)
-    container.css('b').last.try(:text).scan(/Beantwortung\s+mit\s+Antwort/m).size >= 1
+    container.css('b').last.try(:text).scan(/mit\s+Antwort/m).size >= 1
   end
 
   def self.extract_container(block)
@@ -26,7 +26,7 @@ module NiedersachsenLandtagScraper
   end
 
   def self.extract_link(container)
-    container.css('a').select { |el| el.text.include? '/' }.last
+    container.css('a').select { |el| el.text.include?('/') && !el.previous.text.include?('Plenarprotokoll') }.last
   end
 
   def self.extract_full_reference(link)
@@ -41,17 +41,27 @@ module NiedersachsenLandtagScraper
     link.attributes['href'].value
   end
 
+  def self.extract_doctype(doctype)
+    case doctype.downcase
+    when 'kleine'
+      Paper::DOCTYPE_MINOR_INTERPELLATION
+    when 'große'
+      Paper::DOCTYPE_MAJOR_INTERPELLATION
+    end
+  end
+
   def self.extract_meta(container)
     o_results, a_results = [nil, nil]
     container.children.map(&:text).each do |line|
-      match = line.match(/Kleine\s+Anfrage(?:\s+zur\s+schriftlichen\s+Beantwortung)?\s+(.+\))/m)
+      match = line.match(/(Kleine|Große)\s+Anfrage(?:\s+zur\s+schriftlichen\s+Beantwortung)?\s+(.+)(?:\s+\d|\))/m)
       o_results = match if match
       match = line.match(/Antwort\s+(.+)\s+([\d\.]+)/m)
       a_results = match if match
     end
-    fail 'cannot extract metadata' if o_results.nil? || a_results.nil?
+    return nil if o_results.nil? || a_results.nil?
     {
-      originators: o_results[1].strip,
+      doctype: o_results[1].strip,
+      originators: o_results[2].strip,
       answerers: a_results[1].strip,
       published_at: a_results[2]
     }
@@ -74,8 +84,14 @@ module NiedersachsenLandtagScraper
     meta = extract_meta(references)
     fail "NS [#{full_reference}]: no readable meta information found" if meta.nil?
 
+    doctype = extract_doctype(meta[:doctype])
+
     ministries = []
-    originators = NamePartyExtractor.new(meta[:originators]).extract
+    if doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
+      originators = { people: [], parties: [meta[:originators]] }
+    else
+      originators = NamePartyExtractor.new(meta[:originators]).extract
+    end
     ministries = [meta[:answerers]] unless meta[:answerers].nil?
     published_at = Date.parse(meta[:published_at])
 
@@ -83,7 +99,7 @@ module NiedersachsenLandtagScraper
       legislative_term: legislative_term,
       full_reference: full_reference,
       reference: reference,
-      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+      doctype: doctype,
       title: title,
       url: url,
       published_at: published_at,
@@ -95,7 +111,7 @@ module NiedersachsenLandtagScraper
 
   class Overview < Scraper
     SEARCH_URL = BASE_URL + '/starweb/NILAS/servlet.starweb?path=NILAS/lissh.web'
-    TYPE = 'Kleine Anfrage Zur Schriftlichen Beantwortung Mit Antwort'
+    TYPE = 'Große Anfrage Mit Antwort;Kleine Anfrage Zur Schriftlichen Beantwortung Mit Antwort'
 
     def supports_streaming?
       true
