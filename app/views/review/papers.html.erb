@@ -8,7 +8,7 @@
 <ol class="paper-list">
   <%= render partial: 'paper/paper', collection: @incomplete[b.state], locals: {
     before_meta: lambda do |paper| -%>
-  <code class="paper-id"><%= paper.try(:id) %></code>
+    <code class="paper-id"><%= paper.try(:id) %></code>
   <% end,
     prepend_meta: lambda do |paper| -%>
     <span class="paper-problems">
@@ -16,6 +16,12 @@
     <span title="<%= p.to_s %>" class="problem problem-<%=p.to_s%>">&bull;</span>
     <% end %>
     </span>
+  <% end,
+     after_meta: lambda do |paper| -%>
+    <p class="meta">
+      <span class="paper-problems"></span>
+      Beantwortet von: <%= paper.answerers.collect(&:name).join(', ') %>
+    </p>
   <% end } -%>
 </ol>
 <% end %>
