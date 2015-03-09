@@ -92,7 +92,7 @@ module SaarlandScraper
     Addressable::URI.parse(BASE_URL + url).normalize.to_s
   end
 
-  def self.extract_full_reference_from_href (href)
+  def self.extract_full_reference_from_href(href)
     href = href.split("/").last.split(".").first
     href.split("_")[0][2] + href.split("_")[0][3] + "/" + href.split("_")[1]
   end
