@@ -15,7 +15,7 @@ class SaarlandScraperDetailTest < ActiveSupport::TestCase
     entry = @scraper.extract_search_entry(@html, "14", "0374")
     assert_equal({
                    :title=>'Biogasanlagen im Saarland',
-                   :description=>"LANDTAG DES SAARLANDES 14. Wahlperiode Drucksache 14/374 (14/334) 06.01.2011 A N T W O R T zu der Anfrage der Abgeordneten Anke Rehlinger (SPD) Dr. Magnus Jung (SPD) betr  \r\n  ",
+                   :description=>"LANDTAG DES SAARLANDES 14. Wahlperiode Drucksache 14/374 (14/334) 06.01.2011 A N T W O R T zu der Anfrage der Abgeordneten Anke Rehlinger (SPD) Dr. Magnus Jung (SPD) betr",
                    :url=>'http://www.landtag-saar.de/Dokumente/DrucksachenNEU/Aw14_0374.pdf'
                  }, entry)
     assert_equal 'Biogasanlagen im Saarland', entry[:title]

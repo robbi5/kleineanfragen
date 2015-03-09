@@ -152,7 +152,7 @@ module SaarlandScraper
       if item.try(:text).include? "Aw#{term}_#{ref}"
         res= {
           title: item.previous_element.previous_element.css('a').attr('title').value,
-          description: item.previous_element.text.split("…")[0],
+          description: item.previous_element.text.split("…")[0].strip,
           url: item.text
         }
         return res
