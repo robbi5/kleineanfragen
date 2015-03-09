@@ -8,12 +8,12 @@ class HamburgBuergerschaftScraperTest < ActiveSupport::TestCase
   test 'extract dates' do
     assert_equal(
       [
-        [Date.parse('01.01.2015'), Date.parse('03.01.2015')],
-        [Date.parse('04.01.2015'), Date.parse('06.01.2015')],
-        [Date.parse('07.01.2015'), Date.parse('09.01.2015')],
-        [Date.parse('10.01.2015'), Date.parse('12.01.2015')]
+        [Date.parse('2015-01-01'), Date.parse('2015-01-03')],
+        [Date.parse('2015-01-04'), Date.parse('2015-01-06')],
+        [Date.parse('2015-01-07'), Date.parse('2015-01-09')],
+        [Date.parse('2015-01-10'), Date.parse('2015-01-12')]
       ],
-      @scraper.extract_date_ranges('(1.1.2015 - 12.1.2015)'))
+      @scraper.extract_date_ranges('(01.01.15 - 12.01.15)'))
   end
 
   test 'extract paper' do
@@ -28,10 +28,10 @@ class HamburgBuergerschaftScraperTest < ActiveSupport::TestCase
         url: 'http://www.buergerschaft-hh.de/Parldok/tcl/PDDocView.tcl?mode=show&dokid=24592&page=0',
         published_at: Date.parse('8.12.2008'),
         originators: {
-                people: ['Dora Heyenn', 'Dr. Joachim Bischoff', 'Wolfgang Joithe-von Krosigk'],
-                parties: ['DIE LINKE']
-            },
-        },
+          people: ['Dora Heyenn', 'Dr. Joachim Bischoff', 'Wolfgang Joithe-von Krosigk'],
+          parties: ['DIE LINKE']
+        }
+      },
       @scraper.extract(@html.css('td.pd_titel').first))
   end
 end

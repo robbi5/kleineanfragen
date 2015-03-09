@@ -9,12 +9,17 @@ class ReviewController < ApplicationController
       @incomplete[b.state].concat Paper.where(body: b).where(['published_at > ?', Date.today])
       @incomplete[b.state].concat Paper.where(body: b, page_count: nil).limit(50)
       @incomplete[b.state].concat Paper.find_by_sql(
-        ["SELECT p.* FROM papers p LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id AND o.originator_type = 'Person') WHERE p.body_id = ? AND o.id IS NULL", b.id]
+        ['SELECT p.* FROM papers p ' \
+          "LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id AND o.originator_type = 'Person') " \
+          'WHERE p.body_id = ? AND o.id IS NULL', b.id]
       )
       @incomplete[b.state].concat Paper.find_by_sql(
-        ["SELECT p.* FROM papers p LEFT OUTER JOIN paper_answerers a ON (a.paper_id = p.id AND a.answerer_type = 'Ministry') WHERE p.body_id = ? AND a.id IS NULL", b.id]
+        ['SELECT p.* FROM papers p ' \
+          "LEFT OUTER JOIN paper_answerers a ON (a.paper_id = p.id AND a.answerer_type = 'Ministry') " \
+          'WHERE p.body_id = ? AND a.id IS NULL', b.id]
       )
       @incomplete[b.state].uniq!
+      @incomplete[b.state].keep_if { |p| p.is_answer == true }
     end
   end
 

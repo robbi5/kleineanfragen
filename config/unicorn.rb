@@ -42,7 +42,7 @@ GC.respond_to?(:copy_on_write_friendly=) and
 # fast LAN.
 check_client_connection false
 
-before_exec do |server|
+before_exec do |_server|
   # Make sure all the .env properties are updated
   ENV.update Dotenv::Environment.new('.env')
 end
@@ -78,7 +78,7 @@ before_fork do |server, worker|
   # sleep 1
 end
 
-after_fork do |server, worker|
+after_fork do |_server, _worker|
   # per-process listener ports for debugging/admin/migrations
   # addr = "127.0.0.1:#{9293 + worker.nr}"
   # server.listen(addr, :tries => -1, :delay => 5, :tcp_nopush => true)

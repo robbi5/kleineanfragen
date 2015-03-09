@@ -76,7 +76,7 @@ class StorePaperPDFJob < ActiveJob::Base
     end
 
     paper.pdf_last_modified = DateTime.parse(last_modified) unless last_modified.blank?
-    paper.downloaded_at = DateTime.now unless paper.downloaded_at.nil?
+    paper.downloaded_at = DateTime.now if paper.downloaded_at.nil?
     paper.save
   end
 end

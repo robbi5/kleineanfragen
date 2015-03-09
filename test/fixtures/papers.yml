@@ -10,6 +10,7 @@ paper_by_17_2000:
   published_at: 2014-09-03
   url: http://bayern.example.org/pdf/17/2000.pdf
   downloaded_at: 2014-09-03 12:22:33
+  is_answer: true
   slug: "2000-noch-nicht-erfolgter-bericht-zur-aufklaerung-ueber-das-ausmass-und-die-handhabung-des-einsatzes-derivativer"
 
 paper_be_17_1000:
@@ -21,4 +22,5 @@ paper_be_17_1000:
   page_count: 1
   published_at: 2014-09-03
   url: http://berlin.example.org/pdf/17/1000.pdf
+  is_answer: true
   downloaded_at: 2014-09-03 12:22:33

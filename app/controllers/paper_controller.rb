@@ -132,7 +132,7 @@ class PaperController < ApplicationController
   end
 
   def redirect_old_slugs
-    canonical_path = paper_path(@body, @legislative_term, @paper, { format: mime_extension(request.format) })
+    canonical_path = paper_path(@body, @legislative_term, @paper, format: mime_extension(request.format))
     if request.path != canonical_path
       return redirect_to canonical_path, status: :moved_permanently
     end

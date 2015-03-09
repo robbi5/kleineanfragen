@@ -78,7 +78,7 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
     assert_equal '06.08.2014', meta[:published_at]
   end
 
-  test 'extract results from container all' do
+  test 'extract all results from container' do
     @scraper.extract_blocks(@html).each do |block|
       details = @scraper.extract_references_block(block)
       container = @scraper.extract_container(details)
@@ -88,7 +88,7 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
   end
 
   test 'extract broken paper should throw error' do
-    block = Nokogiri::HTML("<div>Nope.</div>")
+    block = Nokogiri::HTML('<div>Nope.</div>')
     assert_raises RuntimeError do
       details = @scraper.extract_references_block(block)
       @scraper.extract_paper(details)
@@ -115,6 +115,42 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
         is_answer: true,
         answerers: {
           ministries: ['Niedersächsisches Ministerium für Inneres und Sport']
+        }
+      }, paper)
+  end
+
+  test 'extract results from container in major paper' do
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/niedersachsen_landtag_scraper_overview_gr.html')))
+    block = @scraper.extract_blocks(html).first
+    details = @scraper.extract_references_block(block)
+    container = @scraper.extract_container(details)
+    meta = @scraper.extract_meta(container)
+    assert_equal 'FDP', meta[:originators]
+    assert_equal 'Niedersächsisches Ministerium für Ernährung, Landwirtschaft und Verbraucherschutz', meta[:answerers]
+    assert_equal '02.12.2014', meta[:published_at]
+  end
+
+  test 'extract complete major paper' do
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/niedersachsen_landtag_scraper_overview_gr.html')))
+    block = @scraper.extract_blocks(html).first
+    paper = @scraper.extract_paper(block)
+
+    assert_equal(
+      {
+        legislative_term: '17',
+        full_reference: '17/2430',
+        reference: '2430',
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Zukunft des ländlichen Raums in Niedersachsen',
+        url: 'http://www.landtag-niedersachsen.de/Drucksachen/Drucksachen%5F17%5F2500/2001-2500/17-2430.pdf',
+        published_at: Date.parse('2014-12-02'),
+        originators: {
+          people: [],
+          parties: ['FDP']
+        },
+        is_answer: true,
+        answerers: {
+          ministries: ['Niedersächsisches Ministerium für Ernährung, Landwirtschaft und Verbraucherschutz']
         }
       }, paper)
   end

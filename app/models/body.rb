@@ -1,7 +1,7 @@
 class Body < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: :slugged
-  has_many :papers
+  has_many :papers, -> { answers }
   has_many :ministries
 
   validates :name, uniqueness: true
@@ -25,13 +25,12 @@ class Body < ActiveRecord::Base
     when 'MV' then MeckPommLandtagScraper
     when 'NS' then NiedersachsenLandtagScraper
     when 'HH' then HamburgBuergerschaftScraper
-    else nil
     end
   end
 
   def create_nomenklatura_datasets
-  	return false if Rails.configuration.x.nomenklatura_api_key.blank?
-  	datasets = []
+    return false if Rails.configuration.x.nomenklatura_api_key.blank?
+    datasets = []
     datasets << Nomenklatura::Dataset.create("ka-ministries-#{state.downcase}", "kleineAnfragen Ministerien #{state}")
     datasets << Nomenklatura::Dataset.create("ka-people-#{state.downcase}", "kleineAnfragen Personen #{state}")
     datasets

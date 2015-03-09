@@ -28,7 +28,7 @@ module BayernLandtagScraper
       papers unless block_given?
     end
 
-    def scrape_paginated(page)
+    def scrape_paginated(page, &block)
       papers = []
       block = -> (paper) { papers << paper } unless block_given?
       mp = search(page)

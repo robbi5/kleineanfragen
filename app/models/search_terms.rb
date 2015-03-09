@@ -77,7 +77,7 @@ class SearchTerms
       else
         key.downcase!
         @parts[key] = clean_value(value)
-        define_metaclass_method(key){ @parts[key] } unless key == 'query'
+        define_metaclass_method(key) { @parts[key] } unless key == 'query'
       end
     end
 

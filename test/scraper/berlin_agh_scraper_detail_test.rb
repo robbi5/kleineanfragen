@@ -24,7 +24,7 @@ class BerlinAghScraperDetailTest < ActiveSupport::TestCase
         is_answer: true,
         answerers: { ministries: ['SenBildJugWiss'] }
       }, paper)
-    end
+  end
 
   test 'extract complete paper, minor interpellation' do
     html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/berlin_agh_scraper_detail_17_13104.html')))

@@ -36,13 +36,17 @@ class Paper < ActiveRecord::Base
 
   scope :search_import, -> { includes(:body) }
 
+  # ATTENTION: use .unscoped if you want to access "raw" papers
+  scope :answers, -> { where(is_answer: true) }
+  default_scope { where(is_answer: true) }
+
   def originators
     # TODO: why is .delete_if(&:nil?) needed, why can be an originator nil?
-    paper_originators.sort_by { |org| org.originator_type == 'Person' ? 1 : 2 }.collect(&:originator).delete_if(&:nil?)
+    paper_originators.sort_by { |org| org.originator_type == 'Person' ? 1 : 2 }.map(&:originator).delete_if(&:nil?)
   end
 
   def answerers
-    paper_answerers.sort_by { |answerer| answerer.answerer_type == 'Person' ? 1 : 2 }.collect(&:answerer)
+    paper_answerers.sort_by { |answerer| answerer.answerer_type == 'Person' ? 1 : 2 }.map(&:answerer)
   end
 
   validates :reference, uniqueness: { scope: [:body_id, :legislative_term] }
@@ -64,6 +68,10 @@ class Paper < ActiveRecord::Base
   end
 
   # searchkick helpers
+
+  def should_index?
+    is_answer == true
+  end
 
   def search_data
     {
@@ -133,8 +141,8 @@ class Paper < ActiveRecord::Base
     desc = []
     desc << "#{doctype_human.titleize} #{full_reference} aus #{body.name}. "
     if originator_people.size > 0
-      desc << "Eingereicht von #{originator_people.collect(&:name).join(', ')}, " +
-              "#{originator_organizations.collect(&:name).join(', ')}. "
+      desc << "Eingereicht von #{originator_people.map(&:name).join(', ')}, " +
+        "#{originator_organizations.map(&:name).join(', ')}. "
     end
     desc << "#{page_count} #{ActionController::Base.helpers.t(:pages, count: page_count)}." if page_count.present?
     desc.join('')
