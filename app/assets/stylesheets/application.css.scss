@@ -58,11 +58,26 @@ $grid-float-breakpoint:   320px;
   min-width: 170px;
 }
 
-.app-footer .container {
-  border-top: 1px solid $gray-lighter;
-  margin-top: 10px;
-  padding-top: 10px;
+.app-footer.container {
+  margin-top: 25px;
   color: $gray-light;
+}
+
+.app-footer .row {
+  border-top: 1px solid $gray-lighter;
+  padding: 5px 0;
+}
+
+.footer-project-line {
+  padding-top: 10px;
+}
+
+.footer-support-logo {
+  text-align: center;
+}
+
+.footer-support-logo img {
+  height: 75px
 }
 
 .page-header {
