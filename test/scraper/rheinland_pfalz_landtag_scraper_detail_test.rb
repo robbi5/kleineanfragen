@@ -67,4 +67,26 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         ] }
       }, paper)
   end
+
+  test 'extract paper without party like 16/863' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_detail_863.html')))
+    record = @scraper.extract_records(@html).first
+    paper = @scraper.extract_paper(record, check_pdf: false)
+
+    assert_equal(
+      {
+        legislative_term: '16',
+        full_reference: '16/863',
+        reference: '863',
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        title: 'Mehrfache Verschiebung der Mediation zur Geothermie',
+        url: 'http://www.landtag.rlp.de/landtag/drucksachen/863-16.pdf',
+        published_at: Date.parse('07.02.2012'),
+        originators: { people: ['Martin Brandl'], parties: [] },
+        is_answer: true,
+        answerers: { ministries: [
+          'Ministerium für Wirtschaft, Klimaschutz, Energie und Landesplanung'
+        ] }
+      }, paper)
+  end
 end
