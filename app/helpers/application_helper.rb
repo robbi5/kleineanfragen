@@ -34,4 +34,8 @@ module ApplicationHelper
       feed.link(rel: 'next', type: 'application/atom+xml', href: next_url)
     end
   end
+
+  def relative_time_dativ(time)
+    time_tag(time, time_ago_in_words_dativ(time))
+  end
 end

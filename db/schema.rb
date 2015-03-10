@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150303140603) do
+ActiveRecord::Schema.define(version: 20150310121721) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,6 +119,16 @@ ActiveRecord::Schema.define(version: 20150303140603) do
   end
 
   add_index "people", ["name"], name: "index_people_on_name", unique: true, using: :btree
+
+  create_table "scraper_results", force: :cascade do |t|
+    t.integer  "body_id"
+    t.datetime "started_at"
+    t.datetime "stopped_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean  "success"
+    t.string   "message"
+  end
 
   add_foreign_key "ministries", "bodies"
   add_foreign_key "paper_answerers", "papers"
