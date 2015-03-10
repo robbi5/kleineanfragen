@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  email: MyString
+  confirmation_token: MyString
+  confirmed_at: 2015-03-10 15:36:35
+  confirmed_ip: MyString
+  created_ip: MyString
+
+two:
+  email: MyString
+  confirmation_token: MyString
+  confirmed_at: 2015-03-10 15:36:35
+  confirmed_ip: MyString
+  created_ip: MyString

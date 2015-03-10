@@ -92,3 +92,6 @@ gem 'httparty', '~> 0.13.3'
 
 # simple title and opengraph/twitter cards view helpers
 gem 'tophat', '~>2.2.0'
+
+# email urls
+gem 'hashids', '~> 1.0.2'

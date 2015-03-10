@@ -7,6 +7,11 @@ class BodyController < ApplicationController
     @latest_paper = @body.papers.order(published_at: :desc).first
   end
 
+  def subscribe
+    # FIXME: show form for /abo
+    # FIXME: form without authenticity_token
+  end
+
   private
 
   def find_body
