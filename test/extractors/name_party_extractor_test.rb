@@ -45,4 +45,13 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 1, pair[:parties].size
     assert_equal 'DIE LINKE', pair[:parties].first
   end
+
+  # Danny Freymark
+  test 'one person, no party, single line' do
+    pair = NamePartyExtractor.new('Danny Freymark').extract
+
+    assert_equal 1, pair[:people].size
+    assert_equal 'Danny Freymark', pair[:people].first
+    assert_equal 0, pair[:parties].size
+  end
 end

@@ -26,7 +26,7 @@ class SaarlandScraperOverviewTest < ActiveSupport::TestCase
         url: 'http://www.landtag-saar.de/Dokumente/Drucksachen/Aw15_1200.pdf',
         published_at: Date.parse('2015-01-12'),
         originators: {
-          parties: ['PIRATEN'],
+          parties: ['PIRATEN']
         },
         is_answer: true
       }, paper)

@@ -46,16 +46,28 @@
   </div>
 </main>
 
-<footer class="app-footer">
-  <div class="container">
-    <p class="pull-right">
-      <%= link_to 'Datenqualität', info_daten_path %>
-      &bull;
-      <%= link_to 'Mitmachen', info_mitmachen_path %>
-      &bull;
-      <%= link_to 'Kontakt', info_kontakt_path %>
-    </p>
-    <p><%= Date.today.year %> kleineAnfragen.</p>
+<footer class="app-footer container">
+  <div class="row">
+    <div class="col-md-8 footer-project-line">
+      <p>kleineAnfragen ist ein ehrenamtliches Projekt der <a href="http://okfn.de/">Open Knowledge Foundation Deutschland e.V.</a> mit Unterstützung der <a href="http://headissue.com">headissue GmbH</a>.</p>
+    </div>
+    <div class="col-md-2 col-xs-6 footer-support-logo">
+      <a href="http://okfn.de"><img src="<%= image_url 'okfn-logo.svg' %>" /></a>
+    </div>
+    <div class="col-md-2 col-xs-6 footer-support-logo">
+      <a href="http://headissue.com"><img src="<%= image_url 'headissue-logo.svg' %>" /></a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <p>
+        <%= link_to 'Datenqualität', info_daten_path %>
+        &bull;
+        <%= link_to 'Mitmachen', info_mitmachen_path %>
+        &bull;
+        <%= link_to 'Kontakt', info_kontakt_path %>
+      </p>
+    </div>
   </div>
 </footer>
 

@@ -2,6 +2,7 @@
 show_body = false if show_body.nil?
 before_meta = lambda {|*args|} if before_meta.nil?
 prepend_meta = lambda {|*args|} if prepend_meta.nil?
+after_meta = lambda {|*args|} if after_meta.nil?
 %>
 <li>
   <p class="source-and-title">
@@ -17,4 +18,5 @@ prepend_meta = lambda {|*args|} if prepend_meta.nil?
     Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <time datetime="<%= paper.published_at.iso8601 %>"><%= l paper.published_at %></time>
      &mdash; <%= paper.page_count || '?' %> <%= t :pages, count: paper.page_count || 0 -%><%- if paper.contains_table %>, enthält Tabelle<% end %>
   </p>
+  <%= capture paper, &after_meta %>
 </li>

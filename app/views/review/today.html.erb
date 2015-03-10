@@ -9,7 +9,12 @@
 <ol class="paper-list">
   <%= render partial: 'paper/paper', collection: @papers[b.id], locals: {
     before_meta: lambda do |paper| -%>
-  <code class="paper-id"><%= paper.try(:id) %></code>
+    <code class="paper-id"><%= paper.try(:id) %></code>
+  <% end,
+   after_meta: lambda do |paper| -%>
+    <p class="meta">
+      Beantwortet von: <%= paper.answerers.collect(&:name).join(', ') %>
+    </p>
   <% end } -%>
 </ol>
 
