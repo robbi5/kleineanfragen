@@ -56,8 +56,9 @@
       <%= link_to_paper title, paper, class: 'searchresult-title' %>
     </p>
     <p class="meta">
-      Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <time datetime="<%= paper.published_at.iso8601 %>"><%= l paper.published_at %></time>
-       &mdash; <%= paper.page_count || '?' %> <%= t :pages, count: paper.page_count || 0 -%><%- if paper.contains_table %>, enthält Tabelle<% end %>
+      Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %>
+      &mdash; Veröffentlicht am <%= time_tag(paper.published_at, l(paper.published_at)) %>
+      &mdash; <%= paper.page_count || '?' %> <%= t :pages, count: paper.page_count || 0 -%><%- if paper.contains_table -%>, enthält Tabelle<% end %>
     </p>
     <p class="searchresult-snippet"><%= snippet.gsub(/[\t\n]/, ' ').html_safe %></p>
   </li>

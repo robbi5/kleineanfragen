@@ -36,6 +36,6 @@ module ApplicationHelper
   end
 
   def relative_time_dativ(time)
-    time_tag(time, time_ago_in_words_dativ(time))
+    time_tag(time, time_ago_in_words_dativ(time), title: time)
   end
 end

@@ -51,7 +51,7 @@
         <p class="meta">
           Eingereicht von <%= paper.originators.collect(&:name).join(', ') %>
           &mdash;
-          Veröffentlicht vor <time datetime="<%= paper.published_at.iso8601 %>"><%= time_ago_in_words_dativ paper.published_at %></time>
+          Veröffentlicht vor <%= relative_time_dativ(paper.published_at) %>
         </p>
       </li>
       <% end %>
