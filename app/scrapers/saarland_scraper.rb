@@ -131,14 +131,15 @@ module SaarlandScraper
   end
 
   def self.extract_search_entry(mp, term, ref)
-    mp.search('//*[@id="CSR"]/div/p').map do |item|
-      nil unless item.try(:text).include? "Aw#{term}_#{ref}"
-      {
-        title: item.previous_element.previous_element.css('a').attr('title').value,
-        description: item.previous_element.text.split('…')[0].strip,
-        url: item.text
-      }
+    entry = mp.search('//div[@id="CSR"]//p[contains(@class, "srch-Metadata1")]').find do |item|
+      item.try(:text).include? "Aw#{term}_#{ref}"
     end
+    return nil if entry.nil?
+    {
+      title: entry.previous_element.previous_element.css('a').attr('title').value,
+      description: entry.previous_element.text.split('…')[0].strip,
+      url: entry.text
+    }
   end
 
   def self.extract_paper_from_search_entry(entry, term, ref)
