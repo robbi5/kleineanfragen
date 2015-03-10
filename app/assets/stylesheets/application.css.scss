@@ -519,3 +519,18 @@ span.twitter-typeahead {
 .paper-preview-not-available {
   text-align: center;
 }
+
+.latest-run {
+  font-size: 0;
+  line-height: 0;
+  height: 14px;
+  width: 14px;
+  display: inline-block;
+  vertical-align: middle;
+  border: 7px solid #9b0000;
+  border-radius: 100%;
+}
+
+.latest-run--ok {
+  border-color: #5cb85c;
+}

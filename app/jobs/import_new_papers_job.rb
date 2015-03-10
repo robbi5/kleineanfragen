@@ -1,6 +1,22 @@
 class ImportNewPapersJob < ActiveJob::Base
   queue_as :import
 
+  around_perform do |job, block|
+    body = job.arguments.first
+    @result = body.scraper_results.create(started_at: DateTime.now)
+    failure = nil
+    begin
+      block.call
+    rescue => e
+      failure = e
+    end
+    @result.stopped_at = DateTime.now
+    @result.success = failure.nil? ? true : false
+    @result.message = failure.nil? ? nil : failure.message
+    @result.save
+    raise failure unless failure.nil?
+  end
+
   def perform(body, legislative_term)
     fail "No scraper found for body #{body.state}" if body.scraper.nil?
     @body = body
