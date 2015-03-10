@@ -20,6 +20,16 @@
   </div>
 
   <div class="col-md-6">
+    <div class="latest-result">
+      <%- unless @scraper_result.nil? -%>
+        Letztes Update vor <%= relative_time_dativ @scraper_result.stopped_at %>
+        <span class="latest-run latest-run--<%= @scraper_result.success? ? 'ok' : 'failed' %>"><%= @scraper_result.success? ? 'erfolgreich' : 'fehlgeschlagen' %></span>
+        <br>
+      <%- end -%>
+      <%- unless @latest_paper.nil? -%>
+        Neueste Anfrage vor <%= relative_time_dativ @latest_paper.published_at %>
+      <%- end -%>
+    </div>
     <h3>Behörden:</h3>
     <ul>
       <% @body.ministries.each do |ministry| %>

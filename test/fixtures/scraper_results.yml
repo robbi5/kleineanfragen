@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  body: 
+  started_at: 2015-03-09 15:59:30
+  stopped_at: 2015-03-09 15:59:30
+  result: MyString
+
+two:
+  body: 
+  started_at: 2015-03-09 15:59:30
+  stopped_at: 2015-03-09 15:59:30
+  result: MyString
