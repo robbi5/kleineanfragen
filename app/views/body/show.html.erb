@@ -11,7 +11,7 @@
       <li class="row">
         <h2 class="col-xs-9 col-sm-10"><%= link_to "#{term.to_s}. Wahlperiode", legislative_term_path(@body, term) %></h2>
         <div class="paper-count col-xs-3 col-sm-2">
-          <span><%= count %></span> <br/>
+          <span><%= count %></span><br/>
           <%= t :anfragen, count: count %>
         </div>
       </li>
@@ -23,18 +23,21 @@
     <div class="latest-result">
       <%- unless @scraper_result.nil? -%>
         Letztes Update vor <%= relative_time_dativ @scraper_result.stopped_at %>
-        <span class="latest-run latest-run--<%= @scraper_result.success? ? 'ok' : 'failed' %>"><%= @scraper_result.success? ? 'erfolgreich' : 'fehlgeschlagen' %></span>
-        <br>
+        <span class="latest-run latest-run--<%= @scraper_result.css_class %>"><%= @scraper_result.success? ? 'erfolgreich' : 'fehlgeschlagen' %></span>
+        <br/>
       <%- end -%>
       <%- unless @latest_paper.nil? -%>
-        Neueste Anfrage vor <%= relative_time_dativ @latest_paper.published_at %>
+        Neueste Anfrage vor <%= relative_time_dativ @latest_paper.published_at %> veröffentlicht
       <%- end -%>
     </div>
+
+    <% if @body.ministries.size > 0 %>
     <h3>Behörden:</h3>
     <ul>
       <% @body.ministries.each do |ministry| %>
       <li><%= link_to ministry.name, ministry_path(@body, ministry) %></li>
       <% end %>
     </ul>
+    <% end %>
   </div>
 </div>
