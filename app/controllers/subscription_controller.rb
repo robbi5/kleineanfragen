@@ -13,10 +13,15 @@ class SubscriptionController < ApplicationController
         # FIXME: redirect back to search
       else
         # FIXME: render error message
+        render status: :bad_request
       end
     end
 
-    # FIXME: check blacklist
+    if EmailBlacklist.active_and_email(@subscription.email).exists?
+      # FIXME: render error message
+      render status: :unauthorized
+      return
+    end
 
     needs_opt_in = OptIn.unconfirmed_and_email(@subscription.email).empty?
     @subscription.active = !needs_opt_in

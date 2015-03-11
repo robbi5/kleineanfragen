@@ -23,6 +23,12 @@ class SubscriptionControllerTest < ActionController::TestCase
     assert sub.active?, 'subscription should be active'
   end
 
+  test 'should fail if email is blacklisted' do
+    email = email_blacklists(:blacklisted).email
+    post :subscribe, subscription: { email: email, subtype: :body, query: 'BE' }
+    assert_response :unauthorized
+  end
+
   test 'should get unsubscribe' do
     sub = subscriptions(:subscription_active)
     get :unsubscribe, 'subscription' => sub.to_param

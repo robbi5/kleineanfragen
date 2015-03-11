@@ -20,3 +20,10 @@ subscription_active_too:
   query: BB
   active: true
   last_sent_at: 2015-03-10 15:50:30
+
+subscription_inactive_blacklisted:
+  email: blacklisted@example.org
+  subtype: body
+  query: BY
+  active: false
+  last_sent_at: 2015-03-10 15:47:25

@@ -24,6 +24,13 @@ class OptInControllerTest < ActionController::TestCase
     assert sub.active?, 'subscription should now be active'
   end
 
+  test 'should fail if email is blacklisted' do
+    sub = subscriptions(:subscription_inactive_blacklisted)
+
+    get :confirm, 'subscription' => sub.to_param, 'confirmation_token' => '8224d55d9cfeb211aa067a08f97a0e5fd6250195'
+    assert_response :unauthorized
+  end
+
   test 'should get report' do
     sub = subscriptions(:subscription_inactive)
 

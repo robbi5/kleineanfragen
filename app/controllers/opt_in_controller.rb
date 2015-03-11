@@ -3,7 +3,11 @@ class OptInController < ApplicationController
   before_action :find_subscription, only: [:confirm]
 
   def confirm
-    # FIXME: check blacklist
+    if EmailBlacklist.active_and_email(@subscription.email).exists?
+      # FIXME: render error message
+      render status: :unauthorized
+      return
+    end
 
     if @opt_in.confirmed?
       # FIXME: thanks, but already confirmed
@@ -20,7 +24,9 @@ class OptInController < ApplicationController
   end
 
   def report
-    # FIXME: add user to email blacklist
+    EmailBlacklist.find_or_create_by(email: @opt_in.email.downcase) do |blacklisted|
+      blacklisted.reason = :report
+    end
 
     # cannot use update_all here, because it doesn't change updated_at
     Subscription.where(email: @opt_in.email, active: true).each do |sub|

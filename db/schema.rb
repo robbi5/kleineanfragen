@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150310230538) do
+ActiveRecord::Schema.define(version: 20150311144256) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,14 @@ ActiveRecord::Schema.define(version: 20150310230538) do
   add_index "bodies", ["name"], name: "index_bodies_on_name", unique: true, using: :btree
   add_index "bodies", ["slug"], name: "index_bodies_on_slug", unique: true, using: :btree
   add_index "bodies", ["state"], name: "index_bodies_on_state", unique: true, using: :btree
+
+  create_table "email_blacklists", force: :cascade do |t|
+    t.string   "email"
+    t.integer  "reason"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
