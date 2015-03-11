@@ -13,14 +13,14 @@ class SaarlandPDFExtractor
       party = m.scan(/\(.+\)/)[0].gsub(/[()]/, '')
       parties << party
       person = m.gsub(/\p{Z}/, ' ')
-        .gsub("\n", ' ')
-        .gsub(/\s+/, ' ')
-        .gsub(/\(.*\)/, '') # remove party
-        .strip
-        .gsub(/\p{Other}/, '') # invisible chars & private use unicode
-        .sub(/^Anfrage\s/, '')
-        .sub(/^de[rs]\s/, '')
-        .sub(/Abgeordneten\s+/, '')
+                .gsub("\n", ' ')
+                .gsub(/\s+/, ' ')
+                .gsub(/\(.*\)/, '') # remove party
+                .strip
+                .gsub(/\p{Other}/, '') # invisible chars & private use unicode
+                .sub(/^Anfrage\s/, '')
+                .sub(/^de[rs]\s/, '')
+                .sub(/Abgeordneten\s+/, '')
       people << person unless person.blank?
     end
 
