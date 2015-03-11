@@ -21,7 +21,12 @@ class OptInController < ApplicationController
 
   def report
     # FIXME: add user to email blacklist
-    # FIXME: set every subscription from email to active=0
+
+    # cannot use update_all here, because it doesn't change updated_at
+    Subscription.where(email: @opt_in.email, active: true).each do |sub|
+      sub.active = false
+      sub.save!
+    end
 
     report = Report.new(Time.now, request.remote_ip, request.user_agent)
     OptInMailer.report(@opt_in, report).deliver_later

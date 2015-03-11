@@ -30,4 +30,16 @@ class OptInControllerTest < ActionController::TestCase
     get :report, 'subscription' => sub.to_param, 'confirmation_token' => '8224d55d9cfeb211aa067a08f97a0e5fd6250195'
     assert_response :success
   end
+
+  test 'should cancel active subscriptions on report' do
+    sub = subscriptions(:subscription_active)
+    assert sub.active?, 'subscription should be active'
+
+    get :report, 'subscription' => sub.to_param, 'confirmation_token' => '24fb72b3195aa101b88ac05ecbee060cacc7739d'
+    assert_response :success
+
+    sub = Subscription.find(sub.id)
+    assert_not sub.active?, 'subscription should now be inactive'
+    assert_not subscriptions(:subscription_active_too).active?, 'second subscription should now be inactive too'
+  end
 end

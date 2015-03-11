@@ -13,3 +13,10 @@ subscription_active:
   query: BY
   active: true
   last_sent_at: 2015-03-10 15:47:25
+
+subscription_active_too:
+  email: test@example.org
+  subtype: body
+  query: BB
+  active: true
+  last_sent_at: 2015-03-10 15:50:30
