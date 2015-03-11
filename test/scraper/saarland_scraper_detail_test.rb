@@ -33,7 +33,8 @@ class SaarlandScraperDetailTest < ActiveSupport::TestCase
         title: 'Biogasanlagen im Saarland',
         url: 'http://www.landtag-saar.de/Dokumente/DrucksachenNEU/Aw14_0374.pdf',
         published_at: Date.parse('2011-01-06'),
-        is_answer: true
+        is_answer: true,
+        answerers: { ministries: ['Landesregierung'] }
       }, paper)
   end
 end

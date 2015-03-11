@@ -28,7 +28,8 @@ class SaarlandScraperOverviewTest < ActiveSupport::TestCase
         originators: {
           parties: ['PIRATEN']
         },
-        is_answer: true
+        is_answer: true,
+        answerers: { ministries: ['Landesregierung'] }
       }, paper)
   end
 
