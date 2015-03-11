@@ -18,11 +18,11 @@ class SubscriptionController < ApplicationController
       end
     end
 
-    @opt_in = OptIn.unconfirmed_and_email(@subscription.email)
-    @subscription.active = !@opt_in.empty?
+    needs_opt_in = OptIn.unconfirmed_and_email(@subscription.email).empty?
+    @subscription.active = !needs_opt_in
     @subscription.save!
 
-    if @opt_in.empty?
+    if needs_opt_in
       send_opt_in(@subscription)
     end
 
@@ -40,7 +40,7 @@ class SubscriptionController < ApplicationController
 
   def send_opt_in(subscription)
     @opt_in = OptIn.create!(email: subscription.email, created_ip: request.remote_ip)
-    # FIXME: send opt_in
+    OptInMailer.opt_in(@opt_in, subscription).deliver
   end
 
   def subscription_params

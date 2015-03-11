@@ -22,7 +22,10 @@ class OptInController < ApplicationController
   def report
     # FIXME: add user to email blacklist
     # FIXME: set every subscription from email to active=0
-    # FIXME: notify admin
+
+    report = Report.new(Time.now, request.remote_ip, request.user_agent)
+    OptInMailer.report(@opt_in, report).deliver
+
     # FIXME: thanks page
   end
 

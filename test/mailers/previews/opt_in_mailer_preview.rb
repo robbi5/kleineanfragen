@@ -1,14 +1,17 @@
-# Preview all emails at http://localhost:3000/rails/mailers/opt_in_mailer
+# Preview all emails at http://localhost:5000/rails/mailers/opt_in_mailer
 class OptInMailerPreview < ActionMailer::Preview
 
-  # Preview this email at http://localhost:3000/rails/mailers/opt_in_mailer/opt_in
+  # Preview this email at http://localhost:5000/rails/mailers/opt_in_mailer/opt_in
   def opt_in
-    OptInMailer.opt_in
+    opt_in = OptIn.new
+    subscription = Subscription.new
+    OptInMailer.opt_in(opt_in, subscription)
   end
 
-  # Preview this email at http://localhost:3000/rails/mailers/opt_in_mailer/report
+  # Preview this email at http://localhost:5000/rails/mailers/opt_in_mailer/report
   def report
-    OptInMailer.report
+    opt_in = OptIn.new
+    report = Report.new
+    OptInMailer.report(opt_in, report)
   end
-
 end
