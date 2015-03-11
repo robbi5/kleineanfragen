@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  # kleineAnfragen is sessionless. only "risky" form is for email subscription, and thats requiring double-opt-in.
+  protect_from_forgery with: :null_session
 
   # FIXME: correct place?
   def mime_extension(mime_type)
