@@ -8,6 +8,6 @@ class OptInMailer < ApplicationMailer
   def report(opt_in, report)
     @opt_in = opt_in
     @report = report
-    mail subject: '[report] #{@opt_in.email} ist nun auf der E-Mail-Blacklist', to: Rails.configuration.x.email_support
+    mail subject: "[report] #{@opt_in.email} ist nun auf der E-Mail-Blacklist", to: Rails.configuration.x.email_support
   end
 end
