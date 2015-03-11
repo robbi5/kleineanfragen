@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class SaarlandPDFExtractorOriginatorsTest < ActiveSupport::TestCase
-
   test 'one person, single line' do
     paper = Struct.new(:contents).new("   Anfrage   des   Abgeordneten   Michael   Neyses  (PIRATEN)   \n")
 
@@ -21,5 +20,4 @@ class SaarlandPDFExtractorOriginatorsTest < ActiveSupport::TestCase
     assert_equal 'Astrid Schramm', originators[:people].first
     assert_equal 'DIE LINKE.', originators[:parties].first
   end
-
 end
