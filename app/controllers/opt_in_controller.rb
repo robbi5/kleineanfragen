@@ -1,10 +1,21 @@
 class OptInController < ApplicationController
-  before_action :set_opt_in
+  before_action :find_opt_in
+  before_action :find_subscription, only: [:confirm]
 
   def confirm
     # FIXME: check blacklist
-    # FIXME: fill @opt_in
-    # FIXME: set @subscription active
+
+    if @opt_in.confirmed?
+      # FIXME: thanks, but already confirmed
+      return
+    end
+
+    @opt_in.confirmed_at = DateTime.now
+    @opt_in.confirmed_ip = request.remote_ip
+    @opt_in.save!
+
+    @subscription.active = true
+    @subscription.save!
     # FIXME: thanks page
   end
 
@@ -17,11 +28,13 @@ class OptInController < ApplicationController
 
   private
 
-  def set_opt_in
+  def find_opt_in
     @opt_in = OptIn.find_by_confirmation_token(params[:confirmation_token])
-    render :'error/confirmation_token' if @opt_in.nil? # FIXME: page 'email konnte nicht gefunden werden'
-    # FIXME: howto break?
+    render :'error/confirmation_token' if @opt_in.nil? # FIXME: page
   end
 
-  # FIXME: get @subscription for confirm
+  def find_subscription
+    @subscription = Subscription.find_by_hash(params[:subscription])
+    render :'error/subscription' if @subscription.nil? # FIXME: page
+  end
 end

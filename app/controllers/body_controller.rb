@@ -8,7 +8,9 @@ class BodyController < ApplicationController
   end
 
   def subscribe
-    # FIXME: show form for /abo
+    @subscription = Subscription.new
+    @subscription.subtype = :body
+    @subscription.query = @body.state
     # FIXME: form without authenticity_token
   end
 
@@ -16,8 +18,5 @@ class BodyController < ApplicationController
 
   def find_body
     @body = Body.friendly.find params[:body]
-
-    # Add support for renamed slugs
-    return redirect_to @body, status: :moved_permanently if request.path != body_path(@body)
   end
 end
