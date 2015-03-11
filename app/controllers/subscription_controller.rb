@@ -40,7 +40,7 @@ class SubscriptionController < ApplicationController
 
   def send_opt_in(subscription)
     @opt_in = OptIn.create!(email: subscription.email, created_ip: request.remote_ip)
-    OptInMailer.opt_in(@opt_in, subscription).deliver
+    OptInMailer.opt_in(@opt_in, subscription).deliver_later
   end
 
   def subscription_params
