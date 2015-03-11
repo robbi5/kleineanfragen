@@ -16,8 +16,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def self.hashids
-    # FIXME: salt per installation
-    Hashids.new('Subscription', 5)
+    Hashids.new('Subscription' + Rails.application.secrets.subscription_salt, 5)
   end
 
   private
