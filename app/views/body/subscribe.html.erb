@@ -1,4 +1,4 @@
-<% title "#{@body.name} abonnieren" %>
+<% title "#{@body.name} per E-Mail abonnieren" %>
 
 <div class="page-header">
   <h1><%= link_to @body.name, @body %> per E-Mail abonnieren</h1>
@@ -25,11 +25,12 @@
   </div>
   <div class="col-sm-4">
     <p>
-      Interessiert daran, schnell von neuen Anfragen in <%= @body.name %> zu erfahren?
-      kleineAnfragen verschickt E-Mails an ... 
+      kleineAnfragen sammelt regelmäßig Anfragen aus <%= @body.name %> ein.
+      Um eine Benachrichtigung zu erhalten, wenn neue Anfragen verfügbar sind,
+      kannst du hier deine E-Mail-Adresse eintragen.
     </p>
     <p>
-      Beim ersten abo an eine mailadresse, doubleoptin.
+      Beim ersten Abonnement von kleineAnfragen erhältst du einen Link um deine Mailadresse zu bestätigen.
     </p>
   </div>
 </div>

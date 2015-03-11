@@ -4,13 +4,12 @@ class OptInController < ApplicationController
 
   def confirm
     if EmailBlacklist.active_and_email(@subscription.email).exists?
-      # FIXME: render error message
-      render status: :unauthorized
+      render 'subscription/error_blacklist', status: :unauthorized
       return
     end
 
     if @opt_in.confirmed?
-      # FIXME: thanks, but already confirmed
+      render :confirm
       return
     end
 
@@ -20,7 +19,6 @@ class OptInController < ApplicationController
 
     @subscription.active = true
     @subscription.save!
-    # FIXME: thanks page
   end
 
   def report
@@ -36,19 +34,17 @@ class OptInController < ApplicationController
 
     report = Report.new(Time.now, request.remote_ip, request.user_agent)
     OptInMailer.report(@opt_in, report).deliver_later
-
-    # FIXME: thanks page
   end
 
   private
 
   def find_opt_in
     @opt_in = OptIn.find_by_confirmation_token(params[:confirmation_token])
-    render :'error/confirmation_token' if @opt_in.nil? # FIXME: page
+    render :error_not_found, status: 404 if @opt_in.nil?
   end
 
   def find_subscription
     @subscription = Subscription.find_by_hash(params[:subscription])
-    render :'error/subscription' if @subscription.nil? # FIXME: page
+    render :error_not_found, status: 404 if @subscription.nil?
   end
 end

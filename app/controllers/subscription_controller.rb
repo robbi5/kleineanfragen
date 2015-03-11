@@ -4,41 +4,26 @@ class SubscriptionController < ApplicationController
   def subscribe
     @subscription = Subscription.new(subscription_params)
 
-    # FIXME: validate here
     if @subscription.invalid?
-      case @subscription.subtype
-      when :body
-        # FIXME: redirect back to body
-      when :search
-        # FIXME: redirect back to search
-      else
-        # FIXME: render error message
-        render status: :bad_request
-      end
-    end
-
-    if EmailBlacklist.active_and_email(@subscription.email).exists?
-      # FIXME: render error message
-      render status: :unauthorized
+      render :error_invalid, status: :bad_request
       return
     end
 
-    needs_opt_in = OptIn.unconfirmed_and_email(@subscription.email).empty?
-    @subscription.active = !needs_opt_in
-    @subscription.save!
-
-    if needs_opt_in
-      send_opt_in(@subscription)
+    if EmailBlacklist.active_and_email(@subscription.email).exists?
+      render :error_blacklist, status: :unauthorized
+      return
     end
 
-    # FIXME: thanks page
+    @needs_opt_in = OptIn.unconfirmed_and_email(@subscription.email).empty?
+    @subscription.active = !@needs_opt_in
+    @subscription.save!
+
+    send_opt_in(@subscription) if @needs_opt_in
   end
 
   def unsubscribe
     @subscription.active = false
     @subscription.save!
-
-    # FIXME: thanks page
   end
 
   private

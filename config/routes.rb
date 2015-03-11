@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   get 'review/ministries'
   get 'review/today'
 
+  get 'abo', to: redirect('/')
   post 'abo' => 'subscription#subscribe', as: :subscription_create
 
   get 'm/:subscription/confirm/:confirmation_token' => 'opt_in#confirm', as: :opt_in_confirm

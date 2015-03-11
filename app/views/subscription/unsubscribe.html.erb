@@ -1,2 +1,10 @@
-<h1>Subscription#unsubscribe</h1>
-<p>Find me in app/views/subscription/unsubscribe.html.erb</p>
+<% title "Abonnement beendet" -%>
+<%- content_for :head do %><%= noindex() %><% end -%>
+
+<div class="page-header">
+  <h1><%= @subscription.subject %> per E-Mail abonnieren</h1>
+</div>
+
+<p>
+  Dein gewünschtes Abonnement wurde beendet.
+</p>
