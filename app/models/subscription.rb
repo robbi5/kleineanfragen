@@ -6,12 +6,12 @@ class Subscription < ActiveRecord::Base
   validates :query, presence: true
 
   def to_param
-    hashids.encrypt(id)
+    self.class.hashids.encode(id)
   end
 
   def self.find_by_hash(hash)
-    id = hashids.decrypt(hash).first
-    find(id.to_i) # FIXME: test, if i
+    id = hashids.decode(hash).first
+    find(id)
   end
 
   def self.hashids
