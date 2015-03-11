@@ -3,7 +3,8 @@ class ExtractOriginatorsJob < ActiveJob::Base
 
   EXTRACTORS = {
     'BY' => BayernPDFExtractor,
-    'BT' => BundestagPDFExtractor
+    'BT' => BundestagPDFExtractor,
+    'SL' => SaarlandPDFExtractor
   }
 
   def perform(paper)
