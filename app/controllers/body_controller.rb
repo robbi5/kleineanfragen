@@ -11,7 +11,6 @@ class BodyController < ApplicationController
     @subscription = Subscription.new
     @subscription.subtype = :body
     @subscription.query = @body.state
-    # FIXME: form without authenticity_token
   end
 
   private

@@ -3,8 +3,6 @@ class SubscriptionController < ApplicationController
 
   def subscribe
     @subscription = Subscription.new(subscription_params)
-    # FIXME: do we want ip only at opt_in?
-    ## @subscription.created_ip = request.remote_ip
 
     # FIXME: validate here
     if @subscription.invalid?
@@ -17,6 +15,8 @@ class SubscriptionController < ApplicationController
         # FIXME: render error message
       end
     end
+
+    # FIXME: check blacklist
 
     needs_opt_in = OptIn.unconfirmed_and_email(@subscription.email).empty?
     @subscription.active = !needs_opt_in

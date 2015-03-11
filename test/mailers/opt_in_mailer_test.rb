@@ -6,7 +6,6 @@ class OptInMailerTest < ActionMailer::TestCase
     @support_address = Mail::Address.new(Rails.configuration.x.email_support).address
   end
 
-
   test 'opt_in' do
     opt_in = OptIn.new(email: 'test@example.org')
     subscription = Subscription.new
