@@ -1,13 +1,15 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  email: MyString
-  type: 
-  query: MyString
-  last_sent_at: 2015-03-10 15:47:25
+subscription_inactive:
+  email: hello@example.com
+  subtype: body
+  query: BY
+  active: false
+  last_sent_at:
 
-two:
-  email: MyString
-  type: 
-  query: MyString
+subscription_active:
+  email: test@example.org
+  subtype: body
+  query: BY
+  active: true
   last_sent_at: 2015-03-10 15:47:25

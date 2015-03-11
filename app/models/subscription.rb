@@ -1,8 +1,8 @@
 class Subscription < ActiveRecord::Base
-  enum type: [:body, :search] # FIXME: all?
+  enum subtype: [:body, :search] # FIXME: all?
 
   validates :email, presence: true, email: true
-  validates :type, presence: true
+  validates :subtype, presence: true
   validates :query, presence: true
 
   def to_param
