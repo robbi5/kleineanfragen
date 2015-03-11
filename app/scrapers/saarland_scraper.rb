@@ -107,7 +107,8 @@ module SaarlandScraper
       url: href,
       published_at: published_at,
       originators: originators,
-      is_answer: true
+      is_answer: true,
+      answerers: { ministries: ['Landesregierung'] }
     }
   end
 
@@ -156,7 +157,8 @@ module SaarlandScraper
       title: title,
       url: url,
       published_at: published_date,
-      is_answer: true
+      is_answer: true,
+      answerers: { ministries: ['Landesregierung'] }
     }
   end
 end
