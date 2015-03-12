@@ -14,7 +14,7 @@ Body.create([
   { name: 'Hamburg',         state: 'HH' },
   { name: 'Rheinland-Pfalz', state: 'RP' },
   { name: 'Mecklenburg-Vorpommern', state: 'MV' },
-  { name: 'Niedersachsen',   state: 'NS' },
+  { name: 'Niedersachsen',   state: 'NI' },
   { name: 'Saarland',        state: 'SL' }
 ])
 

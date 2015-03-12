@@ -68,21 +68,21 @@ module NiedersachsenLandtagScraper
   end
 
   def self.extract_paper(item)
-    fail 'NS [?]: called extract_paper with null parameter' if item.nil?
+    fail 'NI [?]: called extract_paper with null parameter' if item.nil?
     details = extract_references_block(item)
     title = extract_title(details)
-    fail 'NS [?]: no title element found' if title.nil?
+    fail 'NI [?]: no title element found' if title.nil?
 
     references = extract_container(details)
     link = extract_link(references)
-    fail "NS [?]: no link element found. Paper title: #{title}" if link.nil?
+    fail "NI [?]: no link element found. Paper title: #{title}" if link.nil?
 
     full_reference = extract_full_reference(link)
     is_answer = extract_is_answer(item)
     legislative_term, reference = extract_reference(full_reference)
     url = extract_url(link)
     meta = extract_meta(references)
-    fail "NS [#{full_reference}]: no readable meta information found" if meta.nil?
+    fail "NI [#{full_reference}]: no readable meta information found" if meta.nil?
 
     doctype = extract_doctype(meta[:doctype])
 
