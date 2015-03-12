@@ -40,11 +40,13 @@ class OptInController < ApplicationController
 
   def find_opt_in
     @opt_in = OptIn.find_by_confirmation_token(params[:confirmation_token])
-    render :error_not_found, status: 404 if @opt_in.nil?
+  rescue
+    render :error_not_found, status: 404
   end
 
   def find_subscription
     @subscription = Subscription.find_by_hash(params[:subscription])
-    render :error_not_found, status: 404 if @subscription.nil?
+  rescue
+    render :error_not_found, status: 404
   end
 end

@@ -39,5 +39,7 @@ class SubscriptionController < ApplicationController
 
   def find_subscription
     @subscription = Subscription.find_by_hash(params[:subscription])
+  rescue
+    render :error_not_found, status: 404
   end
 end

@@ -14,6 +14,7 @@ class Subscription < ActiveRecord::Base
 
   def self.find_by_hash(hash)
     id = hashids.decode(hash).first
+    fail 'Invalid id' if id.nil?
     find(id)
   end
 
