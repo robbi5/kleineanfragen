@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   get 'recent' => 'paper#recent'
 
+  get 'info' => 'info#index'
   get 'info/daten'
   get 'info/kontakt'
   get 'info/mitmachen'

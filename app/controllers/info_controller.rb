@@ -7,4 +7,8 @@ class InfoController < ApplicationController
 
   def kontakt
   end
+
+  def index
+  end
+
 end
