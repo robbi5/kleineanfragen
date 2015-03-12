@@ -1,38 +1,57 @@
 <% title 'Über diese Seite' %>
 <h2>Was sind <em>kleine Anfragen</em>?</h2>
 <p>
-    Mit <em>kleinen Anfragen</em> können Abgeordnete in Parlamenten ihrer jeweiligen Regierung Fragen stellen, die von dieser zeitnah beantwortet und veröffentlicht werden müssen. Diese Seite sammelt kleine Anfragen der Landesparlamente und des Bundestages und versucht sie möglichst einfach auffind-, durchsuch- und verlinkbar zu machen.
+  Mit <em>kleinen Anfragen</em> können Abgeordnete in Parlamenten ihrer jeweiligen Regierung Fragen stellen, die von
+  dieser zeitnah beantwortet und veröffentlicht werden müssen. Diese Seite sammelt kleine Anfragen der
+  Landesparlamente und des Bundestages und versucht sie möglichst einfach auffind-, durchsuch- und verlinkbar zu
+  machen.
 </p>
 <p>
-    Mehr zu den Anfragearten und den Regelungen in den einzelnen Landtagen auf der <a href="https://de.wikipedia.org/wiki/Kleine_Anfrage_(Deutschland)">Wikipedia-Seite zu kleinen Anfragen</a>.
+  Mehr zu den Anfragearten und den Regelungen in den einzelnen Landtagen auf der
+  <a href="https://de.wikipedia.org/wiki/Kleine_Anfrage_(Deutschland)">Wikipedia-Seite zu kleinen Anfragen</a>.
 </p>
 <h2>Warum?</h2>
 <p>
-    In Antworten auf kleine Anfragen verstecken sich immer wieder interessante Details. So konnte Zeit Online z.B. durch einer Reihe kleiner Anfragen, die die Grünen-Bundestagsfraktion an die Bundesregierung gerichtet hatte, eine <a href="http://www.zeit.de/mobilitaet/2014-09/deutsche-bahn-bruecken-zustand">interaktive Karte über den Zustand von Bahnbrücken</a> erstellen.
+  In Antworten auf kleine Anfragen verstecken sich immer wieder interessante Details. So konnte Zeit Online z.B. durch
+  einer Reihe kleiner Anfragen, die die Grünen-Bundestagsfraktion an die Bundesregierung gerichtet hatte, eine
+  <a href="http://www.zeit.de/mobilitaet/2014-09/deutsche-bahn-bruecken-zustand">
+      interaktive Karte über den Zustand von Bahnbrücken
+  </a> erstellen.
 </p>
-<h2>Wie es funktioniert.</h1>
+<h2>Wie es funktioniert.</h2>
 <p>
-    Anfragen sind alle öffentlich in den Parlamentsdokumentationssystemen zugänglich. Unten sind die einzelnen Systeme nach Bundesland aufgeführt. Aus diesen Seiten extrahieren unsere <a href="https://de.wikipedia.org/wiki/Screen_Scraping">Scraper</a> soviele Daten wie möglich über das Dokument, die betroffenen Personen und Ministerien. Die Dokumente an sich liegen als PDF in den Systemen vor. Was an Informationen auf den Webseiten fehlt, versuchen wir im Anschluss aus den PDFs auszulesen.
+  Anfragen sind alle öffentlich in den Parlamentsdokumentationssystemen zugänglich. Unten sind die einzelnen
+  Systeme nach Bundesland aufgeführt. Aus diesen Seiten extrahieren unsere
+  <a href="https://de.wikipedia.org/wiki/Screen_Scraping">Scraper</a> soviele Daten wie möglich über das Dokument,
+  die betroffenen Personen und Ministerien. Die Dokumente an sich liegen als PDF in den Systemen vor. Was an
+  Informationen auf den Webseiten fehlt, versuchen wir im Anschluss aus den PDFs auszulesen.
 </p>
+
 <p>
-    Aus den Dokumenten extrahieren wir den Text und machen ihn durchsuchbar. Um einheitliche Schreibweisen von Ministerien und Personen zu gewährleisten, werden die gescrapten Namen mit <a href="http://opennames.org">opennames.org</a> normalisiert. Zudem ermitteln wir, ob das
-    Dokument Tabellen enthält. Diese kann man kopieren und z.B. mit <a href="https://github
-    .com/tabulapdf/tabula">tabula</a> in gut verarbeitbares Format wandeln.
+  Aus den Dokumenten extrahieren wir den Text und machen ihn durchsuchbar. Um einheitliche Schreibweisen von
+  Ministerien und Personen zu gewährleisten, werden die gescrapten Namen mit
+  <a href="http://opennames.org">opennames.org</a> normalisiert. Zudem ermitteln wir, ob das
+  Dokument Tabellen enthält. Diese kann man kopieren und z.B. mit <a href="http://tabula.technology/">tabula</a>
+  in gut verarbeitbares Format wandeln.
 </p>
+
 <p>
-    Da bei manchen Dokumenten der Link auf die PDF nur kurze Zeit gültig ist, laden wir auch die PDFs herunter und stellen diese unverändert und dauerhaft unter einer eindeutigen und unveränderlichen Adresse zur Verfügung. So lassen sich Anfragen gut über z.B. soziale Netzwerke teilen.
+  Da bei manchen Dokumenten der Link auf die PDF nur kurze Zeit gültig ist, laden wir auch die PDFs herunter und
+  stellen diese unverändert und dauerhaft unter einer eindeutigen und unveränderlichen Adresse zur Verfügung. So
+  lassen sich Anfragen gut über z.B. soziale Netzwerke teilen.
 </p>
+
 <div class="table-responsive">
-    <table class="table table-striped">
-      <tr>
-        <th>Bundesland</th>
-        <th>Quelle</th>
-      </tr>
-      <% Body.all.order(name: :asc).each do |b|  %>
-      <tr>
-        <td><%= b.name %></td>
-        <td><a href="<%= b.website %>"><%= b.website%></a></td>
-      </tr>
-      <% end %>
-    </table>
+  <table class="table table-striped">
+    <tr>
+      <th>Bundesland</th>
+      <th>Quelle</th>
+    </tr>
+    <% Body.all.order(name: :asc).each do |b| %>
+    <tr>
+      <td><%= b.name %></td>
+      <td><a href="<%= b.website %>"><%= b.website %></a></td>
+    </tr>
+    <% end %>
+  </table>
 </div>
