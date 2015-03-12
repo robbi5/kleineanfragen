@@ -28,7 +28,9 @@
       <%- end -%>
       <%- unless @latest_paper.nil? -%>
         Neueste Anfrage vor <%= relative_time_dativ @latest_paper.published_at %> veröffentlicht
+        <br/>
       <%- end -%>
+      <a href="./<%= @body.friendly_id %>/abo">Neue Anfragen per Mail erhalten!</a>
     </div>
 
     <% if @body.ministries.size > 0 %>

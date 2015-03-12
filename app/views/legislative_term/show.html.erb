@@ -1,9 +1,14 @@
 <% title "#{@body.name}, #{@legislative_term}. Wahlperiode" -%>
 <%- content_for :head do %><%= auto_discovery_link_tag(:atom, legislative_term_url(body: @body, legislative_term: @legislative_term, format: :atom)) %><% end -%>
 
-<div class="page-header page-header--has-feed">
-  <h1><%= link_to @body.name, @body %> &mdash; <%= @legislative_term %>. Wahlperiode</h1>
-  <%= link_to image_tag('feed-icon.svg', class: 'feed-icon'), legislative_term_url(body: @body, legislative_term: @legislative_term, format: :atom), class: 'feed' %>
+<div class="page-header row">
+  <div class="col-sm-6">
+    <h1><%= link_to @body.name, @body %> &mdash; <%= @legislative_term %>. Wahlperiode</h1>
+  </div>
+  <div class="col-sm-6 subscription-options">
+    <%= link_to image_tag('feed-icon.svg', class: 'feed-icon'), legislative_term_url(body: @body, legislative_term: @legislative_term, format: :atom), class: '' %>
+    <a class="btn btn-primary btn-email" href="/<%= @body.friendly_id %>/abo">Neue Anfragen per Mail</a>
+  </div>
 </div>
 
 <ol class="paper-list">
