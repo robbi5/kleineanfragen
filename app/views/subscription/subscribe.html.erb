@@ -4,17 +4,17 @@
 <div class="page-header">
   <h1><%= @subscription.subject %> per E-Mail abonnieren</h1>
 </div>
-
+<p>
+    Vielen Dank,
+</p>
+<p>
+    wir schicken dir zukünftig eine E-Mail wenn es neue Anfragen gibt,
+</p>
 <% if @needs_opt_in %>
 <p>
-  Da dies dein erstes Abonnement von kleineAnfragen ist,
-  hast du soeben eine E-Mail mit einem Link zum Bestätigen deiner E-Mail-Adresse erhalten.
+  Wenn dies dein erstes Abonnement von kleineAnfragen ist, musst du noch deine E-Mail Adresse bestätigen. Dazu haben wir dir eine E-Mail geschickt.
 </p>
 <p>
   Sobald du deine E-Mail-Adresse bestätigt hast, wird die gewünschte Benachrichtigung aktiv.
-</p>
-<% else %>
-<p>
-  Die gewünschte Benachrichtigung ist ab jetzt aktiv.
 </p>
 <% end %>

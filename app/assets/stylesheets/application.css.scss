@@ -84,18 +84,31 @@ $grid-float-breakpoint:   320px;
   margin-top: 0;
 }
 
-.page-header--has-feed {
-  padding-right: 30px;
-  .feed {
-    float: right;
-    margin-top: -2.6em;
-    margin-right: -30px;
-  }
-}
-
 .feed-icon {
   width: 24px;
   height: 24px;
+}
+
+.subscription-options a {
+  float: right;
+  @media (min-width: $screen-sm-min) {
+    margin-top: 26px;
+  }
+}
+.btn.btn-email {
+  padding: 1px 3px 1px 5px;
+  margin-right: 5px;
+}
+.btn.btn-email:after {
+  content: ' ';
+  display: inline-block;
+  position: relative;
+  background: image-url('mail.svg') center no-repeat;
+  height: 14px;
+  width: 22px;
+  background-size: 19px;
+  margin-bottom: -2px;
+  margin-left: 3px;
 }
 
 .jumbotron {
