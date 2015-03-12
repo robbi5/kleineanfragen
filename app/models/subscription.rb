@@ -2,9 +2,8 @@ class Subscription < ActiveRecord::Base
   enum subtype: [:body, :search] # FIXME: all?
 
   validates :email, presence: true, email: true
-  validates :subtype, presence: true
+  validates :subtype, presence: true, inclusion: { in: %w(body search) }
   validates :query, presence: true
-  # FIXME: validate subtype
   validate :body_query_is_existing
   validate :not_already_subscribed
 
