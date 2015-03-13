@@ -11,10 +11,14 @@ class ImportNewPapersJob < ActiveJob::Base
       failure = e
     end
     @result.stopped_at = DateTime.now
-    @result.success = failure.nil? ? true : false
+    @result.success = failure.nil?
     @result.message = failure.nil? ? nil : failure.message
     @result.save
-    raise failure unless failure.nil?
+    fail failure unless failure.nil?
+  end
+
+  after_perform do
+    SendSubscriptionsJob.perform_later(@body) if @result.success?
   end
 
   def perform(body, legislative_term)
