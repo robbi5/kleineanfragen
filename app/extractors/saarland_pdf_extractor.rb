@@ -21,10 +21,10 @@ class SaarlandPDFExtractor
 
   def self.clean(text)
     text.gsub(/\p{Z}/, ' ')
-    .gsub("\n", ' ')
-    .gsub(/\s+/, ' ')
-    .strip
-    .gsub(/\p{Other}/, '') # invisible chars & private use unicode
+        .gsub("\n", ' ')
+        .gsub(/\s+/, ' ')
+        .strip
+        .gsub(/\p{Other}/, '') # invisible chars & private use unicode
   end
 
 end
