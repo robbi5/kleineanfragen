@@ -1,5 +1,13 @@
-<h1>SubscriptionMailer#papers</h1>
+<p>Es sind <%= @papers.size %> neue kleine Anfragen eingegangen:</p>
+<ul>
+<%- @papers.each do |paper| -%>
+<li>
+<%= link_to_paper paper.title, paper %><br/>
+<span class="meta">Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> — Veröffentlicht am <%= l paper.published_at %> <%- unless paper.page_count.nil? -%>— <%= paper.page_count %> <%= t :pages, count: paper.page_count -%><%- end -%><%- if paper.contains_table %>, enthält Tabelle<% end %></span>
+</li>
+<%- end -%>
+</ul>
 
-<p>
-  Find me in app/views/subscription_mailer/papers.html.erb
-</p>
+<% content_for :footer do %>
+<p>kleineAnfragen &bull; Diese Benachrichtigung nicht mehr erhalten? <%= link_to 'Abbestellen', unsubscribe_url(@subscription) %></p>
+<% end %>

@@ -14,8 +14,6 @@ class OptIn < ActiveRecord::Base
     where('confirmed_at IS NOT NULL').where(email: val)
   end
 
-  private
-
   def assign_confirmation_token
     self.confirmation_token = Digest::SHA1.hexdigest([email, Time.now.to_i].join)
   end

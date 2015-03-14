@@ -95,3 +95,7 @@ gem 'tophat', '~>2.2.0'
 
 # email urls
 gem 'hashids', '~> 1.0.2'
+
+# inline css for emails
+gem 'nokogiri'
+gem 'premailer-rails', '~> 1.8.0'
