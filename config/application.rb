@@ -16,6 +16,7 @@ module Kleineanfragen
     config.autoload_paths += %W(#{Rails.root}/app/jobs)
     config.autoload_paths += %W(#{Rails.root}/app/scrapers)
     config.autoload_paths += %W(#{Rails.root}/app/extractors)
+    config.autoload_paths += %W(#{Rails.root}/app/validators)
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -32,6 +33,9 @@ module Kleineanfragen
     # Disable image optim for assets
     config.assets.image_optim = false
 
+    # active job
+    config.active_job.queue_adapter = :resque
+
     # applicaton config:
     # path for storing paper pdfs
     config.x.paper_storage = Rails.root.join('data')
@@ -41,5 +45,10 @@ module Kleineanfragen
     config.x.tika_server = ENV['TIKA_SERVER_URL'] || false
     # Nomenklatura API Key
     config.x.nomenklatura_api_key = ENV['NOMENKLATURA_APIKEY'] || false
+    # used email addresses
+    config.x.email_from = 'kleineAnfragen <noreply@kleineanfragen.de>'
+    config.x.email_support = 'kleineAnfragen support <hallo@kleineanfragen.de>'
+    # set from address
+    config.action_mailer.default_options = { from: config.x.email_from }
   end
 end

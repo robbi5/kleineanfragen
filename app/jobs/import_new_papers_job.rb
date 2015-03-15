@@ -11,10 +11,14 @@ class ImportNewPapersJob < ActiveJob::Base
       failure = e
     end
     @result.stopped_at = DateTime.now
-    @result.success = failure.nil? ? true : false
+    @result.success = failure.nil?
     @result.message = failure.nil? ? nil : failure.message
     @result.save
-    raise failure unless failure.nil?
+    fail failure unless failure.nil?
+  end
+
+  after_perform do
+    SendSubscriptionsJob.perform_later(@body) if @result.success?
   end
 
   def perform(body, legislative_term)
@@ -73,14 +77,23 @@ class ImportNewPapersJob < ActiveJob::Base
     if Paper.unscoped.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
       logger.info "[#{@body.state}] Updating Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
       paper = Paper.unscoped.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).first
+
+      if !paper.is_answer && item[:is_answer] == true
+        # changed state, answer is now available. reset created_at, so subscriptions get triggered
+        paper.created_at = DateTime.now
+        @new_papers += 1
+      else
+        @old_papers += 1
+      end
+
       paper.assign_attributes(item.except(:full_reference, :body, :legislative_term, :reference))
       paper.save!
     else
       logger.info "[#{@body.state}] New Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
       paper = Paper.create!(item.except(:full_reference).merge(body: @body))
+      @new_papers += 1
     end
     LoadPaperDetailsJob.perform_later(paper) if (item[:originators].blank? || item[:answerers].blank?) && @load_details
     StorePaperPDFJob.perform_later(paper)
-    @new_papers += 1
   end
 end

@@ -7,12 +7,15 @@ class BodyController < ApplicationController
     @latest_paper = @body.papers.order(published_at: :desc).first
   end
 
+  def subscribe
+    @subscription = Subscription.new
+    @subscription.subtype = :body
+    @subscription.query = @body.state
+  end
+
   private
 
   def find_body
     @body = Body.friendly.find params[:body]
-
-    # Add support for renamed slugs
-    return redirect_to @body, status: :moved_permanently if request.path != body_path(@body)
   end
 end

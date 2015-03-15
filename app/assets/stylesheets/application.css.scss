@@ -534,3 +534,58 @@ span.twitter-typeahead {
 .latest-run--ok {
   border-color: #5cb85c;
 }
+
+.alert-wrap {
+  text-align: center;
+  margin-bottom: 1.5em;
+
+  .alert {
+    display: inline-block;
+    margin: 0 auto;
+  }
+}
+
+.alert-icon {
+  &.alert-success,
+  &.alert-info,
+  &.alert-warning,
+  &.alert-danger {
+    background-color: transparent;
+  }
+
+  position: relative;
+  padding-top: 10em;
+
+  &:before {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 15px;
+    width: 8em;
+    height: 8em;
+    margin-left: -4em;
+    border: 1px solid transparent;
+    border-radius: 100%;
+    background-position: center;
+    background-size: 5em;
+    background-repeat: no-repeat;
+  }
+
+  &.alert-success:before {
+    border-color: $state-success-border;
+    background-image: image-url('icon-tick.svg');
+  }
+
+  &.alert-warning:before {
+    border-color: $state-warning-border;
+  }
+
+  &.alert-email:before {
+    background-image: image-url('icon-email.svg');
+  }
+
+  &.alert-danger:before {
+    border-color: $state-danger-border;
+    background-image: image-url('icon-cross.svg');
+  }
+}

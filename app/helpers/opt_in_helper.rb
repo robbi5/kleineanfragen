@@ -1,0 +1,2 @@
+module OptInHelper
+end

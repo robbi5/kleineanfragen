@@ -1,0 +1,21 @@
+<p>Vielen Dank für dein Interesse an <%= link_to 'kleineAnfragen', root_url %>.</p>
+
+<div itemprop="action" itemscope itemtype="http://schema.org/ConfirmAction">
+<meta itemprop="name" content="E-Mail-Adresse bestätigen"/>
+
+<p>Um automatisch neue Anfragen für <%= @subscription.subject %> zu erhalten, bestätige bitte deine E-Mail-Adresse.</p>
+
+<p itemprop="handler" itemscope itemtype="http://schema.org/HttpActionHandler">
+<%= link_to 'E-Mail-Adresse bestätigen', opt_in_confirm_url(@subscription, @opt_in), class: 'btn-primary', itemprop: 'url' %>
+</p>
+
+</div>
+
+<p>Vielen Dank,<br/>
+&mdash; kleineAnfragen
+</p>
+
+<% content_for :footer do %>
+<p>Solltest du keine Benachrichtigungen bei kleineAnfragen angefordert haben,
+<%= link_to 'melde uns dies bitte', opt_in_report_url(@subscription, @opt_in) %>.</p>
+<% end %>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<%= stylesheet_link_tag 'email' %>
+</head>
+<body bgcolor="#f6f6f6" itemscope itemtype="http://schema.org/EmailMessage">
+<table class="body-wrap">
+  <tr>
+    <td></td>
+    <td class="container" bgcolor="#FFFFFF">
+      <div class="content">
+        <table>
+          <tr>
+            <td>
+              <%= yield %>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+    <td></td>
+  </tr>
+</table>
+<table class="footer-wrap">
+  <tr>
+    <td></td>
+    <td class="container">
+      <div class="content">
+        <table>
+          <tr>
+            <td align="center">
+              <%= yield :footer %>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+    <td></td>
+  </tr>
+</table>
+</body>
+</html>

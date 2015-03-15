@@ -1,0 +1,17 @@
+<% title 'E-Mail-Adresse blockiert' -%>
+<%- content_for :head do %><%= noindex() %><% end -%>
+
+<div class="page-header">
+  <h1>E-Mail-Adresse blockiert</h1>
+</div>
+
+<div class="alert-wrap">
+  <div class="alert alert-success alert-icon">
+    <p>Deine E-Mail-Adresse ist ab nun blockiert. Du wirst keine weiteren E-Mails mehr von uns erhalten.</p>
+  </div>
+</div>
+
+<p>
+  Solltest du aus Versehen diese E-Mail-Adresse blockiert haben und
+  möchtest wieder Benachrichtigungen empfangen können, <%= link_to 'kontaktiere uns', info_kontakt_path %>.
+</p>
