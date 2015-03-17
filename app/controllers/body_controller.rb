@@ -7,6 +7,13 @@ class BodyController < ApplicationController
     @latest_paper = @body.papers.order(published_at: :desc).first
   end
 
+  def feed
+    @papers = @body.papers
+              .order(published_at: :desc, reference: :desc)
+              .page params[:page]
+    fresh_when last_modified: @papers.maximum(:updated_at), public: true
+  end
+
   def subscribe
     @subscription = Subscription.new
     @subscription.subtype = :body

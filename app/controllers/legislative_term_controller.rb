@@ -3,6 +3,8 @@ class LegislativeTermController < ApplicationController
   before_filter :find_legislative_term
 
   def show
+    redirect_to(body_feed_url(@body, format: :atom), status: :moved_permanently) if params[:format] == 'atom'
+
     @papers = @body.papers
               .where(legislative_term: @legislative_term)
               .order(published_at: :desc, reference: :desc)

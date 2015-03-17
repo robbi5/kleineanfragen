@@ -1,7 +1,8 @@
 <% title @body.name %>
 
-<div class="page-header">
+<div class="page-header page-header--has-feed">
   <h1><%= @body.name %> <small><code>(<%= @body.state %>)</code></small></h1>
+  <%= link_to image_tag('feed-icon.svg', class: 'feed-icon'), body_feed_url(body: @body, format: :atom), class: 'feed' %>
 </div>
 
 <div class="row">
