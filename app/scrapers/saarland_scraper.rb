@@ -79,7 +79,7 @@ module SaarlandScraper
   def self.extract_full_reference_from_href(href)
     href = href.split('/').last.split('.').first
     parts = href.split('_')
-    parts[0][2..3] + '/' + parts[1].scan(/\d+/).first
+    parts[0][2..3] + '/' + parts[1]
   end
 
   def self.extract_date(entry)

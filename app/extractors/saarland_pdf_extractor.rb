@@ -10,21 +10,22 @@ class SaarlandPDFExtractor
     people = []
     parties = []
     m = @contents.match(ORIGINATORS)
-    party = SaarlandPDFExtractor.clean(m[2])
+    return nil if m.nil?
+    party = clean_text(m[2])
     parties << party
-    person = SaarlandPDFExtractor.clean(m[1])
-      people << person unless person.blank?
-
+    person = clean_text(m[1])
+    people << person unless person.blank?
 
     { people: people, parties: parties }
   end
 
-  def self.clean(text)
-    text.gsub(/\p{Z}/, ' ')
-        .gsub("\n", ' ')
-        .gsub(/\s+/, ' ')
-        .strip
-        .gsub(/\p{Other}/, '') # invisible chars & private use unicode
-  end
+  private
 
+  def clean_text(text)
+    text.gsub(/\p{Z}/, ' ')
+      .gsub("\n", ' ')
+      .gsub(/\s+/, ' ')
+      .strip
+      .gsub(/\p{Other}/, '') # invisible chars & private use unicode
+  end
 end
