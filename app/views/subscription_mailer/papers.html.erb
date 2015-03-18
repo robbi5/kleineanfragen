@@ -2,7 +2,7 @@
 <ul>
 <%- @papers.each do |paper| -%>
 <li>
-<%= link_to_paper paper.title, paper %><br/>
+<%= link_to_paper_url paper.title, paper %><br/>
 <span class="meta">Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> — Veröffentlicht am <%= l paper.published_at %> <%- unless paper.page_count.nil? -%>— <%= paper.page_count %> <%= t :pages, count: paper.page_count -%><%- end -%><%- if paper.contains_table %>, enthält Tabelle<% end %></span>
 </li>
 <%- end -%>
