@@ -74,6 +74,7 @@ class ImportNewPapersJob < ActiveJob::Base
   end
 
   def on_item(item)
+    new_paper = false
     if Paper.unscoped.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
       logger.info "[#{@body.state}] Updating Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
       paper = Paper.unscoped.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).first
@@ -82,8 +83,14 @@ class ImportNewPapersJob < ActiveJob::Base
         # changed state, answer is now available. reset created_at, so subscriptions get triggered
         paper.created_at = DateTime.now
         @new_papers += 1
+        new_paper = true
       else
         @old_papers += 1
+      end
+
+      if !paper.is_answer && item[:is_answer].nil?
+        # don't know if we have the answer this time, so we have to run the full pipeline
+        new_paper = true
       end
 
       paper.assign_attributes(item.except(:full_reference, :body, :legislative_term, :reference))
@@ -92,8 +99,9 @@ class ImportNewPapersJob < ActiveJob::Base
       logger.info "[#{@body.state}] New Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
       paper = Paper.create!(item.except(:full_reference).merge(body: @body))
       @new_papers += 1
+      new_paper = true
     end
     LoadPaperDetailsJob.perform_later(paper) if (item[:originators].blank? || item[:answerers].blank?) && @load_details
-    StorePaperPDFJob.perform_later(paper)
+    StorePaperPDFJob.perform_later(paper, force: new_paper)
   end
 end
