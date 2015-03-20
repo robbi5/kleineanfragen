@@ -84,7 +84,7 @@ class PaperController < ApplicationController
   end
 
   def autocomplete
-    render json: Paper.search(params[:q], fields: [{ title: :text_start }], limit: 5).map(&:autocomplete_data)
+    render json: Paper.search(params[:q], fields: [{ 'title^1.5' => :text_start }, { title: :word_start }], limit: 5).map(&:autocomplete_data)
   end
 
   def recent
