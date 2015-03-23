@@ -8,7 +8,7 @@ namespace :papers do
   task store_all: :environment do
     limit = ENV['limit'] || 50
     papers = Paper.where(downloaded_at: nil).limit(limit)
-    papers.each do |paper|
+    papers.find_each do |paper|
       Rails.logger.info "Adding job for uploading paper [#{paper.body.state} #{paper.full_reference}]"
       StorePaperPDFJob.perform_later(paper)
     end
@@ -18,7 +18,7 @@ namespace :papers do
   task extract_all: :environment do
     limit = ENV['limit'] || 50
     papers = Paper.where(contents: nil).limit(limit)
-    papers.each do |paper|
+    papers.find_each do |paper|
       Rails.logger.info "Adding job for extracting text of paper [#{paper.body.state} #{paper.full_reference}]"
       ExtractTextFromPaperJob.perform_later(paper)
     end

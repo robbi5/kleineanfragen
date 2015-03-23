@@ -47,7 +47,7 @@
       <th>Bundesland</th>
       <th>Quelle</th>
     </tr>
-    <% Body.all.order(name: :asc).each do |b| %>
+    <% Body.order(name: :asc).find_each do |b| %>
     <tr>
       <td><%= b.name %></td>
       <td><a href="<%= b.website %>"><%= b.website %></a></td>

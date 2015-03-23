@@ -27,7 +27,7 @@ class OptInController < ApplicationController
     end
 
     # cannot use update_all here, because it doesn't change updated_at
-    Subscription.where(email: @opt_in.email, active: true).each do |sub|
+    Subscription.where(email: @opt_in.email, active: true).find_each do |sub|
       sub.active = false
       sub.save!
     end

@@ -4,7 +4,7 @@ class ReviewController < ApplicationController
 
   def papers
     @incomplete = {}
-    Body.all.each do |b|
+    Body.find_each do |b|
       @incomplete[b.state] = []
       @incomplete[b.state].concat Paper.where(body: b).where(['published_at > ?', Date.today])
       @incomplete[b.state].concat Paper.where(body: b, page_count: nil).limit(50)
@@ -30,7 +30,7 @@ class ReviewController < ApplicationController
   def today
     @papers = {}
     @ministries = {}
-    Body.all.each do |b|
+    Body.find_each do |b|
       @papers[b.id] = b.papers.where(['created_at >= ?', Date.today])
       @ministries[b.id] = b.ministries.where(['created_at >= ?', Date.today])
     end
