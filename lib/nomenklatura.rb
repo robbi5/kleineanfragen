@@ -92,8 +92,10 @@ module Nomenklatura
     # PORT from API version 1
     #
     # look for an entity by name, if it doesn't exist, create one. return cleaned/same name
+    # or nil if invalid
     def lookup(name)
       entity = entity_by_name(name).dereference
+      return nil if entity.invalid
       return entity.name
     rescue NoMatch
       begin

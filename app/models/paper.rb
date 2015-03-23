@@ -152,6 +152,7 @@ class Paper < ActiveRecord::Base
   def originators_parties=(parties)
     parties.each do |party|
       party = normalize(party, 'parties')
+      next if party.nil?
       Rails.logger.debug "+ Originator (Party): #{party}" # TODO: refactor
       org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
       originator_organizations << org unless originator_organizations.include? org
@@ -161,6 +162,7 @@ class Paper < ActiveRecord::Base
   def originators_people=(people)
     people.each do |name|
       name = normalize(name, 'people', body)
+      next if name.nil?
       Rails.logger.debug "+ Originator (Person): #{name}" # TODO: refactor
       person = Person.where('lower(name) = ?', name.mb_chars.downcase.to_s).first_or_create(name: name)
       originator_people << person unless originator_people.include? person
@@ -177,6 +179,7 @@ class Paper < ActiveRecord::Base
       ministry = Ministry.where(body: body).where('lower(short_name) = ?', name.mb_chars.downcase.to_s).first
       if ministry.nil?
         name = normalize(name, 'ministries', body)
+        next if name.nil?
         ministry = Ministry.where(body: body)
                    .where('lower(name) = ?', name.mb_chars.downcase.to_s)
                    .first_or_create(body: body, name: name)
