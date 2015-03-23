@@ -21,13 +21,11 @@ module BerlinAghScraper
   def self.extract_type(seperator)
     doctype_text = seperator.next_element.next_element.search('./td[2]').first.try(:text)
     if doctype_text.scan(/kleine/i).present?
-      return Paper::DOCTYPE_MINOR_INTERPELLATION
-    end
-    if doctype_text.scan(/große/i).present?
-      return Paper::DOCTYPE_MAJOR_INTERPELLATION
-    end
-    if doctype_text.scan(/schriftliche/i).present?
-      return Paper::DOCTYPE_WRITTEN_INTERPELLATION
+      Paper::DOCTYPE_MINOR_INTERPELLATION
+    elsif doctype_text.scan(/große/i).present?
+      Paper::DOCTYPE_MAJOR_INTERPELLATION
+    elsif doctype_text.scan(/schriftliche/i).present?
+      Paper::DOCTYPE_WRITTEN_INTERPELLATION
     end
   end
 
@@ -43,8 +41,17 @@ module BerlinAghScraper
     link.attributes['href'].try(:value)
   end
 
-  def self.extract_link(data_cell)
+  def self.extract_first_link(data_cell)
     data_cell.search('a').first
+  end
+
+  def self.extract_link(answer_round)
+    el = answer_round
+    loop do
+      el = el.next_element
+      break if el.nil?
+      return el if el.name == 'a' && el.text.include?('Drucksache')
+    end
   end
 
   def self.extract_full_reference(link)
@@ -59,8 +66,8 @@ module BerlinAghScraper
     data_cell.elements.first.previous.text.strip
   end
 
-  def self.extract_ministry_line(data_cell)
-    line = data_cell.search('u').first.next_element.next_element.next
+  def self.extract_ministry_line(answer_round)
+    line = answer_round.next_element.next_element.next
     line = line.next_element.next if line.text.include? 'Kommentar: '
     line.text.strip
   end
@@ -69,8 +76,20 @@ module BerlinAghScraper
     ministry_line.split(/\s+\-|,/).map(&:strip).reject(&:empty?).uniq
   end
 
-  def self.extract_date(data_cell)
+  def self.extract_date(link)
+    link.next.text.match(/.*vom\s+([\d\.]+)/m).try(:[], 1)
+  end
+
+  def self.extract_last_date(data_cell)
     data_cell.text.match(/.*vom ([\d\.]+)/m)[1]
+  end
+
+  def self.extract_answer_round(data_cell)
+    data_cell.search('u').each do |el|
+      type = el.next_element.next.text.strip
+      return el if type == 'Antwort'
+    end
+    nil
   end
 
   def self.extract_paper(seperator)
@@ -78,7 +97,17 @@ module BerlinAghScraper
     fail '[?] no title found' if title.nil?
 
     data_cell = extract_data_cell(seperator)
-    link = extract_link(data_cell)
+
+    answer_round = extract_answer_round(data_cell)
+    fail "[?] no answer round found. Paper title: #{title}" if answer_round.nil?
+
+    broken_paper = false
+    link = extract_link(answer_round)
+    if link.nil?
+      # got broken paper
+      link = extract_first_link(data_cell)
+      broken_paper = true
+    end
     fail "[?] no link element found. Paper title: #{title}" if link.nil?
 
     full_reference = extract_full_reference(link)
@@ -87,16 +116,23 @@ module BerlinAghScraper
     path = link.attributes['href'].value
     url = Addressable::URI.parse(BASE_URL + path).normalize.to_s
 
-    names = extract_names(data_cell)
-    originators = NamePartyExtractor.new(names).extract
-
     doctype = extract_type(seperator)
     fail "[#{full_reference}] no known doctype" if doctype.nil?
 
-    date = extract_date(data_cell)
+    names = extract_names(data_cell)
+    originators = NamePartyExtractor.new(names).extract
+    if doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
+      originators = { people: [], parties: originators[:people] }
+    end
+
+    if broken_paper
+      date = extract_last_date(data_cell)
+    else
+      date = extract_date(link)
+    end
     published_at = Date.parse(date)
 
-    ministry_line = extract_ministry_line(data_cell)
+    ministry_line = extract_ministry_line(answer_round)
     fail "[#{full_reference}] no ministry line found" if ministry_line.nil?
 
     ministries = extract_ministries(ministry_line)
@@ -117,7 +153,7 @@ module BerlinAghScraper
 
   class Overview < Scraper
     SEARCH_URL = BASE_URL + '/starweb/AHAB/servlet.starweb?path=AHAB/lissh.web'
-    TYPE = 'KLEINE ANFRAGE; SCHRIFTLICHE ANFRAGE'
+    TYPE = 'KLEINE ANFRAGE; SCHRIFTLICHE ANFRAGE; GROßE ANFRAGE; GROẞE ANFRAGE'
 
     def supports_streaming?
       true
