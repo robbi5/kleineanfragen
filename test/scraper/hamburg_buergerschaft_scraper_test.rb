@@ -30,6 +30,9 @@ class HamburgBuergerschaftScraperTest < ActiveSupport::TestCase
         originators: {
           people: ['Dora Heyenn', 'Dr. Joachim Bischoff', 'Wolfgang Joithe-von Krosigk'],
           parties: ['DIE LINKE']
+        },
+        answerers: {
+          ministries: ['Senat']
         }
       },
       @scraper.extract(@html.css('td.pd_titel').first))

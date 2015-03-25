@@ -127,8 +127,9 @@ module HamburgBuergerschaftScraper
       title: title_text,
       url: url,
       published_at: date,
-      originators: originators
-      # answerers are not available
+      originators: originators,
+      # hamburg exposes no answerers
+      answerers: { ministries: ['Senat'] }
     }
   end
 
