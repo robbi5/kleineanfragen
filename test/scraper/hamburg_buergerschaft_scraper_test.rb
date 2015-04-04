@@ -5,36 +5,25 @@ class HamburgBuergerschaftScraperTest < ActiveSupport::TestCase
     @scraper = HamburgBuergerschaftScraper
   end
 
-  test 'extract dates' do
-    assert_equal(
-      [
-        [Date.parse('2015-01-01'), Date.parse('2015-01-03')],
-        [Date.parse('2015-01-04'), Date.parse('2015-01-06')],
-        [Date.parse('2015-01-07'), Date.parse('2015-01-09')],
-        [Date.parse('2015-01-10'), Date.parse('2015-01-12')]
-      ],
-      @scraper.extract_date_ranges('(01.01.15 - 12.01.15)'))
-  end
-
   test 'extract paper' do
     @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hamburg_search_result.html')))
+    paper = @scraper.extract(@html.css('.title').first)
     assert_equal(
       {
-        legislative_term: '19',
-        full_reference: '19/1745',
-        reference: '1745',
+        legislative_term: '21',
+        full_reference: '21/159',
+        reference: '159',
         doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-        title: 'Stadtwerke (1): Finanzierung von „Hamburg Energie“ im Haushaltsplan-Entwurf 2009/2010',
-        url: 'http://www.buergerschaft-hh.de/Parldok/tcl/PDDocView.tcl?mode=show&dokid=24592&page=0',
-        published_at: Date.parse('8.12.2008'),
+        title: 'Wann werden endlich die Bahnhofsknotenpunkte Hamburg und Harburg entlastet und Pendler sowie die Harburgerinnen und Harburger nicht mehr länger wie Ölsardinen in Züge gepresst?',
+        url: 'https://www.buergerschaft-hh.de/ParlDok/dokument/48286/wann-werden-endlich-die-bahnhofsknotenpunkte-hamburg-und-harburg-entlastet-und-pendler-sowie-die-harburgerinnen-und-harburger-nicht-mehr-l%C3%A4nger.pdf',
+        published_at: Date.parse('2015-03-31'),
         originators: {
-          people: ['Dora Heyenn', 'Dr. Joachim Bischoff', 'Wolfgang Joithe-von Krosigk'],
-          parties: ['DIE LINKE']
+          people: ['Birgit Stöver'],
+          parties: ['CDU']
         },
         answerers: {
           ministries: ['Senat']
         }
-      },
-      @scraper.extract(@html.css('td.pd_titel').first))
+      }, paper)
   end
 end

@@ -44,7 +44,9 @@ class StorePaperPDFJob < ActiveJob::Base
       return false
     end
 
-    if paper.body.state == 'HH'
+    content_type = content_type(resp)
+
+    if paper.body.state == 'HH' && content_type != 'application/pdf'
       js = resp.body.match(/location\.replace\(['"](.+)['"]\)/)
       fail "Could not extract PDF path for Hamburg Paper [#{paper.body.state} #{paper.full_reference}]" if js.nil?
       url = Addressable::URI.parse(paper.url).join(js[1]).normalize.to_s
@@ -53,10 +55,8 @@ class StorePaperPDFJob < ActiveJob::Base
         logger.warn "Download failed with status #{resp.status} for Paper [#{paper.body.state} #{paper.full_reference}]"
         return false
       end
+      content_type = content_type(resp)
     end
-
-    content_type = resp.headers['Content-Type']
-    content_type = content_type.last if content_type.is_a? Array
 
     if content_type != 'application/pdf'
       logger.warn "File for Paper [#{paper.body.state} #{paper.full_reference}] is not a PDF: #{content_type}"
@@ -78,5 +78,14 @@ class StorePaperPDFJob < ActiveJob::Base
     paper.pdf_last_modified = DateTime.parse(last_modified) unless last_modified.blank?
     paper.downloaded_at = DateTime.now if paper.downloaded_at.nil?
     paper.save
+  end
+
+  def content_type(response)
+    content_type = response.headers['Content-Type']
+    if content_type.is_a? Array
+      content_type.last
+    else
+      content_type
+    end
   end
 end

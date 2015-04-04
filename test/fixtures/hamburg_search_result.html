@@ -1,63 +1,616 @@
 <!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-<table id="parldokresult" border="0" width="100%" cellpadding="2" cellspacing="0" summary="Diese Tabelle beinhaltet die Treffer Ihrer Recherche.">
-  <tbody><tr>
-    <th scope="col" id="pd_anlagen" rowspan="2" width="10%">Dokument</th>
-    <th scope="col" id="pd_titel" colspan="3">Titel</th>
-  </tr>
-  <tr>
-    <th scope="col" id="pd_nummer">Nummer</th>
-    <th scope="col" id="pd_typ">Typ</th>
-    <th scope="col" id="pd_datum">Datum</th>
-  </tr>
-  <tr>
-    <th scope="col" style="border-bottom: 1px solid #00488D" id="pd_vorgang" rowspan="1">Vorgang</th>
-    <th scope="col" style="border-bottom: 1px solid #00488D" id="pd_urheber" colspan="3">Urheber</th>
-  </tr>
+<html lang="de">
+    <head>
+        <title>Parlamentsdatenbank: Formalkriterien</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="keywords" content="Drucksachen, Plenarprotokoll, Parlamentsdokumentation, Bibliothek, Verzeichnis, Parlament, Dokumente, parldok, Drucksachen, Anfragen, Tagesordnungen, Protokolle, TK-Export"/>
+        <meta name="viewport" content="width=device-width; initial-scale=1.0;"/>
+        <meta name="author" content="Bürgerschaft der Freien und Hansestadt Hamburg"/>
+        <meta name="robots" content="index, nofollow"/>
+        <meta name="geo.region" content="DE-HH"/>
+        <meta name="description" content="Die Parlamentsdatenbank ist das Informationssystem der Hamburgischen Bürgerschaft. Sie dokumentiert die öffentlich zugängliche Arbeit der Abgeordneten und des Parlaments und enthält alle Drucksachen und Protokolle."/>
+        <meta name="generator" content="ParlDok 3.1.2.453, entwickelt von der J3S GmbH (http://www.j3s.de)"/>
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="https://www.buergerschaft-hh.de/parldok/index.rss"/>
+        <link rel="stylesheet" type="text/css" href="/ParlDok/t/hh/s/site.css" media="all"/>
+        <link rel="stylesheet" type="text/css" href="/ParlDok/t/def/s/all.css" media="all"/>
+        <link rel="stylesheet" type="text/css" href="/ParlDok/t/hh/s/overlay.css" media="all"/>
+        <link rel="stylesheet" type="text/css" href="/ParlDok/t/hh/s/print.css" id="print-style" media="print"/>
+        <link rel="stylesheet" type="text/css" href="/ParlDok/t/def/s/ui-lightness/jquery-ui-datapicker.css" media="all"/>
+        <script type="text/javascript" src="/ParlDok/t/def/s/j/jQuery-1.10.2.js" ></script>
+        <script type="text/javascript" src="/ParlDok/t/def/s/j/jquery-ui-1.10.3.custom.min.js" ></script>
+        <script type="text/javascript" src="/ParlDok/t/def/s/j/javascript.js" ></script>
+        <script type="text/javascript">
+            //<![CDATA[
+                function printStyle(vorgang) {
+                    if (!vorgang) {
+                        $('#print-style').attr('href', '/ParlDok/t/hh/s/print.css');
+                        window.print();
+                    } else {
+                        $('#print-style').attr('href', '/ParlDok/t/hh/s/print-vorgang.css');
+                        window.print();
+                    }
+                }
 
-  <!-- icon and title -->
-  <tr>
+                function freeSearchTop() {
+                    var words = $("#topFreeSearch").val();
+                    if (!words || words == "") {
+                        showMessage("Bitte geben Sie einen Suchbegriff ein.");
+                        $("#topFreeSearch").focus();
+                        return false;
+                    }
+                    return true;
+                }
+            //]]>
+        </script>
 
-    <td headers="pd_anlagen" valign="middle" align="right" rowspan="2" width="34" id="img24592">
-      <div style="font-size:6pt" align="left">1</div>
-      <a class="hitlist" href="/Parldok/tcl/PDDocView.tcl?mode=show&amp;dokid=24592&amp;page=0" title="PDF Dokument öffnen (24,6 KB)"><img alt="PDF Dokument öffnen (24,6 KB)" valign="middle" border="0" src="../images/type/pdf.gif"></a>
+        <link rel="shortcut icon" href="/ParlDok/t/hh/s/i/favicon.ico" type="image/x-icon"/>
+        <link rel="icon" href="/ParlDok/t/hh/s/i/favicon.ico" type="image/x-icon"/>
+        
 
-    </td>
+    </head>
+    <body>
+        <!-- Default texts and parameters -->
+        
 
-    <td headers="pd_titel" class="pd_titel" valign="top" colspan="3">
-      <a class="hitlist" href="/Parldok/tcl/PDDocView.tcl?mode=show&amp;dokid=24592&amp;page=0" title="PDF Dokument öffnen (24,6 KB)">Stadtwerke (1): Finanzierung von „Hamburg Energie“ im Haushaltsplan-Entwurf 2009/2010</a>
-    </td>
-  </tr>
+<div id="hidden-param">
+    <!-- URLs -->
+    <span id="url-update-descriptors">/ParlDok/criteria/loaddescriptors</span>
+    <span id="url-descriptor-references">/ParlDok/criteria/descriptorreferences</span>
+    <span id="url-reload-speaker-persons">/ParlDok/criteria/reloadspeakerpersons</span>
+    <span id="url-reload-persons">/ParlDok/criteria/loadurheber</span>
+    <span id="url-reload-beratungsstand">/ParlDok/criteria/loadberatungsstand</span>
+    <span id="url-reload-systematics">/ParlDok/criteria/loadsystematiks</span>
 
-  <!-- metadata -->
-  <tr>
-    <td headers="pd_nummer" valign="top" width="10%">
-      19/1745
-    </td>
-    <td headers="pd_typ" valign="top" width="30%">
-      Schriftliche Kleine Anfrage
-    </td>
-    <td headers="pd_datum" valign="top" width="10%">
-      08.12.2008
-    </td>
-  </tr>
+    <!-- MESSAGES -->
+    <span id="msg-unknown-error">Es ist ein Fehler aufgetreten.</span>
+    <span id="msg-reload">Die Seite wird neu geladen.</span>
+    <span id="msg-unknown-error-page-reload">Es ist ein Fehler aufgetreten. Die Seite wird neu geladen.</span>
+    <span id="msg-empty-keywords">Es fehlt eine Eingabe im Feld "Ausgewählte Suchbegriffe".</span>
+    <span id="msg-wrong-date-format">Fehlerhafte Datumseingabe</span>
+    <span id="msg-no-speaker-set">Keine Person ausgewählt</span>
+    <span id="msg-no-criteria-set">Keine Suchkriterien eingegeben.</span>
+    <span id="msg-no-doc-number-set">Es fehlt die Eingabe der Dokumentnummer.</span>
+    <span id="msg-doc-no-number">Die Dokumentnummer muss eine Zahl beinhalten.</span>
+    <span id="msg-no-free-search-set">Bitte geben Sie einen Suchbegriff ein.</span>
+</div>
 
-  <!-- urheber -->
-  <tr>
-    <td style="border-bottom: 1px solid #00488D" headers="pd_vorgang" valign="middle" align="left" rowspan="1" width="52">
 
-      <button class="vorgang" onclick="location.href='WPParse.tcl?c=1551141203017072663371&amp;template=ViewVorgangsablauf.htm&amp;SearchId=0&amp;DokumentID=24592&amp;VorgangsNr=0'">Vorgang<br>anzeigen</button>
+         <div id="wrapper">
+            <div id="header">
+            <!-- START Header -->
+                <header class="header-image" role="banner">
+                    <span >
+                        <a href="http://hamburgische-buergerschaft.de/" id="logo" class="logo-img" title="Logo hamburg.de: Zur Startseite">
+                            <img alt="Logo hamburg.de: Zur Startseite" src="/ParlDok/t/hh/s/i/headnavigation-desktop.png"/>
+                        </a>
+                    </span>
 
-      &nbsp;
-    </td>
-    <td headers="pd_urheber" style="border-bottom: 1px solid #00488D" valign="top" colspan="3">Dora Heyenn (Fraktion DIE LINKE), Dr. Joachim Bischoff (Fraktion DIE LINKE), Wolfgang Joithe-von Krosigk (Fraktion DIE LINKE)</td>
-  </tr>
+                </header>
+            <!-- // END Header -->
+                 <nav id="navigation" role="navigation" class="dark-blue">
+                  <!-- START Navigation -->
+                 <ul class="main-navigation">
+                    <li class="main-nav home" title="Startseite"><a class="main-a" href="/ParlDok/index"></a></li>
+                    <li class="main-nav" style="padding-left: 20px; padding-right: 20px;"><a class="main-a" href="/ParlDok/neuedokumente">Aktuelle Dokumente</a></li>
+                    <li class="main-nav" style="padding-left: 20px; padding-right: 20px;"><a class="main-a" href="/ParlDok/dokumentennummer">Dokumentnummer</a></li>
+                    <li class="main-nav active" style="padding-left: 20px; padding-right: 20px;"><a class="main-a" href="/ParlDok/formalkriterien">Formalkriterien</a></li>
+                    <li class="main-nav" style="padding-left: 20px; padding-right: 20px;"><a class="main-a" href="/ParlDok/schlagworte">Schlagworte</a></li>
+                    <li class="main-nav" style="padding-left: 20px; padding-right: 20px;"><a class="main-a" href="/ParlDok/freiesuche">Freie Suche</a></li>
+                    <li class="main-nav search">
+                        <form action="/ParlDok/freiesuche" method="post" onsubmit="return freeSearchTop();">
+                    <input id="topFreeSearch" name="SearchWords" placeholder="Schnellsuche" type="search"/>
+                            
 
-  </tbody></table>
-</body>
+<input type="hidden" value="1" name="SearchType" />
+<input type="hidden" value="" name="LegislaturperiodenNummer" />
+<input type="hidden" value="" name="Datum" />
+<input type="hidden" value="" name="DatumVon" />
+<input type="hidden" value="" name="DatumBis" />
+<input type="hidden" value="0" name="Operation" />
+<input type="hidden" value="" name="UrheberPersonenId" />
+<input type="hidden" value="0" name="Redebeitraege" />
+<input type="hidden" value="" name="UrheberSonstigeId" />
+<input type="hidden" value="" name="DokumententypId" />
+<input type="hidden" value="" name="BeratungsstandId" />
+<input type="hidden" value="" name="AktuellerBeratungsstand" />
+
+                    </form>
+                    </li>
+                </ul>
+                </nav> 
+            </div>
+            <div id="main" role="main">
+                <div id="breadcrumb-sticky-wrapper" class="sticky-wrapper" style="height: 44px;">
+                    <div id="breadcrumb">
+                        <ul class="breadcrumb">
+                            <li><a href="http://hamburgische-buergerschaft.de/" title="Startseite">Startseite</a></li><li><a href="/ParlDok/index" title="Parlamentsdatenbank">Parlamentsdatenbank</a></li><li><a href="/ParlDok/formalkriterien" title="Parlamentsdatenbank">Formalkriterien</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="content" class="article">
+                    
+    
+    <h3 class="screenreader">Suchergebnisse</h3>
+
+    
+        <h4 class="screenreader">Seite 1</h4>
+    
+        <div class="page-head-height">
+            <div class="pd_resultcount">
+                
+                    Dokumente
+                1 - 10 von 122 
+                 
+                
+                            (<a href="/ParlDok/formalkriterien?param=true" id="search-refine" title="Ihre Suche hat 122 Treffer gefunden, klicken Sie hier, um Ihre Suche zu verfeinern.">Suche verfeinern</a>)
+                       
+            </div>
+
+            <div class="pd_resultnavigation">Seite <span class='page-disable'>&lt;&lt;</span><span title="Seite 1" class="activepage">1</span><a href="/ParlDok/formalkriterien/2" title="Seite 2">2</a><a href="/ParlDok/formalkriterien/3" title="Seite 3">3</a><a href="/ParlDok/formalkriterien/4" title="Seite 4">4</a><a href="/ParlDok/formalkriterien/5" title="Seite 5">5</a><a href="/ParlDok/formalkriterien/6" title="Seite 6">6</a><a href="/ParlDok/formalkriterien/7" title="Seite 7">7</a><a href="/ParlDok/formalkriterien/8" title="Seite 8">8</a><a href="/ParlDok/formalkriterien/9" title="Seite 9">9</a><a href="/ParlDok/formalkriterien/10" title="Seite 10">10</a>...<a href="/ParlDok/formalkriterien/2" onclick="this.clickto=setTimeout('location.href=\''+this.href+'\'',100);return false" ondblclick="if(this.clickto)clearTimeout(this.clickto);location.href='/ParlDok/formalkriterien/13'; return false" title="Nächste Seite / Letzte Seite (Doppelklick)">&gt;&gt;</a></div>
+            
+        
+        </div>
+        <table id="parldokresult">            
+            
+            <tr><td colspan="4"><hr /></td></tr> 
+            <tr>
+                <th id="result-dokument" rowspan ="2">Dokument</th>
+                <th id="result-titel" colspan="3">Titel</th>
+            </tr>
+            <tr>
+                <th id="result-nummer">Nummer</th>
+                <th id="result-typ">Typ</th>
+                <th id="result-datum">Datum</th>
+            </tr>
+            <tr>
+                <th id="result-vorgang">Vorgang</th>
+                <th id="result-urheber" colspan="3">Urheber</th>
+            </tr>
+
+            <tr><td colspan="4"><hr /></td></tr> 
+            
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/ParlDok/dokument/48286/wann-werden-endlich-die-bahnhofsknotenpunkte-hamburg-und-harburg-entlastet-und-pendler-sowie-die-harburgerinnen-und-harburger-nicht-mehr-l%c3%a4nger.pdf"  title="PDF Dokument &#246;ffnen (11,7 KB)" >
+                                        <img src="/ParlDok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (11,7 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/ParlDok/dokument/48286/wann-werden-endlich-die-bahnhofsknotenpunkte-hamburg-und-harburg-entlastet-und-pendler-sowie-die-harburgerinnen-und-harburger-nicht-mehr-l%c3%a4nger.pdf"  title="PDF Dokument &#246;ffnen (11,7 KB)" >Wann werden endlich die Bahnhofsknotenpunkte Hamburg und Harburg entlastet und Pendler sowie die Harburgerinnen und Harburger nicht mehr l&#228;nger wie &#214;lsardinen in Z&#252;ge gepresst?</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">21/159</td>
+                    <td headers="result-typ">Schriftliche Kleine Anfrage</td>
+                    <td headers="result-datum">31.03.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Birgit St&#246;ver (CDU)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/ParlDok/dokument/48285/babyklappen-anonyme-und-vertrauliche-geburten-in-hamburg-ii-.pdf"  title="PDF Dokument &#246;ffnen (10,5 KB)" >
+                                        <img src="/ParlDok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (10,5 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/ParlDok/dokument/48285/babyklappen-anonyme-und-vertrauliche-geburten-in-hamburg-ii-.pdf"  title="PDF Dokument &#246;ffnen (10,5 KB)" >Babyklappen, anonyme und vertrauliche Geburten in Hamburg (II)</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">21/158</td>
+                    <td headers="result-typ">Schriftliche Kleine Anfrage</td>
+                    <td headers="result-datum">31.03.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Dennis Thering (CDU)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/ParlDok/dokument/48284/geschlossene-unterbringung-von-intensivp%c3%a4dagogisch-zu-betreuenden-jugendlichen.pdf"  title="PDF Dokument &#246;ffnen (10,4 KB)" >
+                                        <img src="/ParlDok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (10,4 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/ParlDok/dokument/48284/geschlossene-unterbringung-von-intensivp%c3%a4dagogisch-zu-betreuenden-jugendlichen.pdf"  title="PDF Dokument &#246;ffnen (10,4 KB)" >Geschlossene Unterbringung von intensivp&#228;dagogisch zu betreuenden Jugendlichen</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">21/157</td>
+                    <td headers="result-typ">Schriftliche Kleine Anfrage</td>
+                    <td headers="result-datum">31.03.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Philipp Hei&#223;ner (CDU)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/ParlDok/dokument/48283/situation-in-hamburgs-jobcentern.pdf"  title="PDF Dokument &#246;ffnen (9,9 KB)" >
+                                        <img src="/ParlDok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (9,9 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/ParlDok/dokument/48283/situation-in-hamburgs-jobcentern.pdf"  title="PDF Dokument &#246;ffnen (9,9 KB)" >Situation in Hamburgs Jobcentern</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">21/151</td>
+                    <td headers="result-typ">Schriftliche Kleine Anfrage</td>
+                    <td headers="result-datum">30.03.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Jennyfer Dutschke (FDP)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/ParlDok/dokument/48273/lieferung-der-dt5-einheiten.pdf"  title="PDF Dokument &#246;ffnen (7 KB)" >
+                                        <img src="/ParlDok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (7 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/ParlDok/dokument/48273/lieferung-der-dt5-einheiten.pdf"  title="PDF Dokument &#246;ffnen (7 KB)" >Lieferung der DT5-Einheiten</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">21/150</td>
+                    <td headers="result-typ">Schriftliche Kleine Anfrage</td>
+                    <td headers="result-datum">30.03.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                        Dr. Wieland Schinnenburg (FDP)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/ParlDok/dokument/48272/langzeitstudenten-2-.pdf"  title="PDF Dokument &#246;ffnen (6,9 KB)" >
+                                        <img src="/ParlDok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (6,9 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/ParlDok/dokument/48272/langzeitstudenten-2-.pdf"  title="PDF Dokument &#246;ffnen (6,9 KB)" >Langzeitstudenten (2)</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">21/149</td>
+                    <td headers="result-typ">Schriftliche Kleine Anfrage</td>
+                    <td headers="result-datum">30.03.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                        Dr. Wieland Schinnenburg (FDP)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/ParlDok/dokument/48271/bewerbung-um-sportgro%c3%9fveranstaltungen.pdf"  title="PDF Dokument &#246;ffnen (7,7 KB)" >
+                                        <img src="/ParlDok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (7,7 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/ParlDok/dokument/48271/bewerbung-um-sportgro%c3%9fveranstaltungen.pdf"  title="PDF Dokument &#246;ffnen (7,7 KB)" >Bewerbung um Sportgro&#223;veranstaltungen</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">21/148</td>
+                    <td headers="result-typ">Schriftliche Kleine Anfrage</td>
+                    <td headers="result-datum">30.03.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Daniel Oetzel (FDP)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/ParlDok/dokument/48270/teilsperrung-der-a-7-s%c3%bcdlich-der-elbe.pdf"  title="PDF Dokument &#246;ffnen (7,1 KB)" >
+                                        <img src="/ParlDok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (7,1 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/ParlDok/dokument/48270/teilsperrung-der-a-7-s%c3%bcdlich-der-elbe.pdf"  title="PDF Dokument &#246;ffnen (7,1 KB)" >Teilsperrung der A 7 s&#252;dlich der Elbe</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">21/147</td>
+                    <td headers="result-typ">Schriftliche Kleine Anfrage</td>
+                    <td headers="result-datum">30.03.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                        Dr. Wieland Schinnenburg (FDP)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/ParlDok/dokument/48282/schulbau-rochade-in-harburg.pdf"  title="PDF Dokument &#246;ffnen (9 KB)" >
+                                        <img src="/ParlDok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (9 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/ParlDok/dokument/48282/schulbau-rochade-in-harburg.pdf"  title="PDF Dokument &#246;ffnen (9 KB)" >Schulbau-Rochade in Harburg</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">21/146</td>
+                    <td headers="result-typ">Schriftliche Kleine Anfrage</td>
+                    <td headers="result-datum">30.03.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Birgit St&#246;ver (CDU),  Karin Prien (CDU)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/ParlDok/dokument/48281/entwicklung-der-haushaltsreste.pdf"  title="PDF Dokument &#246;ffnen (7,9 KB)" >
+                                        <img src="/ParlDok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (7,9 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/ParlDok/dokument/48281/entwicklung-der-haushaltsreste.pdf"  title="PDF Dokument &#246;ffnen (7,9 KB)" >Entwicklung der Haushaltsreste</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">21/145</td>
+                    <td headers="result-typ">Schriftliche Kleine Anfrage</td>
+                    <td headers="result-datum">30.03.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Thilo Kleibauer (CDU)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+
+        </table> 
+
+        <div class="pd_resultnavigation">Seite <span class='page-disable'>&lt;&lt;</span><span title="Seite 1" class="activepage">1</span><a href="/ParlDok/formalkriterien/2" title="Seite 2">2</a><a href="/ParlDok/formalkriterien/3" title="Seite 3">3</a><a href="/ParlDok/formalkriterien/4" title="Seite 4">4</a><a href="/ParlDok/formalkriterien/5" title="Seite 5">5</a><a href="/ParlDok/formalkriterien/6" title="Seite 6">6</a><a href="/ParlDok/formalkriterien/7" title="Seite 7">7</a><a href="/ParlDok/formalkriterien/8" title="Seite 8">8</a><a href="/ParlDok/formalkriterien/9" title="Seite 9">9</a><a href="/ParlDok/formalkriterien/10" title="Seite 10">10</a>...<a href="/ParlDok/formalkriterien/2" onclick="this.clickto=setTimeout('location.href=\''+this.href+'\'',100);return false" ondblclick="if(this.clickto)clearTimeout(this.clickto);location.href='/ParlDok/formalkriterien/13'; return false" title="Nächste Seite / Letzte Seite (Doppelklick)">&gt;&gt;</a></div>
+        
+
+        <input type="button" value="Zurück" name="Back" onclick="location.replace('/ParlDok/formalkriterien');"/>
+
+    
+                </div>
+            </div> 
+            <!-- START Footer -->
+            <footer id="footer" role="contentinfo">
+                <div class="content-info-social">
+                    <ul class="content-info">
+                        <li><a href="/ParlDok/hilfe">Hilfe</a></li>
+                        <li><a href="https://www.Parlamentsspiegel.de">Parlamentsspiegel</a></li>
+                        <li><a href="http://hamburgische-buergerschaft.de/impressum/">Impressum</a></li>
+                    </ul>
+                </div> 
+            </footer> 
+        </div> 
+    </body>
 </html>
