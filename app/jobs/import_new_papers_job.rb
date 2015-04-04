@@ -1,9 +1,22 @@
 class ImportNewPapersJob < ActiveJob::Base
   queue_as :import
 
+  def self.perform_async(body, legislative_term)
+    result = body.scraper_results.create
+    params = [body, legislative_term, result]
+    send(:perform_later, *params)
+    result.to_param
+  end
+
   around_perform do |job, block|
     body = job.arguments.first
-    @result = body.scraper_results.create(started_at: DateTime.now)
+    if job.arguments.last.is_a? ScraperResult
+      @result = job.arguments.pop
+      @result.started_at = DateTime.now
+      @result.save
+    else
+      @result = body.scraper_results.create(started_at: DateTime.now)
+    end
     failure = nil
     begin
       block.call

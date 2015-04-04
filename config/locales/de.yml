@@ -60,3 +60,6 @@ de:
       x_seconds:
         one: einer Sekunde
         other: ! '%{count} Sekunden'
+  time:
+    formats:
+      veryshort: "%H:%M Uhr"

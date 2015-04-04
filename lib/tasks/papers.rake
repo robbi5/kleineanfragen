@@ -46,7 +46,8 @@ namespace :papers do
   task :import_new, [:state, :legislative_term] => [:environment] do |_t, args|
     body = Body.find_by_state(args[:state])
     Rails.logger.info "Adding job for importing new papers [#{body.state} #{args[:legislative_term]}]"
-    ImportNewPapersJob.perform_later(body, args[:legislative_term])
+    job_id = ImportNewPapersJob.perform_async(body, args[:legislative_term])
+    puts ({ scraper_result_id: job_id }).to_json
   end
 
   desc 'Download and store paper in s3'

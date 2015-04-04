@@ -1,0 +1,35 @@
+<%- content_for :head do %><%= noindex() %><% end -%>
+<div class="page-header">
+  <h1><%= link_to 'Review', review_path %> / Scraper</h1>
+</div>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Land</th>
+      <% @dates.each do |date| %>
+      <th><%= l date, format: :short %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+  <% @bodies.each do |body| %>
+    <tr>
+    <th><%= link_to body.name, body %></th>
+    <% @dates.each do |date| %>
+    <td>
+      <% @results[body.id][date].each do |result|
+          info = ''
+          unless result.started_at.nil?
+            info = l(result.started_at, format: :veryshort) + ': ' + distance_of_time_in_min_sec(result.stopped_at, result.started_at) + ' min'
+          end
+      %>
+        <span class="circle circle--<%= result.css_class %>" title="<%= info %>"><%= result.success %></span>
+      <% end %>
+    </td>
+    <% end %>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

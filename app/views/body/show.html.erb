@@ -24,7 +24,7 @@
     <div class="latest-result">
       <%- unless @scraper_result.nil? -%>
         Letztes Update vor <%= relative_time_dativ @scraper_result.stopped_at %>
-        <span class="latest-run latest-run--<%= @scraper_result.css_class %>"><%= @scraper_result.success? ? 'erfolgreich' : 'fehlgeschlagen' %></span>
+        <span class="circle circle--large circle--<%= @scraper_result.css_class %>"><%= @scraper_result.success? ? 'erfolgreich' : 'fehlgeschlagen' %></span>
         <br/>
       <%- end -%>
       <%- unless @latest_paper.nil? -%>
