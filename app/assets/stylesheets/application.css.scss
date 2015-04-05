@@ -386,7 +386,7 @@ span.twitter-typeahead {
     top: 1px;
     left: 1px;
     border-radius: 100% 100%;
-    background-color: #fff;
+    background-color: #CCCCCC;
   }
 
   &.circle--large {
@@ -400,7 +400,6 @@ span.twitter-typeahead {
   }
 
   &.circle--success:after { background-color: #5cb85c; }
-  &.circle--running:after { background-color: #CCCCCC; }
   &.circle--failure:after { background-color: #9b0000; }
 }
 

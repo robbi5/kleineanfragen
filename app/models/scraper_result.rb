@@ -1,14 +1,20 @@
 class ScraperResult < ActiveRecord::Base
   belongs_to :body
 
-  def css_class
-    if success?
+  def status
+    if queued?
+      'waiting'
+    elsif success?
       'success'
     elsif running?
       'running'
     else
       'failure'
     end
+  end
+
+  def queued?
+    !created_at.nil? && started_at.nil? && stopped_at.nil?
   end
 
   def running?
@@ -30,6 +36,6 @@ class ScraperResult < ActiveRecord::Base
   end
 
   def as_json(*options)
-    super(*options).merge(status: css_class, running: running?, id: to_param)
+    super(*options).merge(status: status, running: running?, id: to_param)
   end
 end

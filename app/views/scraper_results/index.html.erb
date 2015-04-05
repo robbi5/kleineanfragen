@@ -25,7 +25,7 @@
             info = l(result.started_at, format: :veryshort) + ': ' + distance_of_time_in_min_sec(result.stopped_at, result.started_at) + ' min'
           end
       %>
-        <span class="circle circle--<%= result.css_class %>" title="<%= info %>"><%= result.success %></span>
+        <span class="circle circle--<%= result.status %>" title="<%= info %>"><%= result.success %></span>
       <% end %>
     </td>
     <% end %>
