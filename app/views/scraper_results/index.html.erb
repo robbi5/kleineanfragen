@@ -22,7 +22,7 @@
       <% @results[body.id][date].each do |result|
           info = ''
           unless result.started_at.nil?
-            info = l(result.started_at, format: :veryshort) + ': ' + distance_of_time_in_min_sec(result.stopped_at, result.started_at) + ' min'
+            info = l(result.started_at, format: :veryshort) + ': ' + distance_of_time_in_min_sec(result.started_at, result.stopped_at) + ' min'
           end
       %>
         <span class="circle circle--<%= result.status %>" title="<%= info %>"><%= result.success %></span>

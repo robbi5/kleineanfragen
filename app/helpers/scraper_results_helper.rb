@@ -1,5 +1,6 @@
 module ScraperResultsHelper
-  def distance_of_time_in_min_sec(from_time, to_time)
+  def distance_of_time_in_min_sec(from_time, to_time = nil)
+    to_time = Time.now if to_time.nil?
     from_time = from_time.to_time if from_time.respond_to?(:to_time)
     to_time = to_time.to_time if to_time.respond_to?(:to_time)
     from_time, to_time = to_time, from_time if from_time > to_time
