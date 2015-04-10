@@ -34,6 +34,14 @@
                        class: 'selectpicker',
                        title: 'alle Parlamente' %>
       </div>
+      <div class="form-group facetbar-group">
+        <label for="body">Typ:</label>
+        <% @doctypes.map! {|doctype| doctype.name = doctype.name + ' ' + write_facet_count('doctype', doctype.key); doctype }%>
+        <%= select_tag :doctype, options_from_collection_for_select(@doctypes, 'key', 'name', @conditions[:doctype]),
+                       multiple: true,
+                       class: 'selectpicker',
+                       title: 'alle Anfragen' %>
+      </div>
     </div>
   </div>
 <% end %>

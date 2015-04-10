@@ -28,13 +28,13 @@ class PaperController < ApplicationController
     @query = params[:q].presence
     redirect_to(root_url) && return if @query.blank?
 
-    if params[:table].present? || params[:body].present?
+    if params[:table].present? || params[:body].present? || params[:doctype].present?
       query = params_to_nice_query
       redirect_to search_path(params: { q: query })
       return
     end
 
-    @terms = SearchTerms.new(@query || '', %w(table body))
+    @terms = SearchTerms.new(@query || '', %w(table body doctype))
     @term = @terms.query.presence || '*'
     @conditions = {}
     @conditions[:contains_table] = true if @terms['table']
@@ -44,13 +44,16 @@ class PaperController < ApplicationController
       @conditions[:body] = @bodies.select { |body| @terms.body.include? body.state }.map(&:state)
     end
 
+    @doctypes = Paper::DOCTYPES.map { |doctype|  OpenStruct.new(key: doctype, name: t(doctype, scope: [:paper, :doctype]).to_s) }
+    @conditions[:doctype] = Paper::DOCTYPES.select { |doctype| @terms['doctype'].include? doctype } if @terms['doctype']
+
     query = Paper.search @term,
                          where: @conditions,
                          fields: ['title^10', :contents],
                          page: params[:page],
                          per_page: 10,
                          highlight: { tag: '<mark>' },
-                         facets: [:contains_table, :body],
+                         facets: [:contains_table, :body, :doctype],
                          smart_facets: true,
                          execute: false,
                          misspellings: false
@@ -145,6 +148,10 @@ class PaperController < ApplicationController
     if params[:body].present? && !params[:body].include?('')
       states = Body.all.map(&:state).select { |state| params[:body].include? state }
       q << 'body:' + states.join(',')
+    end
+    if params[:doctype].present?
+      doctypes = Paper::DOCTYPES.select { |doctype| params[:doctype].include? doctype }
+      q << 'doctype:' + doctypes.join(',')
     end
     q.join ' '
   end

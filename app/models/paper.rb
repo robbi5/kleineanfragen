@@ -2,6 +2,7 @@ class Paper < ActiveRecord::Base
   extend FriendlyId
   friendly_id :reference_and_title, use: :scoped, scope: [:body, :legislative_term]
 
+  DOCTYPES = ['minor', 'major', 'written']
   DOCTYPE_MINOR_INTERPELLATION = 'minor'
   DOCTYPE_MAJOR_INTERPELLATION = 'major'
   DOCTYPE_WRITTEN_INTERPELLATION = 'written'
@@ -82,6 +83,7 @@ class Paper < ActiveRecord::Base
       title: title,
       contents: contents,
       contains_table: contains_table,
+      doctype: doctype,
       published_at: published_at
     }
   end

@@ -8,6 +8,11 @@ de:
   pages:
     one: 'Seite'
     other: 'Seiten'
+  paper:
+    doctype:
+      minor: 'kleine Anfrage'
+      major: 'große Anfrage'
+      written: 'schriftliche Anfrage'
   views:
     pagination:
       first: "&lArr; Erste Seite"
