@@ -401,6 +401,13 @@ span.twitter-typeahead {
 
   &.circle--success:after { background-color: #5cb85c; }
   &.circle--failure:after { background-color: #9b0000; }
+  &.circle--running:after { animation: circle-running 1.2s infinite alternate; }
+}
+
+@keyframes circle-running {
+  0% { background-color: #FFF; }
+  20% { background-color: #FFF; }
+  100% { background-color: #CCC; }
 }
 
 .problem {
