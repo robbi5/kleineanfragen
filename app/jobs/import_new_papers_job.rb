@@ -8,6 +8,11 @@ class ImportNewPapersJob < ActiveJob::Base
     result.to_param
   end
 
+  # NOTE: after_perform must be before around_perform, else @result won't be filled
+  after_perform do
+    SendSubscriptionsJob.perform_later(@body) if @result.success?
+  end
+
   around_perform do |job, block|
     body = job.arguments.first
     if job.arguments.last.is_a? ScraperResult
@@ -28,10 +33,6 @@ class ImportNewPapersJob < ActiveJob::Base
     @result.message = failure.nil? ? nil : failure.message
     @result.save
     fail failure unless failure.nil?
-  end
-
-  after_perform do
-    SendSubscriptionsJob.perform_later(@body) if @result.success?
   end
 
   def perform(body, legislative_term)
