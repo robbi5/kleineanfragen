@@ -11,7 +11,7 @@ class ReviewController < ApplicationController
       @incomplete[b.state].concat Paper.find_by_sql(
         ['SELECT p.* FROM papers p ' \
           "LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id AND o.originator_type = 'Person') " \
-          'WHERE p.body_id = ? AND o.id IS NULL', b.id]
+          "WHERE p.body_id = ? AND p.doctype != ? AND o.id IS NULL", b.id, Paper::DOCTYPE_MAJOR_INTERPELLATION]
       )
       @incomplete[b.state].concat Paper.find_by_sql(
         ['SELECT p.* FROM papers p ' \

@@ -207,7 +207,7 @@ class Paper < ActiveRecord::Base
     p = []
     p << :wrong_published_at if published_at > Date.today
     p << :missing_page_count if page_count.nil?
-    p << :missing_originator_people if originator_people.size == 0
+    p << :missing_originator_people if originator_people.size == 0 && doctype != DOCTYPE_MAJOR_INTERPELLATION
     p << :missing_originator_organizations if originator_organizations.size == 0
     p << :missing_answerers if paper_answerers.size == 0
     p
