@@ -1,4 +1,4 @@
-class ExtractTextFromPaperJob < ActiveJob::Base
+class ExtractTextFromPaperJob < PaperJob
   queue_as :meta
 
   def perform(paper)

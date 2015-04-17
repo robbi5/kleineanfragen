@@ -151,6 +151,14 @@ class Paper < ActiveRecord::Base
     desc.join('')
   end
 
+  def freeze
+    self.frozen_at = DateTime.now
+  end
+
+  def frozen?
+    !frozen_at.nil? && frozen_at.to_i > 0
+  end
+
   def originators_parties=(parties)
     parties.each do |party|
       party = normalize(party, 'parties')

@@ -1,4 +1,4 @@
-class ExtractOriginatorsJob < ActiveJob::Base
+class ExtractOriginatorsJob < PaperJob
   queue_as :meta
 
   EXTRACTORS = {

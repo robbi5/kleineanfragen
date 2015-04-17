@@ -12,8 +12,14 @@ class ImportPaperJob < ActiveJob::Base
     answer_state_changed = false
 
     if Paper.unscoped.where(body: body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
-      logger.info "Paper already exists, updating: [#{item[:reference]}] \"#{item[:title]}\""
       paper = Paper.unscoped.where(body: body, legislative_term: item[:legislative_term], reference: item[:reference]).first
+      if paper.frozen?
+        logger.info "Paper already exists, skipping [#{item[:reference]}] - frozen"
+        return
+      end
+
+      logger.info "Paper already exists, updating: [#{item[:reference]}] \"#{item[:title]}\""
+
       answer_state_changed = (paper.is_answer.nil? || paper.is_answer != item[:is_answer] || item[:is_answer].nil?)
       paper.assign_attributes(item.except(:full_reference, :body, :legislative_term, :reference))
       paper.save!

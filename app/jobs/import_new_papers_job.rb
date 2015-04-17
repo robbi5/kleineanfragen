@@ -90,8 +90,13 @@ class ImportNewPapersJob < ActiveJob::Base
   def on_item(item)
     new_paper = false
     if Paper.unscoped.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
-      logger.info "[#{@body.state}] Updating Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
       paper = Paper.unscoped.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).first
+      if paper.frozen?
+        logger.info "[#{@body.state}] Skipping Paper [#{item[:full_reference]}] - frozen"
+        return
+      end
+
+      logger.info "[#{@body.state}] Updating Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
 
       if !paper.is_answer && item[:is_answer] == true
         # changed state, answer is now available. reset created_at, so subscriptions get triggered

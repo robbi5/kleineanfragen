@@ -1,4 +1,4 @@
-class FillPaperPDFLastModifiedJob < ActiveJob::Base
+class FillPaperPDFLastModifiedJob < PaperJob
   queue_as :meta
 
   # Paper.where(pdf_last_modified: nil).each {|p| FillPaperPDFLastModifiedJob.perform_later(p) }

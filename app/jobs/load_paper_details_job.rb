@@ -1,4 +1,4 @@
-class LoadPaperDetailsJob < ActiveJob::Base
+class LoadPaperDetailsJob < PaperJob
   queue_as :meta
 
   OVERWRITEABLE = [:originators, :answerers, :doctype]

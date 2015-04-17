@@ -1,4 +1,4 @@
-class StorePaperPDFJob < ActiveJob::Base
+class StorePaperPDFJob < PaperJob
   queue_as :store
 
   def perform(paper, options = {})

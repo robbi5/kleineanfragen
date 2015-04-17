@@ -1,4 +1,4 @@
-class ExtractLastModifiedFromPaperJob < ActiveJob::Base
+class ExtractLastModifiedFromPaperJob < PaperJob
   queue_as :meta
 
   def perform(paper)
