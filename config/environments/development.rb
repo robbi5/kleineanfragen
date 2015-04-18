@@ -44,6 +44,9 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
+  # Enable console when using boot2docker
+  config.web_console.whitelisted_ips = '192.168.59.0/24'
+
   # applicaton config:
   # User-Agent for scraping and download
   config.user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36'
