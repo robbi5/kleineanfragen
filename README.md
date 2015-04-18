@@ -40,6 +40,10 @@ kleineAnfragen needs multiple Datasets with the following identifiers that must 
 * `ka-people-XX` (replace XX with a two letter state)
 * `ka-ministries-XX` (replace XX with a two letter state)
 
+### Troubleshooting
+
+You just `git pull`ed and now kleineanfragen doesn't start anymore? Try `docker-compose rm web` and `docker-compose build web` — this rebuilds the container that the application is running in.
+
 Dependencies
 ------------
 
