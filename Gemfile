@@ -75,7 +75,8 @@ gem 'docsplit', '~> 0.7.6'
 gem 'image_optim', '~> 0.20.2'
 
 # search!
-gem 'searchkick', '~> 0.8.5'
+# pin version to 0.8.5 until searchkick#429 (or #427, #424) is resolved
+gem 'searchkick', '0.8.5'
 gem 'patron', '~> 0.4.18'
 
 # storage

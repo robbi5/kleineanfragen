@@ -238,7 +238,7 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
-    searchkick (0.8.7)
+    searchkick (0.8.5)
       activemodel
       elasticsearch (>= 1)
       hashie
@@ -315,7 +315,7 @@ DEPENDENCIES
   resque (~> 1.25.2)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
-  searchkick (~> 0.8.5)
+  searchkick (= 0.8.5)
   spring
   sqlite3
   tophat (~> 2.2.0)
