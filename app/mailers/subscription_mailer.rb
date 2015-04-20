@@ -1,6 +1,6 @@
 class SubscriptionMailer < ApplicationMailer
   helper ApplicationHelper
-  after_action :set_send_at
+  after_action :set_sent_at
 
   def papers(subscription, papers)
     @subscription = subscription
@@ -23,7 +23,7 @@ class SubscriptionMailer < ApplicationMailer
     Rails.application.routes.url_helpers.unsubscribe_url(@subscription, Rails.configuration.action_mailer.default_url_options)
   end
 
-  def set_send_at
+  def set_sent_at
     @subscription.last_sent_at = DateTime.now
     @subscription.save
   end
