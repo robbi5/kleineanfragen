@@ -9,8 +9,8 @@ Rails.application.routes.draw do
     mount Resque::Server.new, at: '/.resque'
   end
 
-  get 'search' => 'paper#search', as: :search
-  get 'search/autocomplete' => 'paper#autocomplete'
+  get 'search' => 'search#search', as: :search
+  get 'search/autocomplete' => 'search#autocomplete'
 
   get 'recent' => 'paper#recent'
 
