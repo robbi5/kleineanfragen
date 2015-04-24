@@ -44,7 +44,6 @@ elasticsearch:
 #  ports:
 #    - "9200:9200"
 
-## waiting for https://github.com/pudo/nomenklatura/pull/41 to be merged
 #nomenklatura:
 # image: robbi5/nomenklatura
 # links:
