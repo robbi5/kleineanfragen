@@ -5,10 +5,5 @@ gosu postgres postgres --single -jE <<-EOSQL
 EOSQL
 
 gosu postgres postgres --single -jE <<-EOSQL
-    GRANT ALL PRIVILEGES ON DATABASE nomenklatura TO kleineanfragen;
-EOSQL
-
-gosu postgres postgres --single -jE nomenklatura <<-EOSQL
-	CREATE EXTENSION hstore;
-	CREATE EXTENSION fuzzystrmatch;
+  GRANT ALL PRIVILEGES ON DATABASE nomenklatura TO kleineanfragen;
 EOSQL
