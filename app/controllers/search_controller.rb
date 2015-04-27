@@ -22,7 +22,7 @@ class SearchController < ApplicationController
     @doctypes = Paper::DOCTYPES.map { |doctype|  OpenStruct.new(key: doctype, name: t(doctype, scope: [:paper, :doctype]).to_s) }
     @conditions[:doctype] = Paper::DOCTYPES.select { |doctype| @terms['doctype'].include? doctype } if @terms['doctype']
 
-    query = Paper.search @term,
+    query = Paper.search @terms.unquoted.presence || '*',
                          where: @conditions,
                          fields: ['title^10', :contents],
                          page: params[:page],
@@ -35,6 +35,18 @@ class SearchController < ApplicationController
 
     # boost newer papers
     unboosted_query = query.body[:query]
+
+    puts unboosted_query.inspect
+
+    if @terms.quoted.size > 0
+      if !unboosted_query[:match_all].nil?
+        unboosted_query = { dis_max: { queries: [] } }
+      end
+      @terms.quoted.each do |quoted|
+        unboosted_query[:dis_max][:queries].unshift(*quoted_to_match(quoted))
+      end
+    end
+
     query.body[:query] = {
       function_score: {
         query: unboosted_query,
@@ -58,6 +70,7 @@ class SearchController < ApplicationController
       'number_of_fragments' => 1,
       'no_match_size' => 250
     }
+
     @papers = query.execute
   end
 
@@ -80,5 +93,28 @@ class SearchController < ApplicationController
       q << 'doctype:' + doctypes.join(',')
     end
     q.join ' '
+  end
+
+  def quoted_to_match(quoted)
+    [{
+      match: {
+        'title.analyzed' => {
+          query: quoted,
+          type: 'phrase',
+          boost: 200,
+          analyzer: 'searchkick_search2'
+        }
+      }
+    },
+    {
+      match: {
+        'contents.analyzed' => {
+          query: quoted,
+          type: 'phrase',
+          boost: 150,
+          analyzer: 'searchkick_search2'
+        }
+      }
+    }]
   end
 end

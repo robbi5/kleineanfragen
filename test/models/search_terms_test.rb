@@ -28,4 +28,11 @@ class SearchTermsTest < ActiveSupport::TestCase
     assert_equal 'hello world something:bad', terms.query
     assert_equal ({ 'test' => 'foo' }), terms.parts
   end
+
+  test 'quoted' do
+    terms = SearchTerms.new('something "hello world" else')
+    assert_equal 'something "hello world" else', terms.query
+    assert_equal 'something else', terms.unquoted
+    assert_equal ['hello world'], terms.quoted
+  end
 end

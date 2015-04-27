@@ -29,7 +29,7 @@
 #
 # Useful to drive custom logic in controllers
 class SearchTerms
-  attr_reader :query, :parts
+  attr_reader :query, :parts, :quoted, :unquoted
 
   # regex scanner for the parser
   SCANNER = %r{
@@ -55,6 +55,8 @@ class SearchTerms
   def initialize(query, whitelist = nil, split = true)
     @query = query
     @parts = {}
+    @quoted = []
+    @unquoted = ''
     @whitelist = whitelist
     @split = split
     parse_query!
@@ -68,9 +70,15 @@ class SearchTerms
 
   def parse_query!
     tmp = []
+    tmp_unquoted = []
 
     @query.scan(SCANNER).map do |key, value|
       if value.nil?
+        if key.start_with?('"') && key.end_with?('"')
+          @quoted << key.tr('"', '')
+        else
+          tmp_unquoted << key
+        end
         tmp << key
       elsif !@whitelist.nil? && !@whitelist.include?(key.to_s.downcase)
         tmp << "#{key}:#{value}"
@@ -81,6 +89,7 @@ class SearchTerms
       end
     end
 
+    @unquoted = tmp_unquoted.join(' ')
     @query = tmp.join(' ')
   end
 
