@@ -25,7 +25,6 @@ module SchleswigHolsteinLandtagScraper
     line = block.child.next.child.next.next.next.content
     line = line.sub(/Kleine Anfrage/, '').sub(/Drucksache/, '')
     matches = /\d{2}\.\d{2}\.\d{4}/.match(line)
-    published_date = Date.parse(matches[0]) unless matches.nil?
     line.sub(/\d{2}\.\d{2}\.\d{4}/, '')
     parts = line.split('und Antwort')
     originators_with_party = parts[0]
@@ -36,7 +35,6 @@ module SchleswigHolsteinLandtagScraper
     {
       ministries: ministries,
       originators: originators,
-      published_date: published_date
     }
   end
 
@@ -50,7 +48,6 @@ module SchleswigHolsteinLandtagScraper
       legislative_term: legislative_term,
       full_reference: full_reference,
       reference: reference,
-      published_date: meta[:published_date],
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       title: SchleswigHolsteinLandtagScraper.extract_title(block),
       url: url,
