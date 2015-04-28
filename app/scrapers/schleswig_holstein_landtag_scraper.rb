@@ -86,7 +86,6 @@ module SchleswigHolsteinLandtagScraper
       SchleswigHolsteinLandtagScraper.extract_blocks(table).each do |block|
         begin
           paper = SchleswigHolsteinLandtagScraper.extract_paper(block)
-          puts paper
         rescue => e
           logger.warn e
           next
