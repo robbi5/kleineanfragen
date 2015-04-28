@@ -1,4 +1,4 @@
-class ExtractAnswerersJob < ActiveJob::Base
+class ExtractAnswerersJob < PaperJob
   queue_as :meta
 
   def perform(paper)

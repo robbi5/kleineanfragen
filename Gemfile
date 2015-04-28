@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby '2.1.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.0'
+gem 'rails', '4.2.1'
 # Use postgresql as the database for Active Record
 gem 'pg'
 # Use SCSS for stylesheets
@@ -57,14 +57,13 @@ gem 'rails-i18n', '~> 4.0.0'
 gem 'mechanize', '~> 2.7.3'
 
 # slugs
-gem 'friendly_id', '~> 5.0.0'
+gem 'friendly_id', '~> 5.1.0'
 
 # fix urls while scraping
 gem 'addressable', '~> 2.3.6', require: 'addressable/uri'
 
 # styling
-gem 'bootstrap-sass', '~> 3.3.1.0'
-gem 'autoprefixer-rails', '~> 4.0.1'
+gem 'bootstrap-sass', '~> 3.3.4'
 
 # pagination
 gem 'kaminari', '~> 0.16.0'
@@ -76,13 +75,15 @@ gem 'docsplit', '~> 0.7.6'
 gem 'image_optim', '~> 0.20.2'
 
 # search!
-gem 'searchkick', '~> 0.8.5'
+# pin version to 0.8.5 until searchkick#429 (or #427, #424) is resolved
+gem 'searchkick', '0.8.5'
 gem 'patron', '~> 0.4.18'
 
 # storage
-# pinned to 1.24.0 until radosgw speaks AWS Signature v4
-# or a fallback is available: https://github.com/fog/fog/issues/3299
-gem 'fog', '1.24.0'
+# gem 'fog', '~> 1.29.0'
+#  - fog loads way too many provider gems. load only the ones we need:
+gem 'fog-aws', '~> 0.1.2'
+gem 'fog-local', '~> 0.2.1'
 
 # jobs
 gem 'resque', '~> 1.25.2'
@@ -92,3 +93,10 @@ gem 'httparty', '~> 0.13.3'
 
 # simple title and opengraph/twitter cards view helpers
 gem 'tophat', '~>2.2.0'
+
+# email urls
+gem 'hashids', '~> 1.0.2'
+
+# inline css for emails
+gem 'nokogiri'
+gem 'premailer-rails', '~> 1.8.0'

@@ -2,6 +2,7 @@ class Paper < ActiveRecord::Base
   extend FriendlyId
   friendly_id :reference_and_title, use: :scoped, scope: [:body, :legislative_term]
 
+  DOCTYPES = ['minor', 'major', 'written']
   DOCTYPE_MINOR_INTERPELLATION = 'minor'
   DOCTYPE_MAJOR_INTERPELLATION = 'major'
   DOCTYPE_WRITTEN_INTERPELLATION = 'written'
@@ -9,6 +10,7 @@ class Paper < ActiveRecord::Base
   # enable search
   searchkick language: 'German',
              text_start: [:title],
+             word_start: [:title],
              highlight: [:title, :contents],
              index_prefix: 'kleineanfragen',
              include: [:body, :paper_originators, :originator_people, :originator_organizations]
@@ -81,6 +83,7 @@ class Paper < ActiveRecord::Base
       title: title,
       contents: contents,
       contains_table: contains_table,
+      doctype: doctype,
       published_at: published_at
     }
   end
@@ -148,9 +151,18 @@ class Paper < ActiveRecord::Base
     desc.join('')
   end
 
+  def freeze
+    self.frozen_at = DateTime.now
+  end
+
+  def frozen?
+    !frozen_at.nil? && frozen_at.to_i > 0
+  end
+
   def originators_parties=(parties)
     parties.each do |party|
       party = normalize(party, 'parties')
+      next if party.nil?
       Rails.logger.debug "+ Originator (Party): #{party}" # TODO: refactor
       org = Organization.where('lower(name) = ?', party.mb_chars.downcase.to_s).first_or_create(name: party)
       originator_organizations << org unless originator_organizations.include? org
@@ -160,6 +172,7 @@ class Paper < ActiveRecord::Base
   def originators_people=(people)
     people.each do |name|
       name = normalize(name, 'people', body)
+      next if name.nil?
       Rails.logger.debug "+ Originator (Person): #{name}" # TODO: refactor
       person = Person.where('lower(name) = ?', name.mb_chars.downcase.to_s).first_or_create(name: name)
       originator_people << person unless originator_people.include? person
@@ -176,6 +189,7 @@ class Paper < ActiveRecord::Base
       ministry = Ministry.where(body: body).where('lower(short_name) = ?', name.mb_chars.downcase.to_s).first
       if ministry.nil?
         name = normalize(name, 'ministries', body)
+        next if name.nil?
         ministry = Ministry.where(body: body)
                    .where('lower(name) = ?', name.mb_chars.downcase.to_s)
                    .first_or_create(body: body, name: name)
@@ -193,7 +207,7 @@ class Paper < ActiveRecord::Base
     p = []
     p << :wrong_published_at if published_at > Date.today
     p << :missing_page_count if page_count.nil?
-    p << :missing_originator_people if originator_people.size == 0
+    p << :missing_originator_people if originator_people.size == 0 && doctype != DOCTYPE_MAJOR_INTERPELLATION
     p << :missing_originator_organizations if originator_organizations.size == 0
     p << :missing_answerers if paper_answerers.size == 0
     p

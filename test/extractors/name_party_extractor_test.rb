@@ -54,4 +54,14 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 'Danny Freymark', pair[:people].first
     assert_equal 0, pair[:parties].size
   end
+
+  # Trailing comma, space
+  test 'one person, trailing comma and space' do
+    pair = NamePartyExtractor.new('Danny Freymark (CDU), ').extract
+
+    assert_equal 1, pair[:people].size
+    assert_equal 'Danny Freymark', pair[:people].first
+    assert_equal 1, pair[:parties].size
+    assert_equal 'CDU', pair[:parties].first
+  end
 end

@@ -9,6 +9,7 @@ module SaarlandScraper
       parameters = "#{text}&r=saarlandcontenttype%3D%22drucksache%22%20saarlandwahlperiode%3D%22#{@legislative_term}%22"
       mp = mechanize.get "#{BASE_URL}/Service/Seiten/Suche.aspx?#{parameters}"
       entry = SaarlandScraper.extract_search_entry(mp, @legislative_term, @reference)
+      return nil if entry.nil?
       SaarlandScraper.extract_paper_from_search_entry(entry, @legislative_term, @reference)
     end
   end
@@ -77,7 +78,8 @@ module SaarlandScraper
 
   def self.extract_full_reference_from_href(href)
     href = href.split('/').last.split('.').first
-    href.split('_')[0][2] + href.split('_')[0][3] + '/' + href.split('_')[1]
+    parts = href.split('_')
+    parts[0][2..3] + '/' + parts[1]
   end
 
   def self.extract_date(entry)

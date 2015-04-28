@@ -54,7 +54,8 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
     body = @scraper.extract_body(@html)
     seperator = @scraper.extract_seperators(body).first
     data_cell = @scraper.extract_data_cell(seperator)
-    link = @scraper.extract_link(data_cell)
+    answer_round = @scraper.extract_answer_round(data_cell)
+    link = @scraper.extract_link(answer_round)
     assert_equal '<a href="/starweb/adis/citat/VT/17/SchrAnfr/s17-15458.pdf">Drucksache 17/15458</a>', link.to_html
   end
 
@@ -70,7 +71,8 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
     body = @scraper.extract_body(@html)
     seperator = @scraper.extract_seperators(body).first
     data_cell = @scraper.extract_data_cell(seperator)
-    ministry_line = @scraper.extract_ministry_line(data_cell)
+    answer_round = @scraper.extract_answer_round(data_cell)
+    ministry_line = @scraper.extract_ministry_line(answer_round)
     assert_equal 'RBm', ministry_line
   end
 
@@ -85,7 +87,9 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
     body = @scraper.extract_body(@html)
     seperator = @scraper.extract_seperators(body).first
     data_cell = @scraper.extract_data_cell(seperator)
-    date = @scraper.extract_date(data_cell)
+    answer_round = @scraper.extract_answer_round(data_cell)
+    link = @scraper.extract_link(answer_round)
+    date = @scraper.extract_date(link)
     assert_equal '10.02.2015', date
   end
 
@@ -93,8 +97,11 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
     body = @scraper.extract_body(@html)
     @scraper.extract_seperators(body).each do |seperator|
       data_cell = @scraper.extract_data_cell(seperator)
-      link = @scraper.extract_link(data_cell)
-      full_reference = @scraper.extract_full_reference(link)
+      answer_round = @scraper.extract_answer_round(data_cell)
+      link = @scraper.extract_link(answer_round)
+      first_link = @scraper.extract_first_link(data_cell)
+      assert_not link.nil? && first_link.nil?, 'both methord to extract link failed'
+      full_reference = @scraper.extract_full_reference(link || first_link)
       assert_not @scraper.extract_names(data_cell).blank?, "[#{full_reference}] originators blank"
     end
   end
@@ -242,6 +249,24 @@ class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
         originators: { people: ['Martin Delius'], parties: ['Piraten'] },
         is_answer: true,
         answerers: { ministries: ['SenBildJugWiss'] }
+      }, paper)
+  end
+
+  test 'support major interpellation like 17/1469' do
+    paper = paper_from_fixture('1469')
+
+    assert_equal(
+      {
+        legislative_term: '17',
+        full_reference: '17/1469',
+        reference: '1469',
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Was hat die Errichtung des Flughafens Berlin Brandenburg (BER) bisher gekostet?',
+        url: 'http://pardok.parlament-berlin.de/starweb/adis/citat/VT/17/DruckSachen/d17-1469.pdf',
+        published_at: Date.parse('11.02.2014'),
+        originators: { people: [], parties: ['Piraten'] },
+        is_answer: true,
+        answerers: { ministries: [] }
       }, paper)
   end
 

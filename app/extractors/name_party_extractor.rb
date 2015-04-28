@@ -11,7 +11,8 @@ class NamePartyExtractor
     pairs.each do |line|
       m = line.match(/(.+)\s\((.+)\)/)
       m = ['', line.strip] if m.nil?
-      people << m[1].gsub(/\p{Z}+/, ' ').strip
+      person = m[1].gsub(/\p{Z}+/, ' ').strip
+      people << person unless person.blank?
       parties << m[2].gsub(/\p{Z}+/, ' ').strip.sub(/^Fraktion\s+/, '') unless m[2].nil?
     end
 

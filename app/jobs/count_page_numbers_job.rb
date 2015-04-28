@@ -1,4 +1,4 @@
-class CountPageNumbersJob < ActiveJob::Base
+class CountPageNumbersJob < PaperJob
   queue_as :meta
 
   def perform(paper)

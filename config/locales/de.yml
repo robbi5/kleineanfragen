@@ -8,6 +8,11 @@ de:
   pages:
     one: 'Seite'
     other: 'Seiten'
+  paper:
+    doctype:
+      minor: 'kleine Anfrage'
+      major: 'große Anfrage'
+      written: 'schriftliche Anfrage'
   views:
     pagination:
       first: "&lArr; Erste Seite"
@@ -60,3 +65,6 @@ de:
       x_seconds:
         one: einer Sekunde
         other: ! '%{count} Sekunden'
+  time:
+    formats:
+      veryshort: "%H:%M Uhr"

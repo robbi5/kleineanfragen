@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150310121721) do
+ActiveRecord::Schema.define(version: 20150417142732) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,14 @@ ActiveRecord::Schema.define(version: 20150310121721) do
   add_index "bodies", ["name"], name: "index_bodies_on_name", unique: true, using: :btree
   add_index "bodies", ["slug"], name: "index_bodies_on_slug", unique: true, using: :btree
   add_index "bodies", ["state"], name: "index_bodies_on_state", unique: true, using: :btree
+
+  create_table "email_blacklists", force: :cascade do |t|
+    t.string   "email"
+    t.integer  "reason"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
@@ -54,6 +62,16 @@ ActiveRecord::Schema.define(version: 20150310121721) do
   add_index "ministries", ["body_id", "name"], name: "index_ministries_on_body_id_and_name", unique: true, using: :btree
   add_index "ministries", ["body_id", "slug"], name: "index_ministries_on_body_id_and_slug", unique: true, using: :btree
   add_index "ministries", ["body_id"], name: "index_ministries_on_body_id", using: :btree
+
+  create_table "opt_ins", force: :cascade do |t|
+    t.string   "email"
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.string   "confirmed_ip"
+    t.string   "created_ip"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
 
   create_table "organizations", force: :cascade do |t|
     t.string   "name"
@@ -105,6 +123,7 @@ ActiveRecord::Schema.define(version: 20150310121721) do
     t.datetime "pdf_last_modified"
     t.string   "doctype"
     t.boolean  "is_answer"
+    t.datetime "frozen_at"
   end
 
   add_index "papers", ["body_id", "legislative_term", "reference"], name: "index_papers_on_body_id_and_legislative_term_and_reference", unique: true, using: :btree
@@ -128,6 +147,16 @@ ActiveRecord::Schema.define(version: 20150310121721) do
     t.datetime "updated_at", null: false
     t.boolean  "success"
     t.string   "message"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.string   "email"
+    t.integer  "subtype"
+    t.string   "query"
+    t.boolean  "active"
+    t.datetime "last_sent_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   add_foreign_key "ministries", "bodies"

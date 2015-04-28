@@ -11,6 +11,8 @@ Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.precompile += %w( viewer.js viewer.css )
 # pdfjs
 Rails.application.config.assets.precompile += %w( *.png *.svg *.gif pdfjs/pdf.worker.js pdfjs/locale/*.properties )
+# email
+Rails.application.config.assets.precompile += %w( email.css )
 
 # disable image_optim for assets
 Rails.application.config.assets.image_optim = false

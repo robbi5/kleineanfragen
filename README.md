@@ -40,6 +40,10 @@ kleineAnfragen needs multiple Datasets with the following identifiers that must 
 * `ka-people-XX` (replace XX with a two letter state)
 * `ka-ministries-XX` (replace XX with a two letter state)
 
+### Troubleshooting
+
+You just `git pull`ed and now kleineanfragen doesn't start anymore? Try `docker-compose rm web` and `docker-compose build web` — this rebuilds the container that the application is running in.
+
 Dependencies
 ------------
 
@@ -59,25 +63,26 @@ Configuration
 
 * `config/application.rb`
 
-	Please change the `config.x.user_agent` to your own email address.
+  Please change the `config.x.user_agent` to your own email address.
 
 * `.env`
 
-	In development, the environment variables are set in `docker-compose.yml`. For development without docker-compose (or production), create `.env` and fill it with these:
+  In development, the environment variables are set in `docker-compose.yml`. For development without docker-compose (or production), create `.env` and fill it with these:
 
-	    export DATABASE_URL="postgres://user:pass@localhost/kleineanfragen"
-	    export ELASTICSEARCH_URL="http://127.0.0.1:9200/"
-	    export SECRET_KEY_BASE="FIXME"
-	    export S3_ACCESS_KEY="FIXME"
-	    export S3_SECRET_KEY="FIXME"
-	    export REDIS_URL="redis://localhost:6379"
-	    export TIKA_SERVER_URL="http://localhost:9998"
-	    export NOMENKLATURA_HOST="http://localhost:9000"
-	    export NOMENKLATURA_APIKEY="FIXME"
+      export DATABASE_URL="postgres://user:pass@localhost/kleineanfragen"
+      export ELASTICSEARCH_URL="http://127.0.0.1:9200/"
+      export SECRET_KEY_BASE="FIXME"
+      export SECRET_SUBSCRIPTION_SALT="FIXME"
+      export S3_ACCESS_KEY="FIXME"
+      export S3_SECRET_KEY="FIXME"
+      export REDIS_URL="redis://localhost:6379"
+      export TIKA_SERVER_URL="http://localhost:9998"
+      export NOMENKLATURA_HOST="http://localhost:9000"
+      export NOMENKLATURA_APIKEY="FIXME"
 
 * `config/fog.yml`
 
-	This file contains the connection details to your s3 server/bucket. Test uses the `tmp` folder, so you don't need a connection to a running s3 compatible storage.
+  This file contains the connection details to your s3 server/bucket. Test uses the `tmp` folder, so you don't need a connection to a running s3 compatible storage.
 
 Jobs
 ----

@@ -1,0 +1,13 @@
+Vielen Dank für dein Interesse an kleineAnfragen.
+
+Um automatisch neue Anfragen für <%= @subscription.subject %> zu erhalten, bestätige bitte deine E-Mail-Adresse mit folgendem Link:
+
+<%= opt_in_confirm_url(@subscription, @opt_in) %>
+
+Vielen Dank,
+
+- kleineAnfragen
+
+-----
+Solltest du keine Benachrichtigungen bei kleineAnfragen angefordert haben, melde uns dies bitte durch einen Klick auf folgenden Link:
+<%= opt_in_report_url(@subscription, @opt_in) %>

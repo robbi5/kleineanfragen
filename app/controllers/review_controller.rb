@@ -4,13 +4,18 @@ class ReviewController < ApplicationController
 
   def papers
     @incomplete = {}
-    Body.all.each do |b|
+    Body.find_each do |b|
       @incomplete[b.state] = []
       @incomplete[b.state].concat Paper.where(body: b).where(['published_at > ?', Date.today])
       @incomplete[b.state].concat Paper.where(body: b, page_count: nil).limit(50)
       @incomplete[b.state].concat Paper.find_by_sql(
         ['SELECT p.* FROM papers p ' \
           "LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id AND o.originator_type = 'Person') " \
+          "WHERE p.body_id = ? AND p.doctype != ? AND o.id IS NULL", b.id, Paper::DOCTYPE_MAJOR_INTERPELLATION]
+      )
+      @incomplete[b.state].concat Paper.find_by_sql(
+        ['SELECT p.* FROM papers p ' \
+          "LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id AND o.originator_type = 'Organization') " \
           'WHERE p.body_id = ? AND o.id IS NULL', b.id]
       )
       @incomplete[b.state].concat Paper.find_by_sql(
@@ -30,7 +35,7 @@ class ReviewController < ApplicationController
   def today
     @papers = {}
     @ministries = {}
-    Body.all.each do |b|
+    Body.find_each do |b|
       @papers[b.id] = b.papers.where(['created_at >= ?', Date.today])
       @ministries[b.id] = b.ministries.where(['created_at >= ?', Date.today])
     end

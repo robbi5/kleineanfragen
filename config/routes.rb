@@ -9,11 +9,12 @@ Rails.application.routes.draw do
     mount Resque::Server.new, at: '/.resque'
   end
 
-  get 'search' => 'paper#search', as: :search
-  get 'search/autocomplete' => 'paper#autocomplete'
+  get 'search' => 'search#search', as: :search
+  get 'search/autocomplete' => 'search#autocomplete'
 
   get 'recent' => 'paper#recent'
 
+  get 'info' => 'info#index'
   get 'info/daten'
   get 'info/kontakt'
   get 'info/mitmachen'
@@ -22,31 +23,27 @@ Rails.application.routes.draw do
   get 'review/papers'
   get 'review/ministries'
   get 'review/today'
+  get 'review/scraper' => 'scraper_results#index', as: :scraper_results
+  get '.scraper/:scraper_result' => 'scraper_results#show', as: :scraper_result
 
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
+  get 'abo', to: redirect('/')
+  post 'abo' => 'subscription#subscribe', as: :subscription_create
+
+  get 'm/:subscription/confirm/:confirmation_token' => 'opt_in#confirm', as: :opt_in_confirm
+  get 'm/:subscription/report/:confirmation_token' => 'opt_in#report', as: :opt_in_report
+  get 'm/:subscription/unsubscribe' => 'subscription#unsubscribe', as: :unsubscribe
 
   # really short paper url used for debugging jobs
   get 'p:paper' => 'paper#redirect_by_id', constraints: { paper: /[0-9]+/ }
 
+  get ':body/abo' => 'body#subscribe', as: :body_subscribe
   get ':body/behoerde/:ministry' => 'ministry#show', as: :ministry
 
   get ':body/:legislative_term/:paper/viewer' => 'paper#viewer', as: :paper_pdf_viewer, constraints: { legislative_term: /[0-9]+/ }
   get ':body/:legislative_term/:paper' => 'paper#show', as: :paper, constraints: { legislative_term: /[0-9]+/ }
   get ':body/:legislative_term' => 'legislative_term#show', as: :legislative_term, constraints: { legislative_term: /[0-9]+/ }
-  get ':body' => 'body#show', as: :body, body: /[^0-9\/]+/, format: false
+  get ':body' => 'body#feed', as: :body_feed, body: /[^0-9\/\.]+/, format: true
+  get ':body' => 'body#show', as: :body, body: /[^0-9\/\.]+/, format: false
 
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # You can have the root of your site routed with "root"
   root 'site#index'
 end

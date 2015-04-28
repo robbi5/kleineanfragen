@@ -1,5 +1,3 @@
-ActiveJob::Base.queue_adapter = :resque
-
 # thanks, railties/lib/rails/application/bootstrap.rb
 logfile = File.open 'log/active_job.log', 'a'
 logfile.binmode

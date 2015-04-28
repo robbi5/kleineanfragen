@@ -16,6 +16,11 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
+  config.action_mailer.default_url_options = { host: ENV['APP_HOST'] || 'localhost' }
+  config.action_mailer.asset_host = 'http://' + config.action_mailer.default_url_options[:host]
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = { address: 'mailcatcher', port: 1025 }
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
@@ -38,6 +43,9 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Enable console when using boot2docker
+  config.web_console.whitelisted_ips = '192.168.59.0/24'
 
   # applicaton config:
   # User-Agent for scraping and download

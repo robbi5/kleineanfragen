@@ -3,7 +3,7 @@
   <h1><%= link_to 'Review', review_path %> / Anfragen</h1>
 </div>
 
-<% Body.all.each do |b| %>
+<% Body.find_each do |b| %>
 <h2><%= link_to b.name, b %>: <%= @incomplete[b.state].size %></h2>
 <ol class="paper-list">
   <%= render partial: 'paper/paper', collection: @incomplete[b.state], locals: {

@@ -1,10 +1,10 @@
 atom_feed(
   language:  'de-DE',
-  root_url: legislative_term_url(body: @body, legislative_term: @legislative_term),
+  root_url: body_feed_url(body: @body),
   url: feed_url_with_current_page(@papers)
 ) do |feed|
   paginated_feed(feed, @papers)
-  feed.title "kleineAnfragen: Anfragen aus #{@body.name}, #{@legislative_term}. Wahlperiode"
+  feed.title "kleineAnfragen: Anfragen aus #{@body.name}"
   feed.updated @papers.maximum(:updated_at)
   feed.author { |author| author.name 'kleineAnfragen' }
 

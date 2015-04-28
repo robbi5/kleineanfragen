@@ -1,4 +1,4 @@
-class LoadPaperDetailsJob < ActiveJob::Base
+class LoadPaperDetailsJob < PaperJob
   queue_as :meta
 
   OVERWRITEABLE = [:originators, :answerers, :doctype]
@@ -10,7 +10,14 @@ class LoadPaperDetailsJob < ActiveJob::Base
     scraper = paper.body.scraper::Detail.new(paper.legislative_term, paper.reference)
     scraper.logger = logger
 
-    scraper.scrape.each do |key, value|
+    results = scraper.scrape
+
+    if results.nil?
+      logger.warn 'Detail Scraper for Paper [#{paper.body.state} #{paper.full_reference}] got nothing'
+      return
+    end
+
+    results.each do |key, value|
       paper.send("#{key}=", value) if paper.send(key).blank? || OVERWRITEABLE.include?(key)
     end
 

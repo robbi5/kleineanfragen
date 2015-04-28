@@ -1,9 +1,27 @@
 class ImportNewPapersJob < ActiveJob::Base
   queue_as :import
 
+  def self.perform_async(body, legislative_term)
+    result = body.scraper_results.create
+    params = [body, legislative_term, result]
+    send(:perform_later, *params)
+    result.to_param
+  end
+
+  # NOTE: after_perform must be before around_perform, else @result won't be filled
+  after_perform do
+    SendSubscriptionsJob.perform_later(@body) if @result.success?
+  end
+
   around_perform do |job, block|
     body = job.arguments.first
-    @result = body.scraper_results.create(started_at: DateTime.now)
+    if job.arguments.last.is_a? ScraperResult
+      @result = job.arguments.pop
+      @result.started_at = DateTime.now
+      @result.save
+    else
+      @result = body.scraper_results.create(started_at: DateTime.now)
+    end
     failure = nil
     begin
       block.call
@@ -11,10 +29,10 @@ class ImportNewPapersJob < ActiveJob::Base
       failure = e
     end
     @result.stopped_at = DateTime.now
-    @result.success = failure.nil? ? true : false
+    @result.success = failure.nil?
     @result.message = failure.nil? ? nil : failure.message
     @result.save
-    raise failure unless failure.nil?
+    fail failure unless failure.nil?
   end
 
   def perform(body, legislative_term)
@@ -70,17 +88,39 @@ class ImportNewPapersJob < ActiveJob::Base
   end
 
   def on_item(item)
+    new_paper = false
     if Paper.unscoped.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
-      logger.info "[#{@body.state}] Updating Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
       paper = Paper.unscoped.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).first
+      if paper.frozen?
+        logger.info "[#{@body.state}] Skipping Paper [#{item[:full_reference]}] - frozen"
+        return
+      end
+
+      logger.info "[#{@body.state}] Updating Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
+
+      if !paper.is_answer && item[:is_answer] == true
+        # changed state, answer is now available. reset created_at, so subscriptions get triggered
+        paper.created_at = DateTime.now
+        @new_papers += 1
+        new_paper = true
+      else
+        @old_papers += 1
+      end
+
+      if !paper.is_answer && item[:is_answer].nil?
+        # don't know if we have the answer this time, so we have to run the full pipeline
+        new_paper = true
+      end
+
       paper.assign_attributes(item.except(:full_reference, :body, :legislative_term, :reference))
       paper.save!
     else
       logger.info "[#{@body.state}] New Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
       paper = Paper.create!(item.except(:full_reference).merge(body: @body))
+      @new_papers += 1
+      new_paper = true
     end
     LoadPaperDetailsJob.perform_later(paper) if (item[:originators].blank? || item[:answerers].blank?) && @load_details
-    StorePaperPDFJob.perform_later(paper)
-    @new_papers += 1
+    StorePaperPDFJob.perform_later(paper, force: new_paper)
   end
 end

@@ -1,4 +1,4 @@
-class ContainsTableJob < ActiveJob::Base
+class ContainsTableJob < PaperJob
   queue_as :meta
 
   def perform(paper)

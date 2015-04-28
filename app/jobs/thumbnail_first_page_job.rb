@@ -1,4 +1,4 @@
-class ThumbnailFirstPageJob < ActiveJob::Base
+class ThumbnailFirstPageJob < PaperJob
   queue_as :store
 
   def perform(paper, options = {})

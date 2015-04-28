@@ -12,6 +12,7 @@ web:
     - elasticsearch
 #   - nomenklatura
     - s3
+    - mailcatcher
   environment:
     RESQUE_SERVER_OPEN: true
     ELASTICSEARCH_URL: http://elasticsearch:9200/
@@ -43,7 +44,6 @@ elasticsearch:
 #  ports:
 #    - "9200:9200"
 
-## waiting for https://github.com/pudo/nomenklatura/pull/41 to be merged
 #nomenklatura:
 # image: robbi5/nomenklatura
 # links:
@@ -62,3 +62,8 @@ s3:
     - ./tmp/ka-dev:/data
   ports:
     - "9444:9444"
+
+mailcatcher:
+  image: schickling/mailcatcher
+  ports:
+    - "1080:1080"

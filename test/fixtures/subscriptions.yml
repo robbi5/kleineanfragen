@@ -1,0 +1,29 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+subscription_inactive:
+  email: hello@example.com
+  subtype: body
+  query: BY
+  active: false
+  last_sent_at:
+
+subscription_active:
+  email: test@example.org
+  subtype: body
+  query: BY
+  active: true
+  last_sent_at: 2015-03-10 15:47:25
+
+subscription_active_too:
+  email: test@example.org
+  subtype: body
+  query: BB
+  active: true
+  last_sent_at: 2015-03-10 15:50:30
+
+subscription_inactive_blacklisted:
+  email: blacklisted@example.org
+  subtype: body
+  query: BY
+  active: false
+  last_sent_at: 2015-03-10 15:47:25

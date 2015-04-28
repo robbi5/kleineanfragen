@@ -1,4 +1,4 @@
-class DeterminePaperTypeJob < ActiveJob::Base
+class DeterminePaperTypeJob < PaperJob
   queue_as :meta
 
   EXTRACTORS = {

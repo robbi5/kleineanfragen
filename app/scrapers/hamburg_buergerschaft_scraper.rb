@@ -1,14 +1,14 @@
 require 'date'
 
 module HamburgBuergerschaftScraper
-  BASE_URL = 'http://www.buergerschaft-hh.de'
+  BASE_URL = 'https://www.buergerschaft-hh.de/ParlDok'
   TYPES = ['Schriftliche Kleine Anfrage', 'Große Anfrage']
   # because hamburg has a limit of displayed documents, we need to split the date range search
   # when scraping fails because of too much documents, increment this number, should not happen too often
   SEARCH_PARTS = 4
 
   class Overview < Scraper
-    SEARCH_URL = BASE_URL + '/parldok/tcl/WPParse.tcl?template=FormFormalkriterien.htm'
+    SEARCH_URL = BASE_URL + '/formalkriterien'
 
     def supports_streaming?
       true
@@ -19,32 +19,27 @@ module HamburgBuergerschaftScraper
       papers = []
       m = mechanize
       # to initialize session
-      m.get SEARCH_URL
+      m.get BASE_URL
       # search form
-      mp = m.get SEARCH_URL
-      form = mp.forms.second
-      field = form.field_with(name: 'LegislaturperiodenNummer')
-      field.value = @legislative_term
-      option_text = field.options.find { |option| option.text.include? "#{@legislative_term}. Wahlperiode" }.text
-      dates = HamburgBuergerschaftScraper.extract_date_ranges(option_text)
-      dates.each do |daterange|
-        mp = submit_search(m, daterange)
-        result_url = mp.uri
-        result_page_index = 0
-        loop do
-          body = mp.search("//table[@id = 'parldokresult']")
-          body.css('.pd_titel').each do |title_el|
+      mp = submit_search(m)
+      loop do
+        body = mp.search("//table[@id='parldokresult']")
+        body.css('.title').each do |title_el|
+          begin
             paper = HamburgBuergerschaftScraper.extract(title_el)
-            if streaming
-              yield paper
-            else
-              papers << paper
-            end
+          rescue => e
+            logger.warn e
+            next
           end
-          break unless next_page_el(mp)
-          result_page_index += 1
-          mp = m.get("#{result_url}&pagepos=#{result_page_index}")
+          if streaming
+            yield paper
+          else
+            papers << paper
+          end
         end
+        next_page = next_page_el(mp)
+        break if next_page.nil?
+        mp = m.click next_page
       end
       papers unless streaming
     end
@@ -54,13 +49,11 @@ module HamburgBuergerschaftScraper
       mp.search("//a[text()[normalize-space(.)='>>']]").first
     end
 
-    def submit_search(m, daterange)
+    def submit_search(m)
       mp = m.get SEARCH_URL
       form = mp.forms.second
       form.field_with(name: 'LegislaturperiodenNummer').value = @legislative_term
-      form.field_with(name: 'DatumVon').value = daterange.first.strftime('%d.%m.%Y')
-      form.field_with(name: 'DatumBis').value = daterange.last.strftime('%d.%m.%Y')
-      form.field_with(name: 'Dokumententyp').options.each do |opt|
+      form.field_with(name: 'DokumententypId').options.each do |opt|
         if TYPES.include? opt.text.strip
           opt.select
         else
@@ -69,33 +62,8 @@ module HamburgBuergerschaftScraper
       end
       submit_button = form.submits.find { |btn| btn.value == 'Suchen' }
       mp = m.submit(form, submit_button)
-      unless mp.forms.second.nil?
-        form = mp.forms.second
-        submit_button = form.submits.find { |btn| btn.value == 'Dokumente anzeigen' }
-        mp = m.submit(form, submit_button)
-      end
-      if redir = mp.search("//meta[@http-equiv='refresh']").first
-        mp = m.get BASE_URL + redir['content'].gsub(/.+URL=(.+)/m, '\1')
-      end
       mp
     end
-  end
-
-  def self.extract_date_ranges(option_text)
-    only_start_date = option_text.match(/\(.+\)/).nil?
-    if only_start_date
-      start_time = Date.strptime(option_text.split(' ').last.match(/([\d\.]+)$/)[1], '%d.%m.%y')
-      end_time = Date.today
-    else
-      option_parts = option_text.match(/\((.+)\)/)[1].split('-')
-      start_time = Date.strptime(option_parts.first.match(/([\d\.]+)/)[1], '%d.%m.%y')
-      end_time = Date.strptime(option_parts.second.match(/([\d\.]+)/)[1], '%d.%m.%y')
-    end
-    if (end_time - start_time).to_i < 10
-      return [[start_time, end_time]]
-    end
-    dates = start_time.step(end_time).to_a
-    dates.each_slice((dates.size / SEARCH_PARTS.to_f).round).map { |group| [group.first, group.last] }
   end
 
   def self.extract(title_el)
@@ -106,7 +74,7 @@ module HamburgBuergerschaftScraper
     legislative_term = full_reference.split('/').first
     date = Date.parse(next_row.element_children[2].text.strip)
     path = title_el.element_children[0]['href']
-    url = Addressable::URI.parse(BASE_URL + path).normalize.to_s
+    url = Addressable::URI.parse(BASE_URL).join(path).normalize.to_s
 
     doctype_el = next_row.element_children[1]
     if doctype_el.text.scan(/kleine/i).present?
@@ -127,29 +95,27 @@ module HamburgBuergerschaftScraper
       title: title_text,
       url: url,
       published_at: date,
-      originators: originators
-      # answerers are not available
+      originators: originators,
+      # hamburg exposes no answerers
+      answerers: { ministries: ['Senat'] }
     }
   end
 
   class Detail < DetailScraper
-    SEARCH_URL = BASE_URL + '/parldok/tcl/WPParse.tcl?template=FormDokumentNummer.htm'
+    SEARCH_URL = BASE_URL + '/dokumentennummer'
 
     def scrape
       m = mechanize
       # get a session
-      m.get SEARCH_URL
+      m.get BASE_URL
       mp = m.get SEARCH_URL
       form = mp.forms.second
-      form.field_with(name: 'LegislaturperiodenNummer').value = @legislative_term
-      form.field_with(name: 'Dokumentennummer').value = @reference
+      form.field_with(name: 'LegislaturPeriodenNummer').value = @legislative_term
+      form.field_with(name: 'DokumentenNummer').value = @reference
       submit_button = form.submits.find { |btn| btn.value == 'Suchen' }
       mp = m.submit(form, submit_button)
-      # page which triggeres a redirect,so call redirect url manually
-      redir = mp.search("//meta[@http-equiv='refresh']").first
-      mp = m.get BASE_URL + redir['content'].gsub(/.+URL=(.+)/m, '\1')
-      body = mp.search("//table[@id = 'parldokresult']")
-      HamburgBuergerschaftScraper.extract(body.at_css('.pd_titel'))
+      body = mp.search("//table[@id='parldokresult']")
+      HamburgBuergerschaftScraper.extract(body.at_css('.title'))
     end
   end
 end

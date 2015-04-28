@@ -14,6 +14,8 @@ module RheinlandPfalzLandtagScraper
       m = mechanize
       mp = m.get SEARCH_URL
       search_form = mp.form '__form'
+      fail 'search form missing' if search_form.nil?
+
       # fill search form
       search_form.field_with(name: '__action').value = 19
       search_form.field_with(name: '02_LISSH_WP').value = @legislative_term
