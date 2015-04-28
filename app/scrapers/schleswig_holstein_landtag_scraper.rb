@@ -15,42 +15,39 @@ module SchleswigHolsteinLandtagScraper
     block.child.next.child.next.content
   end
 
-  def self.is_answer(block)
+  def self.answer?(block)
     block.content.scan(/in Vorbereitung/)[0].nil? && !block.content.scan(/Kleine Anfrage.+und Antwort/)[0].nil?
   end
 
- def self.extract_meta(block)
-   ministries = []
-   answered = is_answer(block)
-   line = block.child.next.child.next.next.next.content
-   line = line.sub(/Kleine Anfrage/, '').sub(/Drucksache/, '')
-   matches=/\d{2}\.\d{2}\.\d{4}/.match(line)
-   published_date = Date.parse(matches[0]) unless matches.nil?
-   line.sub(/\d{2}\.\d{2}\.\d{4}/, '')
-   parts = line.split('und Antwort')
-   originators_with_party = parts[0]
-   originators_with_party = parts[1] unless answered
-   ministry = parts[1] if answered
-   ministries.push(ministry.strip!) if answered
-   originators = NamePartyExtractor.new(originators_with_party).extract
-   {
-     ministries: ministries,
-     originators: originators,
-     published_date: published_date
-   }
- end
+  def self.extract_meta(block)
+    ministries = []
+    answered = answer?(block)
+    line = block.child.next.child.next.next.next.content
+    line = line.sub(/Kleine Anfrage/, '').sub(/Drucksache/, '')
+    matches = /\d{2}\.\d{2}\.\d{4}/.match(line)
+    line.sub(/\d{2}\.\d{2}\.\d{4}/, '')
+    parts = line.split('und Antwort')
+    originators_with_party = parts[0]
+    originators_with_party = parts[1] unless answered
+    ministry = parts[1] if answered
+    ministries.push(ministry.strip!) if answered
+    originators = NamePartyExtractor.new(originators_with_party).extract
+    {
+      ministries: ministries,
+      originators: originators,
+    }
+  end
 
   def self.extract_paper(block)
     full_reference = SchleswigHolsteinLandtagScraper.extract_full_reference(block)
     meta = SchleswigHolsteinLandtagScraper.extract_meta(block)
-    answered = SchleswigHolsteinLandtagScraper.is_answer(block)
+    answered = SchleswigHolsteinLandtagScraper.answer?(block)
     url = SchleswigHolsteinLandtagScraper.extract_url(block) if answered
     legislative_term, reference = full_reference.split('/')
     {
       legislative_term: legislative_term,
       full_reference: full_reference,
       reference: reference,
-      published_date: meta[:published_date],
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       title: SchleswigHolsteinLandtagScraper.extract_title(block),
       url: url,
@@ -69,9 +66,8 @@ module SchleswigHolsteinLandtagScraper
   end
 
   class Overview < Scraper
-
     SEARCH_URL = BASE_URL + '/cgi-bin/starfinder/0?path=lisshfl.txt&id=fastlink&pass=&search='
-    #'((dtyp%3dkleine+and+WP%3d$1))'
+
     def supports_streaming?
       true
     end
@@ -87,7 +83,6 @@ module SchleswigHolsteinLandtagScraper
       SchleswigHolsteinLandtagScraper.extract_blocks(table).each do |block|
         begin
           paper = SchleswigHolsteinLandtagScraper.extract_paper(block)
-          puts paper
         rescue => e
           logger.warn e
           next
@@ -103,7 +98,6 @@ module SchleswigHolsteinLandtagScraper
   end
 
   class Detail < DetailScraper
-
     SEARCH_URL = BASE_URL + '/cgi-bin/starfinder/0?path=lisshfl.txt&id=FASTLINK&pass=&search='
 
     def scrape
@@ -114,5 +108,4 @@ module SchleswigHolsteinLandtagScraper
       SchleswigHolsteinLandtagScraper.extract_paper(block)
     end
   end
-
 end
