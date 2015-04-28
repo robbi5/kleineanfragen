@@ -3,7 +3,6 @@ require 'test_helper'
 class SchleswigholsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
   def setup
     @scraper = SchleswigHolsteinLandtagScraper
-    @baseurl = "http://lissh.lvn.parlanet.de/cgi-bin/starfinder/0?path=lisshfl.txt&id=fastlink&pass=&search=((dtyp%3dkleine+and+WP%3d18))"
     @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/schleswigholstein_landtag_scraper_overview.html')
                            ).force_encoding("WINDOWS-1252"))
     @table = @scraper.extract_table @html
@@ -24,8 +23,8 @@ class SchleswigholsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
   end
 
   test 'is answered' do
-    assert_equal true, @scraper.is_answer(@blocks[0])
-    assert_equal false, @scraper.is_answer(@blocks[1])
+    assert_equal true, @scraper.answer?(@blocks[0])
+    assert_equal false, @scraper.answer?(@blocks[1])
   end
 
   test 'get ministries' do
@@ -55,7 +54,6 @@ class SchleswigholsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
     assert_equal Date.parse('2015-12-14'), meta[:published_date]
 
     meta = @scraper.extract_meta(@blocks[7])
-    puts @blocks[7].inspect
     assert_equal nil, meta[:published_date]
   end
 
