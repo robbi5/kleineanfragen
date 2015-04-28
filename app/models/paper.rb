@@ -180,6 +180,7 @@ class Paper < ActiveRecord::Base
   end
 
   def originators=(originators)
+    return if originators.nil?
     self.originators_parties = originators[:parties] unless originators[:parties].blank?
     self.originators_people = originators[:people] unless originators[:people].blank?
   end
@@ -200,6 +201,7 @@ class Paper < ActiveRecord::Base
   end
 
   def answerers=(answerers)
+    return if answerers.nil?
     self.answerers_ministries = answerers[:ministries] unless answerers[:ministries].blank?
   end
 

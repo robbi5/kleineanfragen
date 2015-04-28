@@ -28,6 +28,7 @@ class Body < ActiveRecord::Base
     when 'HH' then HamburgBuergerschaftScraper
     when 'SL' then SaarlandScraper
     when 'SH' then SchleswigHolsteinLandtagScraper
+    when 'ST' then SachsenAnhaltLandtagScraper
     end
   end
 
