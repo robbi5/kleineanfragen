@@ -108,4 +108,36 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
     paper = @scraper.update_major_details({}, html)
     assert_equal({originators: {:people=>["Anke Erdmann"],:parties=>["BÜNDNIS 90/DIE GRÜNEN"]}}, paper)
   end
+
+  test 'get full paper' do
+    assert_equal(
+      {
+        legislative_term: '18',
+        full_reference: '18/2537',
+        reference: '2537',
+        published_at: Date.parse('2214-12-14'),
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        title: 'Planungskapazitäten für den NOK und die Rader Hochbrücke',
+        url: 'http://www.landtag.ltsh.de/infothek/wahl18/drucks/2500/drucksache-18-2537.pdf',
+        originators: { people: ['Hans-Jörn Arp', 'Johannes Callsen'], parties: ['CDU'] },
+        is_answer: true,
+        answerers: { ministries: ['Minister/in für Wirtschaft, Arbeit, Verkehr und Technologie'] }
+      }, @scraper.extract_paper(@blocks[15]))
+  end
+
+  test 'get full paper where answerers are unknown' do
+    assert_equal(
+      {
+        legislative_term: '18',
+        full_reference: '18/2380',
+        reference: '2380',
+        published_at: Date.parse('2014-10-29'),
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        title: 'Übergang zwischen Bachelor und Master, sowie Situation im Master',
+        url: 'http://www.landtag.ltsh.de/infothek/wahl18/drucks/2300/drucksache-18-2380.pdf',
+        originators: { people: ['Uli König'], parties: ['PIRATEN'] },
+        is_answer: true,
+        answerers: { ministries: [] }
+      }, @scraper.extract_paper(@blocks[294]))
+  end
 end
