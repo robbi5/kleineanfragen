@@ -176,6 +176,7 @@ module SchleswigHolsteinLandtagScraper
           logger.warn e
           next
         end
+        next if paper.nil?
         if streaming
           yield paper
         else
