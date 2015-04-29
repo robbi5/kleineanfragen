@@ -89,4 +89,64 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         ] }
       }, paper)
   end
+
+  test 'extract complete paper from Major' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_major_detail.html')))
+    record = @scraper.extract_records(@html).first
+    paper = @scraper.extract_paper(record, check_pdf: false)
+
+    assert_equal(
+      {
+        legislative_term: '16',
+        full_reference: '16/4788',
+        reference: '4788',
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Situation kinderreicher Familien in Rheinland-Pfalz',
+        url: 'http://www.landtag.rlp.de/landtag/drucksachen/4788-16.pdf',
+        published_at: Date.parse('20.03.2015'),
+        originators: { people: [], parties: ['CDU'] },
+        is_answer: true,
+        answerers: { ministries: ['Ministerium für Integration, Familie, Kinder, Jugend und Frauen'] }
+      }, paper)
+  end
+
+  test 'extract complete paper from Major with more information and links' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_major_detail_4503.html')))
+    record = @scraper.extract_records(@html).first
+    paper = @scraper.extract_paper(record, check_pdf: false)
+
+    assert_equal(
+      {
+        legislative_term: '16',
+        full_reference: '16/4503',
+        reference: '4503',
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Sterben in Würde',
+        url: 'http://www.landtag.rlp.de/landtag/drucksachen/4503-16.pdf',
+        published_at: Date.parse('21.01.2015'),
+        originators: { people: [], parties: ['CDU'] },
+        is_answer: true,
+        answerers: { ministries: ['Ministerium für Soziales, Arbeit, Gesundheit und Demografie'] }
+      }, paper)
+  end
+
+  test 'extract complete paper from Major with an additional answer' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_major_detail_579.html')))
+    record = @scraper.extract_records(@html).first
+    paper = @scraper.extract_paper(record, check_pdf: false)
+
+    assert_equal(
+      {
+        legislative_term: '16',
+        full_reference: '16/579',
+        reference: '579',
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Prüfung vergaberechtlicher sowie weiterer rechtlicher Fragestellungen im Rahmen der Verträge zur Umsetzung des Zukunftskonzeptes Nürburgring',
+        url: 'http://www.landtag.rlp.de/landtag/drucksachen/579-16.pdf',
+        published_at: Date.parse('16.11.2011'),
+        originators: { people: [], parties: ['CDU'] },
+        is_answer: true,
+        answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] }
+      }, paper)
+  end
 end
