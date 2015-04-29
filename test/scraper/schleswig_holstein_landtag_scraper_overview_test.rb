@@ -62,14 +62,12 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
   end
 
   test 'get major paper' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/schleswigholstein_landtag_scraper_major.html')
-                          ).force_encoding("WINDOWS-1252"))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/schleswigholstein_landtag_scraper_major.html')).force_encoding("WINDOWS-1252"))
     table = @scraper.extract_table html
     blocks = @scraper.extract_blocks table
     paper = @scraper.extract_major_paper blocks[0]
-    assert_equal(
-      {
-        legislative_term: '17',
+    assert_equal({
+      legislative_term: '17',
       full_reference: '17/2295',
       reference: '2295',
       doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
