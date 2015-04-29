@@ -1,9 +1,144 @@
 module RheinlandPfalzLandtagScraper
   BASE_URL = 'http://opal.rlp.de'
 
+  def self.patron_session
+    sess = Patron::Session.new
+    sess.connect_timeout = 8
+    sess.timeout = 60
+    sess.headers['User-Agent'] = Rails.configuration.x.user_agent
+    sess
+  end
+
+  def self.extract_records(page)
+    page.search('//tbody[@name="RecordRepeater"]')
+  end
+
+  def self.extract_detail_block(page)
+    page.search('./tr[@name="Repeat_Fund"]/td[3]').first
+  end
+
+  def self.extract_title(block)
+    block.search('./tr[@name="Repeat_WHET"]/td[2]').first.text
+  end
+
+  def self.extract_link(container)
+    container.at_css('a')
+  end
+
+  def self.extract_full_reference(link)
+    link.text.strip
+  end
+
+  def self.extract_reference(full_reference)
+    full_reference.split('/')
+  end
+
+  def self.extract_url(link)
+    link.attributes['href'].value
+  end
+
+  def self.extract_ministries(ministry_line)
+    ministry_line.split(/Ministerium/)
+      .reject(&:empty?)
+      .map { |s| "Ministerium #{s.strip.gsub(/\s*,$/, '')}" }
+      .uniq
+  end
+
+  def self.extract_meta(meta_row)
+    differentiation = meta_row.text.match(/(Kleine|Große)\s+Anfrage/m)
+    if differentiation[1].downcase == 'kleine'
+      link = extract_link(meta_row)
+      results = meta_row.text.match(/Kleine\s+Anfrage\s+\d+\s+(.+)\s+und\s+Antwort\s+(.+?)\s+([\d\.]+)\s+/)
+      return nil if results.nil?
+      {
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        originators: results[1].strip,
+        answerers: results[2].strip,
+        published_at: results[3],
+        link: link
+      }
+    else
+      o_results, a_results = [nil, nil]
+      link = nil
+      last_line = nil
+      meta_row.children.each do |line|
+        match = line.text.match(/Große\s+Anfrage\s+(.+)\s+\d+\./)
+        o_results = match if match && !line.text.include?('Antwort')
+        match = line.text.match(/Antwort\s+(.+)\s+([\d\.]+) /m)
+        a_results = match if match && !line.text.include?('Ergänzung')
+        if link.nil?
+          link = line if !last_line.nil? && last_line.text.include?('Antwort')
+          last_line = line
+        end
+      end
+      return nil if o_results.nil? || a_results.nil?
+      {
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        originators: o_results[1].strip,
+        answerers: a_results[1].strip,
+        published_at: a_results[2],
+        link: link
+      }
+    end
+  end
+
+  def self.extract_paper(item, check_pdf: true)
+    title = extract_title(item)
+    meta_row = extract_detail_block(item)
+
+    # for broken records like 16D4556
+    fail "RP [?]: no meta information found. Paper title: #{title}" if meta_row.nil?
+
+    meta = extract_meta(meta_row)
+
+    fail "RP [?]: no link element found. Paper title: #{title}" if meta[:link].nil?
+
+    full_reference = extract_full_reference(meta[:link])
+    url = extract_url(meta[:link])
+    legislative_term, reference = extract_reference(full_reference)
+
+    # not all papers are available
+    if check_pdf
+      begin
+        resp = patron_session.head(url)
+      rescue => e
+        raise "RP [#{full_reference}]: url throwed #{e}"
+      end
+      if resp.status == 404 || resp.url.include?('error404.html')
+        fail "RP [#{full_reference}]: url throws 404"
+      end
+    end
+
+    fail "NI [#{full_reference}]: no readable meta information found" if meta.nil?
+
+    doctype = meta[:doctype]
+
+    ministries = []
+    if doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
+      originators = { people: [], parties: [meta[:originators]] }
+    else
+      originators = NamePartyExtractor.new(meta[:originators]).extract
+    end
+    ministries = extract_ministries(meta[:answerers]) unless meta[:answerers].nil?
+    published_at = Date.parse(meta[:published_at])
+
+    {
+      legislative_term: legislative_term,
+      full_reference: full_reference,
+      reference: reference,
+      doctype: doctype,
+      title: title,
+      url: url,
+      published_at: published_at,
+      originators: originators,
+      is_answer: true,
+      answerers: { ministries: ministries }
+    }
+  end
+
   class Overview < Scraper
     SEARCH_URL = BASE_URL + '/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSH.web'
-    TYPE = 'KLEINE ANFRAGE UND ANTWORT'
+    TYPE = 'KLEINE ANFRAGE UND ANTWORT; ANTWORT'
 
     def supports_streaming?
       true
@@ -67,69 +202,5 @@ module RheinlandPfalzLandtagScraper
       item = RheinlandPfalzLandtagScraper.extract_records(mp).first
       RheinlandPfalzLandtagScraper.extract_paper(item)
     end
-  end
-
-  # FIXME: move somewhere else
-  def self.patron_session
-    sess = Patron::Session.new
-    sess.connect_timeout = 8
-    sess.timeout = 60
-    sess.headers['User-Agent'] = Rails.configuration.x.user_agent
-    sess
-  end
-
-  def self.extract_records(page)
-    page.search('//tbody[@name="RecordRepeater"]')
-  end
-
-  # extract paper information
-  def self.extract_paper(item, check_pdf: true)
-    title = item.search('./tr[@name="Repeat_WHET"]/td[2]').first.text
-    container = item.search('./tr[@name="Repeat_Fund"]/td[3]').first
-
-    # for broken records like 16D4556
-    fail "RP [?]: no meta information found. Paper title: #{title}" if container.nil?
-
-    link = container.at_css('a')
-    fail "RP [?]: no link element found. Paper title: #{title}" if link.nil?
-
-    full_reference = link.text.strip
-    url = link.attributes['href'].value
-    legislative_term = full_reference.split('/').first
-    reference = full_reference.split('/').last
-
-    results = container.at_css('a').previous.text.match(/Kleine Anfrage \d+ (.+) und Antwort (.+) ([\d\.]+) /)
-    fail "RP [#{full_reference}]: no readable meta information found" if results.nil?
-    is_answer = container.at_css('a').previous.text.scan(/Kleine Anfrage.*und Antwort/).present?
-
-    # not all papers are available
-    if check_pdf
-      begin
-        resp = patron_session.head(url)
-      rescue => e
-        raise "RP [#{full_reference}]: url throwed #{e}"
-      end
-      if resp.status == 404 || resp.url.include?('error404.html')
-        fail "RP [#{full_reference}]: url throws 404"
-      end
-    end
-
-    originators = NamePartyExtractor.new(results[1].strip).extract
-    ministry_line = results[2].strip
-    ministries = ministry_line.split('Ministerium').map { |m| m.sub(/,\s*$/, '').sub(/^\s/, 'Ministerium ') }.select { |m| !m.blank? }
-    published_at = Date.parse(results[3])
-
-    {
-      legislative_term: legislative_term,
-      full_reference: full_reference,
-      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-      reference: reference,
-      title: title,
-      url: url,
-      published_at: published_at,
-      originators: originators,
-      is_answer: is_answer,
-      answerers: { ministries: ministries }
-    }
   end
 end
