@@ -122,7 +122,7 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
         originators: { people: ['Hans-Jörn Arp', 'Johannes Callsen'], parties: ['CDU'] },
         is_answer: true,
         answerers: { ministries: ['Minister/in für Wirtschaft, Arbeit, Verkehr und Technologie'] }
-      }, @scraper.extract_paper(@blocks[15]))
+      }, @scraper.extract_minor_paper(@blocks[15]))
   end
 
   test 'get full paper where answerers are unknown' do
@@ -138,6 +138,6 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
         originators: { people: ['Uli König'], parties: ['PIRATEN'] },
         is_answer: true,
         answerers: { ministries: [] }
-      }, @scraper.extract_paper(@blocks[294]))
+      }, @scraper.extract_minor_paper(@blocks[294]))
   end
 end
