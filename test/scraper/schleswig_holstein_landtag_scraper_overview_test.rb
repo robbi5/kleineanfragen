@@ -98,9 +98,9 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
     assert_equal 'Anke Erdmann (BÜNDNIS 90/DIE GRÜNEN) 07.10.2011 Drucksache', line
     originators = NamePartyExtractor.new(line).extract
 
-    assert_equal({:people=>['Anke Erdmann'], :parties=>['BÜNDNIS 90/DIE GRÜNEN']}, originators)
+    assert_equal({ people: ['Anke Erdmann'], parties: ['BÜNDNIS 90/DIE GRÜNEN'] }, originators)
     paper = @scraper.update_major_details({}, html)
-    assert_equal({originators: {:people=>['Anke Erdmann'],:parties=>['BÜNDNIS 90/DIE GRÜNEN']}}, paper)
+    assert_equal({ originators: { people: ['Anke Erdmann'], parties: ['BÜNDNIS 90/DIE GRÜNEN'] } }, paper)
   end
 
   test 'get full paper' do

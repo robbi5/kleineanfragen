@@ -201,7 +201,7 @@ module SchleswigHolsteinLandtagScraper
     def extract_paper(block, mp)
       if SchleswigHolsteinLandtagScraper.major?(block)
         paper = SchleswigHolsteinLandtagScraper.extract_major_paper(block)
-        mp = mp.link_with(:text => /Vorgang/).click
+        mp = mp.link_with(text: /Vorgang/).click
         return SchleswigHolsteinLandtagScraper.update_major_details(paper, mp)
       end
       paper = SchleswigHolsteinLandtagScraper.extract_minor_paper(block)
