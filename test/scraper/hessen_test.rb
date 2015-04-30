@@ -37,22 +37,22 @@ class HessenTest < ActiveSupport::TestCase
 
   test 'extract originators' do
     text = @scraper.extract_originator_text(@detail_block_minor)
-    assert_equal({people: ["Marius Weiß", "Norbert Schmitt", "Wolfgang Decker", "Kerstin Geis", "Brigitte Hofmeyer", "Gerald Kummer", "Angelika Löber", "Torsten Warnecke"], parties: ["SPD"]}, @scraper.extract_originators(text))
+    assert_equal({ people: ['Marius Weiß', 'Norbert Schmitt', 'Wolfgang Decker', 'Kerstin Geis', 'Brigitte Hofmeyer', 'Gerald Kummer', 'Angelika Löber', 'Torsten Warnecke'], parties: ['SPD'] }, @scraper.extract_originators(text))
 
-    text = "GrAnfr             Waschke, Sabine, SPD
+    text = 'GrAnfr             Waschke, Sabine, SPD
   16.10.2014 Drs 19/1030
   Antw 09.02.2015 Drs 19/1578
   PlPr 19/38  05.03.2015
   von Tagesordnung abgesetzt
   Ausschussberatung:
-  EUA 19/13  14.04.2015 (ö)"
-    assert_equal({people: ["Sabine Waschke"], parties: ["SPD"]}, @scraper.extract_originators(text))
+  EUA 19/13  14.04.2015 (ö)'
+    assert_equal({ people: ['Sabine Waschke'], parties: ['SPD'] }, @scraper.extract_originators(text))
   end
 
   test 'extract originators from text' do
-    text = "KlAnfr             Greilich, Wolfgang, FDP
-  18.11.2014 und Antw 08.01.2015 Drs 19/1128"
-    assert_equal({people: ["Wolfgang Greilich"], parties: ["FDP"]}, @scraper.extract_originators(text))
+    text = 'KlAnfr             Greilich, Wolfgang, FDP
+  18.11.2014 und Antw 08.01.2015 Drs 19/1128'
+    assert_equal({ people: ['Wolfgang Greilich'], parties: ['FDP'] }, @scraper.extract_originators(text))
   end
 
   test 'get result from search' do
@@ -68,7 +68,7 @@ class HessenTest < ActiveSupport::TestCase
   end
 
   test 'extract answer line' do
-    text = "Europäische Förderprogramme
+    text = 'Europäische Förderprogramme
   GrAnfr             Waschke, Sabine, SPD; Franz, Dieter, SPD; Geis,
                      Kerstin, SPD; Grüger, Stephan, SPD; Kummer,
                      Gerald, SPD; Quanz, Lothar, SPD; Fraktion der SPD
@@ -79,13 +79,13 @@ class HessenTest < ActiveSupport::TestCase
   Ausschussberatung:
   EUA 19/13  14.04.2015 (ö)
 
-    "
+    '
     assert_equal 'Antw 09.02.2015 Drs 19/1578', @scraper.extraxct_answer_line(text)
-    text = "Studium Generale
+    text = 'Studium Generale
   KlAnfr             Sommer, Daniela, Dr., SPD
   24.03.2015 und Antw 29.04.2015 Drs 19/1774
-            "
+            '
     assert_equal '24.03.2015 und Antw 29.04.2015 Drs 19/1774', @scraper.extraxct_answer_line(text)
-    assert_equal true, @scraper.extraxct_answer_line("").nil?
+    assert_equal true, @scraper.extraxct_answer_line('').nil?
   end
 end
