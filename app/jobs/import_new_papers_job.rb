@@ -120,7 +120,7 @@ class ImportNewPapersJob < ActiveJob::Base
       @new_papers += 1
       new_paper = true
     end
-    LoadPaperDetailsJob.perform_later(paper) if (item[:originators].blank? || item[:answerers].blank?) && @load_details
+    LoadPaperDetailsJob.perform_later(paper) if (item[:originators].blank? || item[:answerers].blank? || item[:published_at].blank?) && @load_details
     StorePaperPDFJob.perform_later(paper, force: new_paper)
   end
 end
