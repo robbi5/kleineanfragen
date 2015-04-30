@@ -33,11 +33,11 @@ module HessenScraper
     title.content.gsub(/\p{Z}+/, ' ').strip
   end
 
-  def self.extract_originator_text (detail_block)
+  def self.extract_originator_text(detail_block)
     detail_block.child.next.next.text
   end
 
-  def self.extract_paper (block)
+  def self.extract_paper(block)
     leg, ref = extract_reference(block)
     {
       legislative_term: leg,
@@ -52,19 +52,6 @@ module HessenScraper
   def self.extract_result_from_search(page)
     page.search('//tbody[@name="RecordRepeatStart"]').first
   end
-
-=begin
-
-  weird format:
-
-  KlAnfr    Weiß, Marius, SPD; Schmitt, Norbert, SPD; Decker,
-            Wolfgang, SPD; Geis, Kerstin, SPD; Hofmeyer,
-            Brigitte, SPD; Kummer, Gerald, SPD; Löber,
-            Angelika, SPD; Warnecke, Torsten, SPD
-            19.11.2014 und Antw 17.02.2015 Drs "
-
-  will be brought into firstname lastname (party), ... format
-=end
 
   def self.extract_originators(text)
     text = text.sub('KlAnfr', '').sub('GrAnfr', '')
@@ -89,9 +76,9 @@ module HessenScraper
   def self.extraxct_answer_line(text)
     text.split("\n").each do |s|
       s = s.gsub(/\p{Z}+/, ' ').strip
-      return s if (s.include?('Antw') || s.include?('und Antw'))
+      return s if s.include?('Antw') || s.include?('und Antw')
     end
-    return nil
+    nil
   end
 
   def self.get_matches_for_date_pattern(line)
@@ -112,12 +99,10 @@ module HessenScraper
     end
 
     def scrape
-      search_url = SEARCH_URL+ '&wp=WP'+ @legislative_term.to_s +
-        '&search=((UTYP1=GR+OR+KL)+AND+ANTWEIN+NOT+(!+OR+%22%22))'
+      search_url = SEARCH_URL+ '&wp=WP'+ @legislative_term.to_s + '&search=((UTYP1=GR+OR+KL)+AND+ANTWEIN+NOT+(!+OR+%22%22))'
       streaming = block_given?
       m = mechanize
       mp = m.get search_url
-
       blocks = HessenScraper.extract_blocks(mp)
       papers = []
       blocks.each do |block|
@@ -138,16 +123,15 @@ module HessenScraper
     end
   end
 
-
   class Detail < DetailScraper
     SEARCH_URL = BASE_URL + '/starweb/LIS/Pd_Eingang.htm'
 
     def scrape
       m = mechanize
       mp = m.get SEARCH_URL
-      mp = m.click(mp.link_with(:text=>'Suche'))
+      mp = m.click(mp.link_with(text: 'Suche'))
       form = mp.form '__form'
-      text_input = form.field_with(:name=>'QuickSearchLine')
+      text_input = form.field_with(name: 'QuickSearchLine')
       set_form_action!(form, 61)
       text_input.value = full_reference
       mp = form.click_button
@@ -172,12 +156,10 @@ module HessenScraper
         paper[:url] = BASE_URL + mp.search('//a')[1][:href]
         paper
       end
-
     end
 
     def set_form_action!(form, action)
       form.field_with(name: '__action').value = action
     end
-
   end
 end
