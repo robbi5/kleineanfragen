@@ -19,8 +19,7 @@ module HessenScraper
 
     if doc_type.start_with?('Kleine')
       return Paper::DOCTYPE_MINOR_INTERPELLATION
-    end
-    if doc_type.start_with?('Große')
+    elsif doc_type.start_with?('Große')
       return Paper::DOCTYPE_MAJOR_INTERPELLATION
     end
     nil
@@ -68,7 +67,7 @@ module HessenScraper
     NamePartyExtractor.new(originators, NamePartyExtractor::REVERSED_NAME_PARTY).extract
   end
 
-  def self.extraxct_answer_line(text)
+  def self.extract_answer_line(text)
     text.split("\n").each do |s|
       s = s.gsub(/\p{Z}+/, ' ').strip
       return s if s.include?('Antw') || s.include?('und Antw')
@@ -94,10 +93,9 @@ module HessenScraper
     end
 
     def scrape
-      search_url = SEARCH_URL + '&wp=WP'+ @legislative_term.to_s + '&search=((UTYP1=GR+OR+KL)+AND+ANTWEIN+NOT+(!+OR+%22%22))'
       streaming = block_given?
-      m = mechanize
-      mp = m.get search_url
+      search_url = SEARCH_URL + "&wp=WP#{@legislative_term}&search=((UTYP1=GR+OR+KL)+AND+ANTWEIN+NOT+(!+OR+%22%22))"
+      mp = mechanize.get search_url
       blocks = HessenScraper.extract_blocks(mp)
       papers = []
       blocks.each do |block|
@@ -125,36 +123,35 @@ module HessenScraper
       m = mechanize
       mp = m.get SEARCH_URL
       mp = m.click(mp.link_with(text: 'Suche'))
+
       form = mp.form '__form'
-      text_input = form.field_with(name: 'QuickSearchLine')
-      set_form_action!(form, 61)
-      text_input.value = full_reference
+      form.field_with(name: 'QuickSearchLine').value = full_reference
+      form.field_with(name: '__action').value = 61
       mp = form.click_button
+
       result = HessenScraper.extract_result_from_search(mp)
       paper = HessenScraper.extract_paper(result)
+
       form = mp.form '__form'
-      set_form_action!(form, 121)
+      form.field_with(name: '__action').value = 121
       form.field_with(name: 'ReportFormatListValues').value = 'PdPiMoreReport'
       mp = m.submit(form)
+
       detail_block = HessenScraper.extract_detail_block(mp.search('//div[@id="inhalt"]'))
-      response_line = HessenScraper.extraxct_answer_line(detail_block.content)
+      response_line = HessenScraper.extract_answer_line(detail_block.content)
       return nil if response_line.nil?
+
       paper[:published_at] = HessenScraper.get_date_from_detail_line(response_line)
       paper[:originators] = HessenScraper.extract_originators(HessenScraper.extract_originator_text(detail_block))
       if paper[:doctype] == Paper::DOCTYPE_MINOR_INTERPELLATION
         mp = m.click(detail_block.at_css('a'))
         paper[:url] = BASE_URL + mp.search('//a').first[:href]
-        paper
-      end
-      if paper[:doctype] == Paper::DOCTYPE_MAJOR_INTERPELLATION
+      elsif paper[:doctype] == Paper::DOCTYPE_MAJOR_INTERPELLATION
         mp = m.click(detail_block.css('a')[1])
         paper[:url] = BASE_URL + mp.search('//a')[1][:href]
-        paper
       end
-    end
 
-    def set_form_action!(form, action)
-      form.field_with(name: '__action').value = action
+      paper
     end
   end
 end

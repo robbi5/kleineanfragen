@@ -8,9 +8,6 @@ class HessenTest < ActiveSupport::TestCase
     @detail_major = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_detail_major.html')))
     @search = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_search.html')))
     @blocks = @scraper.extract_blocks @overview
-    @detail_block_minor = @scraper.extract_detail_block(@detail_minor)
-    @detail_block_major = @scraper.extract_detail_block(@detail_major)
-    @search_result = @scraper.extract_result_from_search(@search)
   end
 
   test 'get overview blocks' do
@@ -36,22 +33,32 @@ class HessenTest < ActiveSupport::TestCase
   end
 
   test 'extract originators' do
+    @detail_block_minor = @scraper.extract_detail_block(@detail_minor)
     text = @scraper.extract_originator_text(@detail_block_minor)
-    assert_equal({ people: ['Marius Weiß', 'Norbert Schmitt', 'Wolfgang Decker', 'Kerstin Geis', 'Brigitte Hofmeyer', 'Gerald Kummer', 'Angelika Löber', 'Torsten Warnecke'], parties: ['SPD'] }, @scraper.extract_originators(text))
+    assert_equal(
+      {
+        people: [
+          'Marius Weiß', 'Norbert Schmitt', 'Wolfgang Decker',
+          'Kerstin Geis', 'Brigitte Hofmeyer', 'Gerald Kummer',
+          'Angelika Löber', 'Torsten Warnecke'
+        ],
+        parties: ['SPD']
+      }, @scraper.extract_originators(text))
 
-    text = 'GrAnfr             Waschke, Sabine, SPD
-  16.10.2014 Drs 19/1030
-  Antw 09.02.2015 Drs 19/1578
-  PlPr 19/38  05.03.2015
-  von Tagesordnung abgesetzt
-  Ausschussberatung:
-  EUA 19/13  14.04.2015 (ö)'
+    text = <<-END.gsub(/^ {6}/, '').sub(/\n$/, '')
+      GrAnfr             Waschke, Sabine, SPD
+      16.10.2014 Drs 19/1030
+      Antw 09.02.2015 Drs 19/1578
+      PlPr 19/38  05.03.2015
+      von Tagesordnung abgesetzt
+      Ausschussberatung:
+      EUA 19/13  14.04.2015 (ö)
+    END
     assert_equal({ people: ['Sabine Waschke'], parties: ['SPD'] }, @scraper.extract_originators(text))
   end
 
   test 'extract originators from text' do
-    text = 'KlAnfr             Greilich, Wolfgang, FDP
-  18.11.2014 und Antw 08.01.2015 Drs 19/1128'
+    text = "KlAnfr             Greilich, Wolfgang, FDP\n  18.11.2014 und Antw 08.01.2015 Drs 19/1128"
     assert_equal({ people: ['Wolfgang Greilich'], parties: ['FDP'] }, @scraper.extract_originators(text))
   end
 
@@ -60,6 +67,7 @@ class HessenTest < ActiveSupport::TestCase
   end
 
   test 'get reference from search result' do
+    @search_result = @scraper.extract_result_from_search(@search)
     assert_equal ['19', '1030'], @scraper.extract_reference(@search_result)
   end
 
@@ -67,25 +75,32 @@ class HessenTest < ActiveSupport::TestCase
     assert_equal Paper::DOCTYPE_MINOR_INTERPELLATION, @scraper.extract_interpellation_type(@blocks.first)
   end
 
-  test 'extract answer line' do
-    text = 'Europäische Förderprogramme
-  GrAnfr             Waschke, Sabine, SPD; Franz, Dieter, SPD; Geis,
-                     Kerstin, SPD; Grüger, Stephan, SPD; Kummer,
-                     Gerald, SPD; Quanz, Lothar, SPD; Fraktion der SPD
-  16.10.2014 Drs 19/1030
-  Antw 09.02.2015 Drs 19/1578
-  PlPr 19/38  05.03.2015
-  von Tagesordnung abgesetzt
-  Ausschussberatung:
-  EUA 19/13  14.04.2015 (ö)
+  test 'extract complex answer line' do
+    text = <<-END.gsub(/^ {6}/, '').sub(/\n$/, '')
+      Europäische Förderprogramme
+      GrAnfr             Waschke, Sabine, SPD; Franz, Dieter, SPD; Geis,
+                         Kerstin, SPD; Grüger, Stephan, SPD; Kummer,
+                         Gerald, SPD; Quanz, Lothar, SPD; Fraktion der SPD
+      16.10.2014 Drs 19/1030
+      Antw 09.02.2015 Drs 19/1578
+      PlPr 19/38  05.03.2015
+      von Tagesordnung abgesetzt
+      Ausschussberatung:
+      EUA 19/13  14.04.2015 (ö)
+    END
+    assert_equal 'Antw 09.02.2015 Drs 19/1578', @scraper.extract_answer_line(text)
+  end
 
-    '
-    assert_equal 'Antw 09.02.2015 Drs 19/1578', @scraper.extraxct_answer_line(text)
-    text = 'Studium Generale
-  KlAnfr             Sommer, Daniela, Dr., SPD
-  24.03.2015 und Antw 29.04.2015 Drs 19/1774
-            '
-    assert_equal '24.03.2015 und Antw 29.04.2015 Drs 19/1774', @scraper.extraxct_answer_line(text)
-    assert_equal true, @scraper.extraxct_answer_line('').nil?
+  test 'extract simple answer line' do
+    text = <<-END.gsub(/^ {6}/, '').sub(/\n$/, '')
+      Studium Generale
+      KlAnfr             Sommer, Daniela, Dr., SPD
+      24.03.2015 und Antw 29.04.2015 Drs 19/1774
+    END
+    assert_equal '24.03.2015 und Antw 29.04.2015 Drs 19/1774', @scraper.extract_answer_line(text)
+  end
+
+  test 'extract nil answer line' do
+    assert_nil @scraper.extract_answer_line('')
   end
 end
