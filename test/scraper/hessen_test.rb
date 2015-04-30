@@ -47,7 +47,7 @@ class HessenTest < ActiveSupport::TestCase
   Ausschussberatung:
   EUA 19/13  14.04.2015 (ö)"
     assert_equal({people: ["Sabine Waschke"], parties: ["SPD"]}, @scraper.extract_originators(text))
-    end
+  end
 
   test 'extract originators from text' do
     text = "KlAnfr             Greilich, Wolfgang, FDP
@@ -60,7 +60,7 @@ class HessenTest < ActiveSupport::TestCase
   end
 
   test 'get reference from search result' do
-    assert_equal ['19','1030'], @scraper.extract_reference(@search_result)
+    assert_equal ['19', '1030'], @scraper.extract_reference(@search_result)
   end
 
   test 'extract_interpellation_type from search result' do
@@ -80,12 +80,12 @@ class HessenTest < ActiveSupport::TestCase
   EUA 19/13  14.04.2015 (ö)
 
     "
-    assert_equal'Antw 09.02.2015 Drs 19/1578', @scraper.extraxct_answer_line(text)
+    assert_equal 'Antw 09.02.2015 Drs 19/1578', @scraper.extraxct_answer_line(text)
     text = "Studium Generale
   KlAnfr             Sommer, Daniela, Dr., SPD
   24.03.2015 und Antw 29.04.2015 Drs 19/1774
             "
-    assert_equal'24.03.2015 und Antw 29.04.2015 Drs 19/1774', @scraper.extraxct_answer_line(text)
+    assert_equal '24.03.2015 und Antw 29.04.2015 Drs 19/1774', @scraper.extraxct_answer_line(text)
     assert_equal true, @scraper.extraxct_answer_line("").nil?
   end
 end

@@ -15,7 +15,7 @@ module HessenScraper
 
   def self.extract_interpellation_type(block)
     doc_type = block.at_css('span[name="OFR_Vorgtyp"]')
-    doc_type= doc_type.content.split('/')[1]
+    doc_type = doc_type.content.split('/')[1]
 
     if doc_type.start_with?('Kleine')
       return Paper::DOCTYPE_MINOR_INTERPELLATION
@@ -45,7 +45,7 @@ module HessenScraper
       reference: [leg, ref].join('/'),
       doctype: extract_interpellation_type(block),
       title: extract_title(block),
-      is_answer: true,
+      is_answer: true
     }
   end
 
@@ -88,7 +88,7 @@ module HessenScraper
   def self.get_date_from_detail_line(line)
     matches = get_matches_for_date_pattern(line)
     return nil if matches.nil?
-    Date.parse(matches[(matches.length-1)])
+    Date.parse(matches[(matches.length - 1)])
   end
 
   class Overview < Scraper
@@ -99,7 +99,7 @@ module HessenScraper
     end
 
     def scrape
-      search_url = SEARCH_URL+ '&wp=WP'+ @legislative_term.to_s + '&search=((UTYP1=GR+OR+KL)+AND+ANTWEIN+NOT+(!+OR+%22%22))'
+      search_url = SEARCH_URL + '&wp=WP'+ @legislative_term.to_s + '&search=((UTYP1=GR+OR+KL)+AND+ANTWEIN+NOT+(!+OR+%22%22))'
       streaming = block_given?
       m = mechanize
       mp = m.get search_url
