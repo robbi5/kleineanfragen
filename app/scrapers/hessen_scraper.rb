@@ -41,8 +41,8 @@ module HessenScraper
     leg, ref = extract_reference(block)
     {
       legislative_term: leg,
-      full_reference: ref,
-      reference: [leg, ref].join('/'),
+      full_reference: [leg, ref].join('/'),
+      reference: ref,
       doctype: extract_interpellation_type(block),
       title: extract_title(block),
       is_answer: true
