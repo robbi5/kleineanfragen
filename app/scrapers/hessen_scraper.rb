@@ -64,13 +64,8 @@ module HessenScraper
       line = nil if first_date_matched
       line
     end
-    lines = lines.reject(&:nil?).join(' ').split(';').map do |s|
-      sa = s.split(',')
-      party = sa.pop
-      name = sa.reverse.join ' '
-      name + ' (' + party + '), ' unless party.include?('Fraktion')
-    end
-    NamePartyExtractor.new(lines.join).extract
+    originators = lines.reject(&:nil?).join(' ')
+    NamePartyExtractor.new(originators, NamePartyExtractor::REVERSED_NAME_PARTY).extract
   end
 
   def self.extraxct_answer_line(text)

@@ -1,9 +1,44 @@
 class NamePartyExtractor
-  def initialize(text)
+  NAME_BRACKET_PARTY = :nbp
+  REVERSED_NAME_PARTY = :rnp
+
+  def initialize(text, format = NAME_BRACKET_PARTY)
     @text = text
+    @format = format
   end
 
   def extract
+    case @format
+    when NAME_BRACKET_PARTY then extract_nbp
+    when REVERSED_NAME_PARTY then extract_rnp
+    else fail 'Unknown format'
+    end
+  end
+
+  def extract_rnp
+    people = []
+    parties = []
+
+    @text.split(';').map do |s|
+      sa = s.strip.split(',').map(&:strip)
+      unless sa.size == 2 # party missing
+        party = sa.pop
+        parties << party unless party.include?('Fraktion')
+      end
+      if sa.last.include?(' ')
+        # Space seperated party
+        last = sa.pop
+        parts = last.split(' ')
+        parties << parts.pop
+        sa << parts.join(' ')
+      end
+      people << sa.reverse.join(' ')
+    end
+
+    { people: people, parties: parties.uniq }
+  end
+
+  def extract_nbp
     people = []
     parties = []
     pairs = @text.gsub("\n", '').gsub(' und', ', ').split(',').map(&:strip)

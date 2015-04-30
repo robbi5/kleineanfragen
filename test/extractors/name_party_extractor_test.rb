@@ -64,4 +64,65 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 1, pair[:parties].size
     assert_equal 'CDU', pair[:parties].first
   end
+
+  ###
+  # Reversed Name Party Format
+  ###
+
+  test 'rnp: two people, two parties' do
+    pair = NamePartyExtractor.new('Weiß, Marius, SPD; Schmitt, Norbert, SPD', :rnp).extract
+
+    assert_equal 2, pair[:people].size
+    assert_equal 'Marius Weiß', pair[:people].first
+    assert_equal 'Norbert Schmitt', pair[:people].second
+    assert_equal 1, pair[:parties].size
+    assert_equal 'SPD', pair[:parties].first
+  end
+
+  test 'rnp: two people, one party' do
+    pair = NamePartyExtractor.new('Brockes, Dietmar; Ellerbrock, Holger, FDP', :rnp).extract
+
+    assert_equal 2, pair[:people].size
+    assert_equal 'Dietmar Brockes', pair[:people].first
+    assert_equal 'Holger Ellerbrock', pair[:people].second
+    assert_equal 1, pair[:parties].size
+    assert_equal 'FDP', pair[:parties].first
+  end
+
+  test 'rnp: one person with title' do
+    pair = NamePartyExtractor.new('Sommer, Daniela, Dr., SPD', :rnp).extract
+
+    assert_equal 1, pair[:people].size
+    assert_equal 'Dr. Daniela Sommer', pair[:people].first
+    assert_equal 1, pair[:parties].size
+    assert_equal 'SPD', pair[:parties].first
+  end
+
+  test 'rnp: one person with spaced party' do
+    pair = NamePartyExtractor.new('Test, Muster SPD', :rnp).extract
+
+    assert_equal 1, pair[:people].size
+    assert_equal 'Muster Test', pair[:people].first
+    assert_equal 1, pair[:parties].size
+    assert_equal 'SPD', pair[:parties].first
+  end
+
+  test 'rnp: two people, one spaced party' do
+    pair = NamePartyExtractor.new('Brockes, Dietmar; Ellerbrock, Holger FDP', :rnp).extract
+
+    assert_equal 2, pair[:people].size
+    assert_equal 'Dietmar Brockes', pair[:people].first
+    assert_equal 'Holger Ellerbrock', pair[:people].second
+    assert_equal 1, pair[:parties].size
+    assert_equal 'FDP', pair[:parties].first
+  end
+
+  test 'rnp: one person with two names and spaced party' do
+    pair = NamePartyExtractor.new('Schmitz, Ingola Stefanie FDP', :rnp).extract
+
+    assert_equal 1, pair[:people].size
+    assert_equal 'Ingola Stefanie Schmitz', pair[:people].first
+    assert_equal 1, pair[:parties].size
+    assert_equal 'FDP', pair[:parties].first
+  end
 end
