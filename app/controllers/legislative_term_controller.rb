@@ -7,6 +7,7 @@ class LegislativeTermController < ApplicationController
 
     @papers = @body.papers
               .where(legislative_term: @legislative_term)
+              .where.not(published_at: nil)
               .order(published_at: :desc, reference: :desc)
               .page params[:page]
     fresh_when last_modified: @papers.maximum(:updated_at), public: true

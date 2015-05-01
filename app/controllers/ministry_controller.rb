@@ -4,6 +4,7 @@ class MinistryController < ApplicationController
 
   def show
     @papers = @ministry.papers
+              .where.not(published_at: nil)
               .order(legislative_term: :desc, published_at: :desc, reference: :desc)
               .page params[:page]
     fresh_when last_modified: @papers.maximum(:updated_at), public: true

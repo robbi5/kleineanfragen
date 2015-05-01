@@ -72,7 +72,7 @@ class Paper < ActiveRecord::Base
   # searchkick helpers
 
   def should_index?
-    is_answer == true
+    is_answer == true && !published_at.nil?
   end
 
   def search_data

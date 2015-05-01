@@ -4,11 +4,12 @@ class BodyController < ApplicationController
   def show
     @terms = Paper.where(body: @body).group(:legislative_term).count.to_a.sort.reverse
     @scraper_result = @body.scraper_results.where.not(stopped_at: nil).order(stopped_at: :desc).first
-    @latest_paper = @body.papers.order(published_at: :desc).first
+    @latest_paper = @body.papers.where.not(published_at: nil).order(published_at: :desc).first
   end
 
   def feed
     @papers = @body.papers
+              .where.not(published_at: nil)
               .order(published_at: :desc, reference: :desc)
               .page params[:page]
     fresh_when last_modified: @papers.maximum(:updated_at), public: true
