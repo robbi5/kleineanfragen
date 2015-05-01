@@ -18,18 +18,18 @@ class Body < ActiveRecord::Base
 
   def scraper
     case state
-    when 'BY' then BayernLandtagScraper
-    when 'BE' then BerlinAghScraper
     when 'BB' then BrandenburgLandtagScraper
+    when 'BE' then BerlinAghScraper
     when 'BT' then BundestagScraper
-    when 'RP' then RheinlandPfalzLandtagScraper
+    when 'BY' then BayernLandtagScraper
+    when 'HE' then HessenScraper
+    when 'HH' then HamburgBuergerschaftScraper
     when 'MV' then MeckPommLandtagScraper
     when 'NI' then NiedersachsenLandtagScraper
     when 'NW' then NordrheinWestfalenLandtagScraper
-    when 'HE' then HessenScraper
-    when 'HH' then HamburgBuergerschaftScraper
-    when 'SL' then SaarlandScraper
+    when 'RP' then RheinlandPfalzLandtagScraper
     when 'SH' then SchleswigHolsteinLandtagScraper
+    when 'SL' then SaarlandScraper
     when 'ST' then SachsenAnhaltLandtagScraper
     when 'TH' then ThueringenLandtagScraper
     end
