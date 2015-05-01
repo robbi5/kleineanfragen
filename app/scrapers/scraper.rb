@@ -39,4 +39,12 @@ class Scraper
     logger.debug { item.to_s.gsub(/\n|\s\s+/, '') } unless item.nil?
     true
   end
+
+  def self.patron_session
+    sess = Patron::Session.new
+    sess.connect_timeout = 8
+    sess.timeout = 60
+    sess.headers['User-Agent'] = Rails.configuration.x.user_agent
+    sess
+  end
 end

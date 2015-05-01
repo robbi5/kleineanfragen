@@ -1,14 +1,6 @@
 module RheinlandPfalzLandtagScraper
   BASE_URL = 'http://opal.rlp.de'
 
-  def self.patron_session
-    sess = Patron::Session.new
-    sess.connect_timeout = 8
-    sess.timeout = 60
-    sess.headers['User-Agent'] = Rails.configuration.x.user_agent
-    sess
-  end
-
   def self.extract_records(page)
     page.search('//tbody[@name="RecordRepeater"]')
   end
@@ -100,7 +92,7 @@ module RheinlandPfalzLandtagScraper
     # not all papers are available
     if check_pdf
       begin
-        resp = patron_session.head(url)
+        resp = Scraper.patron_session.head(url)
       rescue => e
         raise "RP [#{full_reference}]: url throwed #{e}"
       end
