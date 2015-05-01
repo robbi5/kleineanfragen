@@ -3,7 +3,7 @@ require 'date'
 module ThueringenLandtagScraper
   BASE_URL = 'http://www.parldok.thueringen.de/ParlDok'
   TYPES = ['Antwort auf Große Anfrage', 'Antwort auf Kleine Anfrage']
-  
+
   # when scraping fails because of too much documents, increment this number, should not happen too often
   SEARCH_PARTS = 4
 
