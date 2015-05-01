@@ -4,9 +4,6 @@ module ThueringenLandtagScraper
   BASE_URL = 'http://www.parldok.thueringen.de/ParlDok'
   TYPES = ['Antwort auf Große Anfrage', 'Antwort auf Kleine Anfrage']
 
-  # when scraping fails because of too much documents, increment this number, should not happen too often
-  SEARCH_PARTS = 4
-
   def self.extract_results(page)
     page.css('.title')
   end
@@ -48,7 +45,7 @@ module ThueringenLandtagScraper
     elsif doctype_el.text.scan(/große/i).present?
       doctype = Paper::DOCTYPE_MAJOR_INTERPELLATION
     else
-      fail "doctype unknown for Paper [HH #{full_reference}]"
+      fail "doctype unknown for Paper [TH #{full_reference}]"
     end
 
     answerers = next_row.next_element.element_children[1].text.strip.match(/([^\(]+)/)
@@ -95,7 +92,7 @@ module ThueringenLandtagScraper
       title: title_text,
       url: url,
       published_at: date,
-      # origniators are coming from Detail-Scraper
+      # originators are coming from detail scraper
       answerers: { ministries: ministries }
     }
   end
@@ -128,7 +125,6 @@ module ThueringenLandtagScraper
             paper = ThueringenLandtagScraper.extract_paper(title_el)
           rescue => e
             logger.warn e
-            logger.warn e.backtrace
             next
           end
           if streaming
