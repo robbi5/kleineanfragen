@@ -25,11 +25,12 @@ class Body < ActiveRecord::Base
     when 'RP' then RheinlandPfalzLandtagScraper
     when 'MV' then MeckPommLandtagScraper
     when 'NI' then NiedersachsenLandtagScraper
+    when 'NW' then NordrheinWestfalenLandtagScraper
+    when 'HE' then HessenScraper
     when 'HH' then HamburgBuergerschaftScraper
     when 'SL' then SaarlandScraper
     when 'SH' then SchleswigHolsteinLandtagScraper
     when 'ST' then SachsenAnhaltLandtagScraper
-    when 'HE' then HessenScraper
     end
   end
 

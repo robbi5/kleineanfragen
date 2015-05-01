@@ -117,6 +117,16 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 'FDP', pair[:parties].first
   end
 
+  test 'rnp: two people, one spaced party and others' do
+    pair = NamePartyExtractor.new('Brockes, Dietmar; Ellerbrock, Holger u.a. FDP', :rnp).extract
+
+    assert_equal 2, pair[:people].size
+    assert_equal 'Dietmar Brockes', pair[:people].first
+    assert_equal 'Holger Ellerbrock', pair[:people].second
+    assert_equal 1, pair[:parties].size
+    assert_equal 'FDP', pair[:parties].first
+  end
+
   test 'rnp: one person with two names and spaced party' do
     pair = NamePartyExtractor.new('Schmitz, Ingola Stefanie FDP', :rnp).extract
 

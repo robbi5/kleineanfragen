@@ -28,8 +28,8 @@ class NamePartyExtractor
       if sa.last.include?(' ')
         # Space seperated party
         last = sa.pop
-        parts = last.split(' ')
-        parties << parts.pop
+        parts = last.split(' ').reject {|p| p.include? 'u.a.' }
+        parties << parts.pop if parts.size > 1
         sa << parts.join(' ')
       end
       people << sa.reverse.join(' ')

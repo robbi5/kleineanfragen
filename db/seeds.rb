@@ -17,7 +17,7 @@ Body.create([
   { name: 'Hessen',                 state: 'HE', website: 'http://starweb.hessen.de/starweb/LIS/Pd_Eingang.htm' },
   { name: 'Mecklenburg-Vorpommern', state: 'MV', website: 'http://www.dokumentation.landtag-mv.de' },
   { name: 'Niedersachsen',          state: 'NI', website: 'http://www.nilas.niedersachsen.de' },
-  # { name: 'Nordrhein-Westfalen',    state: 'NW', website: 'https://www.landtag.nrw.de/portal/WWW/Navigation_R2010/040-Dokumente-und-Recherche/Inhalt.jsp' },
+  { name: 'Nordrhein-Westfalen',    state: 'NW', website: 'https://www.landtag.nrw.de/portal/WWW/Navigation_R2010/040-Dokumente-und-Recherche/Inhalt.jsp' },
   { name: 'Rheinland-Pfalz',        state: 'RP', website: 'http://opal.rlp.de/starweb/OPAL_extern' },
   { name: 'Saarland',               state: 'SL', website: 'http://www.landtag-saar.de/Dokumente' },
   # { name: 'Sachsen',                state: 'SN', website: 'http://edas.landtag.sachsen.de' },
@@ -38,4 +38,21 @@ Ministry.create([
   { body: berlin, short_name: 'SenWiTechForsch', name: 'Senatsverwaltung für Wirtschaft, Technolgie und Forschung' },
   { body: berlin, short_name: 'Skzl',            name: 'Senatskanzlei' },
   { body: berlin, short_name: 'RBm',             name: 'Regierender Bürgermeister' }
+])
+
+nrw = Body.find_by_state('NW')
+Ministry.create([
+  { body: nrw, short_name: 'FM',      name: 'Finanzministerium' },
+  { body: nrw, short_name: 'JM',      name: 'Justizministerium' },
+  { body: nrw, short_name: 'MAIS',    name: 'Ministerium für Arbeit, Integration und Soziales' },
+  { body: nrw, short_name: 'MBEM',    name: 'Ministerium für Bundesangelegenheiten, Europa und Medien' },
+  { body: nrw, short_name: 'MBWSV',   name: 'Ministerium für Bauen, Wohnen, Stadtentwicklung und Verkehr' },
+  { body: nrw, short_name: 'MFKJKS',  name: 'Ministerium für Familie, Kinder, Jugend, Kultur und Sport' },
+  { body: nrw, short_name: 'MGEPA',   name: 'Ministerium für Gesundheit, Emanzipation, Pflege und Alter' },
+  { body: nrw, short_name: 'MIK',     name: 'Ministerium für Inneres und Kommunales' },
+  { body: nrw, short_name: 'MIWF',    name: 'Ministerium für Innovation, Wissenschaft und Forschung' },
+  { body: nrw, short_name: 'MKULNV',  name: 'Ministerium für Klimaschutz, Umwelt, Landwirtschaft, Natur- und Verbraucherschutz' },
+  { body: nrw, short_name: 'MP',      name: 'Ministerpräsident/in' },
+  { body: nrw, short_name: 'MSW',     name: 'Ministerium für Schule und Weiterbildung' },
+  { body: nrw, short_name: 'MWEIMH',  name: 'Ministerium für Wirtschaft, Energie, Industrie, Mittelstand und Handwerk' }
 ])
