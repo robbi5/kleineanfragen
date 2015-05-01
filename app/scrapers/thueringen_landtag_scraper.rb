@@ -3,7 +3,7 @@ require 'date'
 module ThueringenLandtagScraper
   BASE_URL = 'http://www.parldok.thueringen.de/ParlDok'
   TYPES = ['Antwort auf Große Anfrage', 'Antwort auf Kleine Anfrage']
-  # because hamburg has a limit of displayed documents, we need to split the date range search
+  
   # when scraping fails because of too much documents, increment this number, should not happen too often
   SEARCH_PARTS = 4
 
@@ -84,7 +84,7 @@ module ThueringenLandtagScraper
     meta = extract_meta(next_row)
 
     doctype = meta[:doctype]
-    date =  Date.parse(meta[:published_at])
+    date = Date.parse(meta[:published_at])
     ministries = []
     ministries = [meta[:answerers].strip] unless meta[:answerers].nil?
     {
@@ -95,7 +95,7 @@ module ThueringenLandtagScraper
       title: title_text,
       url: url,
       published_at: date,
-      # origniators come from Detail-Scraper
+      # origniators are coming from Detail-Scraper
       answerers: { ministries: ministries }
     }
   end
