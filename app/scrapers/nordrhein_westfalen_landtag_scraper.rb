@@ -126,7 +126,9 @@ module NordrheinWestfalenLandtagScraper
                  'order=native%28%27DOKDATUM%281%29%2FDescend+%2C+VA%281%29%2FDescend+%27%29&fm='
 
     def scrape
-      url = SEARCH_URL + "&wp=#{@legislative_term}&w=" + CGI.escape("native('(NUMMER phrase like ''#{@reference}'')')")
+      url = SEARCH_URL + "&wp=#{@legislative_term}&w=" +
+            CGI.escape("native('(NUMMER phrase like ''#{@reference}'') " +
+            "and (DOKUMENTART phrase like ''DRUCKSACHE'') and (DOKUMENTTYP phrase like ''ANTWORT'')')")
       mp = mechanize.get url
 
       item = NordrheinWestfalenLandtagScraper.extract_blocks(mp)
