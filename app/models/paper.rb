@@ -140,6 +140,10 @@ class Paper < ActiveRecord::Base
     end
   end
 
+  def major?
+    doctype == DOCTYPE_MAJOR_INTERPELLATION
+  end
+
   def description
     desc = []
     desc << "#{doctype_human.titleize} #{full_reference} aus #{body.name}."
