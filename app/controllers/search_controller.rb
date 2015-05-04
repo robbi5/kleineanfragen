@@ -22,42 +22,70 @@ class SearchController < ApplicationController
     @doctypes = Paper::DOCTYPES.map { |doctype|  OpenStruct.new(key: doctype, name: t(doctype, scope: [:paper, :doctype]).to_s) }
     @conditions[:doctype] = Paper::DOCTYPES.select { |doctype| @terms['doctype'].include? doctype } if @terms['doctype']
 
-    query = Paper.search @term,
-                         where: @conditions,
-                         fields: ['title^10', :contents],
-                         page: params[:page],
-                         per_page: 10,
-                         highlight: { tag: '<mark>' },
-                         facets: [:contains_table, :body, :doctype],
-                         smart_facets: true,
-                         execute: false,
-                         misspellings: false
-
-    # boost newer papers
-    unboosted_query = query.body[:query]
-    query.body[:query] = {
-      function_score: {
-        query: unboosted_query,
-        functions: [
-          { boost_factor: 1 },
-          {
-            gauss: {
-              published_at: {
-                scale: '4w'
+    query = Paper.search(
+      @term,
+      where: @conditions,
+      fields: ['title^10', :contents],
+      page: params[:page],
+      per_page: 10,
+      highlight: { tag: '<mark>' },
+      facets: [:contains_table, :body, :doctype],
+      smart_facets: true,
+      execute: false,
+      misspellings: false
+    ) do |body|
+      # boost newer papers
+      body[:query] = {
+        function_score: {
+          query: body[:query],
+          functions: [
+            { boost_factor: 1 },
+            {
+              gauss: {
+                published_at: {
+                  scale: '4w'
+                }
               }
             }
-          }
-        ],
-        score_mode: 'sum'
+          ],
+          score_mode: 'sum'
+        }
       }
-    }
 
-    query.body[:highlight][:fields]['contents.analyzed'] = {
-      'type' => 'fvh',
-      'fragment_size' => 250,
-      'number_of_fragments' => 1,
-      'no_match_size' => 250
-    }
+      # use simple_query_string
+      body[:query][:function_score][:query] = {
+        dis_max: {
+          queries: [
+            {
+              simple_query_string: {
+                fields: ['title.analyzed^10', 'contents.analyzed'],
+                query: @term,
+                flags: 'AND|OR|NOT|PHRASE',
+                default_operator: 'AND',
+                analyzer: 'searchkick_search'
+              }
+            },
+            {
+              simple_query_string: {
+                fields: ['title.analyzed^10', 'contents.analyzed'],
+                query: @term,
+                flags: 'AND|OR|NOT|PHRASE',
+                default_operator: 'AND',
+                analyzer: 'searchkick_search2'
+              }
+            }
+          ]
+        }
+      }
+
+      body[:highlight][:fields]['contents.analyzed'] = {
+        type: 'fvh',
+        fragment_size: 250,
+        number_of_fragments: 1,
+        no_match_size: 250
+      }
+    end
+
     @papers = query.execute
   end
 
