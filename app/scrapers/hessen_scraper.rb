@@ -125,6 +125,8 @@ module HessenScraper
       mp = m.click(mp.link_with(text: 'Suche'))
 
       form = mp.form '__form'
+      fail 'No search form found' if form.nil?
+
       form.field_with(name: 'QuickSearchLine').value = full_reference
       form.field_with(name: '__action').value = 61
       mp = form.click_button
