@@ -142,12 +142,12 @@ class Paper < ActiveRecord::Base
 
   def description
     desc = []
-    desc << "#{doctype_human.titleize} #{full_reference} aus #{body.name}. "
+    desc << "#{doctype_human.titleize} #{full_reference} aus #{body.name}."
     if originator_people.size > 0
-      desc << "Eingereicht von #{originator_people.map(&:name).join(', ')}, " +
-        "#{originator_organizations.map(&:name).join(', ')}. "
+      desc << " Eingereicht von #{originator_people.map(&:name).join(', ')}, " +
+        "#{originator_organizations.map(&:name).join(', ')}."
     end
-    desc << "#{page_count} #{ActionController::Base.helpers.t(:pages, count: page_count)}." if page_count.present?
+    desc << " #{page_count} #{ActionController::Base.helpers.t(:pages, count: page_count)}." if page_count.present?
     desc.join('')
   end
 
