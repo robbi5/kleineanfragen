@@ -15,7 +15,8 @@ after_meta = lambda {|*args|} if after_meta.nil?
   <%= capture paper, &before_meta %>
   <p class="meta">
     <%= capture paper, &prepend_meta %>
-    Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %> &mdash; Veröffentlicht am <%= time_tag(paper.published_at, l(paper.published_at))%>
+    Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %>
+    <%- if !paper.published_at.nil? -%> &mdash; Veröffentlicht am <%= time_tag(paper.published_at, l(paper.published_at))%><%- end -%>
      &mdash; <%= paper.page_count || '?' %> <%= t :pages, count: paper.page_count || 0 -%><%- if paper.contains_table %>, enthält Tabelle<% end %>
   </p>
   <%= capture paper, &after_meta %>
