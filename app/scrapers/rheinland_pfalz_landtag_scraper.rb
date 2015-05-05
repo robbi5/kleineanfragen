@@ -64,9 +64,10 @@ module RheinlandPfalzLandtagScraper
         end
       end
       return nil if o_results.nil? || a_results.nil?
+      originators = o_results[1].split(',').map(&:strip)
       {
         doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
-        originators: o_results[1].strip,
+        originators: originators,
         answerers: a_results[1].strip,
         published_at: a_results[2],
         link: link
@@ -107,7 +108,7 @@ module RheinlandPfalzLandtagScraper
 
     ministries = []
     if doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
-      originators = { people: [], parties: [meta[:originators]] }
+      originators = { people: [], parties: meta[:originators] }
     else
       originators = NamePartyExtractor.new(meta[:originators]).extract
     end

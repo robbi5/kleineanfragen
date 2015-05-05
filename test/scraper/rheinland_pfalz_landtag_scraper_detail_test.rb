@@ -149,4 +149,24 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] }
       }, paper)
   end
+
+  test 'extract complete major paper with multiple originator parties' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_major_detail_2887.html')))
+    record = @scraper.extract_records(@html).first
+    paper = @scraper.extract_paper(record, check_pdf: false)
+
+    assert_equal(
+      {
+        legislative_term: '16',
+        full_reference: '16/2887',
+        reference: '2887',
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Bilanz und Perspektiven für die Weiterentwicklung des Bologna-Prozesses in Rheinland-Pfalz',
+        url: 'http://www.landtag.rlp.de/landtag/drucksachen/2887-16.pdf',
+        published_at: Date.parse('15.10.2013'),
+        originators: { people: [], parties: ['SPD', 'BÜNDNIS 90/DIE GRÜNEN'] },
+        is_answer: true,
+        answerers: { ministries: ['Ministerium für Bildung, Wissenschaft, Weiterbildung und Kultur'] }
+      }, paper)
+  end
 end
