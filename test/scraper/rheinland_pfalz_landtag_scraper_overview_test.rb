@@ -98,7 +98,7 @@ class RheinlandPfalzLandtagScraperOverviewTest < ActiveSupport::TestCase
     block = @scraper.extract_records(html).first
     details = @scraper.extract_detail_block(block)
     meta = @scraper.extract_meta(details)
-    assert_equal 'CDU', meta[:originators]
+    assert_equal ['CDU'], meta[:originators]
     assert_equal 'Ministerium für Integration, Familie, Kinder, Jugend und Frauen', meta[:answerers]
     assert_equal '20.03.2015', meta[:published_at]
   end
