@@ -23,16 +23,17 @@ class NamePartyExtractor
       sa = s.strip.split(',').map(&:strip)
       unless sa.size == 2 # party missing
         party = sa.pop
-        parties << party unless party.include?('Fraktion')
+        parties << party.sub(/Fraktion\s+/, '')
       end
-      if sa.last.include?(' ')
+      if !sa.blank? && sa.last.include?(' ')
         # Space seperated party
         last = sa.pop
         parts = last.split(' ').reject {|p| p.include? 'u.a.' }
         parties << parts.pop if parts.size > 1
         sa << parts.join(' ')
       end
-      people << sa.reverse.join(' ')
+      sa.reject!(&:blank?)
+      people << sa.reverse.join(' ') unless sa.size == 0
     end
 
     { people: people, parties: parties.uniq }

@@ -103,4 +103,15 @@ class HessenTest < ActiveSupport::TestCase
   test 'extract nil answer line' do
     assert_nil @scraper.extract_answer_line('')
   end
+
+  test 'extract fraktion like in 1585' do
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_detail_1585.html')))
+    block = @scraper.extract_detail_block(html)
+    text = @scraper.extract_originator_text(block)
+    assert_equal(
+      {
+        people: [],
+        parties: ['DIE LINKE']
+      }, @scraper.extract_originators(text))
+  end
 end

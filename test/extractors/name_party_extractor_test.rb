@@ -135,4 +135,20 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 1, pair[:parties].size
     assert_equal 'FDP', pair[:parties].first
   end
+
+  test 'rnp: only party' do
+    pair = NamePartyExtractor.new('FDP', :rnp).extract
+
+    assert_equal 0, pair[:people].size
+    assert_equal 1, pair[:parties].size
+    assert_equal 'FDP', pair[:parties].first
+  end
+
+  test 'rnp: only fraktion party' do
+    pair = NamePartyExtractor.new('Fraktion FDP', :rnp).extract
+
+    assert_equal 0, pair[:people].size
+    assert_equal 1, pair[:parties].size
+    assert_equal 'FDP', pair[:parties].first
+  end
 end
