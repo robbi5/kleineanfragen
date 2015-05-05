@@ -38,6 +38,11 @@ class ContainsTableJob < PaperJob
       probability += 0.5
     end
 
+    # Hint 7: Anlage 3 Tabelle 1
+    if paper.contents.match(/Anlage\s+\d+\s+Tabelle\s+\d+/m)
+      probability += 1
+    end
+
     logger.info "Probability of Table(s) in Paper [#{paper.body.state} #{paper.full_reference}]: #{probability}"
 
     paper.contains_table = probability >= 1
