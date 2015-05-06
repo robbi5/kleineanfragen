@@ -58,7 +58,7 @@ module BrandenburgLandtagScraper
   end
 
   def self.extract_meta_row(item)
-    item = item.at_css('table')
+    item.at_css('table')
   end
 
   def self.extract_doctype(meta_block)
@@ -78,8 +78,8 @@ module BrandenburgLandtagScraper
     else
       # GrAnfr 123 (ABC, ABC) 11.12.2014 Drs 6/123 (1 S.)
       parties = []
-      meta_text.split('(')[1].split(')')[0].split(',').each{ |p| parties.push(p.strip)}
-      { people: [], parties: parties}
+      meta_text.split('(')[1].split(')')[0].split(',').each{ |p| parties.push(p.strip) }
+      { people: [], parties: parties }
     end
   end
 
@@ -87,7 +87,7 @@ module BrandenburgLandtagScraper
     s = meta_text.split('Antw   (LReg)  ')[1]
     date = s.match(/\d+\.\d+\.\d{4}/)
     Date.parse(date[0].to_s.gsub('.', '-'))
- end
+  end
 
   def self.extract_detail_paper(item)
     meta = extract_meta_row item
@@ -118,7 +118,7 @@ module BrandenburgLandtagScraper
       # answerers in pdf
       is_answer: true
     }
-    end
+  end
 
   def self.extract_paper_overview(item)
     return nil if item.content.include?('BePr')
@@ -143,8 +143,8 @@ module BrandenburgLandtagScraper
       streaming = block_given?
       m = mechanize
       papers = []
-      i = 0
       dates = BrandenburgLandtagScraper.get_dates @legislative_term
+      fail 'WP=' + @legislative_term + ' is not configured'  if dates.nil?
       dates.each do |date|
         mp = m.get SEARCH_URL
         search_form = mp.form '__form'
@@ -161,8 +161,6 @@ module BrandenburgLandtagScraper
         BrandenburgLandtagScraper.extract_overview_items(body).each do |item|
           begin
             paper = BrandenburgLandtagScraper.extract_paper_overview(item)
-            i = i +1
-            puts i
           rescue => e
             logger.warn e
             next
@@ -180,7 +178,6 @@ module BrandenburgLandtagScraper
   end
 
   class Detail < DetailScraper
-    # using rss/xml export
     SEARCH_URL = BASE_URL + '/starweb/LTBB/start.html'
 
     def scrape
@@ -191,19 +188,6 @@ module BrandenburgLandtagScraper
       body = BrandenburgLandtagScraper.extract_body mp
       item = BrandenburgLandtagScraper.extract_detail_item body
       BrandenburgLandtagScraper.extract_detail_paper(item)
-=begin
-
-      {
-        legislative_term: @legislative_term,
-        full_reference: full_reference,
-        reference: @reference,
-        title: title,
-        published_at: published_at,
-        url: url,
-        # no originator or answerers in feed
-        is_answer: nil
-      }
-=end
     end
   end
 end
