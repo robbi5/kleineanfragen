@@ -148,11 +148,11 @@ module HessenScraper
       paper[:originators] = HessenScraper.extract_originators(HessenScraper.extract_originator_text(detail_block))
       if paper[:doctype] == Paper::DOCTYPE_MINOR_INTERPELLATION
         mp = m.click(detail_block.at_css('a'))
-        paper[:url] = BASE_URL + mp.search('//a').first[:href]
       elsif paper[:doctype] == Paper::DOCTYPE_MAJOR_INTERPELLATION
         mp = m.click(detail_block.css('a')[1])
-        paper[:url] = BASE_URL + mp.search('//a')[1][:href]
       end
+      pdf_path = mp.search('//a[contains(@href, ".pdf")]').first[:href]
+      paper[:url] = Addressable::URI.parse(BASE_URL).join(pdf_path).normalize.to_s
 
       paper
     end
