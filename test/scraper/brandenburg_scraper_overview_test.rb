@@ -3,57 +3,100 @@ require 'test_helper'
 class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
   def setup
     @scraper = BrandenburgLandtagScraper
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/brandenburg_scraper_overview.html')))
+    @overview = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/brandenburg_scraper_overview.html')).force_encoding('windows-1252'))
+    @detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/brandenburg_scraper_detail.html')).force_encoding('windows-1252'))
   end
 
-  test 'extract seperators from search result page' do
-    body = @scraper.extract_body(@html)
-    items = @scraper.extract_items(body)
-    assert_equal 50, items.size
+  # webpage states that it shows 671 results but actually displays 482
+  test 'extract overview items' do
+    body = @scraper.extract_body(@overview)
+    items = @scraper.extract_overview_items(body)
+    assert_equal 482, items.length
   end
 
-  test 'extract title from next row' do
-    body = @scraper.extract_body(@html)
-    item = @scraper.extract_items(body).first
+  test 'extract title from item row' do
+    body = @scraper.extract_body(@detail)
+    item = @scraper.extract_detail_item(body)
     title = @scraper.extract_title(item)
-    assert_equal 'Wohngeldzuschuss', title
+    assert_equal 'Umzug der Schulaufsicht von Perleberg nach Neuruppin', title
   end
 
   test 'extract originators' do
-    body = @scraper.extract_body(@html)
-    item = @scraper.extract_items(body).first
-    meta_block = @scraper.extract_meta_block(item)
-    meta_rows = @scraper.extract_meta_rows(meta_block)
-    originators = @scraper.extract_originators(meta_rows.first)
-    assert_equal 'Anita Tack', originators[:people][0]
-    assert_equal 'DIE LINKE', originators[:parties][0]
+    body = @scraper.extract_body(@detail)
+    item = @scraper.extract_detail_item(body)
+    meta_row = @scraper.extract_meta_row(item)
+    originators = @scraper.extract_originators(meta_row.text, Paper::DOCTYPE_MINOR_INTERPELLATION)
+    puts meta_row.text
+    assert_equal 'Gordon Hoffmann', originators[:people][0]
+    assert_equal 'CDU', originators[:parties][0]
   end
 
   test 'extract published_at' do
-    body = @scraper.extract_body(@html)
-    item = @scraper.extract_items(body).first
-    meta_block = @scraper.extract_meta_block(item)
-    meta_rows = @scraper.extract_meta_rows(meta_block)
-    published_at = @scraper.extract_published_at(meta_rows.last)
-    assert_equal Date.parse('2015-03-19'), published_at
+    body = @scraper.extract_body(@detail)
+    item = @scraper.extract_detail_item(body)
+    meta_row = @scraper.extract_meta_row(item)
+    published_at = @scraper.extract_published_at(meta_row.text)
+    assert_equal Date.parse('2015-02-13'), published_at
   end
 
-  test 'extract complete paper' do
-    body = @scraper.extract_body(@html)
-    item = @scraper.extract_items(body).last
-    paper = @scraper.extract_paper(item)
+  test 'extract overview paper' do
+    body = @scraper.extract_body(@overview)
+    item = @scraper.extract_overview_items(body).last
+    paper = @scraper.extract_paper_overview(item)
 
     assert_equal(
       {
         legislative_term: '6',
-        full_reference: '6/885',
-        reference: '885',
+        full_reference: '6/39',
+        reference: '39',
+        is_answer: true
+      }, paper)
+    end
+
+  test 'extract detail paper' do
+    body = @scraper.extract_body(@detail)
+    item = @scraper.extract_detail_item(body)
+    paper = @scraper.extract_detail_paper(item)
+
+    assert_equal(
+      {
+        legislative_term: '6',
+        full_reference: '6/420',
+        reference: '420',
         doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-        title: 'Sanierung von Ortsdurchfahrten entlang der Landesstraßen 154 und 155',
-        url: 'http://www.parldok.brandenburg.de/parladoku/w6/drs/ab_0800/885.pdf',
-        published_at: Date.parse('2015-03-16'),
-        originators: { people: ['Dr. Jan Redmann', 'Rainer Genilke'], parties: ['CDU'] },
+        title: 'Umzug der Schulaufsicht von Perleberg nach Neuruppin',
+        url: 'http://www.parldok.brandenburg.de/parladoku/w6/drs/ab_0400/420.pdf',
+        published_at: Date.parse('2015-02-13'),
+        originators: {
+          people: ['Gordon Hoffmann'],
+          parties: ['CDU']
+        },
         is_answer: true
       }, paper)
   end
+
+  test 'multiple parties on major interpellations' do
+    meta = '            GrAnfr 10   (SPD,DIE LINKE)  13.01.2015 Drs
+        6/420 (1 S.)Antw   (LReg)  13.02.2015 Drs
+        6/618 (3 S.)'
+    puts meta
+    assert_equal({ people: [], parties: ['SPD', 'DIE LINKE']}, @scraper.extract_originators(meta, Paper::DOCTYPE_MAJOR_INTERPELLATION))
+  end
+
+  test 'multiple people on minor interpellation' do
+    meta = '
+        KlAnfr 179   Gordon Freeman (CDU), Black Widow (DIE LINKE)  13.01.2015 Drs
+        6/420 (1 S.)Antw   (LReg)  13.02.2015 Drs
+        6/618 (3 S.)'
+    puts meta
+    assert_equal({
+      people:
+        ['Gordon Freeman',
+         'Black Widow'
+        ],
+      parties:
+        ['CDU', 'DIE LINKE']
+    }, @scraper.extract_originators(meta, Paper::DOCTYPE_MINOR_INTERPELLATION))
+  end
+
 end
