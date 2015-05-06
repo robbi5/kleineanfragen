@@ -67,7 +67,7 @@ module MeckPommLandtagScraper
     legislative_term = full_reference.split('/').first
     date = Date.parse(next_row.element_children[2].text.strip)
     path = title_el.element_children[0]['href']
-    url = Addressable::URI.parse(BASE_URL + path).normalize.to_s
+    url = Addressable::URI.parse(BASE_URL).join(path).normalize.to_s
 
     doctype_el = next_row.element_children[1]
     if doctype_el.text.scan(/kleine/i).present?

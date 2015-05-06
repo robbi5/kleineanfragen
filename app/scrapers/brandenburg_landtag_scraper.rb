@@ -100,7 +100,7 @@ module BrandenburgLandtagScraper
     return nil if !link.previous.text.include?('Drs')
 
     path = link.attributes['href'].value
-    url = Addressable::URI.parse(BASE_URL + path).normalize.to_s
+    url = Addressable::URI.parse(BASE_URL).join(path).normalize.to_s
     full_reference = extract_full_reference(link)
     legislative_term, reference = extract_reference(full_reference)
     originators = extract_originators(meta.text, doctype)

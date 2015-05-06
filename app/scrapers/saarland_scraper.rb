@@ -64,7 +64,7 @@ module SaarlandScraper
     onclick = link_el.attributes['onclick'].value
     return nil if onclick.nil?
     rel_url = onclick.match(/"(.+)"/)[1].gsub(/\\u0026/, '&')
-    Addressable::URI.parse(BASE_URL + rel_url).normalize.to_s
+    Addressable::URI.parse(BASE_URL).join(rel_url).normalize.to_s
   end
 
   def self.extract_entries(mp)
@@ -73,7 +73,7 @@ module SaarlandScraper
 
   def self.extract_doc_link(entry)
     url = entry.at_css('a').attr('href')
-    Addressable::URI.parse(BASE_URL + url).normalize.to_s
+    Addressable::URI.parse(BASE_URL).join(url).normalize.to_s
   end
 
   def self.extract_full_reference_from_href(href)

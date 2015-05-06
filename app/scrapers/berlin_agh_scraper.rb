@@ -114,7 +114,7 @@ module BerlinAghScraper
     legislative_term, reference = extract_reference(full_reference)
 
     path = link.attributes['href'].value
-    url = Addressable::URI.parse(BASE_URL + path).normalize.to_s
+    url = Addressable::URI.parse(BASE_URL).join(path).normalize.to_s
 
     doctype = extract_type(seperator)
     fail "[#{full_reference}] no known doctype" if doctype.nil?
