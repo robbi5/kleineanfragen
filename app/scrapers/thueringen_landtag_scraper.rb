@@ -181,7 +181,7 @@ module ThueringenLandtagScraper
 
       button = body.at_css('.parldokresult-vorgang').attributes['onclick'].value
 
-      fail "NI [#{full_reference}]: no button to show details found" if button.nil?
+      fail "TH [#{full_reference}]: no button to show details found" if button.nil?
 
       detail_url = button.match(/location.href='(.+)'/)
       mp = m.get Addressable::URI.parse(BASE_URL).join(detail_url[1]).normalize.to_s
