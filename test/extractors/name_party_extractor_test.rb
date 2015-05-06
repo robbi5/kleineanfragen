@@ -151,4 +151,12 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 1, pair[:parties].size
     assert_equal 'FDP', pair[:parties].first
   end
+
+  test 'rnp: remove der from fraktion party' do
+    pair = NamePartyExtractor.new('Fraktion der FDP', :rnp).extract
+
+    assert_equal 0, pair[:people].size
+    assert_equal 1, pair[:parties].size
+    assert_equal 'FDP', pair[:parties].first
+  end
 end
