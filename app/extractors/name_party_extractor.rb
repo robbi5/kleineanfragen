@@ -25,7 +25,7 @@ class NamePartyExtractor
         party = sa.pop
         parties << party.sub(/Fraktion\s+(?:der\s+)?/, '')
       end
-      if !sa.blank? && sa.last.include?(' ')
+      if !sa.blank? && parties.blank? && sa.last.include?(' ')
         # Space seperated party
         last = sa.pop
         parts = last.split(' ').reject { |p| p.include? 'u.a.' }
