@@ -38,8 +38,8 @@ class ContainsTableJob < PaperJob
       probability += 0.5
     end
 
-    # Hint 7: Anlage 3 Tabelle 1
-    if paper.contents.match(/Anlage\s+\d+\s+Tabelle\s+\d+/m)
+    # Hint 7: Anlage 3 Tabelle 1, Anlage / Tabelle 1
+    if paper.contents.match(/Anlage\s+[\d\/]+\s+Tabelle\s+\d+/m)
       probability += 1
     end
 
