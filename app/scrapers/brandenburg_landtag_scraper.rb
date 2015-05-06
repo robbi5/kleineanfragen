@@ -144,7 +144,7 @@ module BrandenburgLandtagScraper
       m = mechanize
       papers = []
       dates = BrandenburgLandtagScraper.get_dates @legislative_term
-      fail 'WP=' + @legislative_term + ' is not configured'  if dates.nil?
+      fail 'WP=' + @legislative_term + ' is not configured' if dates.nil?
       dates.each do |date|
         mp = m.get SEARCH_URL
         search_form = mp.form '__form'

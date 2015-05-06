@@ -50,7 +50,7 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
         reference: '39',
         is_answer: true
       }, paper)
-    end
+  end
 
   test 'extract detail paper' do
     body = @scraper.extract_body(@detail)
@@ -75,7 +75,6 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
   end
 
   test 'multiple parties on major interpellations' do
-
     meta = <<-END.gsub(/^ {6}/, '').sub(/\n$/, '')
                   GrAnfr 10   (SPD,DIE LINKE)  13.01.2015 Drs
                   6/420 (1 S.)Antw   (LReg)  13.02.2015 Drs
@@ -98,5 +97,4 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
         ['CDU', 'DIE LINKE']
     }, @scraper.extract_originators(meta, Paper::DOCTYPE_MINOR_INTERPELLATION))
   end
-
 end
