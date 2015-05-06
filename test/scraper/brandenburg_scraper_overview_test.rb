@@ -90,11 +90,11 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
               6/420 (1 S.)Antw   (LReg)  13.02.2015 Drs
               6/618 (3 S.)
     END
-    assert_equal({
-      people:
-        ['Gordon Freeman', 'Black Widow'],
-      parties:
-        ['CDU', 'DIE LINKE']
-    }, @scraper.extract_originators(meta, Paper::DOCTYPE_MINOR_INTERPELLATION))
+    assert_equal(
+      {
+        people: ['Gordon Freeman', 'Black Widow'],
+        parties: ['CDU', 'DIE LINKE']
+      }, @scraper.extract_originators(meta, Paper::DOCTYPE_MINOR_INTERPELLATION)
+    )
   end
 end
