@@ -33,7 +33,8 @@ module HessenScraper
   end
 
   def self.extract_originator_text(detail_block)
-    detail_block.child.next.next.text
+    textblock = detail_block.child.next.next.text
+    textblock.match(/(?:GrAnfr|KlAnfr)(.+)\s+\d/m)[1]
   end
 
   def self.extract_paper(block)

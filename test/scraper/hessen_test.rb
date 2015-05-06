@@ -114,4 +114,15 @@ class HessenTest < ActiveSupport::TestCase
         parties: ['DIE LINKE']
       }, @scraper.extract_originators(text))
   end
+
+  test 'extract fraktion from a big block like in 382' do
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_detail_382.html')))
+    block = @scraper.extract_detail_block(html)
+    text = @scraper.extract_originator_text(block)
+    assert_equal(
+      {
+        people: [],
+        parties: ['DIE LINKE']
+      }, @scraper.extract_originators(text))
+  end
 end
