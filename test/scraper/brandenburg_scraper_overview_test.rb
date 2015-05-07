@@ -26,7 +26,6 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
     item = @scraper.extract_detail_item(body)
     meta_row = @scraper.extract_meta_row(item)
     originators = @scraper.extract_originators(meta_row.text, Paper::DOCTYPE_MINOR_INTERPELLATION)
-    puts meta_row.text
     assert_equal 'Gordon Hoffmann', originators[:people][0]
     assert_equal 'CDU', originators[:parties][0]
   end
@@ -51,7 +50,7 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
         reference: '39',
         is_answer: true
       }, paper)
-    end
+  end
 
   test 'extract detail paper' do
     body = @scraper.extract_body(@detail)
@@ -76,27 +75,26 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
   end
 
   test 'multiple parties on major interpellations' do
-    meta = '            GrAnfr 10   (SPD,DIE LINKE)  13.01.2015 Drs
-        6/420 (1 S.)Antw   (LReg)  13.02.2015 Drs
-        6/618 (3 S.)'
-    puts meta
-    assert_equal({ people: [], parties: ['SPD', 'DIE LINKE']}, @scraper.extract_originators(meta, Paper::DOCTYPE_MAJOR_INTERPELLATION))
+    meta = <<-END.gsub(/^ {6}/, '').sub(/\n$/, '')
+                  GrAnfr 10   (SPD,DIE LINKE)  13.01.2015 Drs
+                  6/420 (1 S.)Antw   (LReg)  13.02.2015 Drs
+                  6/618 (3 S.)
+    END
+    assert_equal({ people: [], parties: ['SPD', 'DIE LINKE'] }, @scraper.extract_originators(meta,
+                                                                                             Paper::DOCTYPE_MAJOR_INTERPELLATION))
   end
 
   test 'multiple people on minor interpellation' do
-    meta = '
-        KlAnfr 179   Gordon Freeman (CDU), Black Widow (DIE LINKE)  13.01.2015 Drs
-        6/420 (1 S.)Antw   (LReg)  13.02.2015 Drs
-        6/618 (3 S.)'
-    puts meta
-    assert_equal({
-      people:
-        ['Gordon Freeman',
-         'Black Widow'
-        ],
-      parties:
-        ['CDU', 'DIE LINKE']
-    }, @scraper.extract_originators(meta, Paper::DOCTYPE_MINOR_INTERPELLATION))
+    meta = <<-END.gsub(/^ {6}/, '').sub(/\n$/, '')
+              KlAnfr 179   Gordon Freeman (CDU), Black Widow (DIE LINKE)  13.01.2015 Drs
+              6/420 (1 S.)Antw   (LReg)  13.02.2015 Drs
+              6/618 (3 S.)
+    END
+    assert_equal(
+      {
+        people: ['Gordon Freeman', 'Black Widow'],
+        parties: ['CDU', 'DIE LINKE']
+      }, @scraper.extract_originators(meta, Paper::DOCTYPE_MINOR_INTERPELLATION)
+    )
   end
-
 end

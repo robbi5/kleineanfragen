@@ -40,7 +40,7 @@ module RheinlandPfalzLandtagScraper
     differentiation = meta_row.text.match(/(Kleine|Große)\s+Anfrage/m)
     if differentiation[1].downcase == 'kleine'
       link = extract_link(meta_row)
-      results = meta_row.text.match(/Kleine\s+Anfrage\s+\d+\s+(.+)\s+und\s+Antwort\s+(.+?)\s+([\d\.]+)\s+/)
+      results = meta_row.text.match(/Kleine\s+Anfrage\s+[\d\s]+(.+?)\s+und\s+Antwort\s+(.+?)\s+([\d\.]+)\s+/)
       return nil if results.nil?
       {
         doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,

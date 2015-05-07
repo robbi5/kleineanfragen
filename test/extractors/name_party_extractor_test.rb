@@ -98,6 +98,15 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 'SPD', pair[:parties].first
   end
 
+  test 'rnp: one person with spaced title' do
+    pair = NamePartyExtractor.new('Hahn, Jörg-Uwe, Dr. h.c., FDP', :rnp).extract
+
+    assert_equal 1, pair[:people].size
+    assert_equal 'Dr. h.c. Jörg-Uwe Hahn', pair[:people].first
+    assert_equal 1, pair[:parties].size
+    assert_equal 'FDP', pair[:parties].first
+  end
+
   test 'rnp: one person with spaced party' do
     pair = NamePartyExtractor.new('Test, Muster SPD', :rnp).extract
 
@@ -146,6 +155,14 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
 
   test 'rnp: only fraktion party' do
     pair = NamePartyExtractor.new('Fraktion FDP', :rnp).extract
+
+    assert_equal 0, pair[:people].size
+    assert_equal 1, pair[:parties].size
+    assert_equal 'FDP', pair[:parties].first
+  end
+
+  test 'rnp: remove der from fraktion party' do
+    pair = NamePartyExtractor.new('Fraktion der FDP', :rnp).extract
 
     assert_equal 0, pair[:people].size
     assert_equal 1, pair[:parties].size

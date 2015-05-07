@@ -90,6 +90,28 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
       }, paper)
   end
 
+  test 'extract paper with two meta_rows like 16/1734' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_detail_1734.html')))
+    record = @scraper.extract_records(@html).first
+    paper = @scraper.extract_paper(record, check_pdf: false)
+
+    assert_equal(
+      {
+        legislative_term: '16',
+        full_reference: '16/1734',
+        reference: '1734',
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        title: 'Aktive Stadt- und Ortsteilzentren. Das Zentrenprogramm der Städtebauförderung',
+        url: 'http://www.landtag.rlp.de/landtag/drucksachen/1734-16.pdf',
+        published_at: Date.parse('24.10.2012'),
+        originators: { people: ['Michael Billen'], parties: ['CDU'] },
+        is_answer: true,
+        answerers: { ministries: [
+          'Ministerium des Innern, für Sport und Infrastruktur'
+        ] }
+      }, paper)
+  end
+
   test 'extract complete paper from Major' do
     @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_major_detail.html')))
     record = @scraper.extract_records(@html).first
