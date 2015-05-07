@@ -76,6 +76,29 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
       }, paper)
   end
 
+  test 'extract major interpellation detail paper 614' do
+    detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/brandenburg_scraper_detail_614.html')).force_encoding('windows-1252'))
+    body = @scraper.extract_body(detail)
+    item = @scraper.extract_detail_item(body)
+    paper = @scraper.extract_detail_paper(item)
+
+    assert_equal(
+      {
+        legislative_term: '6',
+        full_reference: '6/614',
+        reference: '614',
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Situation von Flüchtlingen und Asylbewerbern in Brandenburg',
+        url: 'http://www.parldok.brandenburg.de/parladoku/w6/drs/ab_0600/614.pdf',
+        published_at: Date.parse('2015-02-12'),
+        originators: {
+          people: [],
+          parties: ['CDU']
+        },
+        is_answer: true
+      }, paper)
+  end
+
   test 'multiple parties on major interpellations' do
     meta = <<-END.gsub(/^ {6}/, '').sub(/\n$/, '')
                   GrAnfr 10   (SPD,DIE LINKE)  13.01.2015 Drs
