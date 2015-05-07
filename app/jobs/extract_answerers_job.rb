@@ -1,14 +1,18 @@
 class ExtractAnswerersJob < PaperJob
   queue_as :meta
 
+  EXTRACTORS = {
+    'BY' => BayernPDFExtractor,
+    'BB' => BrandenburgPDFExtractor
+  }
+
   def perform(paper)
-    # FIXME: generic?
-    return unless paper.body.state == 'BY'
+    return unless EXTRACTORS.keys.include?(paper.body.state)
     logger.info "Extracting Answerers from Paper [#{paper.body.state} #{paper.full_reference}]"
 
     fail "No Text for Paper [#{paper.body.state} #{paper.full_reference}]" if paper.contents.blank?
 
-    answerers = BayernPDFExtractor.new(paper).extract_answerers
+    answerers = EXTRACTORS[paper.body.state].new(paper).extract_answerers
     if answerers.nil?
       logger.warn "No Answerers found in Paper [#{paper.body.state} #{paper.full_reference}]"
       return
