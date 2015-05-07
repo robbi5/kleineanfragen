@@ -8,8 +8,9 @@ class BrandenburgPDFExtractor
   # Namens der Landesregierung beantwortet die Ministerin für Wissenschaft, For-\nschung und Kultur die Kleine Anfrage wie folgt:
   # Namens der Landesregierung beantwortet der Minister des Innern und für Kommunales die Kleine Anfrage wie folgt:
   # Namens der Landesregierung beantwortet der Minister der Finanzen die Kleine Anfrage wie folgt:
+  # Namens der Landesregierung beantwortet der Chef der Staatskanzlei die Kleine Anfrage wie folgt:
 
-  ANSWERERS = /Namens\s+der\s+Landesregierung\s+beantwortet\s+(?:der|die)\s+(Minister.+?)\s+die\s+(?:Kleine|Große)\s+An/m
+  ANSWERERS = /Namens\s+der\s+Landesregierung\s+beantwortet\s+(?:der|die)\s+((?:Minister|Chef).+?)\s+die\s+(?:Kleine|Große)\s+An/m
 
   def extract_answerers
     return nil if @contents.nil?
