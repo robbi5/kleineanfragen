@@ -1,7 +1,7 @@
 require 'date'
 
 module BremenBuergerschaftScraper
-  BASE_URL =  'https://www.bremische-buergerschaft.de'
+  BASE_URL = 'https://www.bremische-buergerschaft.de'
   TYPES = 'KlAnfr u. AntwSen;MdS Senat (Antwort)'
 
   def self.extract_results(table)
