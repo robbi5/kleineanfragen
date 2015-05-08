@@ -34,6 +34,15 @@ class HessenPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Ministerin für Bundes- und Europaangelegenheiten und Bevollmächtigten des Landes Hessen beim Bund', answerers[:ministries].first
   end
 
+  test 'suffix: other words' do
+    paper = Struct.new(:contents).new(
+      PREFIX + "des Ministers der Finanzen \n \n \n \nNach dem Erlass")
+    answerers = HessenPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Minister der Finanzen', answerers[:ministries].first
+  end
+
   test 'major interpellation' do
     paper = Struct.new(:contents).new(
       "Antwort \n\nder Landesregierung \n\nauf die Große Anfrage der Abg. G")
