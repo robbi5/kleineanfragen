@@ -3,7 +3,8 @@ class ExtractAnswerersJob < PaperJob
 
   EXTRACTORS = {
     'BY' => BayernPDFExtractor,
-    'BB' => BrandenburgPDFExtractor
+    'BB' => BrandenburgPDFExtractor,
+    'HE' => HessenPDFExtractor
   }
 
   def perform(paper)
