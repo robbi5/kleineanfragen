@@ -2,8 +2,8 @@ require 'test_helper'
 
 class HessenPDFExtractorTest < ActiveSupport::TestCase
   # testcases:
-  PREFIX = 'und  \n\nAntwort  \n\n'
-  SUFFIX = '\n \n \n Vorbemerkung des Fragestellers: '
+  PREFIX = "\nund  \n\nAntwort  \n\n "
+  SUFFIX = "\n \n \n Vorbemerkung des Fragestellers: "
 
   test 'normal ministry' do
     paper = Struct.new(:contents).new(
