@@ -22,6 +22,7 @@ class Body < ActiveRecord::Base
     when 'BE' then BerlinAghScraper
     when 'BT' then BundestagScraper
     when 'BY' then BayernLandtagScraper
+    when 'HB' then BremenBuergerschaftScraper
     when 'HE' then HessenScraper
     when 'HH' then HamburgBuergerschaftScraper
     when 'MV' then MeckPommLandtagScraper

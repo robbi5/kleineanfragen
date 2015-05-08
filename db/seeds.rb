@@ -12,7 +12,7 @@ Body.create([
   { name: 'Berlin',                 state: 'BE', website: 'https://pardok.parlament-berlin.de' },
   { name: 'Brandenburg',            state: 'BB', website: 'http://www.parldok.brandenburg.de' },
   { name: 'Bundestag',              state: 'BT', website: 'http://dipbt.bundestag.de/dip21.web' },
-  # { name: 'Bremen',                 state: 'HB', website: 'https://www.bremische-buergerschaft.de' },
+  { name: 'Bremen',                 state: 'HB', website: 'https://www.bremische-buergerschaft.de' },
   { name: 'Hamburg',                state: 'HH', website: 'https://www.buergerschaft-hh.de/Parldok' },
   { name: 'Hessen',                 state: 'HE', website: 'http://starweb.hessen.de/starweb/LIS/Pd_Eingang.htm' },
   { name: 'Mecklenburg-Vorpommern', state: 'MV', website: 'http://www.dokumentation.landtag-mv.de' },
