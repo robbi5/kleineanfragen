@@ -2,7 +2,7 @@ module NiedersachsenLandtagScraper
   BASE_URL = 'http://www.nilas.niedersachsen.de'
 
   def self.extract_blocks(page)
-    page.search('/html/body/form/div/table[@id="listTable"]/tr/td/table[@id="listTable"]').map(&:previous_element)
+    page.search('//table[@id="listTable"]//table[@id="listTable"]').map(&:previous_element)
   end
 
   def self.extract_references_block(block)
@@ -26,7 +26,9 @@ module NiedersachsenLandtagScraper
   end
 
   def self.extract_link(container)
-    container.css('a').select { |el| el.text.include?('/') && !el.previous.text.include?('Plenarprotokoll') }.last
+    links = container.css('a')
+    return nil if links.nil? || links.size == 0
+    links.select { |el| el.text.include?('/') && !el.previous.text.include?('Plenarprotokoll') }.last
   end
 
   def self.extract_full_reference(link)
@@ -73,15 +75,17 @@ module NiedersachsenLandtagScraper
     title = extract_title(details)
     fail 'NI [?]: no title element found' if title.nil?
 
-    references = extract_container(details)
-    link = extract_link(references)
+    container = extract_container(details)
+    fail "NI [?]: no container element found. Paper title: #{title}" if container.nil?
+
+    link = extract_link(container)
     fail "NI [?]: no link element found. Paper title: #{title}" if link.nil?
 
     full_reference = extract_full_reference(link)
     is_answer = extract_is_answer(item)
     legislative_term, reference = extract_reference(full_reference)
     url = extract_url(link)
-    meta = extract_meta(references)
+    meta = extract_meta(container)
     fail "NI [#{full_reference}]: no readable meta information found" if meta.nil?
 
     doctype = extract_doctype(meta[:doctype])
@@ -125,21 +129,20 @@ module NiedersachsenLandtagScraper
       fail 'Cannot get search form' if search_form.nil?
 
       # fill search form
-      search_form.field_with(name: '__action').value = 4
+      search_form.field_with(name: '__action').value = 6
       search_form.field_with(name: 'wplist').value = @legislative_term
       search_form.field_with(name: 'Suchzeile6').value = TYPE
       mp = m.submit(search_form)
+
+      # Fail if no hits
+      fail 'search returns no results' if mp.search('//tbody[@name="RecordRepeater"]').size == 0
 
       # retrieve new search form with more options
       search_form = mp.form '__form'
       fail 'Cannot switch view' if search_form.nil?
 
-      search_form.field_with(name: '__action').value = 5
-      search_form.add_field!('ReportFormatListDisplay', 'Vollanzeige')
-
-      # Fail if no hits
-      fail 'search returns no results' if mp.search('//span[@name="DBSearched"]').first.text.to_i == 0
-
+      search_form.field_with(name: '__action').value = 29
+      search_form.field_with(name: 'ReportFormatListDisplay').value = 'Vollanzeige'
       mp = m.submit(search_form)
 
       papers = []
