@@ -2,7 +2,7 @@ require 'mechanize'
 
 class Scraper
   def initialize(legislative_term)
-    @legislative_term = legislative_term
+    @legislative_term = legislative_term.to_i
     @per_page = 50
   end
 

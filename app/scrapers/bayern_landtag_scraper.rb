@@ -106,7 +106,7 @@ module BayernLandtagScraper
   def self.extract_url(link)
     rel_url = link.attributes['href'].value
     return nil if rel_url.nil?
-    Addressable::URI.parse(BASE_URL + rel_url).normalize.to_s
+    Addressable::URI.parse(BASE_URL).join(rel_url).normalize.to_s
   end
 
   def self.extract_party(fourth_row)

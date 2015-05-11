@@ -122,6 +122,8 @@ module NiedersachsenLandtagScraper
       m = mechanize
       mp = m.get SEARCH_URL
       search_form = mp.form '__form'
+      fail 'Cannot get search form' if search_form.nil?
+
       # fill search form
       search_form.field_with(name: '__action').value = 4
       search_form.field_with(name: 'wplist').value = @legislative_term
@@ -130,6 +132,8 @@ module NiedersachsenLandtagScraper
 
       # retrieve new search form with more options
       search_form = mp.form '__form'
+      fail 'Cannot switch view' if search_form.nil?
+
       search_form.field_with(name: '__action').value = 5
       search_form.add_field!('ReportFormatListDisplay', 'Vollanzeige')
 

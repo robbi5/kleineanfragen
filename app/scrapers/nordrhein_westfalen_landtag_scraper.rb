@@ -3,7 +3,7 @@ module NordrheinWestfalenLandtagScraper
 
   def self.extract_blocks(mp)
     table = mp.search("//div[@id='content']//table").first
-    table.search('//tr/td[3]')
+    table.search('.//tr/td[3]')
   end
 
   def self.extract_meta(text)
@@ -129,12 +129,23 @@ module NordrheinWestfalenLandtagScraper
       url = SEARCH_URL + "&wp=#{@legislative_term}&w=" +
             CGI.escape("native('(NUMMER phrase like ''#{@reference}'') " +
             "and (DOKUMENTART phrase like ''DRUCKSACHE'') and (DOKUMENTTYP phrase like ''ANTWORT'')')")
-      mp = mechanize.get url
+      m = mechanize
+      mp = m.get url
 
-      item = NordrheinWestfalenLandtagScraper.extract_blocks(mp)
+      blocks = NordrheinWestfalenLandtagScraper.extract_blocks(mp)
+      item = nil
+      blocks.each do |block|
+        # matching number is highlighted with strong
+        if block.search(".//a/strong[contains(text(), '#{@reference}')]/..").present?
+          item = block
+          break
+        end
+      end
+      fail "NW [#{full_reference}]: cannot find relevant block" if item.nil?
+
       paper = NordrheinWestfalenLandtagScraper.extract_paper(item)
 
-      mp = mp.link_with(text: /Beratungsverlauf/).click
+      mp = m.click item.search(".//a[contains(text(), 'Beratungsverlauf')]").first
 
       detail_item = NordrheinWestfalenLandtagScraper.extract_blocks(mp)
       paper.merge NordrheinWestfalenLandtagScraper.extract_paper_details(detail_item)

@@ -24,8 +24,8 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
   test 'extract originators' do
     body = @scraper.extract_body(@detail)
     item = @scraper.extract_detail_item(body)
-    meta_row = @scraper.extract_meta_row(item)
-    originators = @scraper.extract_originators(meta_row.text, Paper::DOCTYPE_MINOR_INTERPELLATION)
+    meta = @scraper.extract_meta(item)
+    originators = @scraper.extract_originators(meta.text, Paper::DOCTYPE_MINOR_INTERPELLATION)
     assert_equal 'Gordon Hoffmann', originators[:people][0]
     assert_equal 'CDU', originators[:parties][0]
   end
@@ -33,8 +33,8 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
   test 'extract published_at' do
     body = @scraper.extract_body(@detail)
     item = @scraper.extract_detail_item(body)
-    meta_row = @scraper.extract_meta_row(item)
-    published_at = @scraper.extract_published_at(meta_row.text)
+    meta = @scraper.extract_meta(item)
+    published_at = @scraper.extract_published_at(meta.text)
     assert_equal Date.parse('2015-02-13'), published_at
   end
 
@@ -48,6 +48,8 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
         legislative_term: '6',
         full_reference: '6/39',
         reference: '39',
+        url: 'http://www.parldok.brandenburg.de/parladoku/w6/drs/ab_0001/39.pdf',
+        published_at: Date.parse('2014-11-03'),
         is_answer: true
       }, paper)
   end
@@ -60,14 +62,37 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
     assert_equal(
       {
         legislative_term: '6',
-        full_reference: '6/420',
-        reference: '420',
+        full_reference: '6/618',
+        reference: '618',
         doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
         title: 'Umzug der Schulaufsicht von Perleberg nach Neuruppin',
-        url: 'http://www.parldok.brandenburg.de/parladoku/w6/drs/ab_0400/420.pdf',
+        url: 'http://www.parldok.brandenburg.de/parladoku/w6/drs/ab_0600/618.pdf',
         published_at: Date.parse('2015-02-13'),
         originators: {
           people: ['Gordon Hoffmann'],
+          parties: ['CDU']
+        },
+        is_answer: true
+      }, paper)
+  end
+
+  test 'extract major interpellation detail paper 614' do
+    detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/brandenburg_scraper_detail_614.html')).force_encoding('windows-1252'))
+    body = @scraper.extract_body(detail)
+    item = @scraper.extract_detail_item(body)
+    paper = @scraper.extract_detail_paper(item)
+
+    assert_equal(
+      {
+        legislative_term: '6',
+        full_reference: '6/614',
+        reference: '614',
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Situation von Flüchtlingen und Asylbewerbern in Brandenburg',
+        url: 'http://www.parldok.brandenburg.de/parladoku/w6/drs/ab_0600/614.pdf',
+        published_at: Date.parse('2015-02-12'),
+        originators: {
+          people: [],
           parties: ['CDU']
         },
         is_answer: true
@@ -80,8 +105,12 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
                   6/420 (1 S.)Antw   (LReg)  13.02.2015 Drs
                   6/618 (3 S.)
     END
-    assert_equal({ people: [], parties: ['SPD', 'DIE LINKE'] }, @scraper.extract_originators(meta,
-                                                                                             Paper::DOCTYPE_MAJOR_INTERPELLATION))
+    assert_equal(
+      {
+        people: [],
+        parties: ['SPD', 'DIE LINKE']
+      }, @scraper.extract_originators(meta, Paper::DOCTYPE_MAJOR_INTERPELLATION)
+    )
   end
 
   test 'multiple people on minor interpellation' do
