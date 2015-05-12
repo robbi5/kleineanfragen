@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   get 'search' => 'search#search', as: :search
   get 'search/autocomplete' => 'search#autocomplete'
+  get 'search/abo' => 'search#subscribe', as: :search_subscribe
 
   get 'recent' => 'paper#recent'
 

@@ -82,9 +82,15 @@ namespace :papers do
     ExtractAnswerersJob.perform_later(paper)
   end
 
-  desc 'Reimport BT PDFs'
+  desc 'Reimport unreviewed PDFs'
   task :reimport_pdfs, :environment do
     Rails.logger.info 'Adding job for reimporting PDFs'
     ReimportPapersPDFJob.perform_later
+  end
+
+  desc 'Send Search Subscription Emails'
+  task :reimport_pdfs, :environment do
+    Rails.logger.info 'Adding job for sending search subscription emails'
+    SendSearchSubscriptionsJob.perform_later
   end
 end

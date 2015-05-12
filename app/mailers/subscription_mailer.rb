@@ -11,6 +11,8 @@ class SubscriptionMailer < ApplicationMailer
     if @subscription.subtype == 'body'
       body = Body.find_by_state(@subscription.query)
       subject = "#{@papers.size} neue kleine Anfrage#{@papers.size == 1 ? '' : 'n'} aus #{body.name}"
+    elsif @subscription.subtype == 'search'
+      subject = "#{@papers.size} neue kleine Anfrage#{@papers.size == 1 ? '' : 'n'} für die Suche nach \"#{@subscription.query}\""
     end
 
     headers['List-Unsubscribe'] = "<#{unsubscribe_url}>"

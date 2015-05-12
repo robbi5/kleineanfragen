@@ -9,30 +9,47 @@ class SearchController < ApplicationController
       return
     end
 
-    @terms = SearchTerms.new(@query || '', %w(table body doctype))
-    @term = @terms.query.presence || '*'
-    @conditions = {}
-    @conditions[:contains_table] = true if @terms['table']
+    search = self.class.parse_query(@query)
+    @term = search.term
+    @conditions = search.conditions
 
     @bodies = Body.all.map { |body| OpenStruct.new(name: body.name, state: body.state) }
-    if @terms['body']
-      @conditions[:body] = @bodies.select { |body| @terms.body.include? body.state }.map(&:state)
+    @doctypes = Paper::DOCTYPES.map { |doctype| OpenStruct.new(key: doctype, name: t(doctype, scope: [:paper, :doctype]).to_s) }
+
+    @papers = self.class.search_papers(@term, @conditions, page: params[:page], per_page: 10)
+  end
+
+  def self.parse_query(query)
+    terms = SearchTerms.new(query || '', %w(table body doctype))
+    term = terms.query.presence || '*'
+
+    conditions = {}
+    conditions[:contains_table] = true if terms['table']
+    if terms['body']
+      conditions[:body] = Body.all.select { |body| terms.body.include? body.state }.map(&:state)
+    end
+    if terms['doctype']
+      conditions[:doctype] = Paper::DOCTYPES.select { |doctype| terms.doctype.include? doctype }
     end
 
-    @doctypes = Paper::DOCTYPES.map { |doctype|  OpenStruct.new(key: doctype, name: t(doctype, scope: [:paper, :doctype]).to_s) }
-    @conditions[:doctype] = Paper::DOCTYPES.select { |doctype| @terms['doctype'].include? doctype } if @terms['doctype']
+    OpenStruct.new(term: term, conditions: conditions)
+  end
+
+  def self.search_papers(term, conditions, options)
+    options =
+      {
+        where: conditions,
+        fields: ['title^10', :contents],
+        highlight: { tag: '<mark>' },
+        facets: [:contains_table, :body, :doctype],
+        smart_facets: true,
+        execute: false,
+        misspellings: false
+      }.merge(options)
 
     query = Paper.search(
-      @term,
-      where: @conditions,
-      fields: ['title^10', :contents],
-      page: params[:page],
-      per_page: 10,
-      highlight: { tag: '<mark>' },
-      facets: [:contains_table, :body, :doctype],
-      smart_facets: true,
-      execute: false,
-      misspellings: false
+      term,
+      options
     ) do |body|
       # boost newer papers
       body[:query] = {
@@ -59,7 +76,7 @@ class SearchController < ApplicationController
             {
               simple_query_string: {
                 fields: ['title.analyzed^10', 'contents.analyzed'],
-                query: @term,
+                query: term,
                 flags: 'AND|OR|NOT|PHRASE',
                 default_operator: 'AND',
                 analyzer: 'searchkick_search'
@@ -68,7 +85,7 @@ class SearchController < ApplicationController
             {
               simple_query_string: {
                 fields: ['title.analyzed^10', 'contents.analyzed'],
-                query: @term,
+                query: term,
                 flags: 'AND|OR|NOT|PHRASE',
                 default_operator: 'AND',
                 analyzer: 'searchkick_search2'
@@ -86,11 +103,17 @@ class SearchController < ApplicationController
       }
     end
 
-    @papers = query.execute
+    query.execute
   end
 
   def autocomplete
     render json: Paper.search(params[:q], fields: [{ 'title^1.5' => :text_start }, { title: :word_start }], limit: 5).map(&:autocomplete_data)
+  end
+
+  def subscribe
+    @subscription = Subscription.new
+    @subscription.subtype = :search
+    @subscription.query = params[:q].presence
   end
 
   private

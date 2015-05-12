@@ -84,7 +84,8 @@ class Paper < ActiveRecord::Base
       contents: contents,
       contains_table: contains_table,
       doctype: doctype,
-      published_at: published_at
+      published_at: published_at,
+      created_at: created_at
     }
   end
 
