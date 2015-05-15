@@ -116,6 +116,10 @@ class SearchController < ApplicationController
     @subscription.query = params[:q].presence
   end
 
+  def opensearch
+    response.headers['Content-Type'] = 'application/opensearchdescription+xml; charset=utf-8'
+  end
+
   private
 
   def params_to_nice_query

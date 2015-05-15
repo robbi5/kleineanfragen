@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <%= tag 'link', href: opensearch_path, rel: 'search', type: 'application/opensearchdescription+xml', title: 'kleineAnfragen Suche' %>
   <%= description %>
   <%= opengraph { |graph| graph.site_name 'kleineAnfragen' } -%>
   <%= twitter_card('summary') { |card| card.site '@kleineanfragen' } -%>
