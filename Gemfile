@@ -87,6 +87,8 @@ gem 'fog-local', '~> 0.2.1'
 
 # jobs
 gem 'resque', '~> 1.25.2'
+gem 'resque-scheduler', '~> 4.0.0'
+gem 'activejob-retry', '~> 0.4.2'
 
 # for nomenklatura
 gem 'httparty', '~> 0.13.3'

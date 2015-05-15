@@ -1,5 +1,10 @@
 class StorePaperPDFJob < PaperJob
+  include ActiveJob::Retry
+
   queue_as :store
+
+  variable_retry delays: [5, 15, 30, 90],
+                 retryable_exceptions: [Patron::TimeoutError]
 
   def perform(paper, options = {})
     options.reverse_merge!(force: false)
@@ -70,7 +75,7 @@ class StorePaperPDFJob < PaperJob
       f.write(resp.body)
     rescue
       logger.warn "Cannot write file for Paper [#{paper.body.state} #{paper.full_reference}]"
-      return
+      return false
     ensure
       f.close if f
     end
