@@ -2,8 +2,9 @@ class ExtractOriginatorsJob < PaperJob
   queue_as :meta
 
   EXTRACTORS = {
-    'BY' => BayernPDFExtractor,
     'BT' => BundestagPDFExtractor,
+    'BY' => BayernPDFExtractor,
+    'HB' => BremenPDFExtractor,
     'SL' => SaarlandPDFExtractor
   }
 
