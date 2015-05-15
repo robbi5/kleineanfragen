@@ -26,7 +26,7 @@ class Subscription < ActiveRecord::Base
     when 'body'
       Body.find_by_state(query).try(:name) || 'kleine Anfragen'
     when 'search'
-      'Suche'
+      "die Suche nach \"#{query}\""
     else
       'kleine Anfragen'
     end
