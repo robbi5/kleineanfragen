@@ -89,7 +89,7 @@ namespace :papers do
   end
 
   desc 'Send Search Subscription Emails'
-  task :reimport_pdfs, :environment do
+  task :send_search_subscriptions, :environment do
     Rails.logger.info 'Adding job for sending search subscription emails'
     SendSearchSubscriptionsJob.perform_later
   end
