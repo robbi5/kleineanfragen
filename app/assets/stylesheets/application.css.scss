@@ -23,9 +23,9 @@
   }
 }
 
-@include font-face(SourceSansPro, 'source-sans-pro/sourcesanspro-regular');
-@include font-face(SourceSansPro, 'source-sans-pro/sourcesanspro-semibold', 600);
-@include font-face(SourceSansPro, 'source-sans-pro/sourcesanspro-it', normal, italic);
+@include font-face("Source Sans Pro", 'source-sans-pro/sourcesanspro-regular');
+@include font-face("Source Sans Pro", 'source-sans-pro/sourcesanspro-semibold', 600);
+@include font-face("Source Sans Pro", 'source-sans-pro/sourcesanspro-it', normal, italic);
 
 // https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_variables.scss
 $font-size-base: 14px;
@@ -34,7 +34,7 @@ $font-size-h2: floor(($font-size-base * 1.85)); // ~25px
 $font-size-h3: floor(($font-size-base * 1.4)); // ~19px
 $headings-font-weight: 400; // Source Sans Pro doesn't has 500
 
-$webfont-family-sans-serif:  "SourceSansPro", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$webfont-family-sans-serif:  "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 $font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 $font-family-base:        $font-family-sans-serif !default;
 
@@ -440,6 +440,7 @@ span.twitter-typeahead {
 
 .label {
   font-weight: normal;
+  margin-right: 3px;
 }
 
 .label-big {
