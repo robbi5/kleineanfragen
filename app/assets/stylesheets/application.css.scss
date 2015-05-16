@@ -15,7 +15,8 @@
     font-weight: $weight;
     font-style: $style;
     src: font-url('#{$file-path}.eot');
-    src: font-url('#{$file-path}.eot?#iefix') format('embedded-opentype'),
+    src: local($font-family),
+         font-url('#{$file-path}.eot?#iefix') format('embedded-opentype'),
          font-url('#{$file-path}.woff2')      format('woff2'),
          font-url('#{$file-path}.woff')       format('woff'),
          font-url('#{$file-path}.ttf')        format('truetype');
@@ -33,7 +34,8 @@ $font-size-h2: floor(($font-size-base * 1.85)); // ~25px
 $font-size-h3: floor(($font-size-base * 1.4)); // ~19px
 $headings-font-weight: 400; // Source Sans Pro doesn't has 500
 
-$font-family-sans-serif:  "SourceSansPro", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$webfont-family-sans-serif:  "SourceSansPro", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 $font-family-base:        $font-family-sans-serif !default;
 
 // Navbar collapse
@@ -42,6 +44,10 @@ $grid-float-breakpoint:   320px;
 
 @import "bootstrap";
 @import "bootstrap-select";
+
+.fonts-loaded body {
+  font-family: $webfont-family-sans-serif;
+}
 
 .navbar {
   margin-bottom: 0;

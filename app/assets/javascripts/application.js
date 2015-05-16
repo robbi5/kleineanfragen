@@ -1,4 +1,6 @@
 //! kleineanfragen.js
+//= require fontfaceobserver.standalone
+//= require font
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
