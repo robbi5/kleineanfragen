@@ -8,7 +8,9 @@ class InfoController < ApplicationController
   def kontakt
   end
 
-  def index
+  def datenschutz
   end
 
+  def index
+  end
 end

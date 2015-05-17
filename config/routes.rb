@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   get 'info' => 'info#index'
   get 'info/daten'
   get 'info/kontakt'
+  get 'info/datenschutz'
   get 'info/mitmachen'
 
   get 'review' => 'review#index'
