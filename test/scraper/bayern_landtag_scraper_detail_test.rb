@@ -25,4 +25,12 @@ class BayernLandtagScraperDetailTest < ActiveSupport::TestCase
         is_answer: true
       }, paper)
   end
+
+  test 'extract correct title from detail, even if abstact is included' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bayern_landtag_scraper_detail_6191.html')))
+    block = @scraper.extract_first_rows(@html).first
+    paper = @scraper.extract_paper(block)
+
+    assert_equal 'Windenergie in Bayern', paper[:title]
+  end
 end

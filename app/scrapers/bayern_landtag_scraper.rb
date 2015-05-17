@@ -116,7 +116,7 @@ module BayernLandtagScraper
   def self.extract_title(third_row)
     title_el = third_row.search('./td[3]').first
     return nil if title_el.nil?
-    title_el.text.gsub(/\s+/, ' ').strip.gsub(/\n/, '-').gsub('... [mehr]', '').gsub('[weniger]', '').strip
+    title_el.children.first.text.gsub(/\s+/, ' ').strip.gsub(/\n/, '-').gsub('... [mehr]', '').gsub('[weniger]', '').strip
   end
 
   def self.extract_paper(first_row)
