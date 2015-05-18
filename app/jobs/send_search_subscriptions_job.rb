@@ -3,7 +3,7 @@ class SendSearchSubscriptionsJob < ActiveJob::Base
 
   def perform
     last_update = Paper.order(created_at: :desc).limit(1).first.created_at
-    Subscription.search.where(active: true).where(['last_sent_at < ?', last_update]).find_each do |sub|
+    Subscription.search.where(active: true).where(['last_sent_at IS NULL OR last_sent_at < ?', last_update]).find_each do |sub|
       # using updated_at, because activation could be delayed by opt_in confirmation
       last_sent_at = sub.last_sent_at || sub.updated_at
 
