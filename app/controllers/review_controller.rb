@@ -4,6 +4,7 @@ class ReviewController < ApplicationController
 
   def papers
     @incomplete = {}
+    @count = 0
     Body.find_each do |b|
       @incomplete[b.state] = []
       @incomplete[b.state].concat Paper.where(body: b).where(['published_at > ?', Date.today])
@@ -25,6 +26,7 @@ class ReviewController < ApplicationController
       )
       @incomplete[b.state].uniq!
       @incomplete[b.state].keep_if { |p| p.is_answer == true && !p.frozen? }
+      @count += @incomplete[b.state].size
     end
   end
 
