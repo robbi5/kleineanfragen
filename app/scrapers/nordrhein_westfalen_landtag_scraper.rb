@@ -147,8 +147,12 @@ module NordrheinWestfalenLandtagScraper
 
       mp = m.click item.search(".//a[contains(text(), 'Beratungsverlauf')]").first
 
-      detail_item = NordrheinWestfalenLandtagScraper.extract_blocks(mp)
-      paper.merge NordrheinWestfalenLandtagScraper.extract_paper_details(detail_item)
+      unless paper[:doctype] == Paper::DOCTYPE_MAJOR_INTERPELLATION
+        detail_item = NordrheinWestfalenLandtagScraper.extract_blocks(mp)
+        paper.merge! NordrheinWestfalenLandtagScraper.extract_paper_details(detail_item)
+      end
+
+      paper
     end
   end
 end

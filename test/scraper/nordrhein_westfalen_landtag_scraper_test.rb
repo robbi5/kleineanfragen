@@ -48,9 +48,6 @@ class NordrheinWestfalenLandtagScraperTest < ActiveSupport::TestCase
     block = @scraper.extract_blocks(html).first
     paper = @scraper.extract_paper_details(block)
 
-    assert_equal(
-      {
-        originators: { people: ['Armin Laschet', 'Lutz Lienenkämper'], parties: ['CDU'] }
-      }, paper)
+    assert_equal ['CDU'], paper[:originators][:parties]
   end
 end
