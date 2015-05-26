@@ -1,6 +1,6 @@
 <%- content_for :head do %><%= noindex() %><% end -%>
 <div class="page-header">
-  <h1><%= link_to 'Review', review_path %> / Heute</h1>
+  <h1><%= link_to 'Review', review_path %> / Heute (<%= @count %>)</h1>
 </div>
 
 <% Body.find_each do |b| %>

@@ -12,7 +12,7 @@ class ReviewController < ApplicationController
       @incomplete[b.state].concat Paper.find_by_sql(
         ['SELECT p.* FROM papers p ' \
           "LEFT OUTER JOIN paper_originators o ON (o.paper_id = p.id AND o.originator_type = 'Person') " \
-          "WHERE p.body_id = ? AND p.doctype != ? AND p.frozen_at IS NULL AND o.id IS NULL", b.id, Paper::DOCTYPE_MAJOR_INTERPELLATION]
+          'WHERE p.body_id = ? AND p.doctype != ? AND p.frozen_at IS NULL AND o.id IS NULL', b.id, Paper::DOCTYPE_MAJOR_INTERPELLATION]
       )
       @incomplete[b.state].concat Paper.find_by_sql(
         ['SELECT p.* FROM papers p ' \
@@ -41,6 +41,7 @@ class ReviewController < ApplicationController
       @papers[b.id] = b.papers.where(['created_at >= ?', Date.today])
       @ministries[b.id] = b.ministries.where(['created_at >= ?', Date.today])
     end
+    @count = @papers.map(&:size).reduce(&:+)
     @people = Person.where(['created_at >= ?', Date.today])
     @organizations = Organization.where(['created_at >= ?', Date.today])
   end
