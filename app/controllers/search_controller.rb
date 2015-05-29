@@ -35,7 +35,7 @@ class SearchController < ApplicationController
     OpenStruct.new(term: term, conditions: conditions)
   end
 
-  def self.search_papers(term, conditions, options)
+  def self.search_papers(term, conditions, options = {})
     options =
       {
         where: conditions,
@@ -95,6 +95,7 @@ class SearchController < ApplicationController
         }
       }
 
+      body[:highlight][:fields]['title.analyzed'][:number_of_fragments] = 0
       body[:highlight][:fields]['contents.analyzed'] = {
         type: 'fvh',
         fragment_size: 250,
