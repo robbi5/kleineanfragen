@@ -1,4 +1,4 @@
-<p>Es sind <%= @papers.size %> neue kleine Anfragen eingegangen:</p>
+<p><%= t :'email.new_interpellations', count: @papers.size %>:</p>
 <ul>
 <%- @papers.each do |paper| -%>
 <li>

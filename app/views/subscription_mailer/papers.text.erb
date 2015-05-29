@@ -1,4 +1,4 @@
-Es sind <%= @papers.size %> neue kleine Anfragen eingegangen:
+<%= t :'email.new_interpellations', count: @papers.size %>:
 
 <%- @papers.each do |paper| -%>
 * <%= paper.title %>

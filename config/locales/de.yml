@@ -13,6 +13,17 @@ de:
       minor: 'kleine Anfrage'
       major: 'große Anfrage'
       written: 'schriftliche Anfrage'
+  email:
+    subject:
+      body:
+        one: Eine neue kleine Anfrage aus %{body}
+        other: '%{count} neue kleine Anfragen aus %{body}'
+      search:
+        one: 'Eine neue kleine Anfrage für die Suche nach "%{query}"'
+        other: '%{count} neue kleine Anfragen für die Suche nach "%{query}"'
+    new_interpellations:
+      one: 'Es ist eine neue Anfrage eingegangen'
+      other: 'Es sind %{count} neue Anfragen eingegangen'
   views:
     pagination:
       first: "&lArr; Erste Seite"
