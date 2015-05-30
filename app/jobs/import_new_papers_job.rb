@@ -31,6 +31,10 @@ class ImportNewPapersJob < ActiveJob::Base
     @result.stopped_at = DateTime.now
     @result.success = failure.nil?
     @result.message = failure.nil? ? nil : failure.message
+    if !@new_papers.nil? && !@old_papers.nil?
+      @result.new_papers = @new_papers
+      @result.old_papers = @old_papers
+    end
     @result.save
     fail failure unless failure.nil?
   end
