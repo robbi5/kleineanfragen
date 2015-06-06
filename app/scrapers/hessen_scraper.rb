@@ -29,12 +29,7 @@ module HessenScraper
     span = block.at_css('span[name="OFR_Betreff"]')
     title = span.at_css('.textlink')
     title = span.at_css('.textLink') if title.nil?
-    title.content.gsub(/\p{Z}+/, ' ').strip
-  end
-
-  def self.extract_originator_text(detail_block)
-    textblock = detail_block.child.next.next.text
-    textblock.match(/(?:GrAnfr|KlAnfr)(.+)\s+\d/m)[1]
+    title.content.gsub(/\p{Z}+/, ' ').gsub(/\n/, ' ').gsub(/\s+/, ' ').strip
   end
 
   def self.extract_paper(block)
@@ -45,12 +40,51 @@ module HessenScraper
       reference: ref,
       doctype: extract_interpellation_type(block),
       title: extract_title(block),
-      is_answer: true
+      # is_answer: true # -> detail scraper
     }
   end
 
-  def self.extract_result_from_search(page)
+  def self.extract_detail_result(page)
     page.search('//tbody[@name="RecordRepeatStart"]').first
+  end
+
+  def self.extract_detail_paper(block)
+    response_line = extract_answer_line(block.content)
+    return nil if response_line.nil?
+
+    leg, ref = extract_detail_reference(block)
+    date = get_date_from_detail_line(response_line)
+    {
+      legislative_term: leg,
+      full_reference: [leg, ref].join('/'),
+      reference: ref,
+      doctype: extract_detail_type(block),
+      title: extract_detail_title(block),
+      published_at: date,
+      originators: extract_originators(extract_originator_text(block)),
+      # unanswered papers often have a future publishing date
+      is_answer: (date <= Date.today)
+    }
+  end
+
+  def self.extract_detail_type(detail_block)
+    textblock = detail_block.child.next.next.text.strip
+    if !textblock.match(/(^|\W)KlAnfr\W/).nil?
+      return Paper::DOCTYPE_MINOR_INTERPELLATION
+    elsif !textblock.match(/(^|\W)GrAnfr\W/).nil?
+      return Paper::DOCTYPE_MAJOR_INTERPELLATION
+    end
+    nil
+  end
+
+  def self.extract_detail_title(detail_block)
+    title = detail_block.at_css('b').text
+    title.gsub(/\p{Z}+/, ' ').gsub(/\n/, ' ').gsub(/\s+/, ' ').strip.gsub(/-\s+/, '')
+  end
+
+  def self.extract_originator_text(detail_block)
+    textblock = detail_block.child.next.next.text
+    textblock.match(/(?:GrAnfr|KlAnfr)(.+)\s+\d/m)[1]
   end
 
   def self.extract_originators(text)
@@ -74,6 +108,10 @@ module HessenScraper
       return s if s.include?('Antw') || s.include?('und Antw')
     end
     nil
+  end
+
+  def self.extract_detail_reference(block)
+    block.at_css('a').content.split('/')
   end
 
   def self.get_matches_for_date_pattern(line)
@@ -118,38 +156,20 @@ module HessenScraper
   end
 
   class Detail < DetailScraper
-    SEARCH_URL = BASE_URL + '/starweb/LIS/Pd_Eingang.htm'
+    SEARCH_URL = BASE_URL + '/starweb/LIS/servlet.starweb?path=LIS/PdPi_FLMore19.web&search='
 
     def scrape
       m = mechanize
-      mp = m.get SEARCH_URL
-      mp = m.click(mp.link_with(text: 'Suche'))
+      mp = m.get SEARCH_URL + CGI.escape("WP=#{@legislative_term} and DRSNRU,ANTW=\"#{full_reference}\"")
 
-      form = mp.form '__form'
-      fail 'No search form found' if form.nil?
+      detail_block = HessenScraper.extract_detail_block(mp.root)
+      paper = HessenScraper.extract_detail_paper(detail_block)
+      return nil if paper.nil?
 
-      form.field_with(name: 'QuickSearchLine').value = full_reference
-      form.field_with(name: '__action').value = 61
-      mp = form.click_button
-
-      result = HessenScraper.extract_result_from_search(mp)
-      paper = HessenScraper.extract_paper(result)
-
-      form = mp.form '__form'
-      form.field_with(name: '__action').value = 121
-      form.field_with(name: 'ReportFormatListValues').value = 'PdPiMoreReport'
-      mp = m.submit(form)
-
-      detail_block = HessenScraper.extract_detail_block(mp.search('//div[@id="inhalt"]'))
-      response_line = HessenScraper.extract_answer_line(detail_block.content)
-      return nil if response_line.nil?
-
-      paper[:published_at] = HessenScraper.get_date_from_detail_line(response_line)
-      paper[:originators] = HessenScraper.extract_originators(HessenScraper.extract_originator_text(detail_block))
       if paper[:doctype] == Paper::DOCTYPE_MINOR_INTERPELLATION
-        mp = m.click(detail_block.at_css('a'))
+        mp = m.click(detail_block.at_css('a')) # first link
       elsif paper[:doctype] == Paper::DOCTYPE_MAJOR_INTERPELLATION
-        mp = m.click(detail_block.css('a')[1])
+        mp = m.click(detail_block.css('a')[1]) # second link
       end
       pdf_path = mp.search('//a[contains(@href, ".pdf")]').first[:href]
       paper[:url] = Addressable::URI.parse(BASE_URL).join(pdf_path).normalize.to_s

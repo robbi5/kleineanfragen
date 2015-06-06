@@ -62,15 +62,6 @@ class HessenTest < ActiveSupport::TestCase
     assert_equal({ people: ['Wolfgang Greilich'], parties: ['FDP'] }, @scraper.extract_originators(text))
   end
 
-  test 'get result from search' do
-    assert_equal true, @scraper.extract_result_from_search(@search).content.include?('Europäische Förderprogramme ')
-  end
-
-  test 'get reference from search result' do
-    @search_result = @scraper.extract_result_from_search(@search)
-    assert_equal ['19', '1030'], @scraper.extract_reference(@search_result)
-  end
-
   test 'extract_interpellation_type from search result' do
     assert_equal Paper::DOCTYPE_MINOR_INTERPELLATION, @scraper.extract_interpellation_type(@blocks.first)
   end
@@ -124,5 +115,26 @@ class HessenTest < ActiveSupport::TestCase
         people: [],
         parties: ['DIE LINKE']
       }, @scraper.extract_originators(text))
+  end
+
+  test 'extract whole paper from detail page like 19/1017' do
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_detail_1017.html')))
+    block = @scraper.extract_detail_block(html)
+    paper = @scraper.extract_detail_paper(block)
+
+    assert_equal(
+      {
+        legislative_term: '19',
+        full_reference: '19/1017',
+        reference: '1017',
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Evaluation der Lehrerbildung in Hessen',
+        published_at: Date.parse('2015-04-15'),
+        originators: {
+          people: ['Christoph Degen', 'Kerstin Geis', 'Karin Hartmann', 'Brigitte Hofmeyer', 'Gerhard Merz', 'Lothar Quanz', 'Turgut Yüksel'],
+          parties: ['SPD']
+        },
+        is_answer: true
+      }, paper)
   end
 end
