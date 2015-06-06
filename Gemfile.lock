@@ -250,6 +250,8 @@ GEM
       activemodel
       elasticsearch (>= 1)
       hashie
+    sentry-raven (0.13.3)
+      faraday (>= 0.7.6)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -326,6 +328,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   searchkick (= 0.8.5)
+  sentry-raven
   spring
   sqlite3
   tophat (~> 2.2.0)
