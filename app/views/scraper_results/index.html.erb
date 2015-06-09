@@ -9,7 +9,7 @@
     <tr>
       <th>Land</th>
       <% @dates.each do |date| %>
-      <th><%= l date, format: :short %></th>
+      <th class="<%= weekend?(date) ? 'date-weekend' : '' %>"><%= l date, format: :short %></th>
       <% end %>
     </tr>
   </thead>
@@ -18,7 +18,7 @@
     <tr>
     <th><%= link_to body.name, body %></th>
     <% @dates.each do |date| %>
-    <td>
+    <td class="<%= weekend?(date) ? 'date-weekend' : '' %>">
       <% @results[body.id][date].each do |result|
           info = ''
           unless result.started_at.nil?

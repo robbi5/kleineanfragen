@@ -17,4 +17,8 @@ module ScraperResultsHelper
       "#{distance_in_minutes}:#{prefix_seconds}#{distance_in_seconds}"
     end
   end
+
+  def weekend?(date)
+    date.saturday? || date.sunday?
+  end
 end
