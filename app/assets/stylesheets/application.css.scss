@@ -458,7 +458,6 @@ span.twitter-typeahead {
   font-size: 0.9em;
 }
 
-
 .breadcrumb-fullwidth {
   background: $breadcrumb-bg;
 
@@ -569,6 +568,15 @@ span.twitter-typeahead {
 
 .shorturl-input {
   width: 100%;
+}
+
+.paper-viewer-wrapper {
+  padding: 0;
+  @media (min-width: $screen-md-min) {
+    // default
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 }
 
 .paper-preview-not-available {
