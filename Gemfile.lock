@@ -1,3 +1,13 @@
+GIT
+  remote: git://github.com/ankane/searchkick.git
+  revision: 1821ecdd9c6f474f2d0195929b7358aa9bc838d2
+  branch: index_options
+  specs:
+    searchkick (0.9.0)
+      activemodel
+      elasticsearch (>= 1)
+      hashie
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -69,12 +79,12 @@ GEM
     dotenv (1.0.2)
     dotenv-rails (1.0.2)
       dotenv (= 1.0.2)
-    elasticsearch (1.0.11)
-      elasticsearch-api (= 1.0.11)
-      elasticsearch-transport (= 1.0.11)
-    elasticsearch-api (1.0.11)
+    elasticsearch (1.0.12)
+      elasticsearch-api (= 1.0.12)
+      elasticsearch-transport (= 1.0.12)
+    elasticsearch-api (1.0.12)
       multi_json
-    elasticsearch-transport (1.0.11)
+    elasticsearch-transport (1.0.12)
       faraday
       multi_json
     erubis (2.7.0)
@@ -113,7 +123,7 @@ GEM
     globalid (0.3.5)
       activesupport (>= 4.1.0)
     hashids (1.0.2)
-    hashie (3.4.1)
+    hashie (3.4.2)
     htmlentities (4.3.3)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
@@ -246,10 +256,6 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
-    searchkick (0.8.5)
-      activemodel
-      elasticsearch (>= 1)
-      hashie
     sentry-raven (0.13.3)
       faraday (>= 0.7.6)
     sinatra (1.4.6)
@@ -327,7 +333,7 @@ DEPENDENCIES
   resque-scheduler (~> 4.0.0)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
-  searchkick (= 0.8.5)
+  searchkick!
   sentry-raven
   spring
   sqlite3

@@ -77,7 +77,7 @@ gem 'image_optim', '~> 0.20.2'
 
 # search!
 # pin version to 0.8.5 until searchkick#429 (or #427, #424) is resolved
-gem 'searchkick', '0.8.5'
+gem 'searchkick', github: 'ankane/searchkick', branch: 'index_options'
 gem 'patron', '~> 0.4.18'
 
 # storage
