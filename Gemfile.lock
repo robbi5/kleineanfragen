@@ -245,6 +245,9 @@ GEM
       redis (~> 3.0)
       resque (~> 1.25)
       rufus-scheduler (~> 3.0)
+    resque-sentry (1.2.0)
+      resque (>= 1.18.0)
+      sentry-raven (>= 0.4.6)
     rufus-scheduler (3.1.2)
     sass (3.4.14)
     sass-rails (5.0.3)
@@ -331,6 +334,7 @@ DEPENDENCIES
   rails-i18n (~> 4.0.0)
   resque (~> 1.25.2)
   resque-scheduler (~> 4.0.0)
+  resque-sentry (~> 1.2.0)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   searchkick!
