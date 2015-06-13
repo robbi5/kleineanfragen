@@ -13,6 +13,7 @@ web:
 #   - nomenklatura
     - s3
     - mailcatcher
+#   - sentry
   environment:
     RESQUE_SERVER_OPEN: true
     ELASTICSEARCH_URL: http://elasticsearch:9200/
@@ -21,6 +22,7 @@ web:
     TIKA_SERVER_URL: http://tika:9998
 #   NOMENKLATURA_HOST: http://nomenklatura:8080
 #   NOMENKLATURA_APIKEY: change_me
+#   SENTRY_DSN: http://public:secret@sentry:9000/2
 
 database:
   build: contrib/postgres-ka
@@ -67,3 +69,18 @@ mailcatcher:
   image: schickling/mailcatcher
   ports:
     - "1080:1080"
+
+## local sentry to test exceptions notifications
+#sentry:
+#  image: slafs/sentry:7.4
+#  volumes:
+#    - ./tmp/sentry:/data
+#  ports:
+#    - "9000:9000"
+#  environment:
+#    SECRET_KEY: totallysecretdevkey
+#    SENTRY_URL_PREFIX: http://localhost:9000
+#    SENTRY_INITIAL_TEAM: kleineanfragen
+#    SENTRY_INITIAL_PROJECT: kleineanfragen
+#    SENTRY_INITIAL_PLATFORM: rails4
+#    SENTRY_INITIAL_KEY: public:secret
