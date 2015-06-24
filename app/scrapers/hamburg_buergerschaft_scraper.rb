@@ -51,7 +51,7 @@ module HamburgBuergerschaftScraper
 
     def submit_search(m)
       mp = m.get SEARCH_URL
-      form = mp.forms.second
+      form = mp.forms.last
       form.field_with(name: 'LegislaturperiodenNummer').value = @legislative_term
       form.field_with(name: 'DokumententypId').options.each do |opt|
         if TYPES.include? opt.text.strip
