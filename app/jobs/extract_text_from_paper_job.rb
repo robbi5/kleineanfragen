@@ -1,11 +1,14 @@
 class ExtractTextFromPaperJob < PaperJob
   queue_as :meta
 
-  def perform(paper)
+  def perform(paper, options = {})
+    options.reverse_merge!(method: :tika)
     logger.info "Extracting Text of the Paper [#{paper.body.state} #{paper.full_reference}]"
 
-    if !Rails.configuration.x.tika_server.blank?
+    if !Rails.configuration.x.tika_server.blank? && options[:method] == :tika
       text = extract_tika(paper)
+    elsif options[:method] == :abbyy
+      text = extract_abbyy(paper)
     else
       text = extract_local(paper)
     end
@@ -49,6 +52,20 @@ class ExtractTextFromPaperJob < PaperJob
                      headers: { 'Content-Type' => 'application/pdf', 'Accept' => 'text/plain' })
     fail 'Couldn\'t get text' if text.status != 200
     # reason for force_encoding: https://github.com/excon/excon/issues/189
+    text.body.force_encoding('utf-8').strip
+  end
+
+  def extract_abbyy(paper)
+    fail "No local copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] found" unless File.exist?(paper.local_path)
+    client = Abbyy::Client.new
+    client.process_image paper.local_path, profile: 'documentArchiving', exportFormat: 'txtUnstructured', language: 'German'
+    while %w(Queued InProgress).include?(client.task[:status])
+      sleep(client.task[:estimatedProcessingTime].to_i)
+      client.get_task_status
+    end
+    fail "Task failed: #{client.task.inspect}" if client.task[:status] != 'Completed'
+    text = client.get
+    fail 'Couldn\'t get text' if text.code != 200
     text.body.force_encoding('utf-8').strip
   end
 

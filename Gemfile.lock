@@ -11,6 +11,8 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    abbyy (0.2.1)
+      rest-client (>= 1.8.0)
     actionmailer (4.2.2)
       actionpack (= 4.2.2)
       actionview (= 4.2.2)
@@ -183,6 +185,7 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.2)
+    netrc (0.10.3)
     newrelic_rpm (3.12.0.288)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
@@ -248,6 +251,10 @@ GEM
     resque-sentry (1.2.0)
       resque (>= 1.18.0)
       sentry-raven (>= 0.4.6)
+    rest-client (1.8.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
     rufus-scheduler (3.1.2)
     sass (3.4.14)
     sass-rails (5.0.3)
@@ -305,6 +312,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  abbyy (~> 0.2.1)
   activejob-retry (~> 0.4.2)
   addressable (~> 2.3.6)
   bootstrap-sass (~> 3.3.4)

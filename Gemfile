@@ -71,6 +71,7 @@ gem 'kaminari', '~> 0.16.0'
 
 # pdf text extraction
 gem 'docsplit', '~> 0.7.6'
+gem 'abbyy', '~> 0.2.1'
 
 # pdf thumbnailing
 gem 'image_optim', '~> 0.20.2'
