@@ -53,7 +53,7 @@ class HessenPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Minister für Soziales und Integration', answerers[:ministries].first
   end
 
-    test 'suffix: der Fragesteller' do
+  test 'suffix: der Fragesteller' do
     paper = Struct.new(:contents).new(
       PREFIX + "des Ministers für Soziales und Integration \nder Fragesteller: " + SUFFIX)
     answerers = HessenPDFExtractor.new(paper).extract_answerers
