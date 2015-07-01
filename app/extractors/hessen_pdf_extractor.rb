@@ -35,6 +35,7 @@ class HessenPDFExtractor
                .gsub(/\p{Other}/, '') # invisible chars & private use unicode
                .gsub(/inisters\s/, 'inister ')
                .gsub(/inisters$/, 'inister')
+               .gsub(/ der Fragesteller:$/, '')
 
     ministry = 'Chef der Staatskanzlei' if ministry == 'Chefs der Staatskanzlein'
 
