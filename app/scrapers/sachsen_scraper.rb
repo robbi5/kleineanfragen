@@ -1,6 +1,8 @@
 module SachsenScraper
   BASE_URL = 'http://edas.landtag.sachsen.de'
   SEARCH_FIELD = 'ctl00$masterContentCallback$content$suchmaske$tblSearch$tabSuche$panelUmSuchmaskeEinfach$suchmaskeEinfachCallback'
+  SEARCH_FIELD2 =
+    'ctl00_masterContentCallback_content_suchmaske_tblSearch_tabSuche_panelUmSuchmaskeEinfach_suchmaskeEinfachCallback_sb_Einf'
 
   def self.extract_overview_items(page)
     page.search('//td[@class="dxdvItem_EDAS"]/table')
@@ -92,7 +94,7 @@ module SachsenScraper
     end
 
     def extract_pdf_url(top)
-      nav = top.frame_with(name : 'navigation').click
+      nav = top.frame_with(name: 'navigation').click
       onloadValue = nav.search("//body").first.attribute("onload")
       pdfurl = onloadValue.to_s[/(http\S*?\.pdf)/]
     end
@@ -122,19 +124,20 @@ module SachsenScraper
     SEARCH_URL = BASE_URL + '/parlamentsdokumentation/parlamentsarchiv/dokumententyp.aspx'
 
     def search(content, type, startAt)
-
       if (type == Paper::DOCTYPE_MAJOR_INTERPELLATION)
         type = 'GrAnfr'
       else
         type = 'KlAnfr'
       end
       search_form = content.forms.first
-      search_form['ctl00_masterContentCallback_content_suchmaske_tblSearch_tabSuche_panelUm' + 'SuchmaskeEinfach_suchmaskeEinfachCallback_sb_EinfDoktyp_ec_VI'] = type
       search_form['__EVENTARGUMENT'] = 'Click'
       search_form['__EVENTTARGET'] = SEARCH_FIELD + '$btn_EinfSuche'
       search_form[SEARCH_FIELD + '$tf_EinfDoknrVon$ec'] = startAt
       search_form[SEARCH_FIELD + '$tf_EinfDoknrBis$ec'] = 100000
-    content = search_form.submit
+      # TODO switch startAt
+      #search_form[SEARCH_FIELD2 + 'OrderBy_logisch_ec_VI'] = 'Eingangsdatum_desc'
+      search_form[SEARCH_FIELD2 + 'Doktyp_ec_VI'] = type
+      content = search_form.submit
     end
 
     def supports_pagination?
@@ -142,36 +145,43 @@ module SachsenScraper
     end
 
     def supports_streaming?
-      false
+      true
     end
 
-    def scrapeType(m, type, startAt)
+    # TODO switch around startAt
+    def scrapeType(m, type, startAt, &block)
       top = m.get BASE_URL
       SachsenScraper.switchToTerm(@legislative_term, m, top)
       content = top.frame_with(name: 'content').click
       content = search(content, type, startAt)
-      page = 1
-      papers = []
-      while !content.search('//td[@class="dxdvItem_EDAS"]/table')[0].nil? do
 
+      page = 1
+      while !content.search('//td[@class="dxdvItem_EDAS"]/table')[0].nil? do
         SachsenScraper.extract_overview_items(content).each do |item|
-          paper = SachsenScraper.extract_overview_paper(item, type)
-          papers.push(paper) if !paper.nil?
+          begin
+            paper = SachsenScraper.extract_overview_paper(item, type)
+          rescue => e
+            logger.warn e
+            next
+          end
+          next if paper.nil?
+          yield paper
         end
         page += 1
         content = m.get(BASE_URL + '/parlamentsdokumentation/parlamentsarchiv/trefferliste.aspx?NavSeite=' + page.to_s + '&isHaldeReport=&VolltextSuche=&refferer=')
       end
       if (!content.search('//*[@id="ctl00_masterContentCallback_content_trWarning"]')[0].nil?)
-        papers.concat(scrapeType(m, type, papers.last.reference.to_i + 1))
+        scrapeType(m, type, papers.last.reference.to_i + 1, &block)
       end
-      papers
     end
 
-    def scrape
-      m = mechanize
+    def scrape(&block)
       papers = []
-      papers.concat(scrapeType(m, Paper::DOCTYPE_MAJOR_INTERPELLATION, 1))
-      papers.concat(scrapeType(m, Paper::DOCTYPE_MINOR_INTERPELLATION, 1))
+      block = -> (paper) { papers << paper } unless block_given?
+      m = mechanize
+      scrapeType(m, Paper::DOCTYPE_MAJOR_INTERPELLATION, 1, &block)
+      scrapeType(m, Paper::DOCTYPE_MINOR_INTERPELLATION, 1, &block)
+      papers unless block_given?
     end
   end
 end
