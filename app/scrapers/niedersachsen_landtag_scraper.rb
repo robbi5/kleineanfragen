@@ -143,6 +143,10 @@ module NiedersachsenLandtagScraper
 
       search_form.field_with(name: '__action').value = 29
       search_form.field_with(name: 'ReportFormatListDisplay').value = 'Vollanzeige'
+      # remove all the hidden "SelectedItems" input fields because NI doesn't seem to like long post requests
+      search_form.fields.each do |f|
+        search_form.delete_field!(f.name) if f.name == 'SelectedItems'
+      end
       mp = m.submit(search_form)
 
       papers = []
