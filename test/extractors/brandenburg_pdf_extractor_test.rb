@@ -36,10 +36,19 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
 
   test 'chef' do
     paper = Struct.new(:contents).new(
-      PREFIX + "der Chef der Staatskanzlei" + SUFFIX)
+      PREFIX + 'der Chef der Staatskanzlei' + SUFFIX)
     answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
 
     assert_equal 1, answerers[:ministries].size
     assert_equal 'Chef der Staatskanzlei', answerers[:ministries].first
+  end
+
+  test 'ministerium' do
+    paper = Struct.new(:contents).new(
+      PREFIX + 'das Ministerium der Finanzen' + SUFFIX)
+    answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Ministerium der Finanzen', answerers[:ministries].first
   end
 end
