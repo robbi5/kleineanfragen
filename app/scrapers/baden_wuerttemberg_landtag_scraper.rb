@@ -4,11 +4,30 @@ module BadenWuerttembergLandtagScraper
   BASE_URL = 'http://www.landtag-bw.de'
   DETAIL_URL = 'http://www.statistik-bw.de/OPAL'
 
+  def self.extract_result_divs(page)
+    list = page.search('//div[@id="result"]//ol')
+    list.css('.result')
+  end
+
+  def self.extract_full_reference(div)
+    div.at_css('p').text.gsub(/\s+/, "").match(/(.+)-.+Datum/)[1].gsub(/\p{Z}+/, ' ').strip
+  end
+
+  def self.extract_reference(full_reference)
+    full_reference.split('/')
+  end
+
+  def self.build_answer_check_url(full_reference)
+    legislative_term, reference = extract_reference(full_reference)
+    url = DETAIL_URL + '/Ergebnis.asp?WP=' + legislative_term + '&DRSNR=' + reference
+    url
+  end
+
   class Overview < Scraper
     SEARCH_URL = BASE_URL + '/cms/render/live/de/sites/LTBW/home/dokumente/die-initiativen/gesamtverzeichnis/contentBoxes/suche-initiative.html?'
     TYPES = ['KA', 'GA']
 
-    def get_legislative_dates
+    def get_legislative_dates_page
       m = mechanize
       m.get DETAIL_URL
     end
@@ -59,15 +78,17 @@ module BadenWuerttembergLandtagScraper
       m = mechanize
       # to initialize session
       m.get SEARCH_URL
-      legislative_site = get_legislative_dates
+      legislative_site = get_legislative_dates_page
       legislative_start_end = extract_legislative_dates(legislative_site)
       legislative_period = get_legislative_period(legislative_start_end[0], legislative_start_end[1])
 
       result_pages = get_search_urls(SEARCH_URL, legislative_period, TYPES)
       result_pages.each do |page|
         results = m.get page
-        list = results.search('//div[@id="result"]//ol')
-        puts list.inspect
+        result_divs = results.extract_result_divs(page)
+        result_divs.each do |div|
+          # full_reference = extract_full_reference(div)
+        end
       end
     end
   end
