@@ -123,7 +123,7 @@ module SachsenScraper
   class Overview < Scraper
     SEARCH_URL = BASE_URL + '/parlamentsdokumentation/parlamentsarchiv/dokumententyp.aspx'
 
-    def search(content, type, startAt)
+    def search(content, type, initiallyHighDocumentNumber)
       if (type == Paper::DOCTYPE_MAJOR_INTERPELLATION)
         type = 'GrAnfr'
       else
@@ -132,12 +132,11 @@ module SachsenScraper
       search_form = content.forms.first
       search_form['__EVENTARGUMENT'] = 'Click'
       search_form['__EVENTTARGET'] = SEARCH_FIELD + '$btn_EinfSuche'
-      search_form[SEARCH_FIELD + '$tf_EinfDoknrVon$ec'] = startAt
-      search_form[SEARCH_FIELD + '$tf_EinfDoknrBis$ec'] = 100000
-      # TODO switch startAt
-      #search_form[SEARCH_FIELD2 + 'OrderBy_logisch_ec_VI'] = 'Eingangsdatum_desc'
+      search_form[SEARCH_FIELD + '$tf_EinfDoknrVon$ec'] = 1
+      search_form[SEARCH_FIELD + '$tf_EinfDoknrBis$ec'] = initiallyHighDocumentNumber
+      search_form[SEARCH_FIELD2 + 'OrderBy_logisch_ec_VI'] = 'Eingangsdatum_desc'
       search_form[SEARCH_FIELD2 + 'Doktyp_ec_VI'] = type
-      content = search_form.submit
+      search_form.submit
     end
 
     def supports_pagination?
@@ -148,14 +147,14 @@ module SachsenScraper
       true
     end
 
-    # TODO switch around startAt
-    def scrapeType(m, type, startAt, &block)
+    def scrapeType(m, type, initiallyHighDocumentNumber, &block)
       top = m.get BASE_URL
       SachsenScraper.switchToTerm(@legislative_term, m, top)
       content = top.frame_with(name: 'content').click
-      content = search(content, type, startAt)
+      content = search(content, type, initiallyHighDocumentNumber)
 
       page = 1
+      paper = nil
       while !content.search('//td[@class="dxdvItem_EDAS"]/table')[0].nil? do
         SachsenScraper.extract_overview_items(content).each do |item|
           begin
@@ -171,16 +170,17 @@ module SachsenScraper
         content = m.get(BASE_URL + '/parlamentsdokumentation/parlamentsarchiv/trefferliste.aspx?NavSeite=' + page.to_s + '&isHaldeReport=&VolltextSuche=&refferer=')
       end
       if (!content.search('//*[@id="ctl00_masterContentCallback_content_trWarning"]')[0].nil?)
-        scrapeType(m, type, papers.last.reference.to_i + 1, &block)
+        scrapeType(m, type, paper[:reference].to_i - 1, &block)
       end
     end
 
     def scrape(&block)
+      initiallyHighDocumentNumber = 20000
       papers = []
       block = -> (paper) { papers << paper } unless block_given?
       m = mechanize
-      scrapeType(m, Paper::DOCTYPE_MAJOR_INTERPELLATION, 1, &block)
-      scrapeType(m, Paper::DOCTYPE_MINOR_INTERPELLATION, 1, &block)
+      scrapeType(m, Paper::DOCTYPE_MAJOR_INTERPELLATION, initiallyHighDocumentNumber, &block)
+      scrapeType(m, Paper::DOCTYPE_MINOR_INTERPELLATION, initiallyHighDocumentNumber, &block)
       papers unless block_given?
     end
   end
