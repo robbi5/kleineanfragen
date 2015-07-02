@@ -22,8 +22,12 @@ de:
         one: 'Eine neue kleine Anfrage für die Suche nach "%{query}"'
         other: '%{count} neue kleine Anfragen für die Suche nach "%{query}"'
     new_interpellations:
-      one: 'Es ist eine neue Anfrage eingegangen'
-      other: 'Es sind %{count} neue Anfragen eingegangen'
+      body:
+        one: Es ist eine neue kleine Anfrage aus %{body} eingegangen
+        other: Es sind %{count} neue kleine Anfragen aus %{body} eingegangen
+      search:
+        one: 'Es ist eine neue kleine Anfrage für die Suche nach "%{query}" eingegangen'
+        other: 'Es sind %{count} neue kleine Anfragen für die Suche nach "%{query}" eingegangen'
   views:
     pagination:
       first: "&lArr; Erste Seite"
