@@ -36,7 +36,7 @@ module SachsenScraper
   def self.extract_originators(meta_text)
     people = [meta_text.partition(/\p{Upper}{2}/)[0].strip]
     parties = [meta_text.match(/\p{Upper}\p{Lower}*\p{Upper}+\s*\p{Upper}*/)[0].strip]
-    { people: people, parties: parties}
+    { people: people, parties: parties }
   end
 
   def self.extract_overview_paper(item, doctype)
