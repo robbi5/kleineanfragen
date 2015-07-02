@@ -96,7 +96,7 @@ module SachsenScraper
     def extract_pdf_url(top)
       nav = top.frame_with(name: 'navigation').click
       onload_value = nav.search('//body').first.attribute('onload')
-      pdf_url = onload_value.to_s[/(http\S*?\.pdf)/]
+      onload_value.to_s[/(http\S*?\.pdf)/]
     end
 
     def extract_viewer_url(content)
