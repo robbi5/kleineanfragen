@@ -13,14 +13,52 @@ module BadenWuerttembergLandtagScraper
     div.at_css('p').text.gsub(/\s+/, "").match(/(.+)-.+Datum/)[1].gsub(/\p{Z}+/, ' ').strip
   end
 
+  def self.extract_title(div)
+    div.at_css('a').text.strip
+  end
+
   def self.extract_reference(full_reference)
     full_reference.split('/')
   end
 
-  def self.build_answer_check_url(full_reference)
+  def self.build_detail_url(full_reference)
     legislative_term, reference = extract_reference(full_reference)
     url = DETAIL_URL + '/Ergebnis.asp?WP=' + legislative_term + '&DRSNR=' + reference
     url
+  end
+
+  def self.get_detail_url(check_answer_url)
+    m = mechanize
+    m.get check_answer_url
+  end
+
+  def self.get_detail_link(page)
+    table = page.search('//table[@class="OPAL"]/tr')
+    table.at_css('a')
+  end
+
+  def self.check_for_answer(link)
+    link.text.lstrip.match(/und\s+Antw/).size >= 1
+  end
+
+  def self.extract_meta(link)
+    url = link.attributes['href'].value
+    match_results = link.text.lstrip.match(/(KlAnfr|GrAnfr)\s+(.+)\s+\d+\..+und\s+Antw\s+(.+)\s+Drs/)
+    doctype = match_results[1]
+    case doctype.downcase
+    when 'klanfr'
+      doctype = Paper::DOCTYPE_MINOR_INTERPELLATION
+    when 'granfr'
+      doctype = Paper::DOCTYPE_MAJOR_INTERPELLATION
+    end
+    {
+      doctype: doctype,
+      url: url,
+      originators: match_results[2].strip,
+      answerers: {
+        ministries: match_results[3].strip
+      }
+    }
   end
 
   class Overview < Scraper

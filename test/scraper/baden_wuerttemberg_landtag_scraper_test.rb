@@ -6,6 +6,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     @search_url = 'http://www.landtag-bw.de/cms/render/live/de/sites/LTBW/home/dokumente/die-initiativen/gesamtverzeichnis/contentBoxes/suche-initiative.html?'
     @legislative_page = Mechanize.new.get('file://' + Rails.root.join('test/fixtures/baden_wuerttemberg_legislative_term_page.html').to_s)
     @result_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/baden_wuerttemberg_result_page.html')))
+    @detail_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/baden_wuerttemberg_is_answer.html')))
   end
 
   test 'get legislative start and end date from url' do
@@ -69,6 +70,13 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
+  test 'extract title from result div' do
+    div = @scraper.extract_result_divs(@result_page)[0]
+    actual = @scraper.extract_title(div)
+    expected = 'Barrierefreier Ausbau der Bahnhöfe auf der Hauptstrecke Stuttgart-Ulm im Landkreis Göppingen zwischen Reichenbach/Fils und Eislingen/Fils'
+    assert_equal(expected, actual)
+  end
+
   test 'extract reference from full reference' do
     full_reference = '15/6432'
     actual = @scraper.extract_reference(full_reference)
@@ -78,8 +86,35 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
 
   test 'build detail url for answer-chek from full reference' do
     full_reference = '15/6432'
-    actual = @scraper.build_answer_check_url(full_reference)
+    actual = @scraper.build_detail_url(full_reference)
     expected = 'http://www.statistik-bw.de/OPAL/Ergebnis.asp?WP=15&DRSNR=6432'
+    assert_equal(expected, actual)
+  end
+
+  test 'get detail link from detail page' do
+    actual = @scraper.get_detail_link(@detail_page).text.lstrip
+    expected = 'KlAnfr Peter Hofelich SPD 29.01.2015 und Antw MVI Drs 15/6432'
+    assert_equal(expected, actual)
+  end
+
+  test 'check document for answer' do
+    link = @scraper.get_detail_link(@detail_page)
+    actual = @scraper.check_for_answer(link)
+    expected = true
+    assert_equal(expected, actual)
+  end
+
+  test 'extract meta information from detail link' do
+    link = @scraper.get_detail_link(@detail_page)
+    actual = @scraper.extract_meta(link)
+    expected = {
+      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+      url: 'http://www.landtag-bw.de/scr/initiativen/ini_check.asp?wp=15&drs=6432',
+      originators: 'Peter Hofelich SPD',
+      answerers: {
+        ministries: 'MVI'
+      }
+    }
     assert_equal(expected, actual)
   end
 end
