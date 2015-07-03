@@ -1,5 +1,7 @@
 require 'date'
 
+# FIXME
+
 module BadenWuerttembergLandtagScraper
   BASE_URL = 'http://www.landtag-bw.de'
   DETAIL_URL = 'http://www.statistik-bw.de/OPAL'
@@ -10,7 +12,11 @@ module BadenWuerttembergLandtagScraper
   end
 
   def self.extract_full_reference(div)
-    div.at_css('p').text.gsub(/\s+/, "").match(/(.+)-.+Datum/)[1].gsub(/\p{Z}+/, ' ').strip
+    div.at_css('p').text.gsub(/\s+/, "").gsub(/g/, "").match(/(.+)-.+Datum/)[1].gsub(/\p{Z}+/, ' ').strip
+  end
+
+  def self.extract_originator_party(div)
+    div.at_css('p').text.gsub(/\s+/, "").match(/Urheber:(.+$)/)[1].gsub(/\p{Z}+/, ' ').strip
   end
 
   def self.extract_title(div)
@@ -82,6 +88,7 @@ module BadenWuerttembergLandtagScraper
 
   def self.extract_overview_paper(div)
     full_reference = extract_full_reference(div)
+    originator_party = extract_originator_party(div)
     legislative_term, reference = extract_reference(full_reference)
     title = extract_title(div)
     
@@ -90,7 +97,11 @@ module BadenWuerttembergLandtagScraper
       full_reference: full_reference,
       legislative_term: legislative_term,
       reference: reference,
-      title: title
+      title: title,
+      origniator: {
+        people: [],
+        parties: [originator_party]
+      }
     }
   end
 
