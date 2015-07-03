@@ -21,15 +21,12 @@ module BadenWuerttembergLandtagScraper
     full_reference.split('/')
   end
 
-  def self.build_detail_url(full_reference)
-    legislative_term, reference = extract_reference(full_reference)
-    url = DETAIL_URL + '/Ergebnis.asp?WP=' + legislative_term + '&DRSNR=' + reference
-    url
+  def self.build_detail_url(legislative_term, reference)
+    DETAIL_URL + '/Ergebnis.asp?WP=' + legislative_term + '&DRSNR=' + reference
   end
 
-  def self.get_detail_url(check_answer_url)
-    m = mechanize
-    m.get check_answer_url
+  def self.get_detail_page(m, detail_url)
+    m.get detail_url
   end
 
   def self.get_detail_link(page)
@@ -41,22 +38,79 @@ module BadenWuerttembergLandtagScraper
     link.text.lstrip.match(/und\s+Antw/).size >= 1
   end
 
+  def self.is_answer?(m, full_reference)
+    legislative_term, reference = extract_reference(full_reference)
+    detail_url = build_detail_url(legislative_term, reference)
+    detail_page = get_detail_page(m, detail_url)
+    detail_link = get_detail_link(detail_page)
+    {
+      detail_link: detail_link,
+      answer: check_for_answer(detail_link)
+    }
+  end
+
+  def self.extract_doctype(match_result)
+    case match_result.downcase
+    when 'klanfr'
+      Paper::DOCTYPE_MINOR_INTERPELLATION
+    when 'granfr'
+      Paper::DOCTYPE_MAJOR_INTERPELLATION
+    end
+  end
+
+  def self.extract_detail_title(page)
+    table = page.search('//table[@class="OPAL"]')
+    table_rows = table.css('tr')
+    table_rows.each do |row|
+      if row.at_css('td').text == 'Betreff:'
+        return row.element_children[1].text
+      end
+    end
+    nil
+  end
+
   def self.extract_meta(link)
     url = link.attributes['href'].value
-    match_results = link.text.lstrip.match(/(KlAnfr|GrAnfr)\s+(.+)\s+\d+\..+und\s+Antw\s+(.+)\s+Drs/)
-    doctype = match_results[1]
-    case doctype.downcase
-    when 'klanfr'
-      doctype = Paper::DOCTYPE_MINOR_INTERPELLATION
-    when 'granfr'
-      doctype = Paper::DOCTYPE_MAJOR_INTERPELLATION
-    end
+    match_results = link.text.lstrip.match(/(KlAnfr|GrAnfr)\s+.+\s+\d+\..+und\s+Antw\s+(.+)\s+Drs/)
+    doctype = extract_doctype(match_results[1])
     {
       doctype: doctype,
       url: url,
-      originators: match_results[2].strip,
+      answerers: match_results[2].strip
+    }
+  end
+
+  def self.extract_overview_paper(div)
+    full_reference = extract_full_reference(div)
+    legislative_term, reference = extract_reference(full_reference)
+    title = extract_title(div)
+    
+    # Remaining parts come from Detail Scraper
+    {
+      full_reference: full_reference,
+      legislative_term: legislative_term,
+      reference: reference,
+      title: title
+    }
+  end
+
+  def self.extract_detail_paper(page, detail_link, full_reference)
+    legislative_term, reference = extract_reference(full_reference)
+    title = extract_detail_title(page)
+    meta = extract_meta(detail_link)
+    doctype = meta[:doctype]
+    url = meta[:url]
+    ministries = [meta[:answerers]] unless meta[:answerers].nil?
+    {
+      full_reference: full_reference,
+      legislative_term: legislative_term,
+      reference: reference,
+      title: title,
+      doctype: doctype,
+      url: url,
+      is_answer: true,
       answerers: {
-        ministries: match_results[3].strip
+        ministries: ministries
       }
     }
   end
@@ -67,7 +121,8 @@ module BadenWuerttembergLandtagScraper
 
     def get_legislative_dates_page
       m = mechanize
-      m.get DETAIL_URL
+      mp = m.get DETAIL_URL + '/'
+      extract_legislative_dates(mp)
     end
 
     def extract_legislative_dates(legislative_page)
@@ -114,23 +169,44 @@ module BadenWuerttembergLandtagScraper
       streaming = block_given?
       papers = []
       m = mechanize
-      # to initialize session
-      m.get SEARCH_URL
-      legislative_site = get_legislative_dates_page
-      legislative_start_end = extract_legislative_dates(legislative_site)
-      legislative_period = get_legislative_period(legislative_start_end[0], legislative_start_end[1])
+      legislative_dates = get_legislative_dates_page
+      legislative_period = Overview.get_legislative_period(legislative_dates[0], legislative_dates[1])
 
-      result_pages = get_search_urls(SEARCH_URL, legislative_period, TYPES)
+      result_pages = Overview.get_search_urls(SEARCH_URL, legislative_period, TYPES)
       result_pages.each do |page|
         results = m.get page
-        result_divs = results.extract_result_divs(page)
+        result_divs = BadenWuerttembergLandtagScraper.extract_result_divs(results)
         result_divs.each do |div|
-          # full_reference = extract_full_reference(div)
+          begin
+            full_reference = BadenWuerttembergLandtagScraper.extract_full_reference(div)
+            is_answer = BadenWuerttembergLandtagScraper.is_answer?(m, full_reference)
+            next unless is_answer
+            paper = BadenWuerttembergLandtagScraper.extract_overview_paper(div)
+          rescue => e
+            logger.warn e
+            next
+          end
+          if streaming
+            yield paper
+          else
+            papers << paper
+          end
         end
+        papers unless streaming
       end
     end
   end
 
   class Detail < DetailScraper
+    def scrape
+      m = mechanize
+      full_reference
+      legislative_term, reference = BadenWuerttembergLandtagScraper.extract_reference(full_reference)
+      page = m.get BadenWuerttembergLandtagScraper.build_detail_url(legislative_term, reference)
+      detail_link = BadenWuerttembergLandtagScraper.get_detail_link(page)
+
+      complete_paper = BadenWuerttembergLandtagScraper.extract_detail_paper(page, detail_link, full_reference)
+      complete_paper
+    end
   end
 end
