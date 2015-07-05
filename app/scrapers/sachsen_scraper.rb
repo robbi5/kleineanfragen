@@ -53,7 +53,7 @@ module SachsenScraper
     legislative_term, reference = full_reference.split('/')
     originators = {
       people: [meta[:person]].reject(&:blank?),
-      party: [meta[:party]].reject(&:blank?)
+      parties: [meta[:party]].reject(&:blank?)
     }
     {
       legislative_term: legislative_term,
