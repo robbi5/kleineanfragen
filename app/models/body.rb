@@ -31,6 +31,7 @@ class Body < ActiveRecord::Base
     when 'RP' then RheinlandPfalzLandtagScraper
     when 'SH' then SchleswigHolsteinLandtagScraper
     when 'SL' then SaarlandScraper
+    when 'SN' then SachsenScraper
     when 'ST' then SachsenAnhaltLandtagScraper
     when 'TH' then ThueringenLandtagScraper
     end

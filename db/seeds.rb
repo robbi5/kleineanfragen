@@ -20,7 +20,7 @@ Body.create([
   { name: 'Nordrhein-Westfalen',    state: 'NW', website: 'https://www.landtag.nrw.de/portal/WWW/Navigation_R2010/040-Dokumente-und-Recherche/Inhalt.jsp' },
   { name: 'Rheinland-Pfalz',        state: 'RP', website: 'http://opal.rlp.de/starweb/OPAL_extern' },
   { name: 'Saarland',               state: 'SL', website: 'http://www.landtag-saar.de/Dokumente' },
-  # { name: 'Sachsen',                state: 'SN', website: 'http://edas.landtag.sachsen.de' },
+  { name: 'Sachsen',                state: 'SN', website: 'http://edas.landtag.sachsen.de' },
   { name: 'Sachsen-Anhalt',         state: 'ST', website: 'http://padoka.landtag.sachsen-anhalt.de' },
   { name: 'Schleswig-Holstein',     state: 'SH', website: 'http://lissh.lvn.parlanet.de/shlt/start.html' },
   { name: 'Thüringen',              state: 'TH', website: 'http://www.parldok.thueringen.de' }
