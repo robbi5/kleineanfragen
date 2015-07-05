@@ -17,8 +17,25 @@ module SachsenScraper
     text.strip if !text.nil?
   end
 
+  def self.extract_meta_data(text)
+    type = extract_type(text)
+    if type == Paper::DOCTYPE_MAJOR_INTERPELLATION
+      # empty braces for same result count
+      m = text.match(/^GrAnfr ()(.+?) ([\d\.]+) Drs ([\d\/]+)$/)
+    else
+      m = text.match(/^KlAnfr (.+?) ([A-Z][a-zA-Z]{2}|[A-Z]{2,}[[:alnum:]\s]+) ([\d\.]+) Drs ([\d\/]+)$/)
+    end
+    return nil if m.nil?
+    {
+      person: m[1],
+      party: m[2],
+      published_at: Date.parse(m[3]),
+      full_reference: m[4]
+    }
+  end
+
   def self.extract_type(text)
-    if (text[0..5] == 'KlAnfr')
+    if text[0..5] == 'KlAnfr'
       Paper::DOCTYPE_MINOR_INTERPELLATION
     else
       Paper::DOCTYPE_MAJOR_INTERPELLATION
@@ -29,29 +46,25 @@ module SachsenScraper
     Date.parse(meta_text.match(/\d+\.\d+\.\d{4}/).to_s)
   end
 
-  def self.extract_reference(meta_text)
-    meta_text.split('Drs')[1].strip
-  end
-
-  def self.extract_originators(meta_text)
-    people = [meta_text.partition(/\p{Upper}{2}/)[0].strip]
-    parties = [meta_text.match(/\p{Upper}\p{Lower}*\p{Upper}+\s*\p{Upper}*/)[0].strip]
-    { people: people, parties: parties }
-  end
-
   def self.extract_overview_paper(item, doctype)
-    meta_text = extract_meta_text item
-    meta_text = meta_text[6..meta_text.length].strip
-    full_reference = extract_reference(meta_text)
+    meta_text = extract_meta_text(item)
+    meta = extract_meta_data(meta_text)
+    full_reference = meta[:full_reference]
+    legislative_term, reference = full_reference.split('/')
+    originators = {
+      people: [meta[:person]].reject(&:blank?),
+      party: [meta[:party]].reject(&:blank?)
+    }
     {
-      legislative_term: full_reference.split('/')[0],
+      legislative_term: legislative_term,
       full_reference: full_reference,
-      reference: full_reference.split('/')[1],
+      reference: reference,
       doctype: doctype,
       title: extract_title(item),
+      # url
       url: nil,
-      published_at: extract_date(meta_text),
-      originators: extract_originators(meta_text),
+      published_at: meta[:published_at],
+      originators: originators,
       is_answer: nil
     }
   end
@@ -62,9 +75,9 @@ module SachsenScraper
     extract_overview_paper(item, type)
   end
 
-  def self.switch_to_term(i, m, top)
+  def self.switch_to_term(legislative_term, m, top)
     top.frame_with(name: 'head').click
-    nav = m.get('/redirect.aspx?wahlperiode=' + i.to_s)
+    nav = m.get('/redirect.aspx?wahlperiode=' + legislative_term.to_s)
     nav.forms.first.submit
   end
 
@@ -104,9 +117,7 @@ module SachsenScraper
       viewer_ids = pdf_table.search('//input').select do |i|
         !i.attribute('name').nil? && !i.attribute('name').value.nil? && !i.attribute('name').value.index(/no\$btn/).nil?
       end
-      viewer_ids = viewer_ids.map do |i|
-        i.attribute('name').value
-      end
+      viewer_ids = viewer_ids.map { |i| i.attribute('name').value }
       viewer_id = viewer_ids.last.match(/anzeige\$(.*?)_(.*?)_Drs_(.*?)_no\$btn/)
       'http://edas.landtag.sachsen.de/viewer.aspx?dok_nr=' + viewer_id[1] + '&dok_art=Drs&leg_per=' + viewer_id[3] + '&pos_dok=' + viewer_id[2]
     end
@@ -124,7 +135,7 @@ module SachsenScraper
     SEARCH_URL = BASE_URL + '/parlamentsdokumentation/parlamentsarchiv/dokumententyp.aspx'
 
     def search(content, type, high_doc_number)
-      if (type == Paper::DOCTYPE_MAJOR_INTERPELLATION)
+      if type == Paper::DOCTYPE_MAJOR_INTERPELLATION
         type = 'GrAnfr'
       else
         type = 'KlAnfr'
@@ -137,10 +148,6 @@ module SachsenScraper
       search_form[SEARCH_FIELD2 + 'OrderBy_logisch_ec_VI'] = 'Eingangsdatum_desc'
       search_form[SEARCH_FIELD2 + 'Doktyp_ec_VI'] = type
       search_form.submit
-    end
-
-    def supports_pagination?
-      false
     end
 
     def supports_streaming?
@@ -179,8 +186,8 @@ module SachsenScraper
       papers = []
       block = -> (paper) { papers << paper } unless block_given?
       m = mechanize
-      scrape_type(m, Paper::DOCTYPE_MAJOR_INTERPELLATION, high_doc_number, &block)
       scrape_type(m, Paper::DOCTYPE_MINOR_INTERPELLATION, high_doc_number, &block)
+      scrape_type(m, Paper::DOCTYPE_MAJOR_INTERPELLATION, high_doc_number, &block)
       papers unless block_given?
     end
   end
