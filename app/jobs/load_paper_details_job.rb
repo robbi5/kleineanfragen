@@ -17,10 +17,13 @@ class LoadPaperDetailsJob < PaperJob
       return
     end
 
+    had_empty_url = paper.url.blank?
+
     results.each do |key, value|
       paper.send("#{key}=", value) if paper.send(key).blank? || OVERWRITEABLE.include?(key)
     end
 
     paper.save
+    StorePaperPDFJob.perform_later(paper) if had_empty_url && !paper.url.blank?
   end
 end

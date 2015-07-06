@@ -125,7 +125,7 @@ class ImportNewPapersJob < ActiveJob::Base
       new_paper = true
     end
     LoadPaperDetailsJob.perform_later(paper) if item_missing_fields?(item) && @load_details
-    StorePaperPDFJob.perform_later(paper, force: new_paper)
+    StorePaperPDFJob.perform_later(paper, force: new_paper) unless paper.url.blank?
   end
 
   def item_missing_fields?(item)
