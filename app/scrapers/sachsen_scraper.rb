@@ -27,7 +27,7 @@ module SachsenScraper
     end
     return nil if m.nil?
     {
-      person: m[1],
+      person: m[1].presence,
       party: m[2],
       published_at: Date.parse(m[3]),
       full_reference: m[4]
@@ -49,6 +49,7 @@ module SachsenScraper
   def self.extract_overview_paper(item, doctype)
     meta_text = extract_meta_text(item)
     meta = extract_meta_data(meta_text)
+    fail "SN: cannot extract meta data: #{meta_text}" if meta.nil?
     full_reference = meta[:full_reference]
     legislative_term, reference = full_reference.split('/')
     originators = {
