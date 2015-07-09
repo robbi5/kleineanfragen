@@ -9,7 +9,9 @@ module SachsenScraper
   end
 
   def self.extract_title(item)
-    item.search('.//tr[3]/td/b').text.strip
+    el = item.search('.//tr[3]/td/b')
+    el.css('br').each { |br| br.replace ' ' }
+    el.text.strip
   end
 
   def self.extract_meta_text(item)
