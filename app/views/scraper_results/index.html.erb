@@ -29,7 +29,7 @@
             info = "#{info}, #{result.new_papers}/#{result.old_papers}"
           end
       %>
-        <span class="circle circle--<%= result.status %>" title="<%= info %>"><%= result.success %></span>
+        <span class="circle circle--<%= result.status %><% if !result.got_new_papers? %> circle--nothing-new<% end %>" title="<%= info %>"><%= result.success %></span>
       <% end %>
     </td>
     <% end %>

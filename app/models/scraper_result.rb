@@ -21,6 +21,10 @@ class ScraperResult < ActiveRecord::Base
     !started_at.nil? && stopped_at.nil?
   end
 
+  def got_new_papers?
+    !new_papers.nil? && new_papers > 0
+  end
+
   def to_param
     self.class.hashids.encode(id)
   end

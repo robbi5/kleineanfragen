@@ -409,6 +409,7 @@ span.twitter-typeahead {
     height: 9px;
   }
 
+  &.circle--nothing-new { border-style: dotted; }
   &.circle--success:after { background-color: #5cb85c; }
   &.circle--failure:after { background-color: #9b0000; }
   &.circle--running:after { animation: circle-running 1.2s infinite alternate; }
