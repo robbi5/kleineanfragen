@@ -2,7 +2,7 @@
 
 <%- @papers.each do |paper| -%>
 * <%= paper.title %>
-  <% if paper.major? -%>Große Anfrage • <% end -%>Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %>
+  <% if paper.major? -%>Große Anfrage • <% end -%><% if @show_body -%><%= paper.body.name %> • <% end -%>Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %>
   Veröffentlicht am <%= l paper.published_at %> <%- unless paper.page_count.nil? -%>— <%= paper.page_count %> <%= t :pages, count: paper.page_count -%><%- end -%><%- if paper.contains_table %>, enthält Tabelle<% end %>
   <%= paper_short_url(paper) %>
 

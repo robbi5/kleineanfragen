@@ -15,6 +15,7 @@ class SubscriptionMailer < ApplicationMailer
     elsif @subscription.subtype == 'search'
       subject = I18n.t(:'email.subject.search', count: @papers.size, query: @subscription.query)
       @first_line = I18n.t(:'email.new_interpellations.search', count: @papers.size, query: @subscription.query)
+      @show_body = true
     end
 
     headers['List-Unsubscribe'] = "<#{unsubscribe_url}>"
