@@ -76,6 +76,10 @@ module HamburgBuergerschaftScraper
     path = title_el.element_children[0]['href']
     url = Addressable::URI.parse(BASE_URL).join(path).normalize.to_s
 
+    if url.starts_with? 'javascript:'
+      fail "Paper [HH #{full_reference}] is non-public"
+    end
+
     doctype_el = next_row.element_children[1]
     if doctype_el.text.scan(/kleine/i).present?
       doctype = Paper::DOCTYPE_MINOR_INTERPELLATION
