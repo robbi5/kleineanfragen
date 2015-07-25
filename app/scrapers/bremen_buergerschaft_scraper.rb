@@ -139,6 +139,7 @@ module BremenBuergerschaftScraper
       form = mp.form 'theForm'
       fail 'HB: search form missing' if form.nil?
 
+      fail 'HB: legislative_term missing' if !form.field_with(name: 'lp').options.any? { |opt| opt.value == @legislative_term.to_s }
       form.field_with(name: 'lp').value = @legislative_term
       form.field_with(name: 'vorlageart').value = TYPES
       submit_button = form.submits.find { |btn| btn.value == 'suchen' }
@@ -158,6 +159,7 @@ module BremenBuergerschaftScraper
       form = mp.form 'theForm'
       fail "HB [#{full_reference}]: search form missing" if form.nil?
 
+      fail 'HB: legislative_term missing' if !form.field_with(name: 'lp').options.any? { |opt| opt.value == @legislative_term.to_s }
       form.field_with(name: 'lp').value = @legislative_term
       form.field_with(name: 'vorlageart').value = TYPES
       form.field_with(name: 'drucksachennr').value = @reference
