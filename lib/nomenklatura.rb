@@ -95,7 +95,7 @@ module Nomenklatura
     # or nil if invalid
     def lookup(name)
       entity = entity_by_name(name).dereference
-      return nil if entity.invalid
+      return nil if entity.invalid?
       return entity.name
     rescue NoMatch
       begin
@@ -118,8 +118,8 @@ module Nomenklatura
 
     # FIXME: nicer accessors for ['name', 'invalid', 'reviewed', 'canonical', 'attributes']
     def name; @data.try(:[], 'name'); end
-    def invalid; @data.try(:[], 'invalid'); end
-    def reviewed; @data.try(:[], 'reviewed'); end
+    def invalid?; @data.try(:[], 'invalid'); end
+    def reviewed?; @data.try(:[], 'reviewed'); end
     def attributes; @data.try(:[], 'attributes'); end
 
     def canonical

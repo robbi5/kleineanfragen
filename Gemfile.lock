@@ -176,6 +176,7 @@ GEM
     mime-types (2.6.1)
     mini_portile (0.6.2)
     minitest (5.7.0)
+    minitest-stub_any_instance (1.0.1)
     mono_logger (1.1.0)
     multi_json (1.11.1)
     multi_xml (0.5.5)
@@ -332,6 +333,7 @@ DEPENDENCIES
   kaminari (~> 0.16.0)
   mechanize (~> 2.7.3)
   memory_test_fix
+  minitest-stub_any_instance
   newrelic_rpm
   nokogiri
   patron (~> 0.4.18)

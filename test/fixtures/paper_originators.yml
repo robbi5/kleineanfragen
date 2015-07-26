@@ -9,3 +9,27 @@ two:
   paper_id: 
   originator_id: 
   originator_type: Originator
+
+three:
+  paper: paper_be_17_1000
+  originator: invalid_person (Person)
+
+four:
+  paper: paper_be_17_1000
+  originator: normal_person (Person)
+
+five:
+  paper: paper_be_17_1000
+  originator: typo_person (Person)
+
+six:
+  paper: paper_be_17_1000
+  originator: shortened_middle_name_person (Person)
+
+seven:
+  paper: paper_be_17_1000
+  originator: multi_body_person (Person)
+
+eight:
+  paper: paper_by_17_2000
+  originator: multi_body_person (Person)

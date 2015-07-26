@@ -7,3 +7,21 @@ one:
 two:
   name: SecondPerson
   party: TheParty
+
+invalid_person:
+  name: "Invalid Person"
+
+normal_person:
+  name: "Normal Person"
+
+typo_person:
+  name: "Typo in Namme"
+
+shortened_middle_name_person:
+  name: "Test M. Name"
+
+middle_name_person:
+  name: "Test Middle Name"
+
+multi_body_person:
+  name: "Has Papers in multiple bodies"
