@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/ankane/searchkick.git
-  revision: 1821ecdd9c6f474f2d0195929b7358aa9bc838d2
-  branch: index_options
+  revision: c29c5be0e37356957061ce42ee1ecc9d67ac7409
+  ref: c29c5be0e37356957061ce42ee1ecc9d67ac7409
   specs:
     searchkick (0.9.0)
       activemodel
