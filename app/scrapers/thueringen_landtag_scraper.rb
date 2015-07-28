@@ -45,7 +45,7 @@ module ThueringenLandtagScraper
     elsif doctype_el.text.scan(/große/i).present?
       doctype = Paper::DOCTYPE_MAJOR_INTERPELLATION
     else
-      fail "doctype unknown for Paper [TH #{full_reference}]"
+      return nil
     end
 
     answerers = next_row.next_element.element_children[1].text.strip.match(/([^\(]+)/)
@@ -79,6 +79,7 @@ module ThueringenLandtagScraper
     path = extract_path(title_el)
     url = extract_url(path)
     meta = extract_meta(next_row)
+    fail "doctype unknown for Paper [TH #{full_reference}]" if meta.nil?
 
     doctype = meta[:doctype]
     date = Date.parse(meta[:published_at])
@@ -179,11 +180,10 @@ module ThueringenLandtagScraper
       body = mp.search("//table[@id='parldokresult']")
       paper = ThueringenLandtagScraper.extract_paper(body.at_css('.title'))
 
-      button = body.at_css('.parldokresult-vorgang').attributes['onclick'].value
-
+      button = body.at_css('.parldokresult-vorgang')
       fail "TH [#{full_reference}]: no button to show details found" if button.nil?
 
-      detail_url = button.match(/location.href='(.+)'/)
+      detail_url = button.attributes['onclick'].value.match(/location.href='(.+)'/)
       mp = m.get Addressable::URI.parse(BASE_URL).join(detail_url[1]).normalize.to_s
 
       complete_paper = ThueringenLandtagScraper.extract_paper_detail(mp)
