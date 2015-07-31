@@ -2,7 +2,7 @@ require 'date'
 
 module BremenBuergerschaftScraper
   BASE_URL = 'https://www.bremische-buergerschaft.de'
-  TYPES = 'KlAnfr u. AntwSen;MdS Senat (Antwort)'
+  TYPES = ['KlAnfr u. AntwSen', 'MdS Senat (Antwort)']
 
   def self.extract_results(table)
     table.css('tr')
@@ -114,34 +114,36 @@ module BremenBuergerschaftScraper
       # to initialize session
       m.get BASE_URL
       # search form
-      mp = submit_search(m)
-      body = mp.search("//table[@id='suchergebnisse']")
-      fail "HB [#{full_reference}]: result page missing" if body.nil?
-      results = BremenBuergerschaftScraper.extract_results(body)
-      results.each do |table_row|
-        begin
-          paper = BremenBuergerschaftScraper.extract_paper(table_row)
-        rescue => e
-          logger.warn e
-          next
-        end
-        if streaming
-          yield paper
-        else
-          papers << paper
+      TYPES.each do |type|
+        mp = submit_search(m, type)
+        body = mp.search("//table[@id='suchergebnisse']")
+        fail "HB [#{full_reference}]: result page missing" if body.nil?
+        results = BremenBuergerschaftScraper.extract_results(body)
+        results.each do |table_row|
+          begin
+            paper = BremenBuergerschaftScraper.extract_paper(table_row)
+          rescue => e
+            logger.warn e
+            next
+          end
+          if streaming
+            yield paper
+          else
+            papers << paper
+          end
         end
       end
       papers unless streaming
     end
 
-    def submit_search(m)
+    def submit_search(m, type)
       mp = m.get SEARCH_URL
       form = mp.form 'theForm'
       fail 'HB: search form missing' if form.nil?
 
       fail 'HB: legislative_term missing' if !form.field_with(name: 'lp').options.any? { |opt| opt.value == @legislative_term.to_s }
       form.field_with(name: 'lp').value = @legislative_term
-      form.field_with(name: 'vorlageart').value = TYPES
+      form.field_with(name: 'vorlageart').value = type
       submit_button = form.submits.find { |btn| btn.value == 'suchen' }
       mp = m.submit(form, submit_button)
       mp
@@ -161,7 +163,7 @@ module BremenBuergerschaftScraper
 
       fail 'HB: legislative_term missing' if !form.field_with(name: 'lp').options.any? { |opt| opt.value == @legislative_term.to_s }
       form.field_with(name: 'lp').value = @legislative_term
-      form.field_with(name: 'vorlageart').value = TYPES
+      form.field_with(name: 'vorlageart').value = TYPES.join(';')
       form.field_with(name: 'drucksachennr').value = @reference
       submit_button = form.submits.find { |btn| btn.value == 'suchen' }
       mp = m.submit(form, submit_button)
