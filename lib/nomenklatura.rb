@@ -46,6 +46,7 @@ module Nomenklatura
     end
   end
 
+  class ServiceNotAvailable < StandardError; end
   class InvalidRequest < Error; end
   class NoMatch < Error; end
 
@@ -67,6 +68,8 @@ module Nomenklatura
       resp = @client.get(format('/datasets/%s/find', @name), params.merge(name: entityname))
       if resp.code == 404
         fail NoMatch, resp.parsed_response
+      elsif resp.code == 500
+        fail ServiceNotAvailable.new(resp)
       elsif resp.code != 200
         fail InvalidRequest, resp.parsed_response
       end
