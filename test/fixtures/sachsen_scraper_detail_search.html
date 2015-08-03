@@ -1,0 +1,814 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head><link rel="stylesheet" type="text/css" href="/DXR.axd?r=1_9-1C5x8" /><link rel="stylesheet" type="text/css" href="../../App_Themes/EDAS/Web/styles.css" /><link rel="stylesheet" type="text/css" href="../../App_Themes/EDAS/Editors/sprite.css" /><link rel="stylesheet" type="text/css" href="/DXR.axd?r=1_4-1C5x8" /><link rel="stylesheet" type="text/css" href="../../App_Themes/EDAS/Editors/styles.css" /><link rel="stylesheet" type="text/css" href="../../App_Themes/EDAS/Web/sprite.css" /><link rel="stylesheet" type="text/css" href="/DXR.axd?r=1_8-1C5x8" /><link href="../../App_Themes/EDAS/Editors/sprite.css" type="text/css" rel="stylesheet" /><link href="../../App_Themes/EDAS/Editors/styles.css" type="text/css" rel="stylesheet" /><link href="../../App_Themes/EDAS/GridView/sprite.css" type="text/css" rel="stylesheet" /><link href="../../App_Themes/EDAS/GridView/styles.css" type="text/css" rel="stylesheet" /><link href="../../App_Themes/EDAS/PivotGrid/sprite.css" type="text/css" rel="stylesheet" /><link href="../../App_Themes/EDAS/PivotGrid/styles.css" type="text/css" rel="stylesheet" /><link href="../../App_Themes/EDAS/Web/sprite.css" type="text/css" rel="stylesheet" /><link href="../../App_Themes/EDAS/Web/styles.css" type="text/css" rel="stylesheet" /><title>
+	Ergebnis der Recherche
+</title><meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema" /><meta content="Dokumente, Presse, EDAS, Webservices, Webservice, Landtag, Sachsen, Sächsischer, Saechsisch, SLT, Freistaat" name="keywords" /><link href="../../library/css/dokumente.css" type="text/css" rel="styleSheet" /><link href="../../favicon.ico" rel="shortcut icon" />
+
+   <script type="text/javascript" language="JavaScript">
+       function synchronisiereNavigation() {
+           if (top.navigation) {
+               if (window.location.href.indexOf('treffer') == -1 
+               && window.location.href.indexOf('suchmaske') == -1 
+               && window.location.href.indexOf('online_hilfe/index.aspx') == -1
+               && window.location.href.indexOf('volltextrecherche.aspx') == -1)
+               {
+                   top.navigation.setNavigation(window.location.href);
+               }
+           }
+        }
+        
+    </script>
+
+
+</head>
+<body style="background-color:White" onload="synchronisiereNavigation()">
+
+	<script language="JavaScript" type="text/javascript">
+	    var headLocator = "<img src='library/img/path_pfeil.gif' width=17 height=9 alt='>' />Parlamentsdokumente<img src='library/img/path_pfeil.gif' width=17 height=9 alt='>' />Trefferliste";
+
+	    function showHelp(a_st_Url) {
+	        var v_url = '/hilfe/online_hilfe/frames.aspx';
+	        //alert(v_url);
+	        var v_window = window.open(v_url + "?url=" + a_st_Url, "HelpWindow", "width=450,height=600,left=50,top=20,menubar=no,toolbar=no,resizable=yes,scrollbars=yes");
+	        if (v_window.focus)
+	            v_window.focus();
+	    }	    
+	    	    
+	</script>
+                  
+    
+    <form name="aspnetForm" method="post" action="trefferliste.aspx?NavSeite=1" id="aspnetForm">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJOTc1NDE5ODU1ZBgCBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WEQUyY3RsMDAkbWFzdGVyQ29udGVudENhbGxiYWNrJGNvbnRlbnQkYnRuRHJ1Y2tlbiRidG4FOmN0bDAwJG1hc3RlckNvbnRlbnRDYWxsYmFjayRjb250ZW50JGJ0bkFsbGVERUV4cG9ydFhMUyRidG4FOmN0bDAwJG1hc3RlckNvbnRlbnRDYWxsYmFjayRjb250ZW50JGJ0bkFsbGVERUV4cG9ydFhNTCRidG4FN2N0bDAwJG1hc3RlckNvbnRlbnRDYWxsYmFjayRjb250ZW50JGJ0bkRydWNrZW5MaXN0ZSRidG4FNGN0bDAwJG1hc3RlckNvbnRlbnRDYWxsYmFjayRjb250ZW50JGJ0bkV4cG9ydFhMUyRidG4FNGN0bDAwJG1hc3RlckNvbnRlbnRDYWxsYmFjayRjb250ZW50JGJ0bkV4cG9ydFhNTCRidG4FOGN0bDAwJG1hc3RlckNvbnRlbnRDYWxsYmFjayRjb250ZW50JHRyZWZmZXJsaXN0ZURhdGFWaWV3BVhjdGwwMCRtYXN0ZXJDb250ZW50Q2FsbGJhY2skY29udGVudCR0cmVmZmVybGlzdGVEYXRhVmlldyRJVDAkYW56ZWlnZSQxNzExXzBfRHJzXzZfbm8kYnRuBVhjdGwwMCRtYXN0ZXJDb250ZW50Q2FsbGJhY2skY29udGVudCR0cmVmZmVybGlzdGVEYXRhVmlldyRJVDAkYW56ZWlnZSQxNzExXzFfRHJzXzZfbm8kYnRuBU5jdGwwMCRtYXN0ZXJDb250ZW50Q2FsbGJhY2skY29udGVudCR0cmVmZmVybGlzdGVEYXRhVmlldyRJVDAkYnRuWnVtVm9yZ2FuZyRidG4FZ2N0bDAwJG1hc3RlckNvbnRlbnRDYWxsYmFjayRjb250ZW50JHRyZWZmZXJsaXN0ZURhdGFWaWV3JElUMCREb2t1bWVudEFuemVpZ2VCdXR0b24xJDE3MTFfMF9EcnNfNl9ubyRidG4FZ2N0bDAwJG1hc3RlckNvbnRlbnRDYWxsYmFjayRjb250ZW50JHRyZWZmZXJsaXN0ZURhdGFWaWV3JElUMCREb2t1bWVudEFuemVpZ2VCdXR0b24xJDE3MTFfMV9EcnNfNl9ubyRidG4FVGN0bDAwJG1hc3RlckNvbnRlbnRDYWxsYmFjayRjb250ZW50JEdlc2NodWV0enRlRG9rdW1lbnRlUG9wdXAkcGNHZXNjaHVldHp0ZURva3VtZW50ZQVkY3RsMDAkbWFzdGVyQ29udGVudENhbGxiYWNrJGNvbnRlbnQkR2VzY2h1ZXR6dGVEb2t1bWVudGVQb3B1cCRwY0dlc2NodWV0enRlRG9rdW1lbnRlJGJ0blBhcnRBbnplaWdlbgVgY3RsMDAkbWFzdGVyQ29udGVudENhbGxiYWNrJGNvbnRlbnQkR2VzY2h1ZXR6dGVEb2t1bWVudGVQb3B1cCRwY0dlc2NodWV0enRlRG9rdW1lbnRlJEFTUHhCdXR0b24yBRVjdGwwMCRwY01hc3RlckhpbndlaXMFIWN0bDAwJHBjTWFzdGVySGlud2VpcyRBU1B4QnV0dG9uMQU4Y3RsMDAkbWFzdGVyQ29udGVudENhbGxiYWNrJGNvbnRlbnQkdHJlZmZlcmxpc3RlRGF0YVZpZXcPFCsAB2RmZgIBZgIBZ2TtS/bkg4gWQij5Zp0XBinV39TCYwQlfoeyY9XXjMrLjQ==" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=QNKPpJQDBXaM_5EXiTicS7jZxkxEUxgxqdtQGp9m-TNf1zugEn9odVcvodp_wOZRxcHalyH_mYqhbt7jdNwLxxFB5pBw1qeSo7H3JS5rYWM1&amp;t=635654528670820778" type="text/javascript"></script>
+
+
+<script src="/library/js/DokumentAnzeige.js" type="text/javascript"></script>
+<script src="/library/js/AllgFunktionen.js" type="text/javascript"></script>
+<script src="/library/js/check_info.js" type="text/javascript"></script>
+<div>
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="9DF30080" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBQLNqr7xBgL/ws2NDAKnj5KoDALMwauQAQLY0uyOBm+RK64uMfhiQASkMSgsWaqpj7xQBEhUsxnu5s85WGVw" />
+</div>
+       <table border="0" cellpadding="0" cellspacing="0" width="99%">
+            <tr id="ctl00_trHeadline">
+	<td style="padding-bottom:10px;" class="headline">Ergebnis der Recherche</td>
+	<td style="padding-bottom:10px;" align="right" class="text"></td>
+</tr>
+
+            <tr>
+                <td colspan="2">
+                    <script id="dxis_934851035" src="/DXR.axd?r=1_157-1C5x8" type="text/javascript"></script><script id="dxis_1463007869" src="/DXR.axd?r=1_89-1C5x8" type="text/javascript"></script><script id="dxis_1690238592" src="/DXR.axd?r=1_149-1C5x8" type="text/javascript"></script><script id="dxis_1462904412" src="/DXR.axd?r=1_88-1C5x8" type="text/javascript"></script><script id="dxis_15714817" src="/DXR.axd?r=1_108-1C5x8" type="text/javascript"></script><script id="dxis_850732063" src="/DXR.axd?r=1_115-1C5x8" type="text/javascript"></script><script id="dxis_1340755051" src="/DXR.axd?r=1_113-1C5x8" type="text/javascript"></script><script id="dxis_2119729703" src="/DXR.axd?r=1_100-1C5x8" type="text/javascript"></script><script id="dxis_934914201" src="/DXR.axd?r=1_137-1C5x8" type="text/javascript"></script><script id="dxis_1831094617" src="/DXR.axd?r=1_92-1C5x8" type="text/javascript"></script><script id="dxis_1462401574" src="/DXR.axd?r=1_86-1C5x8" type="text/javascript"></script><script id="dxis_445205928" src="/DXR.axd?r=1_141-1C5x8" type="text/javascript"></script><script id="dxis_1690409567" src="/DXR.axd?r=1_139-1C5x8" type="text/javascript"></script><script id="dxis_15750756" src="/DXR.axd?r=1_138-1C5x8" type="text/javascript"></script><script id="dxis_1769576422" src="/DXR.axd?r=1_114-1C5x8" type="text/javascript"></script><div id="ctl00_masterContentCallback">
+	                
+                                
+
+    <script type="text/javascript" language="javascript">
+
+			var g_nVon, g_nBis;
+			function initTrefferliste()
+			{
+			
+				top["head"].st_DateiName = "trefferliste";
+				top["head"].st_archiv = "parlamentsdokumentation/parlamentsarchiv";
+				top["head"].st_VolltextSuche = "";
+				top["head"].st_Refferer = "";
+				
+				
+				var v_i_show = 0;
+				if (v_i_show==0)
+				{
+					top["head"].hideNavigator();
+					return;
+				}
+				else if (v_i_show==1)
+				{
+					//sonst Navigation anzeigen
+					var v_arr_Text = new Array();
+					var v_arr_Value = new Array();
+					top["head"].showNavigator(v_arr_Value, v_arr_Text);	
+					top["head"].selectNavigatorIndex(0);
+				}
+				else
+				{
+					top["head"].showNavigatorDiv();
+					top["head"].selectNavigatorIndex(0);
+				}
+			
+				
+			}
+
+			function printTrefferliste()
+			{
+				
+					if (checkVonBis(tf_AnzahlVon.GetValue(),tf_AnzahlBis.GetValue(),1))
+					{
+				        openPrintWindow("drucken.aspx?refferer=&VolltextSuche=&von=" + g_nVon + "&bis=" + g_nBis);				
+					}				
+				
+			}
+
+			function printTrefferlisteVorgang()
+			{
+				if (checkVonBis(tf_AnzahlVon.GetValue(),tf_AnzahlBis.GetValue(),1))
+				{
+                    openPrintWindow("drucken_treffer_vorgang.aspx?refferer=&VolltextSuche=&druck_liste=1&von=" + g_nVon + "&bis=" + g_nBis);				
+				}				
+			}
+
+			
+			function exportTrefferliste(a_format)
+			{				
+				if (checkVonBis(tf_AnzahlVon.GetValue(),tf_AnzahlBis.GetValue(),1))
+				{
+					parent.platzhalter.location.href = "xmlexport.aspx?refferer=&VolltextSuche=&von=" + g_nVon + "&bis=" + g_nBis + "&format=" + a_format;
+				}
+			}
+
+
+			function exportTrefferlisteAlleDE(a_format)
+			{				
+                parent.platzhalter.location.href = "xmlexport.aspx?refferer=AlleDE&dok_art=&dok_nr=&format=" + a_format;
+			}
+
+
+			
+			function AlleDE(a_st_Dokart, a_i_Doknr, a_i_legper)
+			{
+                openAlleDeWindow("trefferliste.aspx?refferer=AlleDE&dok_art=" + a_st_Dokart + "&dok_nr=" + a_i_Doknr + "&leg_per=" + a_i_legper);
+			}
+			
+						
+			var v_arr_Text = new Array("1. Wahlperiode: 27.10.1990 - 06.10.1994", "2. Wahlperiode: 06.10.1994 - 13.10.1999", "3. Wahlperiode: 13.10.1999 - 19.10.2004", "4. Wahlperiode: 19.10.2004 - 29.09.2009", "5. Wahlperiode: 29.09.2009 - 29.09.2014", "6. Wahlperiode: 29.09.2014 - ", "Alle Wahlperioden");
+var v_arr_Value = new Array(1, 2, 3, 4, 5, 6, 0);
+setWahlperiodeImHead(v_arr_Value, v_arr_Text, 6);
+			
+    
+    
+    </script>
+
+
+
+			<table id="ctl00_masterContentCallback_content_tbl_Content" cellspacing="0" cellpadding="0" width="800px" border="0">
+		<tr>
+			<td class="text" valign="top"><span id="ctl00_masterContentCallback_content_lb_Ueberschrift" class="subheadline">(Dokumentennummer = <b><i>1711</i></b>) UND (Dokumentenart = <b><i>Drucksache</i></b>)</span></td>
+			<td align="right" nowrap="nowrap" valign="top">
+						<table cellspacing="0" cellpadding="2" border="0">
+							<tr>
+								<td id="ctl00_masterContentCallback_content_td_TrefferVon" class="text" nowrap="nowrap">Treffer von&nbsp;</td>
+			
+								<td class="text" nowrap="nowrap"><script id="dxss_1161108301" type="text/javascript">
+<!--
+__aspxNumberDecimalSeparator = ',';
+
+//-->
+</script><table class="dxeButtonEditSys dxeButtonEdit_EDAS" cellspacing="0" cellpadding="0" id="ctl00_masterContentCallback_content_tf_AnzahlVon_ec" border="0" style="width:60px;border-collapse:collapse;border-collapse:collapse;">
+				<tr>
+					<td class="dxic" style="width:100%;"><input class="dxeEditArea_EDAS dxeEditAreaSys" onkeydown="aspxEKeyDown(&#39;ctl00_masterContentCallback_content_tf_AnzahlVon_ec&#39;, event)" name="ctl00$masterContentCallback$content$tf_AnzahlVon$ec" onkeyup="aspxEKeyUp(&#39;ctl00_masterContentCallback_content_tf_AnzahlVon_ec&#39;, event)" value="1" id="ctl00_masterContentCallback_content_tf_AnzahlVon_ec_I" onblur="aspxELostFocus(&#39;ctl00_masterContentCallback_content_tf_AnzahlVon_ec&#39;)" onfocus="aspxEGotFocus(&#39;ctl00_masterContentCallback_content_tf_AnzahlVon_ec&#39;)" onkeypress="aspxEKeyPress(&#39;ctl00_masterContentCallback_content_tf_AnzahlVon_ec&#39;, event)" type="text" onchange="aspxETextChanged(&#39;ctl00_masterContentCallback_content_tf_AnzahlVon_ec&#39;)" /></td><td><div id="ctl00_masterContentCallback_content_tf_AnzahlVon_ec_B-2" class="dxeButtonEditButton_EDAS dxeSpinIncButton_EDAS" onclick="aspxBEClick(&#39;ctl00_masterContentCallback_content_tf_AnzahlVon_ec&#39;,-2)" style="-khtml-user-select:none;padding-left:3px;padding-right:3px;padding-top:3px;padding-bottom:3px;">
+						<img id="ctl00_masterContentCallback_content_tf_AnzahlVon_ec_B-2Img" class="dxEditors_edtSpinEditIncrementImage_EDAS" src="/DXR.axd?r=1_12-1C5x8" alt="+" />
+					</div><div id="ctl00_masterContentCallback_content_tf_AnzahlVon_ec_B-3" class="dxeButtonEditButton_EDAS dxeSpinDecButton_EDAS" onclick="aspxBEClick(&#39;ctl00_masterContentCallback_content_tf_AnzahlVon_ec&#39;,-3)" style="-khtml-user-select:none;padding-left:3px;padding-right:3px;padding-top:3px;padding-bottom:3px;">
+						<img id="ctl00_masterContentCallback_content_tf_AnzahlVon_ec_B-3Img" class="dxEditors_edtSpinEditDecrementImage_EDAS" src="/DXR.axd?r=1_12-1C5x8" alt="-" />
+					</div></td>
+				</tr>
+			</table><script id="dxss_681981904" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_masterContentCallback_content_tf_AnzahlVon_ec',[[['dxeButtonEditButtonHover_EDAS dxeSpinIncButtonHover_EDAS'],['padding-left:3px;padding-top:3px;padding-right:3px;padding-bottom:3px;'],['B-2']],[['dxeButtonEditButtonHover_EDAS dxeSpinDecButtonHover_EDAS'],['padding-left:3px;padding-top:3px;padding-right:3px;padding-bottom:3px;'],['B-3']]]);
+aspxRemoveHoverItems('ctl00_masterContentCallback_content_tf_AnzahlVon_ec',[[['B-1']],[['B-4']]]);
+aspxAddPressedItems('ctl00_masterContentCallback_content_tf_AnzahlVon_ec',[[['dxeButtonEditButtonPressed_EDAS dxeSpinIncButtonPressed_EDAS'],['padding-left:3px;padding-top:3px;padding-right:3px;padding-bottom:3px;'],['B-2']],[['dxeButtonEditButtonPressed_EDAS dxeSpinDecButtonPressed_EDAS'],['padding-left:3px;padding-top:3px;padding-right:3px;padding-bottom:3px;'],['B-3']]]);
+aspxRemovePressedItems('ctl00_masterContentCallback_content_tf_AnzahlVon_ec',[[['B-1']],[['B-4']]]);
+aspxAddDisabledItems('ctl00_masterContentCallback_content_tf_AnzahlVon_ec',[[['dxeDisabled_EDAS'],[''],['','I']],[['dxeDisabled_EDAS dxeButtonDisabled_EDAS'],[''],['B-2','B-3'],,[[{'spriteCssClass':'dxEditors_edtSpinEditIncrementImageDisabled_EDAS'}],[{'spriteCssClass':'dxEditors_edtSpinEditDecrementImageDisabled_EDAS'}]],['Img']]]);
+aspxRemoveDisabledItems('ctl00_masterContentCallback_content_tf_AnzahlVon_ec',[[['B-1','B-4']]]);
+document.getElementById("ctl00_masterContentCallback_content_tf_AnzahlVon_ec_I").setAttribute("autocomplete", "off");
+
+var dxo = new ASPxClientSpinEdit('ctl00_masterContentCallback_content_tf_AnzahlVon_ec');
+window['tf_AnzahlVon'] = dxo;
+dxo.uniqueID = 'ctl00$masterContentCallback$content$tf_AnzahlVon$ec';
+dxo.heightCorrectionRequired = true;
+dxo.RequireStyleDecoration();
+dxo.styleDecoration.AddStyle('F','dxeFocused_EDAS','');
+dxo.number = 1;
+dxo.minValue = 1;
+dxo.maxValue = 1;
+dxo.numberType = "i";
+dxo.AfterCreate();
+
+//-->
+</script>
+</td>
+								<td id="ctl00_masterContentCallback_content_td_TrefferBis" class="text" nowrap="nowrap">&nbsp;bis&nbsp;</td>
+			
+                                <td class="text" nowrap="nowrap"><table class="dxeButtonEditSys dxeButtonEdit_EDAS" cellspacing="0" cellpadding="0" id="ctl00_masterContentCallback_content_tf_AnzahlBis_ec" border="0" style="width:60px;border-collapse:collapse;border-collapse:collapse;">
+				<tr>
+					<td class="dxic" style="width:100%;"><input class="dxeEditArea_EDAS dxeEditAreaSys" onkeydown="aspxEKeyDown(&#39;ctl00_masterContentCallback_content_tf_AnzahlBis_ec&#39;, event)" name="ctl00$masterContentCallback$content$tf_AnzahlBis$ec" onkeyup="aspxEKeyUp(&#39;ctl00_masterContentCallback_content_tf_AnzahlBis_ec&#39;, event)" value="1" id="ctl00_masterContentCallback_content_tf_AnzahlBis_ec_I" onblur="aspxELostFocus(&#39;ctl00_masterContentCallback_content_tf_AnzahlBis_ec&#39;)" onfocus="aspxEGotFocus(&#39;ctl00_masterContentCallback_content_tf_AnzahlBis_ec&#39;)" onkeypress="aspxEKeyPress(&#39;ctl00_masterContentCallback_content_tf_AnzahlBis_ec&#39;, event)" type="text" onchange="aspxETextChanged(&#39;ctl00_masterContentCallback_content_tf_AnzahlBis_ec&#39;)" /></td><td><div id="ctl00_masterContentCallback_content_tf_AnzahlBis_ec_B-2" class="dxeButtonEditButton_EDAS dxeSpinIncButton_EDAS" onclick="aspxBEClick(&#39;ctl00_masterContentCallback_content_tf_AnzahlBis_ec&#39;,-2)" style="-khtml-user-select:none;padding-left:3px;padding-right:3px;padding-top:3px;padding-bottom:3px;">
+						<img id="ctl00_masterContentCallback_content_tf_AnzahlBis_ec_B-2Img" class="dxEditors_edtSpinEditIncrementImage_EDAS" src="/DXR.axd?r=1_12-1C5x8" alt="+" />
+					</div><div id="ctl00_masterContentCallback_content_tf_AnzahlBis_ec_B-3" class="dxeButtonEditButton_EDAS dxeSpinDecButton_EDAS" onclick="aspxBEClick(&#39;ctl00_masterContentCallback_content_tf_AnzahlBis_ec&#39;,-3)" style="-khtml-user-select:none;padding-left:3px;padding-right:3px;padding-top:3px;padding-bottom:3px;">
+						<img id="ctl00_masterContentCallback_content_tf_AnzahlBis_ec_B-3Img" class="dxEditors_edtSpinEditDecrementImage_EDAS" src="/DXR.axd?r=1_12-1C5x8" alt="-" />
+					</div></td>
+				</tr>
+			</table><script id="dxss_2055976758" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_masterContentCallback_content_tf_AnzahlBis_ec',[[['dxeButtonEditButtonHover_EDAS dxeSpinIncButtonHover_EDAS'],['padding-left:3px;padding-top:3px;padding-right:3px;padding-bottom:3px;'],['B-2']],[['dxeButtonEditButtonHover_EDAS dxeSpinDecButtonHover_EDAS'],['padding-left:3px;padding-top:3px;padding-right:3px;padding-bottom:3px;'],['B-3']]]);
+aspxRemoveHoverItems('ctl00_masterContentCallback_content_tf_AnzahlBis_ec',[[['B-1']],[['B-4']]]);
+aspxAddPressedItems('ctl00_masterContentCallback_content_tf_AnzahlBis_ec',[[['dxeButtonEditButtonPressed_EDAS dxeSpinIncButtonPressed_EDAS'],['padding-left:3px;padding-top:3px;padding-right:3px;padding-bottom:3px;'],['B-2']],[['dxeButtonEditButtonPressed_EDAS dxeSpinDecButtonPressed_EDAS'],['padding-left:3px;padding-top:3px;padding-right:3px;padding-bottom:3px;'],['B-3']]]);
+aspxRemovePressedItems('ctl00_masterContentCallback_content_tf_AnzahlBis_ec',[[['B-1']],[['B-4']]]);
+aspxAddDisabledItems('ctl00_masterContentCallback_content_tf_AnzahlBis_ec',[[['dxeDisabled_EDAS'],[''],['','I']],[['dxeDisabled_EDAS dxeButtonDisabled_EDAS'],[''],['B-2','B-3'],,[[{'spriteCssClass':'dxEditors_edtSpinEditIncrementImageDisabled_EDAS'}],[{'spriteCssClass':'dxEditors_edtSpinEditDecrementImageDisabled_EDAS'}]],['Img']]]);
+aspxRemoveDisabledItems('ctl00_masterContentCallback_content_tf_AnzahlBis_ec',[[['B-1','B-4']]]);
+document.getElementById("ctl00_masterContentCallback_content_tf_AnzahlBis_ec_I").setAttribute("autocomplete", "off");
+
+var dxo = new ASPxClientSpinEdit('ctl00_masterContentCallback_content_tf_AnzahlBis_ec');
+window['tf_AnzahlBis'] = dxo;
+dxo.uniqueID = 'ctl00$masterContentCallback$content$tf_AnzahlBis$ec';
+dxo.heightCorrectionRequired = true;
+dxo.RequireStyleDecoration();
+dxo.styleDecoration.AddStyle('F','dxeFocused_EDAS','');
+dxo.number = 1;
+dxo.minValue = 1;
+dxo.maxValue = 1;
+dxo.numberType = "i";
+dxo.AfterCreate();
+
+//-->
+</script>
+</td>								
+								<td class="text" nowrap="nowrap"><div title="Drucken" class="dxbButton_EDAS dxbButtonSys" id="ctl00_masterContentCallback_content_btnDrucken_btn" style="height:25px;width:25px;-khtml-user-select:none;padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;">
+				<div class="dxb" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;font-size:0px;">
+					<div class="dxb-hbc">
+						<input title="Drucken" class="dxb-hb" value="submit" type="button" name="ctl00$masterContentCallback$content$btnDrucken$btn" readonly="readonly" />
+					</div><img class="dx-vam" src="../../library/img/drucken.gif" alt="" />
+				</div>
+			</div><script id="dxss_418578401" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_masterContentCallback_content_btnDrucken_btn',[[['dxbButtonHover_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddPressedItems('ctl00_masterContentCallback_content_btnDrucken_btn',[[['dxbButtonPressed_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddDisabledItems('ctl00_masterContentCallback_content_btnDrucken_btn',[[['dxbDisabled_EDAS'],[''],[''],['','TC']]]);
+
+var dxo = new ASPxClientButton('ctl00_masterContentCallback_content_btnDrucken_btn');
+window['ctl00_masterContentCallback_content_btnDrucken_btn'] = dxo;
+dxo.uniqueID = 'ctl00$masterContentCallback$content$btnDrucken$btn';
+dxo.Click.AddHandler(function (s, e) { printTrefferliste(); });
+dxo.isTextEmpty = true;
+aspxAddSelectedItems('ctl00_masterContentCallback_content_btnDrucken_btn',[[['dxbf'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],['CD']]]);
+dxo.useSubmitBehavior = false;
+dxo.autoPostBackFunction = function(postBackArg) { WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions("ctl00$masterContentCallback$content$btnDrucken$btn",  postBackArg, true, "", "", false, true)); };
+dxo.AfterCreate();
+
+//-->
+</script>
+</td>
+								
+									<td class="text" nowrap="nowrap"><div title="Drucken in der Einzeltreffer-Ansicht" class="dxbButton_EDAS dxbButtonSys" id="ctl00_masterContentCallback_content_btnDruckenListe_btn" style="height:25px;width:25px;-khtml-user-select:none;padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;">
+				<div class="dxb" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;font-size:0px;">
+					<div class="dxb-hbc">
+						<input title="Drucken in der Einzeltreffer-Ansicht" class="dxb-hb" value="submit" type="button" name="ctl00$masterContentCallback$content$btnDruckenListe$btn" readonly="readonly" />
+					</div><img class="dx-vam" src="../../library/img/drucken_liste.gif" alt="" />
+				</div>
+			</div><script id="dxss_1391262087" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_masterContentCallback_content_btnDruckenListe_btn',[[['dxbButtonHover_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddPressedItems('ctl00_masterContentCallback_content_btnDruckenListe_btn',[[['dxbButtonPressed_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddDisabledItems('ctl00_masterContentCallback_content_btnDruckenListe_btn',[[['dxbDisabled_EDAS'],[''],[''],['','TC']]]);
+
+var dxo = new ASPxClientButton('ctl00_masterContentCallback_content_btnDruckenListe_btn');
+window['ctl00_masterContentCallback_content_btnDruckenListe_btn'] = dxo;
+dxo.uniqueID = 'ctl00$masterContentCallback$content$btnDruckenListe$btn';
+dxo.Click.AddHandler(function (s, e) { printTrefferlisteVorgang(); });
+dxo.isTextEmpty = true;
+aspxAddSelectedItems('ctl00_masterContentCallback_content_btnDruckenListe_btn',[[['dxbf'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],['CD']]]);
+dxo.useSubmitBehavior = false;
+dxo.autoPostBackFunction = function(postBackArg) { WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions("ctl00$masterContentCallback$content$btnDruckenListe$btn",  postBackArg, true, "", "", false, true)); };
+dxo.AfterCreate();
+
+//-->
+</script>
+</td>
+									<td class="text" nowrap="nowrap"><div title="Im XLS - Format speichern" class="dxbButton_EDAS dxbButtonSys" id="ctl00_masterContentCallback_content_btnExportXLS_btn" style="height:25px;width:25px;-khtml-user-select:none;padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;">
+				<div class="dxb" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;font-size:0px;">
+					<div class="dxb-hbc">
+						<input title="Im XLS - Format speichern" class="dxb-hb" value="submit" type="button" name="ctl00$masterContentCallback$content$btnExportXLS$btn" readonly="readonly" />
+					</div><img class="dx-vam" src="../../library/img/xls.gif" alt="" />
+				</div>
+			</div><script id="dxss_612881641" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_masterContentCallback_content_btnExportXLS_btn',[[['dxbButtonHover_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddPressedItems('ctl00_masterContentCallback_content_btnExportXLS_btn',[[['dxbButtonPressed_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddDisabledItems('ctl00_masterContentCallback_content_btnExportXLS_btn',[[['dxbDisabled_EDAS'],[''],[''],['','TC']]]);
+
+var dxo = new ASPxClientButton('ctl00_masterContentCallback_content_btnExportXLS_btn');
+window['ctl00_masterContentCallback_content_btnExportXLS_btn'] = dxo;
+dxo.uniqueID = 'ctl00$masterContentCallback$content$btnExportXLS$btn';
+dxo.Click.AddHandler(function (s, e) { exportTrefferliste('xls'); });
+dxo.isTextEmpty = true;
+aspxAddSelectedItems('ctl00_masterContentCallback_content_btnExportXLS_btn',[[['dxbf'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],['CD']]]);
+dxo.useSubmitBehavior = false;
+dxo.autoPostBackFunction = function(postBackArg) { WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions("ctl00$masterContentCallback$content$btnExportXLS$btn",  postBackArg, true, "", "", false, true)); };
+dxo.AfterCreate();
+
+//-->
+</script>
+</td>
+									<td class="text" nowrap="nowrap"><div title="Im XML - Format speichern" class="dxbButton_EDAS dxbButtonSys" id="ctl00_masterContentCallback_content_btnExportXML_btn" style="height:25px;width:25px;-khtml-user-select:none;padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;">
+				<div class="dxb" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;font-size:0px;">
+					<div class="dxb-hbc">
+						<input title="Im XML - Format speichern" class="dxb-hb" value="submit" type="button" name="ctl00$masterContentCallback$content$btnExportXML$btn" readonly="readonly" />
+					</div><img class="dx-vam" src="../../library/img/xml.gif" alt="" />
+				</div>
+			</div><script id="dxss_677816427" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_masterContentCallback_content_btnExportXML_btn',[[['dxbButtonHover_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddPressedItems('ctl00_masterContentCallback_content_btnExportXML_btn',[[['dxbButtonPressed_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddDisabledItems('ctl00_masterContentCallback_content_btnExportXML_btn',[[['dxbDisabled_EDAS'],[''],[''],['','TC']]]);
+
+var dxo = new ASPxClientButton('ctl00_masterContentCallback_content_btnExportXML_btn');
+window['ctl00_masterContentCallback_content_btnExportXML_btn'] = dxo;
+dxo.uniqueID = 'ctl00$masterContentCallback$content$btnExportXML$btn';
+dxo.Click.AddHandler(function (s, e) { exportTrefferliste('xml'); });
+dxo.isTextEmpty = true;
+aspxAddSelectedItems('ctl00_masterContentCallback_content_btnExportXML_btn',[[['dxbf'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],['CD']]]);
+dxo.useSubmitBehavior = false;
+dxo.autoPostBackFunction = function(postBackArg) { WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions("ctl00$masterContentCallback$content$btnExportXML$btn",  postBackArg, true, "", "", false, true)); };
+dxo.AfterCreate();
+
+//-->
+</script>
+</td>								    
+								
+																
+							</tr>
+						</table>
+					</td>
+		</tr>
+		<tr>
+			<td colspan="2"><img alt="" src="../../library/img/pixel_trans.gif" width="1" height="4" /></td>
+		</tr>
+	</table>
+	
+			<br />
+			
+            <input id="ctl00_masterContentCallback_content_trefferlisteDataView_S" name="ctl00$masterContentCallback$content$trefferlisteDataView" type="hidden" value="0;20;1;0" /><table class="dxdvControl_EDAS" cellspacing="0" cellpadding="0" id="ctl00_masterContentCallback_content_trefferlisteDataView" border="0" style="width:800px;border-collapse:collapse;">
+		<tr>
+			<td id="ctl00_masterContentCallback_content_trefferlisteDataView_CCell" class="dxdvCtrl" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;vertical-align:top;"><table cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;border-collapse:separate;">
+				<tr>
+					<td id="ctl00_masterContentCallback_content_trefferlisteDataView_ICell" class="dxdvContent_EDAS" style="border-style:None;padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;"><table cellspacing="0" cellpadding="0" border="0" style="height:100%;width:100%;border-collapse:collapse;">
+						<tr>
+							<td class="dxdvItem_EDAS" align="left" style="border-style:None;height:100%;width:247px;vertical-align:Top;padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;">
+			        <table cellspacing="0" border="0" cellpadding="0" width="800px">
+						<tr>
+							<td colspan="3" bgcolor="#8BA0BC"><img alt="" src="../../library/img/pixel_trans.gif" width="1" height="1"></td>
+						</tr>
+						
+						
+						<tr>
+							<td valign="top" class="text" width="40%"><a href="treffer.aspx?ID=220598&refferer=&VolltextSuche=">Drs&nbsp;6/1711 </a></td>
+							<td valign="top" class="text" nowrap="nowrap" width="50%">&nbsp;</td>
+							<td valign="top" class="text" align="right" rowspan="2"><table border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td align="right"><img alt="" src="../../library/img/pixel_trans.gif" width="2" height="2"></td>
+									</tr>
+									<tr>
+										<td align="right"><table border="0" cellspacing="0" cellpadding="0">
+											<tr>
+												<td><table id="ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_tblButtons" cellspacing="0" cellpadding="2" border="0" style="border-collapse:collapse;">
+								<tr id="ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_trButtons">
+									<td><div class="dxbButton_EDAS dxbButtonSys" id="ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_0_Drs_6_no_btn" style="height:25px;width:25px;-khtml-user-select:none;padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;">
+										<div class="dxb" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;font-size:0px;">
+											<div class="dxb-hbc">
+												<input class="dxb-hb" value="submit" type="button" name="ctl00$masterContentCallback$content$trefferlisteDataView$IT0$anzeige$1711_0_Drs_6_no$btn" readonly="readonly" />
+											</div><img class="dx-vam" src="../../library/img/anzeige/pdf.gif" alt="" />
+										</div>
+									</div><script id="dxss_366665969" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_0_Drs_6_no_btn',[[['dxbButtonHover_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddPressedItems('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_0_Drs_6_no_btn',[[['dxbButtonPressed_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddDisabledItems('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_0_Drs_6_no_btn',[[['dxbDisabled_EDAS'],[''],[''],['','TC']]]);
+
+var dxo = new ASPxClientButton('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_0_Drs_6_no_btn');
+window['ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_0_Drs_6_no_btn'] = dxo;
+dxo.uniqueID = 'ctl00$masterContentCallback$content$trefferlisteDataView$IT0$anzeige$1711_0_Drs_6_no$btn';
+dxo.Click.AddHandler(function (s, e) { showDocumentSelect('1711_0_Drs_6_no'); });
+dxo.isTextEmpty = true;
+aspxAddSelectedItems('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_0_Drs_6_no_btn',[[['dxbf'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],['CD']]]);
+dxo.useSubmitBehavior = false;
+dxo.autoPostBackFunction = function(postBackArg) { WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions("ctl00$masterContentCallback$content$trefferlisteDataView$IT0$anzeige$1711_0_Drs_6_no$btn",  postBackArg, true, "", "", false, true)); };
+dxo.AfterCreate();
+
+//-->
+</script>
+</td><td><div class="dxbButton_EDAS dxbButtonSys" id="ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_1_Drs_6_no_btn" style="height:25px;width:25px;-khtml-user-select:none;padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;">
+										<div class="dxb" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;font-size:0px;">
+											<div class="dxb-hbc">
+												<input class="dxb-hb" value="submit" type="button" name="ctl00$masterContentCallback$content$trefferlisteDataView$IT0$anzeige$1711_1_Drs_6_no$btn" readonly="readonly" />
+											</div><img class="dx-vam" src="../../library/img/anzeige/pdf.gif" alt="" />
+										</div>
+									</div><script id="dxss_800501326" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_1_Drs_6_no_btn',[[['dxbButtonHover_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddPressedItems('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_1_Drs_6_no_btn',[[['dxbButtonPressed_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddDisabledItems('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_1_Drs_6_no_btn',[[['dxbDisabled_EDAS'],[''],[''],['','TC']]]);
+
+var dxo = new ASPxClientButton('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_1_Drs_6_no_btn');
+window['ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_1_Drs_6_no_btn'] = dxo;
+dxo.uniqueID = 'ctl00$masterContentCallback$content$trefferlisteDataView$IT0$anzeige$1711_1_Drs_6_no$btn';
+dxo.Click.AddHandler(function (s, e) { showDocumentSelect('1711_1_Drs_6_no'); });
+dxo.isTextEmpty = true;
+aspxAddSelectedItems('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_anzeige_1711_1_Drs_6_no_btn',[[['dxbf'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],['CD']]]);
+dxo.useSubmitBehavior = false;
+dxo.autoPostBackFunction = function(postBackArg) { WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions("ctl00$masterContentCallback$content$trefferlisteDataView$IT0$anzeige$1711_1_Drs_6_no$btn",  postBackArg, true, "", "", false, true)); };
+dxo.AfterCreate();
+
+//-->
+</script>
+</td>
+								</tr>
+							</table>
+
+
+
+
+</td>
+												
+											</tr>
+											</table> 
+										</td>
+									</tr>
+									<tr>
+										<td align="right"><img alt="" src="../../library/img/pixel_trans.gif" width="2" height="2"></td>
+									</tr>
+									<tr>
+                                        <td align="right"><div title="Zum Vorgang" class="dxbButton_EDAS dxbButtonSys" id="ctl00_masterContentCallback_content_trefferlisteDataView_IT0_btnZumVorgang_btn" style="height:25px;width:25px;-khtml-user-select:none;padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;">
+								<div class="dxb" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;">
+									<div class="dxb-hbc">
+										<input title="Zum Vorgang" class="dxb-hb" value=" Vorgang " type="button" name="ctl00$masterContentCallback$content$trefferlisteDataView$IT0$btnZumVorgang$btn" readonly="readonly" />
+									</div><span class="dx-vam">&#160;Vorgang&#160;</span>
+								</div>
+							</div><script id="dxss_2086818716" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_btnZumVorgang_btn',[[['dxbButtonHover_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddPressedItems('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_btnZumVorgang_btn',[[['dxbButtonPressed_EDAS'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],[''],['','TC']]]);
+aspxAddDisabledItems('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_btnZumVorgang_btn',[[['dxbDisabled_EDAS'],[''],[''],['','TC']]]);
+
+var dxo = new ASPxClientButton('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_btnZumVorgang_btn');
+window['ctl00_masterContentCallback_content_trefferlisteDataView_IT0_btnZumVorgang_btn'] = dxo;
+dxo.uniqueID = 'ctl00$masterContentCallback$content$trefferlisteDataView$IT0$btnZumVorgang$btn';
+dxo.Click.AddHandler(function (s, e) { location.href = 'treffer_vorgang.aspx?VorgangButton=y&dok_art=Drs&leg_per=6&refferer=&index=0&dok_nr=1711';  });
+aspxAddSelectedItems('ctl00_masterContentCallback_content_trefferlisteDataView_IT0_btnZumVorgang_btn',[[['dxbf'],['padding-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;'],['CD']]]);
+dxo.useSubmitBehavior = false;
+dxo.autoPostBackFunction = function(postBackArg) { WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions("ctl00$masterContentCallback$content$trefferlisteDataView$IT0$btnZumVorgang$btn",  postBackArg, true, "", "", false, true)); };
+dxo.AfterCreate();
+
+//-->
+</script>
+</td>
+									</tr>
+									<tr>
+										
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="text"><br>
+								<b>
+									Jahrgangsübergreifender Unterricht an sächsischen Grundschulen
+								</b>
+								<br>
+								<br>
+								KlAnfr Petra Zais GRÜNE 17.05.2015 Drs 6/1711
+							</td>
+						</tr>
+							
+                
+                    </table>
+                </td>
+						</tr>
+					</table></td>
+				</tr>
+			</table></td>
+		</tr>
+	</table><table id="ctl00_masterContentCallback_content_trefferlisteDataView_LP" class="dxdvLoadingPanel_EDAS" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;left:0px;top:0px;z-index:30000;display:none;">
+		<tr>
+			<td class="dx" style="padding-right:5px;"><img src="../../App_Themes/EDAS/Web/Loading.gif" alt="" align="middle" /></td><td class="dx" style="padding-left:0px;"><span id="ctl00_masterContentCallback_content_trefferlisteDataView_TL">Lade...</span></td>
+		</tr>
+	</table><div id="ctl00_masterContentCallback_content_trefferlisteDataView_LD" class="dxdvLoadingDiv_EDAS" style="left:0px;top:0px;z-index:29999;display:none;position:absolute;">
+
+	</div><script id="dxss_1227068527" type="text/javascript">
+<!--
+
+var dxo = new ASPxClientDataView('ctl00_masterContentCallback_content_trefferlisteDataView');
+window['ctl00_masterContentCallback_content_trefferlisteDataView'] = dxo;
+dxo.callBack = function(arg) { WebForm_DoCallback('ctl00$masterContentCallback$content$trefferlisteDataView',arg,aspxCallback,'ctl00_masterContentCallback_content_trefferlisteDataView',aspxCallbackError,true); };
+dxo.uniqueID = 'ctl00$masterContentCallback$content$trefferlisteDataView';
+dxo.AfterCreate();
+
+//-->
+</script>			
+			
+			
+			<br />
+			<span id="ctl00_masterContentCallback_content_lb_Fehler" class="text"></span>
+			
+
+
+
+    <script type="text/javascript" language="javascript">
+        //body onLoad
+        initTrefferliste();
+    </script>
+    
+    <input type="hidden" id="ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumenteWS" name="ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumenteWS" value="0:0:-1:-10000:-10000:0:500px:-10000:1:0:0:0" /><div id="ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_PW-1" class="dxpcLite_EDAS dxpclW" style="width:500px;z-index:10000;display:none;">
+		<div class="dxpc-mainDiv dxpc-shadow" style="cursor:default;">
+			<div class="dxpc-header dxpc-withBtn" style="cursor:move;-khtml-user-select:none;">
+				<div class="dxpc-closeBtn" style="cursor:pointer;">
+					<img class="dxWeb_pcCloseButton_EDAS" src="/DXR.axd?r=1_12-1C5x8" alt="[Schließen]" />
+				</div><div class="dxpc-headerContent">
+					<span class="dxpc-headerText dx-vam">Zugriff auf gesch&#252;tzte Dokumente</span>
+				</div><b class="dx-clear"></b>
+			</div><div class="dxpc-contentWrapper">
+				<div class="dxpc-content">
+					
+            
+            <div id="ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_pnlGeschuetzt">
+						
+                        Dieses Dokument unterliegt Zugriffbeschränkungen lt. der Geschäftsordnung des Sächsischen Landtages und 
+                        steht ggf. nur in den Räumen des Parlamentsarchives zur Einsicht zur Verfügung.                                    
+                    
+					</div><script id="dxss_11707314" type="text/javascript">
+<!--
+
+var dxo = new ASPxClientPanel('ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_pnlGeschuetzt');
+window['pnlGeschuetzt'] = dxo;
+dxo.uniqueID = 'ctl00$masterContentCallback$content$GeschuetzteDokumentePopup$pcGeschuetzteDokumente$pnlGeschuetzt';
+dxo.AfterCreate();
+
+//-->
+</script>
+            
+            <div id="ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_pnlTeilGeschuetzt">
+						
+                            Das	von Ihnen angeforderte Dokument besteht sowohl aus geschützten als auch aus ungeschützten
+                            Bestandteilen. Falls Sie auf die ungeschützten Bestandteile des Dokumentes zugreifen wollen, 
+                            so klicken Sie bitte auf den Schalter "Ungeschützte Bestandteile anzeigen".            
+                            <br /><br />
+                            Das geschützte Dokument steht ggf. nur in den Räumen des Parlamentsarchives zur Einsicht zur Verfügung.                                    
+                    
+					</div><script id="dxss_2082293584" type="text/javascript">
+<!--
+
+var dxo = new ASPxClientPanel('ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_pnlTeilGeschuetzt');
+window['pnlTeilGeschuetzt'] = dxo;
+dxo.uniqueID = 'ctl00$masterContentCallback$content$GeschuetzteDokumentePopup$pcGeschuetzteDokumente$pnlTeilGeschuetzt';
+dxo.AfterCreate();
+
+//-->
+</script>
+                            
+            <br />
+            <center>
+                <table border="0">
+                    <tr>
+                        <td>
+                            <div class="dxbButton_EDAS dxbButtonSys" id="ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_btnPartAnzeigen" style="-khtml-user-select:none;">
+						<div class="dxb">
+							<div class="dxb-hbc">
+								<input class="dxb-hb" value="Ungeschützte Bestandteile anzeigen" type="submit" name="ctl00$masterContentCallback$content$GeschuetzteDokumentePopup$pcGeschuetzteDokumente$btnPartAnzeigen" readonly="readonly" />
+							</div><span class="dx-vam">Ungesch&#252;tzte Bestandteile anzeigen</span>
+						</div>
+					</div><script id="dxss_416593650" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_btnPartAnzeigen',[[['dxbButtonHover_EDAS'],[''],[''],['','TC']]]);
+aspxAddPressedItems('ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_btnPartAnzeigen',[[['dxbButtonPressed_EDAS'],[''],[''],['','TC']]]);
+aspxAddDisabledItems('ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_btnPartAnzeigen',[[['dxbDisabled_EDAS'],[''],[''],['','TC']]]);
+
+var dxo = new ASPxClientButton('ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_btnPartAnzeigen');
+window['btnPartAnzeigen'] = dxo;
+dxo.uniqueID = 'ctl00$masterContentCallback$content$GeschuetzteDokumentePopup$pcGeschuetzteDokumente$btnPartAnzeigen';
+dxo.Click.AddHandler(function(s, e) { 
+                                    pcGeschuetzteDokumente.Hide(); 
+                                    showDocument(g_Doknr, g_DE, g_Dokart, g_Legper);
+                                });
+aspxAddSelectedItems('ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_btnPartAnzeigen',[[['dxbf'],[''],['CD']]]);
+dxo.AfterCreate();
+
+//-->
+</script>                                            
+                        </td>
+                        <td>
+                            <div class="dxbButton_EDAS dxbButtonSys" id="ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_ASPxButton2" style="-khtml-user-select:none;">
+						<div class="dxb">
+							<div class="dxb-hbc">
+								<input class="dxb-hb" value="Schliessen" type="submit" name="ctl00$masterContentCallback$content$GeschuetzteDokumentePopup$pcGeschuetzteDokumente$ASPxButton2" readonly="readonly" />
+							</div><span class="dx-vam">Schliessen</span>
+						</div>
+					</div><script id="dxss_1387028290" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_ASPxButton2',[[['dxbButtonHover_EDAS'],[''],[''],['','TC']]]);
+aspxAddPressedItems('ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_ASPxButton2',[[['dxbButtonPressed_EDAS'],[''],[''],['','TC']]]);
+aspxAddDisabledItems('ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_ASPxButton2',[[['dxbDisabled_EDAS'],[''],[''],['','TC']]]);
+
+var dxo = new ASPxClientButton('ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_ASPxButton2');
+window['ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_ASPxButton2'] = dxo;
+dxo.uniqueID = 'ctl00$masterContentCallback$content$GeschuetzteDokumentePopup$pcGeschuetzteDokumente$ASPxButton2';
+dxo.Click.AddHandler(function(s, e) { 
+                                    pcGeschuetzteDokumente.Hide(); 
+                                });
+aspxAddSelectedItems('ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_ASPxButton2',[[['dxbf'],[''],['CD']]]);
+dxo.AfterCreate();
+
+//-->
+</script>                                            
+                        </td>
+                    </tr>
+                </table>
+            </center>
+        
+				</div>
+			</div>
+		</div>
+	</div><div id="ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_DXPWMB-1" class="dxpcModalBackLite_EDAS" style="z-index:9999;">
+
+	</div><table id="ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_LP" class="dxpcLoadingPanel_EDAS" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;left:0px;top:0px;z-index:30000;display:none;">
+		<tr>
+			<td class="dx" style="padding-right:5px;"><img src="../../App_Themes/EDAS/Web/Loading.gif" alt="" align="middle" /></td><td class="dx" style="padding-left:0px;"><span id="ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_TL">Lade...</span></td>
+		</tr>
+	</table><div id="ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente_LD" class="dxpcLoadingDiv_EDAS" style="left:0px;top:0px;z-index:29999;display:none;position:absolute;">
+
+	</div><script id="dxss_871549230" type="text/javascript">
+<!--
+
+var dxo = new ASPxClientPopupControl('ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente');
+window['pcGeschuetzteDokumente'] = dxo;
+dxo.callBack = function(arg) { WebForm_DoCallback('ctl00$masterContentCallback$content$GeschuetzteDokumentePopup$pcGeschuetzteDokumente',arg,aspxCallback,'ctl00_masterContentCallback_content_GeschuetzteDokumentePopup_pcGeschuetzteDokumente',aspxCallbackError,true); };
+dxo.uniqueID = 'ctl00$masterContentCallback$content$GeschuetzteDokumentePopup$pcGeschuetzteDokumente';
+dxo.PopUp.AddHandler(function (s, e) {
+        //alert(g_Doknr);
+        pnlGeschuetzt.SetVisible(g_VollGeschuetzt);
+        pnlTeilGeschuetzt.SetVisible(!g_VollGeschuetzt);
+        btnPartAnzeigen.SetVisible(!g_VollGeschuetzt);
+    });
+dxo.popupAnimationType='fade';
+dxo.closeAction='CloseButton';
+dxo.popupHorizontalAlign='WindowCenter';
+dxo.popupVerticalAlign='WindowCenter';
+dxo.popupHorizontalOffset=-40;
+dxo.popupVerticalOffset=-40;
+dxo.isPopupPositionCorrectionOn=false;
+dxo.allowDragging=true;
+dxo.width=500;
+dxo.height=0;
+dxo.AfterCreate();
+
+//-->
+</script>
+    
+    
+                    
+                            
+</div><table id="ctl00_masterContentCallback_LP" class="dxcpLoadingPanelWithContent_EDAS" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;left:0px;top:0px;z-index:30000;display:none;">
+	<tr>
+		<td class="dx" style="padding-right:5px;"><img src="../../App_Themes/EDAS/Web/Loading.gif" alt="" align="middle" /></td><td class="dx" style="padding-left:0px;"><span id="ctl00_masterContentCallback_TL">Lade...</span></td>
+	</tr>
+</table><div id="ctl00_masterContentCallback_LD" class="dxcpLoadingDiv_EDAS" style="left:0px;top:0px;z-index:29999;display:none;position:absolute;">
+
+</div><script id="dxss_719510509" type="text/javascript">
+<!--
+
+var dxo = new ASPxClientCallbackPanel('ctl00_masterContentCallback');
+window['masterContentCallback'] = dxo;
+dxo.callBack = function(arg) { WebForm_DoCallback('ctl00$masterContentCallback',arg,aspxCallback,'ctl00_masterContentCallback',aspxCallbackError,true); };
+dxo.uniqueID = 'ctl00$masterContentCallback';
+dxo.hideContentOnCallback=false;
+dxo.AfterCreate();
+
+//-->
+</script>
+                </td>
+            </tr>
+        </table>    
+       
+        <input type="hidden" id="ctl00_pcMasterHinweisWS" name="ctl00_pcMasterHinweisWS" value="0:0:-1:-10000:-10000:0:-10000:-10000:1:0:0:0" /><div id="ctl00_pcMasterHinweis_PW-1" class="dxpcLite_EDAS dxpclW" style="width:200px;z-index:10000;display:none;">
+	<div class="dxpc-mainDiv dxpc-shadow" style="cursor:default;">
+		<div class="dxpc-header dxpc-withBtn" style="cursor:move;-khtml-user-select:none;">
+			<div class="dxpc-closeBtn" style="cursor:pointer;">
+				<img class="dxWeb_pcCloseButton_EDAS" src="/DXR.axd?r=1_12-1C5x8" alt="[Schließen]" />
+			</div><div class="dxpc-headerContent">
+				<span class="dxpc-headerText dx-vam">Hinweis</span>
+			</div><b class="dx-clear"></b>
+		</div><div class="dxpc-contentWrapper">
+			<div class="dxpc-content">
+				
+                                        
+                    <div class="Scroll" id="ctl00_pcMasterHinweis_ctl14" style="background-color:White;border-color:#F4921B;border-width:1px;border-style:Solid;width:286px;padding-left:6px;padding-right:6px;padding-top:6px;padding-bottom:6px;">
+					
+                                <span class="dxeBase_EDAS" id="ctl00_pcMasterHinweis_ctl14_txtMasterHinweis"></span><script id="dxss_1040469088" type="text/javascript">
+<!--
+aspxAddDisabledItems('ctl00_pcMasterHinweis_ctl14_txtMasterHinweis',[[['dxeDisabled_EDAS'],[''],['']]]);
+
+var dxo = new ASPxClientLabel('ctl00_pcMasterHinweis_ctl14_txtMasterHinweis');
+window['txtMasterHinweis'] = dxo;
+dxo.uniqueID = 'ctl00$pcMasterHinweis$ctl14$txtMasterHinweis';
+dxo.AfterCreate();
+
+//-->
+</script> 
+                            
+				</div>
+                    <br />
+                    <center>
+                        <div class="dxbButton_EDAS dxbButtonSys" id="ctl00_pcMasterHinweis_ASPxButton1" style="width:80px;-khtml-user-select:none;">
+					<div class="dxb">
+						<div class="dxb-hbc">
+							<input class="dxb-hb" value="Ok" type="button" name="ctl00$pcMasterHinweis$ASPxButton1" readonly="readonly" />
+						</div><span class="dx-vam">Ok</span>
+					</div>
+				</div><script id="dxss_1507268659" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_pcMasterHinweis_ASPxButton1',[[['dxbButtonHover_EDAS'],[''],[''],['','TC']]]);
+aspxAddPressedItems('ctl00_pcMasterHinweis_ASPxButton1',[[['dxbButtonPressed_EDAS'],[''],[''],['','TC']]]);
+aspxAddDisabledItems('ctl00_pcMasterHinweis_ASPxButton1',[[['dxbDisabled_EDAS'],[''],[''],['','TC']]]);
+
+var dxo = new ASPxClientButton('ctl00_pcMasterHinweis_ASPxButton1');
+window['ctl00_pcMasterHinweis_ASPxButton1'] = dxo;
+dxo.uniqueID = 'ctl00$pcMasterHinweis$ASPxButton1';
+dxo.Click.AddHandler(function(s, e) { pcMasterHinweis.Hide(); });
+aspxAddSelectedItems('ctl00_pcMasterHinweis_ASPxButton1',[[['dxbf'],[''],['CD']]]);
+dxo.useSubmitBehavior = false;
+dxo.autoPostBackFunction = function(postBackArg) { WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions("ctl00$pcMasterHinweis$ASPxButton1",  postBackArg, true, "", "", false, true)); };
+dxo.AfterCreate();
+
+//-->
+</script>                    
+                    </center>
+                
+			</div>
+		</div>
+	</div>
+</div><div id="ctl00_pcMasterHinweis_DXPWMB-1" class="dxpcModalBackLite_EDAS" style="z-index:9999;">
+
+</div><table id="ctl00_pcMasterHinweis_LP" class="dxpcLoadingPanel_EDAS" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;left:0px;top:0px;z-index:30000;display:none;">
+	<tr>
+		<td class="dx" style="padding-right:5px;"><img src="../../App_Themes/EDAS/Web/Loading.gif" alt="" align="middle" /></td><td class="dx" style="padding-left:0px;"><span id="ctl00_pcMasterHinweis_TL">Lade...</span></td>
+	</tr>
+</table><div id="ctl00_pcMasterHinweis_LD" class="dxpcLoadingDiv_EDAS" style="left:0px;top:0px;z-index:29999;display:none;position:absolute;">
+
+</div><script id="dxss_2115685978" type="text/javascript">
+<!--
+
+var dxo = new ASPxClientPopupControl('ctl00_pcMasterHinweis');
+window['pcMasterHinweis'] = dxo;
+dxo.callBack = function(arg) { WebForm_DoCallback('ctl00$pcMasterHinweis',arg,aspxCallback,'ctl00_pcMasterHinweis',aspxCallbackError,true); };
+dxo.uniqueID = 'ctl00$pcMasterHinweis';
+dxo.popupAnimationType='fade';
+dxo.closeAction='CloseButton';
+dxo.popupHorizontalAlign='WindowCenter';
+dxo.popupVerticalAlign='WindowCenter';
+dxo.popupHorizontalOffset=-40;
+dxo.popupVerticalOffset=-40;
+dxo.isPopupPositionCorrectionOn=false;
+dxo.allowDragging=true;
+dxo.width=200;
+dxo.height=0;
+dxo.AfterCreate();
+
+//-->
+</script>                                        
+    
+
+<script type="text/javascript">
+//<![CDATA[
+
+WebForm_InitCallback();//]]>
+</script>
+</form>
+    
+
+    <div id="ladebalken" align="center" style="left:350px;top:300px;z-index:30000;visibility:hidden;position:absolute">
+		<table class="dxdvLoadingPanel_EDAS" cellspacing="0" cellpadding="0" border="0" style="height:100%;border-collapse:collapse;">
+			<tr>
+				<td class="dx" style="padding-right:5px;"><img src="../../App_Themes/EDAS/Web/Loading.gif" id="ctl00_Img1" align="middle" /></td><td class="dx" style="padding-left:0px;">Lade...</td>
+			</tr>
+
+		</table>
+	</div>
+</body>
+</html>

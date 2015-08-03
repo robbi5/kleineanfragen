@@ -96,16 +96,16 @@ module SachsenScraper
         paper = SachsenScraper.extract_detail_paper(item)
         # get detail page
         content = m.click(item.search('//a').first)
-        answered_at = content.search('//*[@id="ctl00_masterContentCallback_content_tabTreffer_trefferDataView_IT0_HyperLink6"]').first
+        answered_at = self.class.extract_answered_at(content)
         if !answered_at.nil? && !answered_at.text.empty?
           # answered_at only contains the date. but is that even correct?
           paper[:published_at] = SachsenScraper.extract_date(answered_at.text)
-          buttons = extract_pdf_buttons(content)
+          buttons = self.class.extract_pdf_buttons(content)
           # the first button is for the question, the second one for the answer
           if buttons.size > 1
             paper[:is_answer] = true
-            top = m.get(extract_viewer_url(buttons.last))
-            pdf_url = extract_pdf_url(top)
+            top = m.get(self.class.extract_viewer_url(buttons.last))
+            pdf_url = self.class.extract_pdf_url(top)
             paper[:url] = pdf_url
           end
         end
@@ -113,13 +113,17 @@ module SachsenScraper
       paper
     end
 
-    def extract_pdf_url(top)
+    def self.extract_answered_at(content)
+      content.search('//*[@id="ctl00_masterContentCallback_content_tabTreffer_trefferDataView_IT0_HyperLink6"]').first
+    end
+
+    def self.extract_pdf_url(top)
       nav = top.frame_with(name: 'navigation').click
       onload_value = nav.search('//body').first.attribute('onload')
       onload_value.to_s[/(http\S*?\.pdf)/]
     end
 
-    def extract_pdf_buttons(content)
+    def self.extract_pdf_buttons(content)
       pdf_table = content.search('//table[@id="ctl00_masterContentCallback_content_tabTreffer_trefferDataView_IT0_anzeige_tblButtons"]').first
       viewer_ids = pdf_table.search('.//input').select do |i|
         !i.attribute('name').nil? && !i.attribute('name').value.nil? && !i.attribute('name').value.index(/no\$btn/).nil?
@@ -127,7 +131,7 @@ module SachsenScraper
       viewer_ids.map { |i| i.attribute('name').value }
     end
 
-    def extract_viewer_url(button)
+    def self.extract_viewer_url(button)
       viewer_id = button.match(/anzeige\$(.*?)_(.*?)_Drs_(.*?)_no\$btn/)
       'http://edas.landtag.sachsen.de/viewer.aspx?dok_nr=' + viewer_id[1] + '&dok_art=Drs&leg_per=' + viewer_id[3] + '&pos_dok=' + viewer_id[2]
     end
