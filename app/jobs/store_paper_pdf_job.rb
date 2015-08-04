@@ -44,6 +44,17 @@ class StorePaperPDFJob < PaperJob
     FileUtils.mkdir_p folder
 
     resp = session.get(paper.url)
+
+    if resp.status == 404 && paper.body.state == 'SN'
+      # Sachsen: call viewer URL to make pdf downloadable again
+      m = paper.url.match(/\/(\d+)_Drs_(\d+)_(\d+)_.+.pdf$/)
+      unless m.nil?
+        session.get "http://edas.landtag.sachsen.de/viewer/viewer_navigation.aspx?dok_nr=#{m[2]}&dok_art=Drs&leg_per=#{m[1]}&pos_dok=#{m[3]}"
+        # and try again
+        resp = session.get(paper.url)
+      end
+    end
+
     if resp.status != 200
       logger.warn "Download failed with status #{resp.status} for Paper [#{paper.body.state} #{paper.full_reference}]"
       return false
