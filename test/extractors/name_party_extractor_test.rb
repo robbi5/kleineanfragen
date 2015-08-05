@@ -168,4 +168,65 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 1, pair[:parties].size
     assert_equal 'FDP', pair[:parties].first
   end
+
+  ###
+  # Name Party Comma Format
+  ###
+
+  test 'npc: one person, simple party' do
+    pair = NamePartyExtractor.new('Vor Nachname ABC', :npc).extract
+
+    assert_equal 1, pair[:people].size
+    assert_equal 'Vor Nachname', pair[:people].first
+    assert_equal 1, pair[:parties].size
+    assert_equal 'ABC', pair[:parties].first
+  end
+
+  test 'npc: one person, mixed party' do
+    pair = NamePartyExtractor.new('Vor Nachname AbC', :npc).extract
+
+    assert_equal 1, pair[:people].size
+    assert_equal 'Vor Nachname', pair[:people].first
+    assert_equal 1, pair[:parties].size
+    assert_equal 'AbC', pair[:parties].first
+  end
+
+  test 'npc: one person, spaced party' do
+    pair = NamePartyExtractor.new('Klaus Bartl DIE LINKE', :npc).extract
+
+    assert_equal 1, pair[:people].size
+    assert_equal 'Klaus Bartl', pair[:people].first
+    assert_equal 1, pair[:parties].size
+    assert_equal 'DIE LINKE', pair[:parties].first
+  end
+
+  test 'npc: two people, same simple party' do
+    pair = NamePartyExtractor.new('Vor Nachname ABC, Anderer Name ABC', :npc).extract
+
+    assert_equal 2, pair[:people].size
+    assert_equal 'Vor Nachname', pair[:people].first
+    assert_equal 'Anderer Name', pair[:people].second
+    assert_equal 1, pair[:parties].size
+    assert_equal 'ABC', pair[:parties].first
+  end
+
+  test 'npc: two people, same mixed party' do
+    pair = NamePartyExtractor.new('Vor Nachname AbC, Anderer Name AbC', :npc).extract
+
+    assert_equal 2, pair[:people].size
+    assert_equal 'Vor Nachname', pair[:people].first
+    assert_equal 'Anderer Name', pair[:people].second
+    assert_equal 1, pair[:parties].size
+    assert_equal 'AbC', pair[:parties].first
+  end
+
+  test 'npc: two people, same spaced party' do
+    pair = NamePartyExtractor.new('Klaus Bartl DIE LINKE, Rico Gebhardt DIE LINKE', :npc).extract
+
+    assert_equal 2, pair[:people].size
+    assert_equal 'Klaus Bartl', pair[:people].first
+    assert_equal 'Rico Gebhardt', pair[:people].second
+    assert_equal 1, pair[:parties].size
+    assert_equal 'DIE LINKE', pair[:parties].first
+  end
 end
