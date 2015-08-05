@@ -21,18 +21,18 @@ module SachsenScraper
 
   def self.extract_meta_data(text)
     type = extract_type(text)
-    if type == Paper::DOCTYPE_MAJOR_INTERPELLATION
-      # empty braces for same result count
-      m = text.match(/^GrAnfr ()(.+?) ([\d\.]+) Drs ([\d\/]+)$/)
-    else
-      m = text.match(/^KlAnfr (.+?) ([A-Z][a-zA-Z]{2}|[A-Z]{2,}[[:alnum:]\s]+) ([\d\.]+) Drs ([\d\/]+)$/)
-    end
+    m = text.match(/^(?:Gr|Kl)Anfr (.+?) ([\d\.]+) Drs ([\d\/]+)$/)
     return nil if m.nil?
+    if type == Paper::DOCTYPE_MAJOR_INTERPELLATION
+      party = m[1].strip
+      originators = { people: [], parties: [party] }
+    else
+      originators = NamePartyExtractor.new(m[1], NamePartyExtractor::NAME_PARTY_COMMA).extract
+    end
     {
-      person: m[1].presence,
-      party: m[2],
-      published_at: Date.parse(m[3]),
-      full_reference: m[4]
+      originators: originators,
+      published_at: Date.parse(m[2]),
+      full_reference: m[3]
     }
   end
 
@@ -54,10 +54,6 @@ module SachsenScraper
     fail "SN: cannot extract meta data: #{meta_text}" if meta.nil?
     full_reference = meta[:full_reference]
     legislative_term, reference = full_reference.split('/')
-    originators = {
-      people: [meta[:person]].reject(&:blank?),
-      parties: [meta[:party]].reject(&:blank?)
-    }
     {
       legislative_term: legislative_term,
       full_reference: full_reference,
@@ -67,7 +63,7 @@ module SachsenScraper
       # url
       url: nil,
       published_at: meta[:published_at],
-      originators: originators,
+      originators: meta[:originators],
       is_answer: nil
     }
   end

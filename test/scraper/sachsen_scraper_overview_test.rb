@@ -10,8 +10,10 @@ class SachsenScraperOverviewTest < ActiveSupport::TestCase
     text = 'KlAnfr Vorname Nachname PARTEI 29.05.2015 Drs 19/1234'
     assert_equal(
       {
-        person: 'Vorname Nachname',
-        party: 'PARTEI',
+        originators: {
+          people: ['Vorname Nachname'],
+          parties: ['PARTEI']
+        },
         published_at: Date.parse('2015-05-29'),
         full_reference: '19/1234'
       },
@@ -22,8 +24,10 @@ class SachsenScraperOverviewTest < ActiveSupport::TestCase
     text = 'KlAnfr Vorname Nachname DIE PARTEI 29.05.2015 Drs 19/1234'
     assert_equal(
       {
-        person: 'Vorname Nachname',
-        party: 'DIE PARTEI',
+        originators: {
+          people: ['Vorname Nachname'],
+          parties: ['DIE PARTEI']
+        },
         published_at: Date.parse('2015-05-29'),
         full_reference: '19/1234'
       },
@@ -34,8 +38,10 @@ class SachsenScraperOverviewTest < ActiveSupport::TestCase
     text = 'KlAnfr Vorname Nachname AbC 29.05.2015 Drs 19/1234'
     assert_equal(
       {
-        person: 'Vorname Nachname',
-        party: 'AbC',
+        originators: {
+          people: ['Vorname Nachname'],
+          parties: ['AbC']
+        },
         published_at: Date.parse('2015-05-29'),
         full_reference: '19/1234'
       },
@@ -46,10 +52,26 @@ class SachsenScraperOverviewTest < ActiveSupport::TestCase
     text = 'GrAnfr PARTEI 29.05.2015 Drs 19/1234'
     assert_equal(
       {
-        person: nil,
-        party: 'PARTEI',
+        originators: {
+          people: [],
+          parties: ['PARTEI']
+        },
         published_at: Date.parse('2015-05-29'),
         full_reference: '19/1234'
+      },
+      @scraper.extract_meta_data(text))
+  end
+
+  test 'extract multiple persons' do
+    text = 'KlAnfr Klaus Bartl DIE LINKE, Rico Gebhardt DIE LINKE 21.07.2015 Drs 6/2225'
+    assert_equal(
+      {
+        originators: {
+          people: ['Klaus Bartl', 'Rico Gebhardt'],
+          parties: ['DIE LINKE']
+        },
+        published_at: Date.parse('2015-07-21'),
+        full_reference: '6/2225'
       },
       @scraper.extract_meta_data(text))
   end
