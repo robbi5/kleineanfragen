@@ -47,4 +47,12 @@ class SachsenScraperDetailTest < ActiveSupport::TestCase
     url = @scraper::Detail.extract_viewer_url(button_name)
     assert_equal 'http://edas.landtag.sachsen.de/viewer.aspx?dok_nr=1711&dok_art=Drs&leg_per=6&pos_dok=1', url
   end
+
+  test 'extract answerer from vorgang page' do
+    content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sachsen_scraper_detail_vorgang_vorgang.html')))
+
+    answerer = @scraper::Detail.extract_vorgang_answerer(content)
+
+    assert_equal 'SMS', answerer
+  end
 end

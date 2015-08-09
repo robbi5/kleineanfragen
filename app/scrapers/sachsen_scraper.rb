@@ -105,8 +105,21 @@ module SachsenScraper
             paper[:url] = pdf_url
           end
         end
+        vpage = m.get(BASE_URL + "/parlamentsdokumentation/parlamentsarchiv/treffer_vorgang.aspx?VorgangButton=y&refferer=&dok_art=Drs&leg_per=#{paper[:legislative_term]}&dok_nr=#{paper[:reference]}")
+        answerer = self.class.extract_vorgang_answerer(vpage)
+        paper[:answerers] = { ministries: [answerer] } unless answerer.nil?
       end
       paper
+    end
+
+    def self.extract_vorgang_answerer(vpage)
+      paper_table = vpage.search('//div[@class="dxtc-content"]//td[@class="text"]//table')
+      links = paper_table.search('.//td[@class="text"]/a')
+      links.each do |link|
+        next unless link.text.include? 'Antw'
+        return link.text.match(/Antw (.+) \d+\./).try(:[], 1)
+      end
+      nil
     end
 
     def self.extract_answered_at(content)
