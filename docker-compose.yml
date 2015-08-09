@@ -40,9 +40,9 @@ tika:
 #   - "9998:9998"
 
 elasticsearch:
-  image: dockerfile/elasticsearch
+  image: elasticsearch
 ## if you want to use elasticsearch head (standalone):
-#  command: /elasticsearch/bin/elasticsearch -Des.http.cors.enabled=true
+#  command: elasticsearch -Des.http.cors.enabled=true
 #  ports:
 #    - "9200:9200"
 
