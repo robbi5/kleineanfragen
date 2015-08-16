@@ -51,7 +51,9 @@ class Paper < ActiveRecord::Base
     paper_answerers.sort_by { |answerer| answerer.answerer_type == 'Person' ? 1 : 2 }.map(&:answerer)
   end
 
-  validates :reference, uniqueness: { scope: [:body_id, :legislative_term] }
+  validates :body, presence: true
+  validates :legislative_term, presence: true
+  validates :reference, presence: true, uniqueness: { scope: [:body_id, :legislative_term] }
 
   # friendly id helpers
 
