@@ -1,5 +1,6 @@
 class Ministry < ActiveRecord::Base
   extend FriendlyId
+  include NkSyncable
 
   belongs_to :body
 
