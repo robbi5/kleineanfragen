@@ -8,7 +8,7 @@ class PaperController < ApplicationController
     if stale?(@paper, public: true)
       respond_to do |format|
         format.html
-        format.pdf { redirect_to @paper.url }
+        format.pdf { redirect_to @paper.download_url }
         format.txt { render plain: @paper.contents }
       end
     end
@@ -18,7 +18,6 @@ class PaperController < ApplicationController
     @paper_pdf_url = @paper.public_url
     if !@paper.downloaded_at.nil? && !@paper_pdf_url.blank?
       render :viewer, layout: false
-      # return redirect_to "https://mozilla.github.io/pdf.js/web/viewer.html?file=#{public_url}"
     else
       render :viewer_notavailable, layout: false
     end

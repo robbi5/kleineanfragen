@@ -123,6 +123,14 @@ class Paper < ActiveRecord::Base
     nil
   end
 
+  def download_url
+    if body.use_mirror_for_download? && !public_url.nil?
+      public_url
+    else
+      url
+    end
+  end
+
   def thumbnail_url
     AppStorage.bucket.files.head(thumbnail_path).try(:public_url)
   rescue => error

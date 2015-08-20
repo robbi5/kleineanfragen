@@ -56,6 +56,9 @@
     <p>
       <%= link_to 'PDF herunterladen', paper_path(@body, @legislative_term, @paper, {format: :pdf}), {class: 'btn btn-primary', target: '_blank'} %>
       <br/><small>(<%= @paper.page_count || '?' %> <%= t :pages, count: @paper.page_count || 0 %>)</small>
+      <% if @body.use_mirror_for_download? %>
+      <small>&mdash; <%= link_to 'Gespiegelte Version', info_path %></small>
+      <% end %>
     </p>
     <p>
       <small>Kurz-URL:</small><br/>
