@@ -18,17 +18,38 @@ ActiveRecord::Schema.define(version: 20150818191716) do
 
   create_table "bodies", force: :cascade do |t|
     t.text     "name"
-    t.string   "state",                   limit: 2
+    t.string   "state",      limit: 2
     t.text     "website"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "slug",                    limit: 255
+    t.string   "slug"
     t.boolean  "use_mirror_for_download",             default: false
   end
 
   add_index "bodies", ["name"], name: "index_bodies_on_name", unique: true, using: :btree
   add_index "bodies", ["slug"], name: "index_bodies_on_slug", unique: true, using: :btree
   add_index "bodies", ["state"], name: "index_bodies_on_state", unique: true, using: :btree
+
+  create_table "email_blacklists", force: :cascade do |t|
+    t.string   "email"
+    t.integer  "reason"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "friendly_id_slugs", force: :cascade do |t|
+    t.string   "slug",                      null: false
+    t.integer  "sluggable_id",              null: false
+    t.string   "sluggable_type", limit: 50
+    t.string   "scope"
+    t.datetime "created_at"
+  end
+
+  add_index "friendly_id_slugs", ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true, using: :btree
+  add_index "friendly_id_slugs", ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
+  add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
+  add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
   create_table "ministries", force: :cascade do |t|
     t.integer  "body_id"
@@ -43,8 +64,18 @@ ActiveRecord::Schema.define(version: 20150818191716) do
   add_index "ministries", ["body_id", "slug"], name: "index_ministries_on_body_id_and_slug", unique: true, using: :btree
   add_index "ministries", ["body_id"], name: "index_ministries_on_body_id", using: :btree
 
+  create_table "opt_ins", force: :cascade do |t|
+    t.string   "email"
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.string   "confirmed_ip"
+    t.string   "created_ip"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
   create_table "organizations", force: :cascade do |t|
-    t.string   "name",       limit: 255
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -70,10 +101,10 @@ ActiveRecord::Schema.define(version: 20150818191716) do
   create_table "paper_originators", force: :cascade do |t|
     t.integer "paper_id"
     t.integer "originator_id"
-    t.string  "originator_type", limit: 255
+    t.string  "originator_type"
   end
 
-  add_index "paper_originators", ["originator_id", "originator_type"], name: "index_paper_originators_on_originator_id_and_originator_type", using: :btree
+  add_index "paper_originators", ["originator_type", "originator_id"], name: "index_paper_originators_on_originator_type_and_originator_id", using: :btree
   add_index "paper_originators", ["paper_id"], name: "index_paper_originators_on_paper_id", using: :btree
 
   create_table "papers", force: :cascade do |t|
@@ -88,7 +119,7 @@ ActiveRecord::Schema.define(version: 20150818191716) do
     t.datetime "downloaded_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "slug",              limit: 255
+    t.string   "slug"
     t.boolean  "contains_table"
     t.datetime "pdf_last_modified"
     t.string   "doctype"
@@ -108,6 +139,28 @@ ActiveRecord::Schema.define(version: 20150818191716) do
   end
 
   add_index "people", ["name"], name: "index_people_on_name", unique: true, using: :btree
+
+  create_table "scraper_results", force: :cascade do |t|
+    t.integer  "body_id"
+    t.datetime "started_at"
+    t.datetime "stopped_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean  "success"
+    t.string   "message"
+    t.integer  "new_papers"
+    t.integer  "old_papers"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.string   "email"
+    t.integer  "subtype"
+    t.string   "query"
+    t.boolean  "active"
+    t.datetime "last_sent_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
 
   add_foreign_key "ministries", "bodies"
   add_foreign_key "paper_answerers", "papers"
