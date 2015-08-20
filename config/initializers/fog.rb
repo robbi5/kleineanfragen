@@ -1,26 +1,34 @@
-fog_config = YAML.load(ERB.new(File.read("#{Rails.root}/config/fog.yml")).result)[Rails.env].to_options
-bucket = fog_config.delete :bucket
-
 module AppStorage
   class << self
-    attr_accessor :storage, :bucket
-  end
-end
+  attr_accessor :storage, :bucket, :initialized
 
-begin
-  AppStorage.storage = Fog::Storage.new(fog_config)
-rescue => error
-  Rails.logger.error "Cannot initialize AppStorage: #{error}"
-end
+  def initialize!
+    return if @initialized
+    fog_config = YAML.load(ERB.new(File.read("#{Rails.root}/config/fog.yml")).result)[Rails.env].to_options
+    bucket = fog_config.delete :bucket
 
-if AppStorage.storage
-  begin
-    AppStorage.bucket = AppStorage.storage.directories.get(bucket)
-    # create bucket in development mode
-    if AppStorage.bucket.nil? && Rails.env.development?
-      AppStorage.bucket = AppStorage.storage.directories.create(key: bucket, public: true)
+    begin
+      self.storage = Fog::Storage.new(fog_config)
+    rescue => error
+      Rails.logger.error "Cannot initialize AppStorage: #{error}"
+      return
     end
-  rescue => error
-    Rails.logger.error "Cannot initialize AppStorage/Bucket: #{error}"
+    return unless storage
+
+    begin
+      self.bucket = storage.directories.get(bucket)
+      # create bucket in development mode
+      if bucket.nil? && Rails.env.development?
+        self.bucket = storage.directories.create(key: bucket, public: true)
+      end
+    rescue => error
+      Rails.logger.error "Cannot initialize AppStorage/Bucket: #{error}"
+      return
+    end
+
+    @initialized = true
+  end
   end
 end
+
+AppStorage.initialize! unless ENV['RACK_ENV'].nil?
