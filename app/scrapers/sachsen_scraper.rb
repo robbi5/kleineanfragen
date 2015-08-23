@@ -114,10 +114,10 @@ module SachsenScraper
 
     def self.extract_vorgang_answerer(vpage)
       paper_table = vpage.search('//div[@class="dxtc-content"]//td[@class="text"]//table')
-      links = paper_table.search('.//td[@class="text"]/a')
-      links.each do |link|
-        next unless link.text.include? 'Antw'
-        return link.text.match(/Antw (.+) \d+\./).try(:[], 1)
+      rows = paper_table.search('.//td[@class="text"]')
+      rows.each do |row|
+        next unless row.text.include? 'Antw'
+        return row.text.match(/Antw (.+) \d+\./).try(:[], 1)
       end
       nil
     end
@@ -134,6 +134,7 @@ module SachsenScraper
 
     def self.extract_pdf_buttons(content)
       pdf_table = content.search('//table[@id="ctl00_masterContentCallback_content_tabTreffer_trefferDataView_IT0_anzeige_tblButtons"]').first
+      return [] if pdf_table.nil?
       viewer_ids = pdf_table.search('.//input').select do |i|
         !i.attribute('name').nil? && !i.attribute('name').value.nil? && !i.attribute('name').value.index(/no\$btn/).nil?
       end
