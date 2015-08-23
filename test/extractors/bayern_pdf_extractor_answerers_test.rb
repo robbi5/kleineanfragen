@@ -1,8 +1,9 @@
 require 'test_helper'
 
 class BayernPDFExtractorAnswerersTest < ActiveSupport::TestCase
-  def paper_with_answerer(answerer)
-    Struct.new(:contents).new("Antwort\n#{answerer} vom")
+  def paper_with_answerer(answerer, wrap: true)
+    answerer = "Antwort\n#{answerer} vom" if wrap
+    Struct.new(:contents).new(answerer)
   end
 
   test 'Staatsministeriums des Innern, für Bau und Verkehr' do
@@ -137,5 +138,14 @@ class BayernPDFExtractorAnswerersTest < ActiveSupport::TestCase
 
     assert_equal 1, answerers[:ministries].size
     assert_equal 'Bayerische Staatskanzlei', answerers[:ministries].first
+  end
+
+  # space after Antwort and before newline, newline in name
+  test 'Staatsministeriums für Wirtschaft und Medien, Energie und Technologie' do
+    paper = paper_with_answerer("Antwort \ndes Staatsministeriums für Wirtschaft und Medien, \nEnergie und Technologie\n vom", wrap: false)
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Staatsministerium für Wirtschaft und Medien, Energie und Technologie', answerers[:ministries].first
   end
 end
