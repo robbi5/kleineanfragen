@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de">
+<head profile="http://a9.com/-/spec/opensearch/1.1/">
+ <link rel="shortcut icon" href="OPAL.ico" type="image/ico" />
+ <title>Parlamentsdokumentation</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="de" />
+ <meta http-equiv="Copyright" content="Statistisches Landesamt Baden-Württemberg" />
+ <meta name="publisher" content="Statistisches Landesamt Baden-Württemberg" />
+ <meta name="author" content="Statistisches Landesamt Baden-Württemberg" />
+ <meta name="MSSmartTagsPreventParsing" content="true" />
+ <meta name="robots" content="noindex,nofollow" />
+ <link rel="stylesheet" media="screen"  type="text/css" href="style.css" />
+ <link rel="stylesheet" media="print" type="text/css" href="stylePrint.css" />
+</head>
+<body>
+<div id="menu">
+ <div class="logo" onclick="window.location='/'"></div>
+ <div class="Landtag" onclick="window.open('http://www.landtag-bw.de')"></div>
+</div>
+<div id="topBarBox">
+ <div class="topBar"></div>
+ <div class="navBar"><p>
+  <a href="./?WP=15">Parlamentsdokumentation</a>
+ </p></div>
+</div>
+<hr id="content" />
+<div id="docBody"><div id="doc">
+ <h1>Parlamentsdokumentation des Landtags von Baden-Württemberg</h1>
+<p>In der Parlamentsdokumentation suchen Sie nach parlamentarischen Vorgängen, Drucksachen oder Plenardebatten
+   ab der 9. Wahlperiode (seit 1984). Die <strong>Indexsuche</strong> erfolgt über Schlagwörter oder Drucksachennummern
+   und lässt sich durch Formalkriterien einschränken.<br />
+   Die Suchergebnisse enthalten unter dem Kurzreferat die zugehörigen Vorgangsnummern
+   und sind seit 1996 auch im Volltext als verlinkte PDF-Dokumente verfügbar.</p>
+<form>
+ <p><select name=WP onchange="wechsel()">
+  <option value="15" selected="selected">15. Wahlperiode (01.05.2011-30.04.2016)</option>
+  <option value="14">14. Wahlperiode (01.06.2006-30.04.2011)</option>
+  <option value="13">13. Wahlperiode (01.06.2001-31.05.2006)</option>
+  <option value="12">12. Wahlperiode (01.06.1996-31.05.2001)</option>
+  <option value="11">11. Wahlperiode (01.06.1992-31.05.1996)</option>
+  <option value="10">10. Wahlperiode (01.06.1988-31.05.1992)</option>
+  <option value="09">09. Wahlperiode (01.06.1984-31.05.1988)</option>
+ </select></p>
+ <script type="text/javascript">
+  var wp=document.forms[0].WP;
+  function wechsel ()
+  { var wert="?WP="+wp.options[wp.selectedIndex].value,
+        links=document.links, i=links.length;
+    while(--i>=0)
+    { var link=links[i];
+      if(link.search.length==6&&link.search.substring(1,4)=="WP=")
+        link.search=wert;
+    }
+  } // wechsel
+ </script>
+</form>
+<ul><li><a href="Schlagw.asp?WP=wp"><b>Schlagwortsuche</b></a><br />
+        Diese Funktion ermöglicht Ihnen eine Suche nach ca. 6000 Schlagwörtern.</li>
+    <li><a href="DrsNr.asp?WP=wp"><b>Drucksachennummer</b></a><br />
+        Wenn Sie die Drucksachennummer des gesuchten Dokuments kennen, können Sie eine direkte Abfrage starten.</li>
+    <li><a href="FormalKr.asp?WP=wp"><b>Formalkriterien</b></a><br />
+        Bei dieser Art der Suche werden Ihnen bestimmte formale Kriterien vorgegeben,
+        die Ihre Suche eingrenzen und damit beschleunigen.</li></ul>
+<div>
+ <div class="Spalte">
+  <b>Verantwortlich für die Inhalte</b>:<br />
+  <a href="http://www.landtag-bw.de/cms/home/service/impressum.html" target="_blank">
+     Landtag von Baden-Württemberg</a><br />
+  Konrad-Adenauer-Straße 3<br />70173 Stuttgart<br />
+  <a href="ma&#105;lto:parlamentsdokumentation&#64;landtag-bw.de">parlamentsdokumentation&#64;landtag-bw.de</a><br />
+  &nbsp;</div>
+ <div class="Spalte">
+  <b>Verantwortlich für die Technik</b>:<br />
+  <a href="/Profil/Impressum.asp" target="_blank">Statistisches Landesamt Baden-Württemberg</a><br />
+  Böblinger Straße 68<br />70199 Stuttgart<br />
+  <a href="ma&#105;lto:webmaster&#64;stala.bwl.de">webmaster&#64;stala.bwl.de</a></div>
+</div>
+<script type="text/javascript">
+ wechsel();
+</script>
+<hr id="contentEnd" />
+</div>
+</div>
+</body>
+</html>
