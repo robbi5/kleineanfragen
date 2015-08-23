@@ -51,4 +51,22 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 1, answerers[:ministries].size
     assert_equal 'Ministerium der Finanzen', answerers[:ministries].first
   end
+
+  test 'shorter suffix' do
+    paper = Struct.new(:contents).new(
+      PREFIX + 'der Minister der Finanzen die Anfrage wie folgt:')
+    answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Minister der Finanzen', answerers[:ministries].first
+  end
+
+  test 'im namen' do
+    paper = Struct.new(:contents).new(
+      'Im Namen der Landesregierung beantwortet der Minister für Wirtschaft und Energie' + SUFFIX)
+    answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Minister für Wirtschaft und Energie', answerers[:ministries].first
+  end
 end
