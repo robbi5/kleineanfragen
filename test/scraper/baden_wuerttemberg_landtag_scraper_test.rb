@@ -58,20 +58,20 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
   end
 
   test 'extract result div from resultslist' do
-    actual = @scraper.extract_result_divs(@result_page).size
+    actual = @scraper.extract_result_blocks(@result_page).size
     expected = 40
     assert_equal(expected, actual)
   end
 
   test 'extract full reference from result div' do
-    div = @scraper.extract_result_divs(@result_page)[0]
+    div = @scraper.extract_result_blocks(@result_page)[0]
     actual = @scraper.extract_full_reference(div)
     expected = '15/6432'
     assert_equal(expected, actual)
   end
 
   test 'extract title from result div' do
-    div = @scraper.extract_result_divs(@result_page)[0]
+    div = @scraper.extract_result_blocks(@result_page)[0]
     actual = @scraper.extract_title(div)
     expected = 'Barrierefreier Ausbau der Bahnhöfe auf der Hauptstrecke Stuttgart-Ulm im Landkreis Göppingen zwischen Reichenbach/Fils und Eislingen/Fils'
     assert_equal(expected, actual)
@@ -100,9 +100,8 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
 
   test 'check document for answer' do
     link = @scraper.get_detail_link(@detail_page)
-    actual = @scraper.check_for_answer(link)
-    expected = true
-    assert_equal(expected, actual)
+    is_answer = @scraper.link_is_answer?(link)
+    assert is_answer, 'should be an answer'
   end
 
   test 'extract meta information from detail link' do
@@ -123,7 +122,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
   end
 
   # test 'extract complete paper from page' do
-  #   div = @scraper.extract_result_divs(@result_page)[0]
+  #   div = @scraper.extract_result_blocks(@result_page)[0]
   #   actual = @scraper.extract_paper(div).first
   #   expected = {
   #     full_reference: '15/6432',
