@@ -26,7 +26,7 @@ module BadenWuerttembergLandtagScraper
   end
 
   def self.build_detail_url(legislative_term, reference)
-    DETAIL_URL + '/Ergebnis.asp?WP=' + legislative_term + '&DRSNR=' + reference
+    DETAIL_URL + "/Ergebnis.asp?WP=#{legislative_term}&DRSNR=#{reference}"
   end
 
   def self.get_detail_link(page)
@@ -71,7 +71,7 @@ module BadenWuerttembergLandtagScraper
     }
   end
 
-  def self.extract_overview_paper(block)
+  def self.extract_overview_paper(m, block)
     full_reference = extract_full_reference(block)
     legislative_term, reference = extract_reference(full_reference)
     title = extract_title(block)
@@ -179,7 +179,7 @@ module BadenWuerttembergLandtagScraper
         blocks = BadenWuerttembergLandtagScraper.extract_result_blocks(page)
         blocks.each do |block|
           begin
-            paper = BadenWuerttembergLandtagScraper.extract_overview_paper(block)
+            paper = BadenWuerttembergLandtagScraper.extract_overview_paper(m, block)
           rescue => e
             logger.warn e
             next
