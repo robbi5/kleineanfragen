@@ -110,7 +110,8 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     expected = {
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       url: 'http://www.landtag-bw.de/scr/initiativen/ini_check.asp?wp=15&drs=6432',
-      answerers: 'MVI'
+      originators: { people: ['Peter Hofelich'], parties: ['SPD'] },
+      answerers: { ministries: ['MVI'] }
     }
     assert_equal(expected, actual)
   end
@@ -131,10 +132,8 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
   #     doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
   #     title: 'Barrierefreier Ausbau der Bahnhöfe auf der Hauptstrecke Stuttgart-Ulm im Landkreis Göppingen zwischen Reichenbach/Fils und Eislingen/Fils',
   #     url: 'http://www.landtag-bw.de/scr/initiativen/ini_check.asp?wp=15&drs=6432',
-  #     originators: 'Peter Hofelich SPD',
-  #     answerers: {
-  #       ministries: 'MVI'
-  #     }
+  #     originators: { people: ['Peter Hofelich'], parties: ['SPD'] },
+  #     answerers: { ministries: 'MVI' }
   #   }
   #   assert_equal(expected, actual)
   # end

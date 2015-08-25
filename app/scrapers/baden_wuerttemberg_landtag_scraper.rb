@@ -58,16 +58,17 @@ module BadenWuerttembergLandtagScraper
     nil
   end
 
-  # FIXME: extract originator
   def self.extract_meta(link)
     url = link.attributes['href'].value
-    match_results = link.text.lstrip.match(/(KlAnfr|GrAnfr)\s+.+\s+\d+\..+und\s+Antw\s+(.+)\s+Drs/)
+    match_results = link.text.lstrip.match(/(KlAnfr|GrAnfr)\s+(.+)\s+\d+\..+und\s+Antw\s+(.+)\s+Drs/)
     doctype = extract_doctype(match_results[1])
+    originators = NamePartyExtractor.new(match_results[2], NamePartyExtractor::NAME_PARTY_COMMA).extract
 
     {
       doctype: doctype,
       url: url,
-      answerers: match_results[2].strip
+      originators: originators,
+      answerers: { ministries: [match_results[3].strip] }
     }
   end
 
@@ -89,20 +90,18 @@ module BadenWuerttembergLandtagScraper
       reference: reference,
       title: title,
       # originator: people is set in detail scraper
-      originator: { people: [], parties: [originator_party] },
+      originators: { people: [], parties: [originator_party] },
       # answerer is set in detail scraper
       is_answer: true
     }
   end
 
-  # FIXME: are originators not accessible? -> they are, see meta.
   def self.extract_detail_paper(page, detail_link, full_reference)
     legislative_term, reference = extract_reference(full_reference)
     title = extract_detail_title(page)
     meta = extract_meta(detail_link)
     doctype = meta[:doctype]
     url = meta[:url]
-    ministries = [meta[:answerers]] unless meta[:answerers].nil?
 
     {
       full_reference: full_reference,
@@ -112,10 +111,8 @@ module BadenWuerttembergLandtagScraper
       doctype: doctype,
       url: url,
       is_answer: true,
-      # for originators, see extract_overview_paper
-      answerers: {
-        ministries: ministries
-      }
+      originators: meta[:originators],
+      answerers: meta[:answerers]
     }
   end
 
@@ -165,7 +162,6 @@ module BadenWuerttembergLandtagScraper
       urls
     end
 
-    # FIXME: too many BWLS
     def scrape
       streaming = block_given?
       papers = []
