@@ -7,7 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 Body.create([
-  # { name: 'Baden-Württemberg',      state: 'BW', website: 'https://www.statistik-bw.de/OPAL' },
+  { name: 'Baden-Württemberg',      state: 'BW', website: 'https://www.statistik-bw.de/OPAL' },
   { name: 'Bayern',                 state: 'BY', website: 'https://www1.bayern.landtag.de/webangebot1/dokumente.suche.maske.jsp' },
   { name: 'Berlin',                 state: 'BE', website: 'https://pardok.parlament-berlin.de' },
   { name: 'Brandenburg',            state: 'BB', website: 'http://www.parldok.brandenburg.de' },
