@@ -40,19 +40,19 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
   end
 
   test 'build single urls for legislative period' do
-    types = ['KA']
+    type = 'KA'
     legislative_period = [
       [2013, 11],
       [2013, 12],
       [2014, 1],
       [2014, 2]
     ]
-    actual = @scraper::Overview.get_search_urls(@search_url, legislative_period, types)
+    actual = @scraper::Overview.get_search_urls(@search_url, legislative_period, type)
     expected = [
-      @search_url + 'searchInitiativeType=KA&searchYear=2013&searchMonth=11',
-      @search_url + 'searchInitiativeType=KA&searchYear=2013&searchMonth=12',
+      @search_url + 'searchInitiativeType=KA&searchYear=2014&searchMonth=02',
       @search_url + 'searchInitiativeType=KA&searchYear=2014&searchMonth=01',
-      @search_url + 'searchInitiativeType=KA&searchYear=2014&searchMonth=02'
+      @search_url + 'searchInitiativeType=KA&searchYear=2013&searchMonth=12',
+      @search_url + 'searchInitiativeType=KA&searchYear=2013&searchMonth=11'
     ]
     assert_equal(expected, actual)
   end
