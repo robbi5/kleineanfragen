@@ -69,3 +69,19 @@ Ministry.create([
   { body: sachsen, short_name: 'SMWA', name: 'Staatsministerium für Wirtschaft, Arbeit und Verkehr' },
   { body: sachsen, short_name: 'SMWK', name: 'Staatsministerium für Wissenschaft und Kunst' }
 ])
+
+bw = Body.find_by_state('BW')
+Ministry.create([
+  { body: bw, short_name: 'LReg', name: 'Landesregierung' },
+  { body: bw, short_name: 'MVI',  name: 'Ministerium für Verkehr und Infrastruktur' },
+  { body: bw, short_name: 'IM',   name: 'Innenministerium' },
+  { body: bw, short_name: 'KM',   name: 'Ministerium für Kultus, Jugend und Sport' },
+  { body: bw, short_name: 'SM',   name: 'Ministerium für Arbeit und Sozialordnung, Familie, Frauen und Senioren' },
+  { body: bw, short_name: 'MFW',  name: 'Ministerium für Finanzen und Wirtschaft' },
+  { body: bw, short_name: 'MLR',  name: 'Ministerium für Ländlichen Raum und Verbraucherschutz' },
+  { body: bw, short_name: 'StM',  name: 'Staatsministerium' },
+  { body: bw, short_name: 'MWK',  name: 'Ministerium für Wissenschaft, Forschung und Kunst' },
+  { body: bw, short_name: 'UM',   name: 'Ministerium für Umwelt, Klima und Energiewirtschaft' },
+  { body: bw, short_name: 'JM',   name: 'Justizministerium' },
+  { body: bw, short_name: 'IntM', name: 'Ministerium für Integration' }
+])
