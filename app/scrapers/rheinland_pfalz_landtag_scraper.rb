@@ -102,7 +102,7 @@ module RheinlandPfalzLandtagScraper
       end
     end
 
-    fail "NI [#{full_reference}]: no readable meta information found" if meta.nil?
+    fail "RP [#{full_reference}]: no readable meta information found" if meta.nil?
 
     doctype = meta[:doctype]
 
