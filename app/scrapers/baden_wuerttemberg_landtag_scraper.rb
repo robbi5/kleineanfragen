@@ -14,12 +14,16 @@ module BadenWuerttembergLandtagScraper
     list.css('.result')
   end
 
-  def self.extract_full_reference(div)
-    div.at_css('p').text.gsub(/\s+/, '').gsub(/g/, '').match(/(.+)-.+Datum/)[1].gsub(/\p{Z}+/, ' ').strip
-  end
+  def self.extract_overview_meta(div)
+    text = div.at_css('p').text.strip.gsub(/\p{Z}+/, ' ').gsub(/\n/, ' ').gsub(/\s+/, ' ')
 
-  def self.extract_originator_party(div)
-    div.at_css('p').text.gsub(/\s+/, '').match(/Urheber:(.+$)/)[1].gsub(/\p{Z}+/, ' ').strip
+    m = text.match(/([\d\/]+)\s+-\s+Datum:\s+([\d\.]+)\s+-\s+Art:\s+(.+)\s+-\s+Urheber:\s+(.+)/)
+    {
+      full_reference: m[1],
+      published_at: Date.parse(m[2]),
+      doctype: m[3],
+      originator_party: m[4]
+    }
   end
 
   def self.extract_title(div)
@@ -65,39 +69,40 @@ module BadenWuerttembergLandtagScraper
 
   def self.extract_meta(link)
     url = link.attributes['href'].value
-    match_results = link.text.lstrip.match(/(KlAnfr|GrAnfr)\s+(.+)\s+\d+\..+und\s+Antw\s+(.+)\s+Drs/)
+    match_results = link.text.lstrip.match(/(KlAnfr|GrAnfr)\s+(.+)\s+([\d\.]+)\s+und\s+Antw\s+(.+)\s+Drs/)
     doctype = extract_doctype(match_results[1])
     originators = NamePartyExtractor.new(match_results[2], NamePartyExtractor::NAME_PARTY_COMMA).extract
 
     {
       doctype: doctype,
       url: url,
+      published_at: Date.parse(match_results[3]),
       originators: originators,
-      answerers: { ministries: [match_results[3].strip] }
+      answerers: { ministries: [match_results[4].strip] }
     }
   end
 
   def self.extract_overview_paper(m, block, type)
-    full_reference = extract_full_reference(block)
+    meta = extract_overview_meta(block)
+    full_reference = meta[:full_reference]
     legislative_term, reference = extract_reference(full_reference)
     title = extract_title(block)
-    originator_party = extract_originator_party(block)
 
-    detail_url = build_detail_url(legislative_term, reference)
-    detail_page = m.get(detail_url)
+    detail_page = m.get build_detail_url(legislative_term, reference)
     detail_link = get_detail_link(detail_page)
     return nil if detail_link.nil? || !link_is_answer?(detail_link)
 
-    # Remaining parts come from Detail Scraper
     {
       full_reference: full_reference,
       legislative_term: legislative_term,
       reference: reference,
       doctype: type,
       title: title,
+      # url is set in detail scraper
+      published_at: meta[:published_at],
       # originator: people is set in detail scraper
-      originators: { people: [], parties: [originator_party] },
-      # answerer is set in detail scraper
+      originators: { people: [], parties: [meta[:originator_party]] },
+      # answerers is set in detail scraper
       is_answer: true
     }
   end
@@ -106,16 +111,15 @@ module BadenWuerttembergLandtagScraper
     legislative_term, reference = extract_reference(full_reference)
     title = extract_detail_title(page)
     meta = extract_meta(detail_link)
-    doctype = meta[:doctype]
-    url = meta[:url]
 
     {
       full_reference: full_reference,
       legislative_term: legislative_term,
       reference: reference,
+      doctype: meta[:doctype],
       title: title,
-      doctype: doctype,
-      url: url,
+      url: meta[:url],
+      published_at: meta[:published_at],
       is_answer: true,
       originators: meta[:originators],
       answerers: meta[:answerers]
