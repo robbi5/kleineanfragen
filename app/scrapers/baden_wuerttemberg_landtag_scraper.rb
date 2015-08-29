@@ -69,7 +69,7 @@ module BadenWuerttembergLandtagScraper
 
   def self.extract_meta(link)
     url = link.attributes['href'].value
-    match_results = link.text.lstrip.match(/(KlAnfr|GrAnfr)\s+(.+)\s+([\d\.]+)\s+und\s+Antw\s+(.+)\s+Drs/)
+    match_results = link.text.lstrip.match(/(KlAnfr?|GrAnfr)\s+(.+)\s+([\d\.]+)\s+und\s+Antw\s+(.+)\s+Drs/)
     doctype = extract_doctype(match_results[1])
     # when multiple originators exist, remove "and others" - we extract the other names later
     names = match_results[2].gsub(/\s+u.a./, '').strip
