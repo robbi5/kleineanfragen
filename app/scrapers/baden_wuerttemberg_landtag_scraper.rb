@@ -71,7 +71,9 @@ module BadenWuerttembergLandtagScraper
     url = link.attributes['href'].value
     match_results = link.text.lstrip.match(/(KlAnfr|GrAnfr)\s+(.+)\s+([\d\.]+)\s+und\s+Antw\s+(.+)\s+Drs/)
     doctype = extract_doctype(match_results[1])
-    originators = NamePartyExtractor.new(match_results[2], NamePartyExtractor::NAME_PARTY_COMMA).extract
+    # when multiple originators exist, remove "and others" - we extract the other names later
+    names = match_results[2].gsub(/\s+u.a./, '').strip
+    originators = NamePartyExtractor.new(names, NamePartyExtractor::NAME_PARTY_COMMA).extract
 
     {
       doctype: doctype,
