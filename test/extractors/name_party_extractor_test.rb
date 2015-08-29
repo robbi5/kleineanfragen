@@ -200,6 +200,15 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 'DIE LINKE', pair[:parties].first
   end
 
+  test 'npc: one person, party with slash' do
+    pair = NamePartyExtractor.new('Vor Nachname ABC/DEF', :npc).extract
+
+    assert_equal 1, pair[:people].size
+    assert_equal 'Vor Nachname', pair[:people].first
+    assert_equal 1, pair[:parties].size
+    assert_equal 'ABC/DEF', pair[:parties].first
+  end
+
   test 'npc: two people, same simple party' do
     pair = NamePartyExtractor.new('Vor Nachname ABC, Anderer Name ABC', :npc).extract
 
@@ -228,5 +237,25 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 'Rico Gebhardt', pair[:people].second
     assert_equal 1, pair[:parties].size
     assert_equal 'DIE LINKE', pair[:parties].first
+  end
+
+  test 'npc: two people, one party' do
+    pair = NamePartyExtractor.new('Vor Nachname, Anderer Name ABC', :npc).extract
+
+    assert_equal 2, pair[:people].size
+    assert_equal 'Vor Nachname', pair[:people].first
+    assert_equal 'Anderer Name', pair[:people].second
+    assert_equal 1, pair[:parties].size
+    assert_equal 'ABC', pair[:parties].first
+  end
+
+  test 'npc: two people seperated by und, one party' do
+    pair = NamePartyExtractor.new('Vor Nachname und Anderer Name ABC', :npc).extract
+
+    assert_equal 2, pair[:people].size
+    assert_equal 'Vor Nachname', pair[:people].first
+    assert_equal 'Anderer Name', pair[:people].second
+    assert_equal 1, pair[:parties].size
+    assert_equal 'ABC', pair[:parties].first
   end
 end

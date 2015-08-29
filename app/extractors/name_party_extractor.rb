@@ -47,7 +47,7 @@ class NamePartyExtractor
     pairs = @text.gsub("\n", '').gsub(' und', ', ').split(',').map(&:strip)
 
     pairs.each do |line|
-      m = line.match(/\A(.+?)\s([A-Z][a-zA-Z]{2}|[A-Z]{2,}[[:alnum:]\s]+)\z/)
+      m = line.match(/\A(.+?)(?:\s([A-Z][a-zA-Z]{2}|[A-Z]{2,}[[:alnum:]\s\/]+))?\z/)
       next if m.nil?
       person = m[1].gsub(/\p{Z}+/, ' ').strip
       people << person unless person.blank?
