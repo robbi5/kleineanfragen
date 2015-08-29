@@ -3,6 +3,7 @@ class ExtractOriginatorsJob < PaperJob
 
   EXTRACTORS = {
     'BT' => BundestagPDFExtractor,
+    'BW' => BadenWuerttembergPDFExtractor,
     'BY' => BayernPDFExtractor,
     'HB' => BremenPDFExtractor,
     'SL' => SaarlandPDFExtractor
