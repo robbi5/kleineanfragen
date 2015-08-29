@@ -133,6 +133,10 @@ module BadenWuerttembergLandtagScraper
       Paper::DOCTYPE_MAJOR_INTERPELLATION => 'GA'
     }
 
+    def supports_streaming?
+      true
+    end
+
     def get_legislative_dates
       m = mechanize
       mp = m.get DETAIL_URL + '/'
