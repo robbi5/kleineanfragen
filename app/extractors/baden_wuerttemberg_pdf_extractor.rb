@@ -4,7 +4,7 @@ class BadenWuerttembergPDFExtractor
     @doctype = paper.doctype
   end
 
-  ORIGINATORS_MINOR = /Kleine\s+Anfrage\s+de(?:r|s)\s+Abg.\s+(.+)\s+und\s+Antwort/m
+  ORIGINATORS_MINOR = /Kleine\s+Anfrage\s+de(?:r|s)\s+Abg.\s+(.+?)\s+und\s+Antwort/m
   ORIGINATORS_MAJOR = /Große\s+Anfrage\s+der\s+Fraktion\s+der\s+(.+?)\s+/m
 
   def extract_originators
@@ -22,7 +22,7 @@ class BadenWuerttembergPDFExtractor
     m = @contents.match(ORIGINATORS_MINOR)
     return nil if m.nil?
 
-    names = m[1]
+    names = m[1].gsub(/de(?:r|s)\s+Abg.\s+/, '')
     NamePartyExtractor.new(names, NamePartyExtractor::NAME_PARTY_COMMA).extract
   end
 

@@ -17,6 +17,23 @@ class BadenWuerttembergPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'FDP/DVP', originators[:parties].first
   end
 
+  test 'minor interpellation, three people, two parties' do
+    c = "\n\nKleine Anfrage\n\nder Abg. Alexander Salomon und Dr. Gisela Splett GRÜNE\n" +
+        "und des Abg. Johannes Stober SPD\n\n" +
+        "und\n\nAntwort"
+    paper = paper(Paper::DOCTYPE_MINOR_INTERPELLATION, c)
+
+    originators = BadenWuerttembergPDFExtractor.new(paper).extract_originators
+
+    assert_equal 3, originators[:people].size
+    assert_equal 'Alexander Salomon', originators[:people].first
+    assert_equal 'Dr. Gisela Splett', originators[:people].second
+    assert_equal 'Johannes Stober', originators[:people].third
+    assert_equal 2, originators[:parties].size
+    assert_equal 'GRÜNE', originators[:parties].first
+    assert_equal 'SPD', originators[:parties].second
+  end
+
   test 'major interpellation, one party' do
     c = "\n\nGroße Anfrage \n\nder Fraktion der FDP/DVP\n\n"
     paper = paper(Paper::DOCTYPE_MAJOR_INTERPELLATION, c)
