@@ -115,6 +115,20 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
+  test 'extract meta information from major detail link' do
+    detail_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/baden_wuerttemberg_detail_page_major.html')))
+    link = @scraper.get_detail_link(detail_page)
+    actual = @scraper.extract_meta(link)
+    expected = {
+      doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+      url: 'http://suche.landtag-bw.de/redirect.itl?WP=15&DRS=1608',
+      published_at: Date.parse('2012-04-25'),
+      originators: { people: [], parties: ['FDP/DVP'] },
+      answerers: { ministries: ['LReg'] }
+    }
+    assert_equal(expected, actual)
+  end
+
   test 'extract title from Detail' do
     actual = @scraper.extract_detail_title(@detail_page)
     expected = 'Barrierefreier Ausbau der Bahnhöfe auf der Hauptstrecke Stuttgart-Ulm im LKreis Göppingen zwischen Reichenbach/Fils und Eislingen/Fils'
