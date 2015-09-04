@@ -128,4 +128,21 @@ class BundestagPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 3, originators[:people].size
     assert_equal 'Uwe Kekeritz', originators[:people].first
   end
+
+  # Antwort
+  # der Bundesregierung
+  #
+  # auf die Kleine Anfrage der Abgeordneten Nicole Gohlke,
+  # Sigrid Hupach, Klaus Ernst weiterer Abgeordneter und der Fraktion
+  # DIE LINKE.
+  test 'suffix without comma' do
+    paper = Struct.new(:contents).new(
+      PREFIX + "Nicole Gohlke,\n" +
+      "Sigrid Hupach, Klaus Ernst weiterer Abgeordneter und der Fraktion\n" +
+      "DIE LINKE\n")
+
+    originators = BundestagPDFExtractor.new(paper).extract_originators
+    assert_equal 3, originators[:people].size
+    assert_equal 'Klaus Ernst', originators[:people].last
+  end
 end
