@@ -7,7 +7,7 @@ class ExtractTextFromPaperJob < PaperJob
 
     if !Rails.configuration.x.tika_server.blank? && options[:method] == :tika
       text = extract_tika(paper)
-    elsif options[:method] == :abbyy
+    elsif !Abbyy.application_id.blank? && options[:method] == :abbyy
       text = extract_abbyy(paper)
     else
       text = extract_local(paper)
