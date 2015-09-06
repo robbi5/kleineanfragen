@@ -44,8 +44,9 @@ class ExtractTextFromPaperJob < PaperJob
   end
 
   def extract_tika(paper)
-    fail "No copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] in s3 found" if paper.public_url.nil?
-    pdf = Excon.get(paper.public_url, read_timeout: 120, connect_timeout: 90)
+    url = paper.public_url(true)
+    fail "No copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] in s3 found" if url.nil?
+    pdf = Excon.get(url, read_timeout: 120, connect_timeout: 90)
     fail 'Couldn\'t download PDF' if pdf.status != 200
     text = Excon.put(tika_endpoint,
                      body: pdf.body,

@@ -116,11 +116,15 @@ class Paper < ActiveRecord::Base
     Rails.configuration.x.paper_storage.join(path)
   end
 
-  def public_url
-    AppStorage.bucket.files.head(path).try(:public_url)
-  rescue => error
-    Rails.logger.warn "Cannot get public_url of paper [#{body.state} #{full_reference}]: #{error}"
-    nil
+  def public_url(force_reload = false)
+    Rails.cache.fetch("#{cache_key}/public_url", expires_in: 12.hours, force: force_reload) do
+      begin
+       AppStorage.bucket.files.head(path).try(:public_url)
+      rescue => error
+        Rails.logger.warn "Cannot get public_url of paper [#{body.state} #{full_reference}]: #{error}"
+        nil
+      end
+    end
   end
 
   def download_url
@@ -131,11 +135,13 @@ class Paper < ActiveRecord::Base
     end
   end
 
-  def thumbnail_url
-    AppStorage.bucket.files.head(thumbnail_path).try(:public_url)
-  rescue => error
-    Rails.logger.warn "Cannot get public_url of thumbnail of paper [#{body.state} #{full_reference}]: #{error}"
-    nil
+  def thumbnail_url(force_reload = false)
+    Rails.cache.fetch("#{cache_key}/thumbnail_url", expires_in: 12.hours, force: force_reload) do
+      begin
+      rescue => error
+        Rails.logger.warn "Cannot get public_url of thumbnail of paper [#{body.state} #{full_reference}]: #{error}"
+      end
+    end
   end
 
   def doctype_human

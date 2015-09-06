@@ -28,8 +28,9 @@ class ExtractLastModifiedFromPaperJob < PaperJob
   end
 
   def extract_tika(paper)
-    fail "No copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] in s3 found" if paper.public_url.nil?
-    pdf = Excon.get(paper.public_url)
+    url = paper.public_url(true)
+    fail "No copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] in s3 found" if url.nil?
+    pdf = Excon.get(url)
     fail 'Couldn\'t download PDF' if pdf.status != 200
     meta = Excon.put(tika_endpoint,
                      body: pdf.body,
