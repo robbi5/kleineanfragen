@@ -20,6 +20,7 @@ class BundestagPDFExtractor
                  .sub(/^der\s/, '')
                  .sub(/\s\(.+\)$/, '') # remove city
                  .sub(/^Kleine\s+Anfrage\s+der\s+Abgeordneten\s+/, '') # duplicate prefix
+                 .sub(/^Abgeordneten\s+/, '') # duplicate prefix
                  .sub(/\s*weiterer\s+Abgeordneter\s*$/, '') # duplicate suffix
         people << person unless person.blank? || person == 'weiterer Abgeordneter'
       end

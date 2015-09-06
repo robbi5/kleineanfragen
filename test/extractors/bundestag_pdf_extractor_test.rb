@@ -118,7 +118,7 @@ class BundestagPDFExtractorTest < ActiveSupport::TestCase
   # auf die Kleine Anfrage der Abgeordneten Kleine Anfrage der Abgeordneten
   # Uwe Kekeritz, Claudia Roth (Augsburg), Omid Nouripour, weiterer Abgeordneter
   # und der Fraktion BÜNDNIS 90/DIE GRÜNEN
-  test 'duplicate prefix' do
+  test 'duplicate prefix long' do
     paper = Struct.new(:contents).new(
       PREFIX + "Kleine Anfrage der Abgeordneten\n" +
       "Uwe Kekeritz, Claudia Roth (Augsburg), Omid Nouripour, weiterer Abgeordneter\n" +
@@ -127,6 +127,23 @@ class BundestagPDFExtractorTest < ActiveSupport::TestCase
     originators = BundestagPDFExtractor.new(paper).extract_originators
     assert_equal 3, originators[:people].size
     assert_equal 'Uwe Kekeritz', originators[:people].first
+  end
+
+  # Antwort
+  # der Bundesregierung
+  #
+  # auf die Kleine Anfrage der Abgeordneten der Abgeordneten
+  # Eva Bulling-Schröter, Caren Ley, Kerstin Kassner, weiterer
+  # Abgeordneter und der Fraktion DIE LINKE.
+  test 'duplicate prefix short' do
+    paper = Struct.new(:contents).new(
+      PREFIX + "der Abgeordneten\n" +
+      "Eva Bulling-Schröter, Caren Ley, Kerstin Kassner, weiterer\n" +
+      "Abgeordneter und der Fraktion DIE LINKE.\n")
+
+    originators = BundestagPDFExtractor.new(paper).extract_originators
+    assert_equal 3, originators[:people].size
+    assert_equal 'Eva Bulling-Schröter', originators[:people].first
   end
 
   # Antwort
