@@ -113,7 +113,7 @@ module HamburgBuergerschaftScraper
       # get a session
       m.get BASE_URL
       mp = m.get SEARCH_URL
-      form = mp.forms.second
+      form = mp.forms.last
       form.field_with(name: 'LegislaturPeriodenNummer').value = @legislative_term
       form.field_with(name: 'DokumentenNummer').value = @reference
       submit_button = form.submits.find { |btn| btn.value == 'Suchen' }
