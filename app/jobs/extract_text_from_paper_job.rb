@@ -52,7 +52,9 @@ class ExtractTextFromPaperJob < PaperJob
                      headers: { 'Content-Type' => 'application/pdf', 'Accept' => 'text/plain' })
     fail 'Couldn\'t get text' if text.status != 200
     # reason for force_encoding: https://github.com/excon/excon/issues/189
-    text.body.force_encoding('utf-8').strip
+    t = text.body.force_encoding('utf-8').strip
+    # remove weird pdf control things
+    t.gsub(/\n\n<<\n.+\n>> (?:setdistillerparams|setpagedevice)/m, '')
   end
 
   def extract_abbyy(paper)
