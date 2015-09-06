@@ -7,7 +7,7 @@ class NiedersachsenLandtagScraperDetailTest < ActiveSupport::TestCase
 
   test 'extract detail info' do
     @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/niedersachsen_landtag_scraper_detail.html')))
-    block = @scraper.extract_detail_block(@html).first
+    block = @scraper.extract_detail_block(@html)
     paper = @scraper.extract_paper(block)
 
     assert_equal(
@@ -32,7 +32,7 @@ class NiedersachsenLandtagScraperDetailTest < ActiveSupport::TestCase
 
   test 'extract detail info with attachments' do
     @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/niedersachsen_landtag_scraper_detail_attachment.html')))
-    block = @scraper.extract_detail_block(@html).first
+    block = @scraper.extract_detail_block(@html)
     paper = @scraper.extract_paper(block)
 
     assert_equal(
