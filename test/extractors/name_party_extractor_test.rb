@@ -65,6 +65,17 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 'CDU', pair[:parties].first
   end
 
+  # Trailing comma, party
+  test 'two people, trailing comma and party' do
+    pair = NamePartyExtractor.new('Andrea Schröder-Ehlers (SPD), Dr. Thela Wernstedt, (SPD)').extract
+
+    assert_equal 2, pair[:people].size
+    assert_equal 'Andrea Schröder-Ehlers', pair[:people].first
+    assert_equal 'Dr. Thela Wernstedt', pair[:people].second
+    assert_equal 1, pair[:parties].size
+    assert_equal 'SPD', pair[:parties].first
+  end
+
   ###
   # Reversed Name Party Format
   ###

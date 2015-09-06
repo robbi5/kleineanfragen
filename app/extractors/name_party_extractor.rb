@@ -66,7 +66,7 @@ class NamePartyExtractor
       m = line.match(/(.+)\s\((.+)\)/)
       m = ['', line.strip] if m.nil?
       person = m[1].gsub(/\p{Z}+/, ' ').strip
-      people << person unless person.blank?
+      people << person unless person.blank? || person.match(/^\(.+\)$/)
       parties << m[2].gsub(/\p{Z}+/, ' ').strip.sub(/^Fraktion\s+(?:der\s+)?/, '') unless m[2].nil?
     end
 
