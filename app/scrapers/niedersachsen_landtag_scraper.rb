@@ -10,7 +10,7 @@ module NiedersachsenLandtagScraper
   end
 
   def self.extract_detail_block(page)
-    page.search('//table[@summary="Report"]//table')
+    page.search('//table[@summary="Report"]//table').first
   end
 
   def self.extract_title(block)
@@ -72,6 +72,7 @@ module NiedersachsenLandtagScraper
   def self.extract_paper(item)
     fail 'NI [?]: called extract_paper with null parameter' if item.nil?
     details = extract_references_block(item)
+    fail 'NI [?]: no detail element found' if details.nil?
     title = extract_title(details)
     fail 'NI [?]: no title element found' if title.nil?
 
