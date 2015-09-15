@@ -138,8 +138,10 @@ class Paper < ActiveRecord::Base
   def thumbnail_url(force_reload = false)
     Rails.cache.fetch("#{cache_key}/thumbnail_url", expires_in: 12.hours, force: force_reload) do
       begin
+        AppStorage.bucket.files.head(thumbnail_path).try(:public_url)
       rescue => error
         Rails.logger.warn "Cannot get public_url of thumbnail of paper [#{body.state} #{full_reference}]: #{error}"
+        nil
       end
     end
   end
