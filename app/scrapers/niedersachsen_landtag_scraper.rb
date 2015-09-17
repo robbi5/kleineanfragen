@@ -22,7 +22,9 @@ module NiedersachsenLandtagScraper
   end
 
   def self.extract_container(block)
-    block.css('tr:nth-child(4) td:nth-child(2) table tr td:nth-child(2)').first
+    c = block.css('tr:nth-child(4) td:nth-child(2) table tr td:nth-child(2)').first
+    c = block.css('tr:nth-child(5) td:nth-child(2) table tr td:nth-child(2)').first if c.nil?
+    c
   end
 
   def self.extract_link(container)
@@ -54,13 +56,19 @@ module NiedersachsenLandtagScraper
 
   def self.extract_meta(container)
     o_results, a_results = [nil, nil]
-    container.children.map(&:text).each do |line|
+
+    rows = container.css('ul.fundstelle li')
+    rows = container.children if rows.empty?
+
+    rows.map(&:text).each do |line|
       match = line.match(/(Kleine|Große)\s+Anfrage(?:\s+zur\s+schriftlichen\s+Beantwortung)?\s+(.+)(?:\s+\d|\))/m)
       o_results = match if match && !line.include?('mit Antwort')
-      match = line.match(/Antwort\s+(.+)\s+([\d\.]+)/m)
+      match = line.match(/Antwort\s+(.+)\s+(\d+\.\d+\.\d+)/m)
       a_results = match if match
     end
+
     return nil if o_results.nil? || a_results.nil?
+
     {
       doctype: o_results[1].strip,
       originators: o_results[2].strip,
