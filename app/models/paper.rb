@@ -55,6 +55,8 @@ class Paper < ActiveRecord::Base
   validates :legislative_term, presence: true
   validates :reference, presence: true, uniqueness: { scope: [:body_id, :legislative_term] }
 
+  before_validation :fix_published_at
+
   # friendly id helpers
 
   def should_generate_new_friendly_id?
@@ -238,10 +240,21 @@ class Paper < ActiveRecord::Base
     p
   end
 
-  private
+  protected
 
   def normalize(name, prefix, body = nil)
     return name if Rails.configuration.x.nomenklatura_api_key.blank?
     Nomenklatura::Dataset.new("ka-#{prefix}" + (!body.nil? ? "-#{body.state.downcase}" : '')).lookup(name)
+  end
+
+  def fix_published_at
+    return if published_at.nil?
+    this_year = Date.today.year
+    return unless published_at.year > this_year
+    parts = this_year.to_s.split('').sort
+    if published_at.year.to_s.split('').sort == parts
+      # someone slipped on the keyboard, the years numbers are scrambled
+      self.published_at = Date.new(this_year, published_at.month, published_at.day)
+    end
   end
 end
