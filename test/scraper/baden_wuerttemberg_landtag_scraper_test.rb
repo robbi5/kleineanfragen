@@ -104,12 +104,23 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
 
   test 'extract meta information from detail link' do
     link = @scraper.get_detail_link(@detail_page)
-    actual = @scraper.extract_meta(link)
+    actual = @scraper.extract_meta(link.text)
     expected = {
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-      url: 'http://www.landtag-bw.de/scr/initiativen/ini_check.asp?wp=15&drs=6432',
       published_at: Date.parse('2015-01-29'),
       originators: { people: ['Peter Hofelich'], parties: ['SPD'] },
+      answerers: { ministries: ['MVI'] }
+    }
+    assert_equal(expected, actual)
+  end
+
+  test 'extract meta information from long detail link' do
+    text = 'KlAnfr Arnulf Freiherr von Eyb u.a. CDU, Rainer Hinderer u.a. SPD und Dr. Friedrich Bullinger FDP/DVP 07.05.2013 und Antw MVI Drs 15/3466'
+    actual = @scraper.extract_meta(text)
+    expected = {
+      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+      published_at: Date.parse('2013-05-07'),
+      originators: { people: ['Arnulf Freiherr von Eyb', 'Rainer Hinderer', 'Dr. Friedrich Bullinger'], parties: ['CDU', 'SPD', 'FDP/DVP'] },
       answerers: { ministries: ['MVI'] }
     }
     assert_equal(expected, actual)
@@ -118,10 +129,9 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
   test 'extract meta information from major detail link' do
     detail_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/baden_wuerttemberg_detail_page_major.html')))
     link = @scraper.get_detail_link(detail_page)
-    actual = @scraper.extract_meta(link)
+    actual = @scraper.extract_meta(link.text)
     expected = {
       doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
-      url: 'http://suche.landtag-bw.de/redirect.itl?WP=15&DRS=1608',
       published_at: Date.parse('2012-04-25'),
       originators: { people: [], parties: ['FDP/DVP'] },
       answerers: { ministries: ['LReg'] }

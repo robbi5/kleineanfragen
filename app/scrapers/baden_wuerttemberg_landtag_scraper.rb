@@ -67,9 +67,8 @@ module BadenWuerttembergLandtagScraper
     nil
   end
 
-  def self.extract_meta(link)
-    url = link.attributes['href'].value
-    match_results = link.text.lstrip.match(/(KlAnfr?|GrAnfr)\s+(.+)\s+([\d\.]+)\s+und\s+Antw\s+(.+)\s+Drs/)
+  def self.extract_meta(meta_text)
+    match_results = meta_text.lstrip.match(/(KlAnfr?|GrAnfr)\s+(.+)\s+([\d\.]+)\s+und\s+Antw\s+(.+)\s+Drs/)
     doctype = extract_doctype(match_results[1])
     # when multiple originators exist, remove "and others" - we extract the other names later
     names = match_results[2].gsub(/\s+(?:u.a.|u.u.)/, '').strip
@@ -82,7 +81,6 @@ module BadenWuerttembergLandtagScraper
 
     {
       doctype: doctype,
-      url: url,
       published_at: Date.parse(match_results[3]),
       originators: originators,
       answerers: { ministries: [match_results[4].strip] }
@@ -117,7 +115,8 @@ module BadenWuerttembergLandtagScraper
   def self.extract_detail_paper(page, detail_link, full_reference)
     legislative_term, reference = extract_reference(full_reference)
     title = extract_detail_title(page)
-    meta = extract_meta(detail_link)
+    url = link.attributes['href'].value
+    meta = extract_meta(detail_link.text)
 
     {
       full_reference: full_reference,
@@ -125,7 +124,7 @@ module BadenWuerttembergLandtagScraper
       reference: reference,
       doctype: meta[:doctype],
       title: title,
-      url: meta[:url],
+      url: url,
       published_at: meta[:published_at],
       is_answer: true,
       originators: meta[:originators],
