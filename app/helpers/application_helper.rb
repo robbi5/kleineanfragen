@@ -19,22 +19,24 @@ module ApplicationHelper
     !current_page?(root_path) && !current_page?(search_path)
   end
 
-  def feed_url_with_current_page(model)
-    return url_for(only_path: false, format: 'atom') if model.current_page == 1
-    url_for(only_path: false, format: 'atom', page: model.current_page)
+  def feed_url_with_current_page(model, params = {})
+    options = params.merge(only_path: false, format: 'atom')
+    options[:page] = model.current_page if model.current_page > 1
+    url_for(options)
   end
 
-  def paginated_feed(feed, model)
+  def paginated_feed(feed, model, params = {})
+    options = params.merge(only_path: false, format: 'atom')
     unless model.first_page?
       prev_url = if model.prev_page == 1
-                   url_for(only_path: false, format: 'atom')
+                   url_for(options)
                  else
-                   url_for(only_path: false, format: 'atom', page: model.prev_page)
+                   url_for(options.merge(page: model.prev_page))
                  end
       feed.link(rel: 'prev', type: 'application/atom+xml', href: prev_url)
     end
     unless model.last_page?
-      next_url = url_for(only_path: false, format: 'atom', page: model.next_page)
+      next_url = url_for(options.merge(page: model.next_page))
       feed.link(rel: 'next', type: 'application/atom+xml', href: next_url)
     end
   end

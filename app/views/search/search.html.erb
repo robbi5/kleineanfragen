@@ -1,4 +1,5 @@
 <% title "Suche nach #{@term}" + (!@papers.first_page? ? " (Seite #{@papers.current_page})" : '') %>
+<%- content_for :head do %><%= auto_discovery_link_tag(:atom, search_url(q: @query, format: :atom), title: "Suche nach #{@term}") %><% end -%>
 
 <% content_for :main_fullwidth do %>
 <%= form_tag "/search", method: :get, role: 'search', class: 'search', enforce_utf8: false do %>
@@ -55,7 +56,7 @@
     <%
       title = details[:highlight].try(:fetch, :title, nil).try(:html_safe) || paper.title
       snippet = details[:highlight].try(:fetch, :contents, nil) || ''
-      snippet += "&hellip;" unless snippet.blank?
+      snippet += '&hellip;' unless snippet.blank?
     %>
     <p class="source-and-title">
       <span class="source">
