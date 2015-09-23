@@ -1,7 +1,7 @@
 <% title "Suche nach #{@term}" + (!@papers.first_page? ? " (Seite #{@papers.current_page})" : '') %>
 
 <% content_for :main_fullwidth do %>
-<%= form_tag "/search", method: :get, role: 'search', class: 'search' do %>
+<%= form_tag "/search", method: :get, role: 'search', class: 'search', enforce_utf8: false do %>
   <div class="jumbotron jumbotron--search">
     <div class="container">
       <div class="input-group">
