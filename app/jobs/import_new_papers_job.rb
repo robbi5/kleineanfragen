@@ -117,6 +117,10 @@ class ImportNewPapersJob < ActiveJob::Base
       end
 
       paper.assign_attributes(item.except(:full_reference, :body, :legislative_term, :reference))
+      if !paper.valid?
+        logger.warn "[#{@body.state}] Can't save Paper [#{item[:full_reference]}] - #{paper.errors.messages}"
+        return
+      end
       paper.save!
     else
       logger.info "[#{@body.state}] New Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
