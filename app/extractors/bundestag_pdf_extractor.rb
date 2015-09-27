@@ -4,6 +4,7 @@ class BundestagPDFExtractor
   end
 
   ORIGINATORS = /der Abgeordneten (.+?)(?:,\s+weiterer\s+Abgeordneter)?\s+und\s+der\s+Fraktion\s+(?:der\s+)?(.{0,30}?)\.?\n/m
+  ORIGINATORS_GROUPS = /der Fraktionen\s+(?:der\s+)?([^\n]+)\n/m
 
   def extract_originators
     return nil if @contents.nil?
@@ -25,6 +26,21 @@ class BundestagPDFExtractor
         people << person unless person.blank? || person == 'weiterer Abgeordneter'
       end
       parties << m[1].gsub("\n", ' ').strip.gsub(/\p{Other}/, '').sub(/^der\s/, '').sub(/\.$/, '')
+    end
+
+    if people.empty? && parties.empty?
+      @contents.scan(ORIGINATORS_GROUPS).each do |m|
+        m[0].gsub(' und ', ',').split(',').each do |party|
+          party = party.gsub(/\p{Z}/, ' ')
+                  .gsub("\n", ' ')
+                  .gsub(/\s+/, ' ')
+                  .strip
+                  .gsub(/\p{Other}/, '') # invisible chars & private use unicode
+                  .sub(/^der\s/, '')
+                  .sub(/\.$/, '')
+          parties << party
+        end
+      end
     end
 
     { people: people, parties: parties }

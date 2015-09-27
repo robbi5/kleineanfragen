@@ -162,4 +162,52 @@ class BundestagPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 3, originators[:people].size
     assert_equal 'Klaus Ernst', originators[:people].last
   end
+
+  # Antwort
+  # der Bundesregierung
+  #
+  # auf die Kleine Anfrage der Fraktionen der CDU/CSU und SPD
+  # – Drucksache...
+  test 'parlamentary groups' do
+    paper = Struct.new(:contents).new("Antwort\nder Bundesregierung\n\n" +
+      "auf die Kleine Anfrage der Fraktionen der CDU/CSU und SPD\n– Drucksache")
+
+    originators = BundestagPDFExtractor.new(paper).extract_originators
+    assert_equal 0, originators[:people].size
+    assert_equal 2, originators[:parties].size
+    assert_equal 'CDU/CSU', originators[:parties].first
+    assert_equal 'SPD', originators[:parties].last
+  end
+
+  # Antwort
+  # der Bundesregierung
+  #
+  # der Fraktionen der CDU/CSU und SPD
+  # – Drucksache...
+  test 'parlamentary groups with missing paper type' do
+    paper = Struct.new(:contents).new("Antwort\nder Bundesregierung\n\n" +
+      "der Fraktionen der CDU/CSU und SPD\n– Drucksache")
+
+    originators = BundestagPDFExtractor.new(paper).extract_originators
+    assert_equal 0, originators[:people].size
+    assert_equal 2, originators[:parties].size
+    assert_equal 'CDU/CSU', originators[:parties].first
+    assert_equal 'SPD', originators[:parties].last
+  end
+
+  # Antwort
+  # der Bundesregierung
+  #
+  # auf die Kleine Anfrage der Fraktionen CDU/CSU und SPD
+  # – Drucksache...
+  test 'parlamentary groups with missing der' do
+    paper = Struct.new(:contents).new("Antwort\nder Bundesregierung\n\n" +
+      "auf die Kleine Anfrage der Fraktionen CDU/CSU und SPD\n– Drucksache")
+
+    originators = BundestagPDFExtractor.new(paper).extract_originators
+    assert_equal 0, originators[:people].size
+    assert_equal 2, originators[:parties].size
+    assert_equal 'CDU/CSU', originators[:parties].first
+    assert_equal 'SPD', originators[:parties].last
+  end
 end
