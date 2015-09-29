@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Vorschau nicht verfügbar - kleineAnfragen</title>
+  <title>Vorschau nicht verfügbar (<%= @body.name %> <%= @paper.full_reference %>) - kleineAnfragen</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
 </head>
 <body>
@@ -10,5 +10,6 @@
     Leider kann für diese Anfrage noch keine Vorschau angezeigt werden.<br/>
     <%= link_to 'PDF herunterladen', paper_path(@body, @legislative_term, @paper, {format: :pdf}), {class: 'btn btn-primary', target: '_blank'} %>
   </p>
+<%= render partial: 'site/tracking' %>
 </body>
 </html>
