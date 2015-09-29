@@ -162,6 +162,8 @@ module BerlinAghScraper
     def scrape
       streaming = block_given?
       m = mechanize
+      # increase read timeout for berlin
+      m.read_timeout = 120
       # get a session
       m.get BASE_URL + '/starweb/AHAB/'
       # get search page
@@ -215,7 +217,10 @@ module BerlinAghScraper
     SEARCH_URL = BASE_URL + '/starweb/AHAB/servlet.starweb?path=AHAB/lisshfl.web&id=ahabfastlink&format=WEBVORGLFL&search='
 
     def scrape
-      mp = mechanize.get SEARCH_URL + CGI.escape('WP=' + @legislative_term.to_s + ' AND DNR=' + @reference.to_s)
+      m = mechanize
+      # increase read timeout for berlin
+      m.read_timeout = 120
+      mp = m.get SEARCH_URL + CGI.escape('WP=' + @legislative_term.to_s + ' AND DNR=' + @reference.to_s)
       body = BerlinAghScraper.extract_body(mp)
       seperator = BerlinAghScraper.extract_seperators(body).first
       BerlinAghScraper.extract_paper(seperator)
