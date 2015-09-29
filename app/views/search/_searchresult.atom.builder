@@ -13,6 +13,6 @@ feed.entry paper, published: paper.published_at, updated: paper.updated_at, url:
   end
   entry.category(term: paper.body.state, label: paper.body.name)
   entry.summary do
-    feed.cdata! paper.description + (!snippet.blank? ? "\n" + snippet : '')
+    feed.cdata! paper.description + (!snippet.blank? ? "<br/>\n" + snippet : '')
   end
 end
