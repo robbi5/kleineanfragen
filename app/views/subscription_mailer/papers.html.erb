@@ -3,7 +3,14 @@
 <%- @papers.each do |paper| -%>
 <li>
 <%= link_to_paper_url paper.title, paper %><br/>
-<span class="meta"><%- if paper.major? -%>Große Anfrage • <% end -%><%- if @show_body -%><%= paper.body.name %> • <% end -%>Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %><br/>
+<span class="meta"><%-
+  if paper.major?
+-%>Große Anfrage • <% end -%><%-
+  if @show_body
+-%><%= paper.body.name %> • <% end -%><%-
+  originators = paper.originators.collect(&:name)
+  unless originators.empty?
+-%>Eingereicht von: <%= originators.join(', ') %><% end -%><br/>
 Veröffentlicht am <%= l paper.published_at %> <%- unless paper.page_count.nil? -%>— <%= paper.page_count %> <%= t :pages, count: paper.page_count -%><%- end -%><%- if paper.contains_table %>, enthält Tabelle<% end %></span>
 </li>
 <%- end -%>
