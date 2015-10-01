@@ -124,7 +124,12 @@ class ImportNewPapersJob < ActiveJob::Base
       paper.save!
     else
       logger.info "[#{@body.state}] New Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
-      paper = Paper.create!(item.except(:full_reference).merge(body: @body))
+      paper = Paper.new(item.except(:full_reference).merge(body: @body))
+      if !paper.valid?
+        logger.warn "[#{@body.state}] Can't save Paper [#{item[:full_reference]}] - #{paper.errors.messages}"
+        return
+      end
+      paper.save!
       @new_papers += 1
       new_paper = true
     end

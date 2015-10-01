@@ -23,7 +23,11 @@ class LoadPaperDetailsJob < PaperJob
       paper.send("#{key}=", value) if paper.send(key).blank? || OVERWRITEABLE.include?(key)
     end
 
-    paper.save
+    if !paper.valid?
+      logger.warn "[#{paper.body.state}] Can't save Paper [#{paper.full_reference}] - #{paper.errors.messages}"
+      return
+    end
+    paper.save!
     StorePaperPDFJob.perform_later(paper) if had_empty_url && !paper.url.blank?
   end
 end
