@@ -1,0 +1,47 @@
+<% title "Problem melden: #{@paper.title} (#{@paper.full_reference}) &mdash; #{@body.name}, #{@legislative_term}. Wahlperiode" %>
+<% content_for :head do noindex end %>
+<% content_for :main_fullwidth do %>
+<div class="breadcrumb-fullwidth">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><%= link_to @body.name, @body %></li>
+      <li><%= link_to "#{@legislative_term.to_s}. Wahlperiode", legislative_term_path(@body, @legislative_term) %></li>
+      <li class="active"><%= link_to_paper "Drucksache #{@paper.reference}", @paper %></li>
+    </ol>
+  </div>
+</div>
+<% end %>
+
+<div class="page-header">
+  <h1>Problem melden: <%= link_to_paper @paper.title, @paper %></h1>
+</div>
+
+<div class="row">
+  <div class="col-sm-4 col-sm-push-8">
+    <p>
+      kleineAnfragen extrahiert die Daten zu den Anfragen aus den Parlamentsinformationssystemen.
+      Leider klappt das nicht immer zu 100%.
+    </p>
+    <p>
+      Falls an dieser Anfrage die Anfragesteller fehlen, unvollständig, oder falsch geschrieben sind, oder das antwortenden Ministerium nicht stimmt, kannst du uns hier eine Meldung schicken.
+    </p>
+    <p>
+      Vielen Dank!
+    </p>
+  </div>
+  <div class="col-sm-8 col-sm-pull-4">
+    <%= form_tag paper_send_report_path, class: 'form-horizontal' do %>
+      <div class="row form-group">
+        <label class="col-sm-3 control-label" for="message">Anmerkungen:</label>
+        <div class="col-sm-9">
+          <%= text_area_tag :message, nil, class: 'form-control', rows: 5, placeholder: 'Beschreibe hier kurz, was an den Daten zur Anfrage nicht stimmt' %>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-sm-offset-3 col-sm-9">
+          <%= button_tag 'Senden', class: 'btn btn-primary' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

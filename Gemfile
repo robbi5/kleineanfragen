@@ -107,3 +107,6 @@ gem 'hashids', '~> 1.0.2'
 # inline css for emails
 gem 'nokogiri'
 gem 'premailer-rails', '~> 1.8.2'
+
+# simplify posting to slack channels
+gem 'slack-notifier', '~> 1.3.1'

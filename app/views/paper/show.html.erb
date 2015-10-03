@@ -73,4 +73,12 @@
   </div>
 </div>
 
+<% if report_enabled? %>
+<div class="row">
+  <div class="col-md-3 col-md-push-9">
+    <p class="report"><%= link_to 'Problem melden', paper_report_path(@body, @legislative_term, @paper) %></p>
+  </div>
+</div>
+<% end %>
+
 <!-- Paper/<%= @paper.id %> -->

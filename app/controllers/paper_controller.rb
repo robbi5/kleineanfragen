@@ -1,7 +1,7 @@
 class PaperController < ApplicationController
-  before_filter :find_body, only: [:show, :viewer]
-  before_filter :find_legislative_term, only: [:show, :viewer]
-  before_filter :find_paper, only: [:show, :viewer]
+  before_filter :find_body, only: [:show, :viewer, :report, :send_report]
+  before_filter :find_legislative_term, only: [:show, :viewer, :report, :send_report]
+  before_filter :find_paper, only: [:show, :viewer, :report, :send_report]
   before_filter :redirect_old_slugs, only: [:show]
 
   def show
@@ -35,6 +35,21 @@ class PaperController < ApplicationController
   def redirect_by_id
     @paper = Paper.find(params[:paper].to_i)
     redirect_to paper_path(@paper.body, @paper.legislative_term, @paper)
+  end
+
+  def report
+    render(status: :not_found) and return unless view_context.report_enabled?
+  end
+
+  def send_report
+    render(status: :not_found) and return unless view_context.report_enabled?
+
+    msg = params[:message] || '(no message)'
+
+    notifier = Slack::Notifier.new Rails.configuration.x.report_slack_webhook
+    notifier.ping "#{notifier.escape msg} - #{view_context.paper_short_url(@paper)} [##{@paper.id}]"
+
+    render :report_thanks
   end
 
   private

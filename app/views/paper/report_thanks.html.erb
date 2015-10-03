@@ -1,0 +1,23 @@
+<% title "Problem melden: #{@paper.title} (#{@paper.full_reference}) &mdash; #{@body.name}, #{@legislative_term}. Wahlperiode" %>
+<% content_for :head do noindex end %>
+<% content_for :main_fullwidth do %>
+<div class="breadcrumb-fullwidth">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><%= link_to @body.name, @body %></li>
+      <li><%= link_to "#{@legislative_term.to_s}. Wahlperiode", legislative_term_path(@body, @legislative_term) %></li>
+      <li class="active"><%= link_to_paper "Drucksache #{@paper.reference}", @paper %></li>
+    </ol>
+  </div>
+</div>
+<% end %>
+
+<div class="page-header">
+  <h1>Problem melden: <%= link_to_paper @paper.title, @paper %></h1>
+</div>
+
+<div class="alert-wrap">
+  <div class="alert alert-success alert-icon">
+    <p>Vielen Dank!</p>
+  </div>
+</div>
