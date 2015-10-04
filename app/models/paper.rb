@@ -171,6 +171,8 @@ class Paper < ActiveRecord::Base
     if originator_people.size > 0
       desc << " Eingereicht von #{originator_people.map(&:name).join(', ')}, " +
         "#{originator_organizations.map(&:name).join(', ')}."
+    elsif originator_organizations.size > 0
+      desc << " Eingereicht von #{originator_organizations.map(&:name).join(', ')}."
     end
     desc << " #{page_count} #{ActionController::Base.helpers.t(:pages, count: page_count)}." if page_count.present?
     desc.join('')
