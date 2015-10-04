@@ -61,8 +61,8 @@
       <% end %>
     </p>
     <p>
-      <small>Kurz-URL:</small><br/>
-      <input type="text" name="shorturl" value="<%= paper_short_url(@paper) %>" readonly="readonly" class="shorturl-input"/>
+      <label for="shorturl" class="shorturl-label">Kurz-URL:</label>
+      <input type="text" name="shorturl" id="shorturl" value="<%= paper_short_url(@paper) %>" readonly="readonly" class="shorturl-input"/>
     </p>
     <% if @paper.contains_table %>
     <p>Diese Anfrage enthält eine oder mehrere Tabellen. Um diese einfach exportieren zu können, ist u.a. <a href="http://tabula.technology">Tabula</a> hilfreich.</p>

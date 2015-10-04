@@ -30,6 +30,7 @@
     <% if display_header_search? %>
     <form class="navbar-form navbar-left search search--navbar" role="search" action="/search" method="get" class="search">
       <div class="input-group">
+        <label for="searchq" class="sr-only">Suche in kleinen Anfragen:</label>
         <input type="search" id="searchq" name="q" class="form-control" placeholder="Suche nach Themen&hellip;"/>
         <span class="input-group-btn">
           <button class="btn btn-success" type="submit">Suchen</button>
@@ -50,13 +51,13 @@
 <footer class="app-footer container">
   <div class="row">
     <div class="col-md-8 footer-project-line">
-      <p>kleineAnfragen ist ein ehrenamtliches Projekt der <a href="http://okfn.de/">Open Knowledge Foundation Deutschland e.V.</a> mit Unterstützung der <a href="http://headissue.com">headissue GmbH</a>.</p>
+      <p>kleineAnfragen ist ein ehrenamtliches Projekt der <a href="http://okfn.de">Open Knowledge Foundation Deutschland e.V.</a> mit Unterstützung der <a href="http://headissue.com">headissue GmbH</a>.</p>
     </div>
     <div class="col-md-2 col-xs-6 footer-support-logo">
-      <a href="http://okfn.de"><img src="<%= image_url 'okfn-logo.svg' %>" /></a>
+      <a href="http://okfn.de"><img src="<%= image_url 'okfn-logo.svg' %>" alt="Open Knowledge Foundation Deutschland e.V." role="presentation" /></a>
     </div>
     <div class="col-md-2 col-xs-6 footer-support-logo">
-      <a href="http://headissue.com"><img src="<%= image_url 'headissue-logo.svg' %>" /></a>
+      <a href="http://headissue.com"><img src="<%= image_url 'headissue-logo.svg' %>" alt="headissue GmbH" role="presentation" /></a>
     </div>
   </div>
   <div class="row">

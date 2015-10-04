@@ -114,6 +114,8 @@ $grid-float-breakpoint:   320px;
   .tagline {
     color: #fff;
     text-shadow: 0px 1px 0px rgba(0,0,0,.5);
+    margin: 0;
+    font-weight: normal;
   }
 }
 
@@ -565,6 +567,12 @@ span.twitter-typeahead {
   .paper-list {
     margin-left: 15px;
   }
+}
+
+.shorturl-label {
+  font-size: 85%;
+  margin-bottom: 0;
+  display: block;
 }
 
 .shorturl-input {

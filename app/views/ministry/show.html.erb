@@ -3,7 +3,9 @@
 
 <div class="page-header page-header--has-feed">
   <h1><%= link_to @body.name, @body %> &mdash; <%= @ministry.name %></h1>
-  <%= link_to image_tag('feed-icon.svg', class: 'feed-icon'), ministry_url(body: @body, ministry: @ministry, format: :atom), class: 'feed' %>
+  <%= link_to ministry_url(body: @body, ministry: @ministry, format: :atom), class: 'feed', title: 'neue Anfragen als Atom-Feed abonnieren' do %>
+    <span class="sr-only">neue Anfragen als Atom-Feed abonnieren:</span><%= image_tag('feed-icon.svg', class: 'feed-icon', alt: 'Atom-Feed') %>
+  <% end %>
 </div>
 
 <ol class="paper-list">
