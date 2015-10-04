@@ -1,31 +1,52 @@
-/*! Based on https://github.com/leemunroe/html-email-template (MIT) */
-/* -------------------------------------
-    GLOBAL
-------------------------------------- */
-* {
-  margin: 0;
-  padding: 0;
-  font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-  font-size: 100%;
+/*! Based on https://github.com/InterNations/antwort (MIT) */
+.header,
+.content,
+.footer {
+  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 14px;
   line-height: 1.6;
+  color: #333333;
 }
 
-img {
-  max-width: 100%;
+.header {
+  padding-top: 10px;
+  padding-bottom: 6px;
+  text-align: center;
 }
 
-body {
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-size-adjust: none;
-  width: 100% !important;
-  height: 100%;
+.header a {
+  color: #337AB7;
 }
 
+.footer {
+  font-size: 12px;
+  line-height: 16px;
+  color: #aaaaaa;
+  text-align: center;
+}
 
-/* -------------------------------------
-    ELEMENTS
-------------------------------------- */
-a {
+.footer a {
+  color: #aaaaaa !important;
+  text-decoration: underline;
+}
+
+.container {
+  max-width: 600px !important;
+}
+
+.container-padding {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.content {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: #ffffff;
+  text-align: left;
+}
+
+.content a {
   color: #337AB7;
 }
 
@@ -44,20 +65,8 @@ a {
   border-radius: 6px;
 }
 
-.last {
-  margin-bottom: 0;
-}
-
-.first {
-  margin-top: 0;
-}
-
-.padding {
-  padding: 10px 0;
-}
-
-li {
-  margin-bottom: 5px;
+.content a.btn-primary {
+  color: #fff;
 }
 
 .meta {
@@ -65,105 +74,77 @@ li {
   font-size: 12px;
 }
 
-
-/* -------------------------------------
-    BODY
-------------------------------------- */
-.logo-wrap {
-  text-align: center;
-}
-
-table.body-wrap {
-  width: 100%;
-  padding: 10px;
-}
-
-table.body-wrap .container {
-  border: 1px solid #f0f0f0;
-}
-
-
-/* -------------------------------------
-    FOOTER
-------------------------------------- */
-table.footer-wrap {
-  width: 100%;
-  clear: both !important;
-}
-
-.footer-wrap .container p {
-  font-size: 12px;
-  color: #666;
-}
-
-table.footer-wrap a {
-  color: #999;
-}
-
-
-/* -------------------------------------
-    TYPOGRAPHY
-------------------------------------- */
-h1, h2, h3 {
-  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  line-height: 1.1;
-  margin-bottom: 15px;
-  color: #000;
-  margin: 40px 0 10px;
-  line-height: 1.2;
-  font-weight: 200;
-}
-
-h1 {
-  font-size: 36px;
-}
-h2 {
-  font-size: 28px;
-}
-h3 {
-  font-size: 22px;
-}
-
-p, ul, ol {
+ul, ol {
   margin-bottom: 10px;
   font-weight: normal;
   font-size: 14px;
-}
-
-ul, ol {
   padding-left: 15px;
 }
 
 ul li, ol li {
   list-style-position: outside;
+  margin-bottom: 5px;
+  margin-left: 0;
 }
 
-/* ---------------------------------------------------
-    RESPONSIVENESS
-    Nuke it from orbit. It's the only way to be sure.
------------------------------------------------------- */
 
-/* Set a max-width, and make it display as block so it will automatically stretch to that width, but will also shrink down on a phone or something */
-.container {
-  display: block !important;
-  max-width: 600px !important;
-  margin: 0 auto !important; /* makes it centered */
-  clear: both !important;
+body {
+  margin: 0;
+  padding: 0;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
-/* Set the padding on the td rather than the div for Outlook compatibility */
-.body-wrap .container {
-  padding: 20px;
+table {
+  border-spacing: 0;
 }
 
-/* This should also be a block element, so that it will fill 100% of the .container */
-.content {
-  max-width: 600px;
-  margin: 0 auto;
-  display: block;
+table td {
+  border-collapse: collapse;
 }
 
-/* Let's make sure tables in the content area are 100% wide */
-.content table {
+.ExternalClass {
   width: 100%;
+}
+
+.ExternalClass,
+.ExternalClass p,
+.ExternalClass span,
+.ExternalClass font,
+.ExternalClass td,
+.ExternalClass div {
+  line-height: 100%;
+}
+
+.ReadMsgBody {
+  width: 100%;
+  background-color: #ebebeb;
+}
+
+table {
+  mso-table-lspace: 0pt;
+  mso-table-rspace: 0pt;
+}
+
+img {
+  -ms-interpolation-mode: bicubic;
+}
+
+.yshortcuts a {
+  border-bottom: none !important;
+}
+
+@media screen and (max-width: 599px) {
+  .force-row,
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .container-padding {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
 }

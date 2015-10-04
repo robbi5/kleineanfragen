@@ -3,48 +3,32 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="format-detection" content="telephone=no" />
 <%= stylesheet_link_tag 'email' %>
 </head>
-<body bgcolor="#f6f6f6" itemscope itemtype="http://schema.org/EmailMessage">
-<table class="body-wrap">
+<body style="margin:0; padding:0;" bgcolor="#f6f6f6" itemscope itemtype="http://schema.org/EmailMessage">
+<table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0" bgcolor="#f6f6f6">
   <tr>
-    <td></td>
-    <td class="logo-wrap" align="center">
-      <%= link_to image_tag('kleineanfragen@2x.png', alt: 'kleineAnfragen', width: 143, height: 24), root_url %>
+    <td align="center" valign="top" bgcolor="#f6f6f6" style="background-color: #f6f6f6;">
+      <table border="0" cellpadding="0" cellspacing="0" class="container">
+        <tr>
+          <td class="container-padding header" align="center">
+            <%= link_to image_tag('kleineanfragen@2x.png', alt: 'kleineAnfragen', width: 143, height: 24), root_url %>
+          </td>
+        </tr>
+        <tr>
+          <td class="container-padding content" align="left">
+            <%= yield %>
+          </td>
+        </tr>
+        <tr>
+          <td class="container-padding footer" align="center">
+            <%= yield :footer %>
+          </td>
+        </tr>
+      </table>
     </td>
-    <td></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td class="container" bgcolor="#FFFFFF">
-      <div class="content">
-        <table>
-          <tr>
-            <td>
-              <%= yield %>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </td>
-    <td></td>
-  </tr>
-</table>
-<table class="footer-wrap">
-  <tr>
-    <td></td>
-    <td class="container">
-      <div class="content">
-        <table>
-          <tr>
-            <td align="center">
-              <%= yield :footer %>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </td>
-    <td></td>
   </tr>
 </table>
 </body>
