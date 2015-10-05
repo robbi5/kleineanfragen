@@ -12,5 +12,5 @@
   <%= render partial: 'paper/paper', collection: @papers %>
 </ol>
 
-<p class="pagination-total"><%= @papers.total_count %> kleine Anfragen</p>
+<p class="pagination-total"><%= @papers.total_count %> <%= t :kleine_anfragen, count: @papers.total_count %></p>
 <%= paginate @papers %>
