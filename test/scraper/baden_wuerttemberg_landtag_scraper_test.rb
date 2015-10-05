@@ -126,6 +126,18 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
+  test 'extract meta information from detail with multiple ministries' do
+    text = 'KlAnfr Rainer Hinderer SPD 01.01.2015 und Antw MVI, ABC und DEF Drs 01/1234'
+    actual = @scraper.extract_meta(text)
+    expected = {
+      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+      published_at: Date.parse('2015-01-01'),
+      originators: { people: ['Rainer Hinderer'], parties: ['SPD'] },
+      answerers: { ministries: ['MVI', 'ABC', 'DEF'] }
+    }
+    assert_equal(expected, actual)
+  end
+
   test 'extract meta information from major detail link' do
     detail_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/baden_wuerttemberg_detail_page_major.html')))
     link = @scraper.get_detail_link(detail_page)

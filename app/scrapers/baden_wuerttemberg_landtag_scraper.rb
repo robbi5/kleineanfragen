@@ -83,8 +83,12 @@ module BadenWuerttembergLandtagScraper
       doctype: doctype,
       published_at: Date.parse(match_results[3]),
       originators: originators,
-      answerers: { ministries: [match_results[4].strip] }
+      answerers: { ministries: clean_ministries(match_results[4]) }
     }
+  end
+
+  def self.clean_ministries(ministries)
+    ministries.gsub("\n", ' ').gsub(' und', ',').split(',').map(&:strip)
   end
 
   def self.extract_overview_paper(m, block, type)
