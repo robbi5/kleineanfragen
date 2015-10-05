@@ -37,7 +37,7 @@ class HessenPDFExtractor
                .gsub(/inisters$/, 'inister')
                .gsub(/ der Fragesteller:$/, '')
 
-    ministry = 'Chef der Staatskanzlei' if ministry == 'Chefs der Staatskanzlein'
+    ministry = 'Chef der Staatskanzlei' if ministry.start_with? 'Chefs der Staatskanzlei'
 
     ministries << ministry unless ministry.blank?
 
