@@ -36,6 +36,7 @@ class HessenPDFExtractor
                .gsub(/inisters\s/, 'inister ')
                .gsub(/inisters$/, 'inister')
                .gsub(/ der Fragesteller:$/, '')
+               .gsub(/^Hessischen /, '')
 
     ministry = 'Chef der Staatskanzlei' if ministry.start_with? 'Chefs der Staatskanzlei'
 
