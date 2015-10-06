@@ -65,6 +65,14 @@ class BayernPDFExtractorAnswerersTest < ActiveSupport::TestCase
     assert_equal 'Staatsministerium für Gesundheit und Pflege', answerers[:ministries].first
   end
 
+  test 'Staatsministerin für Europaangelegenheiten newline' do
+    paper = paper_with_answerer("der Staatsministerin für Europaangelegenheiten und regionale\n Beziehungen in der Staatskanzlei")
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Staatsministerium für Europaangelegenheiten und regionale Beziehungen in der Staatskanzlei', answerers[:ministries].first
+  end
+
   test 'Staatsminister (missing s)' do
     paper = paper_with_answerer('des Staatsminister für Ernährung, Landwirtschaft und Forsten')
     answerers = BayernPDFExtractor.new(paper).extract_answerers

@@ -38,7 +38,8 @@ class BayernPDFExtractor
     # Antwort\nder Staatsministerin für Gesundheit und Pflege\nvom 20.08.2014
     p = @contents.match(/Antwort\n[dD]e[rs]\s+Staatsminister(?:s|in)?\s+(für\s+[\p{L}\s\,]+)\s+vom/m)
     if p
-      ministries << "Staatsministerium #{p[1].strip}"
+      ministry = p[1].gsub(/\n/, '').strip
+      ministries << "Staatsministerium #{ministry}"
     end
 
     # Antwort\nDer Leiterin der Bayerischen Staatskanzlei\nStaatsministerin für Bundesangelegenheiten und Son-deraufgaben
