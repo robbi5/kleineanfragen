@@ -79,6 +79,8 @@ class ExtractTextFromPaperJob < PaperJob
     text.gsub!(/\u00AD/, '')
     # windows newlines
     text.gsub!(/\r\n/, "\n")
+    # private use area
+    text.gsub!(/\p{InPrivate_Use_Area}/, ' ')
     text
   end
 end
