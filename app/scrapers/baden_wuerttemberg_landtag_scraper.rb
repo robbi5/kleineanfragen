@@ -119,7 +119,7 @@ module BadenWuerttembergLandtagScraper
   def self.extract_detail_paper(page, detail_link, full_reference)
     legislative_term, reference = extract_reference(full_reference)
     title = extract_detail_title(page)
-    url = link.attributes['href'].value
+    url = detail_link.attributes['href'].value
     meta = extract_meta(detail_link.text)
 
     {
