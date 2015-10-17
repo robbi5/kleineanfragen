@@ -68,7 +68,8 @@ module BadenWuerttembergLandtagScraper
   end
 
   def self.extract_meta(meta_text)
-    match_results = meta_text.lstrip.match(/(KlAnfr?|GrAnfr)\s+(.+)\s+([\d\.]+)\s+und\s+Antw\s+(.+)\s+Drs/)
+    match_results = meta_text.lstrip.match(/(KlAnfr?|GrAnfr)\s+(.+)\s+([\d\.]+)\s+und\s+Antw\s+(.+)\s+Drs/m)
+    return nil if match_results.nil?
     doctype = extract_doctype(match_results[1])
     # when multiple originators exist, remove "and others" - we extract the other names later
     names = match_results[2].gsub(/\s+(?:u.a.|u.u.)/, '').strip
@@ -121,6 +122,8 @@ module BadenWuerttembergLandtagScraper
     title = extract_detail_title(page)
     url = detail_link.attributes['href'].value
     meta = extract_meta(detail_link.text)
+
+    fail "Can't extract detail meta data from Paper [BW #{full_reference}]" if meta.nil?
 
     {
       full_reference: full_reference,

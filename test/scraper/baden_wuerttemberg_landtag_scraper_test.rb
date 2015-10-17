@@ -126,6 +126,18 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
+  test 'extract meta information from long detail link with newline' do
+    text = "\r\n  KlAnfr Dr. Friedrich Bullinger FDP/DVP, Helmut Walter Rüeck CDU und\n  Nikolaos Sakkelariou SPD 24.07.2014 und Antw MLR Drs 15/5544"
+    actual = @scraper.extract_meta(text)
+    expected = {
+      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+      published_at: Date.parse('2014-07-24'),
+      originators: { people: ['Dr. Friedrich Bullinger', 'Helmut Walter Rüeck', 'Nikolaos Sakkelariou'], parties: ['FDP/DVP', 'CDU', 'SPD'] },
+      answerers: { ministries: ['MLR'] }
+    }
+    assert_equal(expected, actual)
+  end
+
   test 'extract meta information from detail with multiple ministries' do
     text = 'KlAnfr Rainer Hinderer SPD 01.01.2015 und Antw MVI, ABC und DEF Drs 01/1234'
     actual = @scraper.extract_meta(text)
