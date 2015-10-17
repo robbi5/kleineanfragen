@@ -61,6 +61,15 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Minister der Finanzen', answerers[:ministries].first
   end
 
+  test 'suffix without space' do
+    paper = Struct.new(:contents).new(
+      PREFIX + 'der Minister des Innern und für Kommunales die KleineAnfrage wie folgt:')
+    answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Minister des Innern und für Kommunales', answerers[:ministries].first
+  end
+
   test 'im namen' do
     paper = Struct.new(:contents).new(
       'Im Namen der Landesregierung beantwortet der Minister für Wirtschaft und Energie' + SUFFIX)
