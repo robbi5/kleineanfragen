@@ -150,6 +150,18 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
+  test 'extract meta information from detail with missing ministry' do
+    text = 'KlAnfr Rainer Hinderer SPD 01.01.2015 und Antw Drs 01/1234'
+    actual = @scraper.extract_meta(text)
+    expected = {
+      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+      published_at: Date.parse('2015-01-01'),
+      originators: { people: ['Rainer Hinderer'], parties: ['SPD'] },
+      answerers: { ministries: [] }
+    }
+    assert_equal(expected, actual)
+  end
+
   test 'extract meta information from detail with wrong published_at position' do
     text = 'KlAnfr Dr. Friedrich Bullinger FDP/DVP und Antw IM 20.06.2014 Drs 15/5345'
     actual = @scraper.extract_meta(text)
