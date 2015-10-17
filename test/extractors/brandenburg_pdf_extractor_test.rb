@@ -70,6 +70,24 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Minister des Innern und für Kommunales', answerers[:ministries].first
   end
 
+  test 'suffix lowercased' do
+    paper = Struct.new(:contents).new(
+      PREFIX + 'der Minister des Innern und für Kommunales die kleine Anfrage wie folgt:')
+    answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Minister des Innern und für Kommunales', answerers[:ministries].first
+  end
+
+  test 'typo in Landesregierung' do
+    paper = Struct.new(:contents).new(
+      'Namens der Landregierung beantwortet der Minister der Justiz und für Europa und Verbraucherschutz' + SUFFIX)
+    answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Minister der Justiz und für Europa und Verbraucherschutz', answerers[:ministries].first
+  end
+
   test 'im namen' do
     paper = Struct.new(:contents).new(
       'Im Namen der Landesregierung beantwortet der Minister für Wirtschaft und Energie' + SUFFIX)
