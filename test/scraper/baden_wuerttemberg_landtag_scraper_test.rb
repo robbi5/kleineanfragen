@@ -150,6 +150,18 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
+  test 'extract meta information from detail with wrong published_at position' do
+    text = 'KlAnfr Dr. Friedrich Bullinger FDP/DVP und Antw IM 20.06.2014 Drs 15/5345'
+    actual = @scraper.extract_meta(text)
+    expected = {
+      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+      published_at: Date.parse('2014-06-20'),
+      originators: { people: ['Dr. Friedrich Bullinger'], parties: ['FDP/DVP'] },
+      answerers: { ministries: ['IM'] }
+    }
+    assert_equal(expected, actual)
+  end
+
   test 'extract meta information from major detail link' do
     detail_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/baden_wuerttemberg_detail_page_major.html')))
     link = @scraper.get_detail_link(detail_page)
