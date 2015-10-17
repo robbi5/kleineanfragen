@@ -36,7 +36,8 @@ class BayernPDFExtractor
     ministries = []
 
     # Antwort\nder Staatsministerin für Gesundheit und Pflege\nvom 20.08.2014
-    p = @contents.match(/Antwort\n[dD]e[rs]\s+Staatsminister(?:s|in)?\s+(für\s+[\p{L}\s\,]+)\s+vom/m)
+    # Antwort\nStaatsministerin für Gesundheit und Pflege\nvom 21.04.2015
+    p = @contents.match(/Antwort\n(?:[dD]e[rs]\s+)?Staatsminister(?:s|in)?\s+(für\s+[\p{L}\s\,]+)\s+vom/m)
     if p
       ministry = p[1].gsub(/\n/, '').strip
       ministries << "Staatsministerium #{ministry}"
