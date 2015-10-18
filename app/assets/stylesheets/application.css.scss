@@ -436,6 +436,7 @@ span.twitter-typeahead {
 
   &.problem-wrong_published_at  { left: 0px;  color: #ff0000; }
   &.problem-missing_page_count  { left: 12px; color: #8000ff; }
+  &.problem-missing_contents    { left: 12px; color: #8000ff; }
   &.problem-missing_originator_people        { left: 24px; color: #0080ff; }
   &.problem-missing_originator_organizations { left: 24px; color: #0080ff; }
   &.problem-missing_answerers   { left: 36px; color: #ff0080; }
