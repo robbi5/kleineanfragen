@@ -98,6 +98,9 @@ gem 'resque-sentry', '~> 1.2.0'
 # for nomenklatura
 gem 'httparty', '~> 0.13.7'
 
+# matching against known names in scrapers
+gem 'fuzzy_match', '~> 2.1.0'
+
 # simple title and opengraph/twitter cards view helpers
 gem 'tophat', '~>2.2.0'
 
