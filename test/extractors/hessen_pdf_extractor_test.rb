@@ -15,7 +15,7 @@ class HessenPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Minister der Finanzen', answerers[:ministries].first
   end
 
-  test 'suffix: die' do
+  test 'suffix: die kleine anfrage' do
     paper = Struct.new(:contents).new(
       PREFIX + "des Kultusministers  \n \n \nDie Kleine Anfrage beantworte ich wie folgt:")
 
@@ -23,6 +23,16 @@ class HessenPDFExtractorTest < ActiveSupport::TestCase
 
     assert_equal 1, answerers[:ministries].size
     assert_equal 'Kultusminister', answerers[:ministries].first
+  end
+
+  test 'suffix: die kleine anfrage im einvernehmen' do
+    paper = Struct.new(:contents).new(
+      PREFIX + "des Ministers für Wirtschaft, Energie, Verkehr und Landesentwicklung \n\nDie Kleine Anfrage beantworte ich im Einvernehmen mit dem Minister der Finanzen wie folgt:")
+
+    answerers = HessenPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Minister für Wirtschaft, Energie, Verkehr und Landesentwicklung', answerers[:ministries].first
   end
 
   test 'suffix: im einvernehmen' do
@@ -56,6 +66,15 @@ class HessenPDFExtractorTest < ActiveSupport::TestCase
   test 'suffix: der Fragesteller' do
     paper = Struct.new(:contents).new(
       PREFIX + "des Ministers für Soziales und Integration \nder Fragesteller: " + SUFFIX)
+    answerers = HessenPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Minister für Soziales und Integration', answerers[:ministries].first
+  end
+
+  test 'suffix: der Fragesteller, other suffix' do
+    paper = Struct.new(:contents).new(
+      PREFIX + "des Ministers für Soziales und Integration \nder Fragesteller: \n \n \n Vorbemerkung des Ministers für Soziales und Integration:")
     answerers = HessenPDFExtractor.new(paper).extract_answerers
 
     assert_equal 1, answerers[:ministries].size

@@ -8,7 +8,7 @@ class HessenPDFExtractor
   # und\s+\n+Antwort\s+\n+der Ministerin für Bundes- und Europaangelegenheiten und Bevollmächtigten des\s+\n+Landes Hessen beim Bund
   # und\s+\n+Antwort\s+\n+der Ministerin für Bundes- und Europaangelegenheiten und Bevollmächtigten des\s+\n+Landes Hessen beim Bund\s+\n+\s+\n+\s+\n+Im Einvernehmen mit dem Kultusminister,
 
-  ANSWERERS = /und\s+\n+Antwort\s+\n+\s*de[sr]\s+(.+?)\n(?:[\n\s]{3,}|[\n\s]+Vorbemerkung)/m
+  ANSWERERS = /und\s+\n+Antwort\s+\n+\s*de[sr]\s+(.+?)\n(?:[\n\s]{3,}|[\n\s]+Vorbemerkung|[\n\s]+Die\s+Kleine\s+Anfrage\s+)/m
 
   def extract_answerers
     return nil if @contents.blank?
