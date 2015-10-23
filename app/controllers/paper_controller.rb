@@ -26,6 +26,7 @@ class PaperController < ApplicationController
   def recent
     @days = 14
     @papers = Paper.where('published_at >= ?', Date.today - @days.days)
+              .includes(:body, :paper_originators)
               .order(published_at: :desc, reference: :desc)
               .page(params[:page])
     @recent = @papers.to_a.group_by(&:published_at)

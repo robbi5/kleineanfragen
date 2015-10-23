@@ -44,7 +44,8 @@ class SearchController < ApplicationController
         facets: [:contains_table, :body, :doctype],
         smart_facets: true,
         execute: false,
-        misspellings: false
+        misspellings: false,
+        include: [:body, :paper_originators]
       }.merge(options)
 
     query = Paper.search(
