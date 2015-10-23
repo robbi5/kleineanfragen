@@ -15,11 +15,13 @@ class PaperController < ApplicationController
   end
 
   def viewer
-    @paper_pdf_url = @paper.public_url
-    if !@paper.downloaded_at.nil? && !@paper_pdf_url.blank?
-      render :viewer, layout: false
-    else
-      render :viewer_notavailable, layout: false
+    if stale?(@paper, public: true)
+      @paper_pdf_url = @paper.public_url
+      if !@paper.downloaded_at.nil? && !@paper_pdf_url.blank?
+        render :viewer, layout: false
+      else
+        render :viewer_notavailable, layout: false
+      end
     end
   end
 
