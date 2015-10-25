@@ -76,7 +76,7 @@ module BadenWuerttembergLandtagScraper
     if doctype == Paper::DOCTYPE_MINOR_INTERPELLATION
       originators = NamePartyExtractor.new(names, NamePartyExtractor::NAME_PARTY_COMMA).extract
     elsif doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
-      parties = names.split(',').map(&:strip)
+      parties = names.gsub(' und', ', ').split(',').map(&:strip)
       originators = { people: [], parties: parties }
     end
 
