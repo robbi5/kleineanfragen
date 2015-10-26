@@ -210,4 +210,23 @@ class BundestagPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'CDU/CSU', originators[:parties].first
     assert_equal 'SPD', originators[:parties].last
   end
+
+  # Antwort
+  # der Bundesregierung
+  #
+  # auf die Kleine Anfrage der der Abgeordneten Dr. Kirsten Tackmann,
+  # Birgit Menz, Caren Lay, weiterer Abgeordneter und
+  # der Fraktion DIE LINKE betreffend
+  # – Drucksache...
+  test 'parlamentary group with additional suffix betreffend' do
+    paper = Struct.new(:contents).new("Antwort\nder Bundesregierung\n\n" +
+      "auf die Kleine Anfrage der der Abgeordneten Dr. Kirsten Tackmann,\n" +
+      "Birgit Menz, Caren Lay, weiterer Abgeordneter und\n" +
+      "der Fraktion DIE LINKE betreffend\n– Drucksache")
+
+    originators = BundestagPDFExtractor.new(paper).extract_originators
+    assert_equal 3, originators[:people].size
+    assert_equal 1, originators[:parties].size
+    assert_equal 'DIE LINKE', originators[:parties].first
+  end
 end

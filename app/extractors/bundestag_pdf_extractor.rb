@@ -25,7 +25,13 @@ class BundestagPDFExtractor
                  .sub(/\s*weiterer\s+Abgeordneter\s*$/, '') # duplicate suffix
         people << person unless person.blank? || person == 'weiterer Abgeordneter'
       end
-      parties << m[1].gsub("\n", ' ').strip.gsub(/\p{Other}/, '').sub(/^der\s/, '').sub(/\.$/, '')
+      party = m[1].gsub("\n", ' ')
+              .strip
+              .gsub(/\p{Other}/, '')
+              .sub(/^der\s/, '')
+              .sub(/\.$/, '')
+              .sub(/\s*betreffend$/, '') # duplicate suffix
+      parties << party
     end
 
     if people.empty? && parties.empty?
