@@ -55,7 +55,7 @@ class NiedersachsenLandtagScraperDetailTest < ActiveSupport::TestCase
       }, paper)
   end
 
-  test 'extract detail info form paper with additional empty row like 4243' do
+  test 'extract detail info from paper with additional empty row like 4243' do
     @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/niedersachsen_landtag_scraper_detail_4243.html')))
     block = @scraper.extract_detail_block(@html)
     paper = @scraper.extract_paper(block)
@@ -76,6 +76,31 @@ class NiedersachsenLandtagScraperDetailTest < ActiveSupport::TestCase
         is_answer: true,
         answerers: {
           ministries: ['Niedersächsisches Ministerium für Soziales, Gesundheit und Gleichstellung']
+        }
+      }, paper)
+  end
+
+  test 'extract detail info from major interpellation like 4370' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/niedersachsen_landtag_scraper_detail_4370.html')))
+    block = @scraper.extract_detail_block(@html)
+    paper = @scraper.extract_paper(block)
+
+    assert_equal(
+      {
+        legislative_term: '17',
+        full_reference: '17/4370',
+        reference: '4370',
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Was tut die Landesregierung zur Förderung der landwirtschaftlichen Sorgentelefone und der landwirtschaftlichen Familienberatungen in Niedersachsen?',
+        url: 'http://www.landtag-niedersachsen.de/Drucksachen/Drucksachen%5F17%5F5000/4001-4500/17-4370.pdf',
+        published_at: Date.parse('2015-09-30'),
+        originators: {
+          people: [],
+          parties: ['CDU']
+        },
+        is_answer: true,
+        answerers: {
+          ministries: ['Niedersächsisches Ministerium für Ernährung, Landwirtschaft und Verbraucherschutz']
         }
       }, paper)
   end
