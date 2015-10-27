@@ -156,6 +156,26 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 'FDP', pair[:parties].first
   end
 
+  test 'rnp: two people, one with two names, and others, spaced party' do
+    pair = NamePartyExtractor.new('Lamla, Lukas Markus; Düngel, Daniel u.a. PIRATEN', :rnp).extract
+
+    assert_equal 2, pair[:people].size
+    assert_equal 'Lukas Markus Lamla', pair[:people].first
+    assert_equal 'Daniel Düngel', pair[:people].second
+    assert_equal 1, pair[:parties].size
+    assert_equal 'PIRATEN', pair[:parties].first
+  end
+
+  test 'rnp: two people, one with two names, and others, spaced party 2' do
+    pair = NamePartyExtractor.new('Schmitz, Ingola Stefanie; Abruszat, Kai u.a. FDP', :rnp).extract
+
+    assert_equal 2, pair[:people].size
+    assert_equal 'Ingola Stefanie Schmitz', pair[:people].first
+    assert_equal 'Kai Abruszat', pair[:people].second
+    assert_equal 1, pair[:parties].size
+    assert_equal 'FDP', pair[:parties].first
+  end
+
   test 'rnp: only party' do
     pair = NamePartyExtractor.new('FDP', :rnp).extract
 
@@ -218,6 +238,15 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 'Vor Nachname', pair[:people].first
     assert_equal 1, pair[:parties].size
     assert_equal 'ABC/DEF', pair[:parties].first
+  end
+
+  test 'npc: one person with title and double name, one party' do
+    pair = NamePartyExtractor.new('Dr. Hans-Ulrich Rülke FDP/DVP', :npc).extract
+
+    assert_equal 1, pair[:people].size
+    assert_equal 'Dr. Hans-Ulrich Rülke', pair[:people].first
+    assert_equal 1, pair[:parties].size
+    assert_equal 'FDP/DVP', pair[:parties].first
   end
 
   test 'npc: two people, same simple party' do
