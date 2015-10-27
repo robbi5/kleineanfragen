@@ -31,7 +31,7 @@ class NamePartyExtractor
         # Space seperated party
         last = sa.pop
         parts = last.split(' ').reject { |p| p.include? 'u.a.' }
-        parties << parts.pop if parts.size > 1 && looks_like_party?(parts.last)
+        parties << parts.pop if parts.size > 1 && self.class.looks_like_party?(parts.last)
         sa << parts.join(' ')
       end
       sa.reject!(&:blank?)
@@ -73,7 +73,7 @@ class NamePartyExtractor
     { people: people, parties: parties.uniq }
   end
 
-  def looks_like_party?(text)
-    !text.match(/\A([A-Z][a-zA-Z]{2}|[A-Z]{2,}[[:alnum:]\s\/]+)\z/).nil?
+  def self.looks_like_party?(text)
+    !text.match(/\A([A-Z][a-zA-Z]{2}|\p{Lu}{2,}[[:alnum:]\s\/]+)\z/).nil?
   end
 end

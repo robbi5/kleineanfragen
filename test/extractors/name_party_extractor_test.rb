@@ -309,4 +309,16 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 1, pair[:parties].size
     assert_equal 'ABC', pair[:parties].first
   end
+
+  test 'looks_like_party? FDP' do
+    assert NamePartyExtractor.looks_like_party? 'FDP'
+  end
+
+  test 'looks_like_party? AfD' do
+    assert NamePartyExtractor.looks_like_party? 'AfD'
+  end
+
+  test 'looks_like_party? BÜNDNIS 90/DIE GRÜNEN' do
+    assert NamePartyExtractor.looks_like_party? 'BÜNDNIS 90/DIE GRÜNEN'
+  end
 end
