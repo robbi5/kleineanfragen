@@ -70,6 +70,8 @@ module NordrheinWestfalenLandtagScraper
   def self.extract_paper_details(block)
     link = block.at_css('a')
     originators_text = link.previous.text.strip
+    # fix typo
+    originators_text.gsub!(/u.a.\s([A-Z]+)\s,\s/, '\1; ')
     originators = NamePartyExtractor.new(originators_text, NamePartyExtractor::REVERSED_NAME_PARTY).extract
 
     {

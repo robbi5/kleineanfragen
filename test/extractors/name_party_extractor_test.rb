@@ -176,6 +176,19 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 'FDP', pair[:parties].first
   end
 
+  test 'rnp: four people, and others, spaced parties' do
+    pair = NamePartyExtractor.new('Römer, Norbert; Herter, Marc u.a. SPD; Priggen, Reiner; Beer, Sigrid u.a. GRÜNE', :rnp).extract
+
+    assert_equal 4, pair[:people].size
+    assert_equal 'Norbert Römer', pair[:people].first
+    assert_equal 'Marc Herter', pair[:people].second
+    assert_equal 'Reiner Priggen', pair[:people].third
+    assert_equal 'Sigrid Beer', pair[:people].fourth
+    assert_equal 2, pair[:parties].size
+    assert_equal 'SPD', pair[:parties].first
+    assert_equal 'GRÜNE', pair[:parties].second
+  end
+
   test 'rnp: only party' do
     pair = NamePartyExtractor.new('FDP', :rnp).extract
 
