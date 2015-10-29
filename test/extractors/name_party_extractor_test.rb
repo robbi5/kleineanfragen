@@ -189,6 +189,18 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 'GRÜNE', pair[:parties].second
   end
 
+  test 'rnp: three people, with prefixed title, spaced parties' do
+    pair = NamePartyExtractor.new('Dr. Nachname, Vorname; Prof. Dr. Test, Vorname ABC; Brockes, Dietmar FDP', :rnp).extract
+
+    assert_equal 3, pair[:people].size
+    assert_equal 'Dr. Vorname Nachname', pair[:people].first
+    assert_equal 'Prof. Dr. Vorname Test', pair[:people].second
+    assert_equal 'Dietmar Brockes', pair[:people].third
+    assert_equal 2, pair[:parties].size
+    assert_equal 'ABC', pair[:parties].first
+    assert_equal 'FDP', pair[:parties].second
+  end
+
   test 'rnp: only party' do
     pair = NamePartyExtractor.new('FDP', :rnp).extract
 

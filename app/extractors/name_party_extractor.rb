@@ -27,12 +27,26 @@ class NamePartyExtractor
         party = sa.pop
         parties << party.sub(/Fraktion\s+(?:der\s+)?/, '')
       end
-      if !sa.blank? && sa.last.include?(' ')
+      next if sa.blank?
+      if sa.last.include?(' ')
         # Space seperated party
         last = sa.pop
         parts = last.split(' ').reject { |p| p.include? 'u.a.' }
         parties << parts.pop if parts.size > 1 && self.class.looks_like_party?(parts.last)
         sa << parts.join(' ')
+      end
+      if sa.first.include?('Dr.')
+        parts = sa.shift.split(' ')
+        titles = []
+        parts.each do |part|
+          if part.include?('.')
+            # use seperate array to keep the order
+            titles.push part.strip
+          else
+            sa.unshift part.strip
+          end
+        end
+        sa << titles
       end
       sa.reject!(&:blank?)
       people << sa.reverse.join(' ') unless sa.size == 0
