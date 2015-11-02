@@ -163,6 +163,24 @@ class BundestagPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Klaus Ernst', originators[:people].last
   end
 
+
+  # Antwort 
+  # der Bundesregierung 
+  # 
+  # auf die Kleine Anfrage der Abgeordneten Oliver Krischer, Annalena Baerbock, 
+  # Dr. Julia Verlinden, weitere Abgeordneter und 
+  # der Fraktion BÜNDNIS 90/DIE GRÜNEN 
+  test 'suffix with typo' do
+    paper = Struct.new(:contents).new(
+      PREFIX + "Oliver Krischer, Annalena Baerbock, \n" +
+      "Dr. Julia Verlinden, weitere Abgeordneter und\n" +
+      "der Fraktion BÜNDNIS 90/DIE GRÜNEN\n")
+
+    originators = BundestagPDFExtractor.new(paper).extract_originators
+    assert_equal 3, originators[:people].size
+    assert_equal 'Dr. Julia Verlinden', originators[:people].last
+  end
+
   # Antwort
   # der Bundesregierung
   #
