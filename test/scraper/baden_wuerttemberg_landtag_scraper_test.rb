@@ -138,6 +138,18 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
+  test 'extract meta information from detail with duplicate date' do
+    text = 'KlAnfr Katrin Schütz CDU 26.08.2014 26.08.2014 und Antw IM Drs 15/5659'
+    actual = @scraper.extract_meta(text)
+    expected = {
+      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+      published_at: Date.parse('2014-08-26'),
+      originators: { people: ['Katrin Schütz'], parties: ['CDU'] },
+      answerers: { ministries: ['IM'] }
+    }
+    assert_equal(expected, actual)
+  end
+
   test 'extract meta information from detail with multiple ministries' do
     text = 'KlAnfr Rainer Hinderer SPD 01.01.2015 und Antw MVI, ABC und DEF Drs 01/1234'
     actual = @scraper.extract_meta(text)
