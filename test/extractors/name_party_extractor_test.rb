@@ -212,6 +212,18 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 'FDP', pair[:parties].second
   end
 
+  test 'rnp: three people, and others, one fraktionslos' do
+    pair = NamePartyExtractor.new('Jung, Volker; Krückel, Bernd u.a. CDU; Stein, Robert fraktionslos', :rnp).extract
+
+    assert_equal 3, pair[:people].size
+    assert_equal 'Volker Jung', pair[:people].first
+    assert_equal 'Bernd Krückel', pair[:people].second
+    assert_equal 'Robert Stein', pair[:people].third
+    assert_equal 2, pair[:parties].size
+    assert_equal 'CDU', pair[:parties].first
+    assert_equal 'fraktionslos', pair[:parties].second
+  end
+
   test 'rnp: only party' do
     pair = NamePartyExtractor.new('FDP', :rnp).extract
 

@@ -94,6 +94,6 @@ class NamePartyExtractor
   end
 
   def self.looks_like_party?(text)
-    !text.match(/\A([A-Z][a-zA-Z]{2}|\p{Lu}{2,}[[:alnum:]\s\/]+)\z/).nil?
+    !text.match(/\A([A-Z][a-zA-Z]{2}|\p{Lu}{2,}[[:alnum:]\s\/]+)\z/).nil? || text.downcase.strip == 'fraktionslos'
   end
 end
