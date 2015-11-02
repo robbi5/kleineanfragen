@@ -127,6 +127,17 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 'SPD', pair[:parties].first
   end
 
+  test 'rnp: three people, one with location in brackets' do
+    pair = NamePartyExtractor.new('Hofmann, Heike, SPD; Müller(Schwalmstadt), Regine, SPD; Rudolph, Günter, SPD', :rnp).extract
+
+    assert_equal 3, pair[:people].size
+    assert_equal 'Heike Hofmann', pair[:people].first
+    assert_equal 'Regine Müller', pair[:people].second
+    assert_equal 'Günter Rudolph', pair[:people].third
+    assert_equal 1, pair[:parties].size
+    assert_equal 'SPD', pair[:parties].first
+  end
+
   test 'rnp: two people, one spaced party' do
     pair = NamePartyExtractor.new('Brockes, Dietmar; Ellerbrock, Holger FDP', :rnp).extract
 
