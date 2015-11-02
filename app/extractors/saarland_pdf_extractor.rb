@@ -11,10 +11,15 @@ class SaarlandPDFExtractor
     parties = []
     m = @contents.match(ORIGINATORS)
     return nil if m.nil?
+
     party = clean_text(m[2])
     parties << party
-    person = clean_text(m[1])
-    people << person unless person.blank?
+
+    names = clean_text(m[1])
+    names.gsub(' und ', ',').split(',').each do |person|
+      p = person.strip
+      people << p unless p.blank?
+    end
 
     { people: people, parties: parties }
   end

@@ -39,4 +39,15 @@ class SaarlandPDFExtractorOriginatorsTest < ActiveSupport::TestCase
     assert_equal 'Michael Neyses', originators[:people].first
     assert_equal 'B90/Grüne', originators[:parties].first
   end
+
+  test 'two people, connected by und' do
+    paper = Struct.new(:contents).new("Anfrage der Abgeordneten\n\nJasmin Maurer und Michael Neyses (PIRATEN)")
+
+    originators = SaarlandPDFExtractor.new(paper).extract_originators
+
+    assert_equal 2, originators[:people].size
+    assert_equal 'Jasmin Maurer', originators[:people].first
+    assert_equal 'Michael Neyses', originators[:people].second
+    assert_equal 'PIRATEN', originators[:parties].first
+  end
 end
