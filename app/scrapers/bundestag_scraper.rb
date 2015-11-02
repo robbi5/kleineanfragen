@@ -130,7 +130,7 @@ module BundestagScraper
             unode.at_css('VORNAME').text,
             unode.at_css('NAMENSZUSATZ').try(:text),
             unode.at_css('NACHNAME').text
-          ].compact.join(' ')
+          ].reject(&:blank?).join(' ')
           party = unode.at_css('FRAKTION').text
           originators[:parties] << party unless originators[:parties].include? party
         end
