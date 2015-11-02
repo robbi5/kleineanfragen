@@ -5,7 +5,7 @@ class HamburgBuergerschaftScraperTest < ActiveSupport::TestCase
     @scraper = HamburgBuergerschaftScraper
   end
 
-  test 'extract paper' do
+  test 'extract minor paper' do
     @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hamburg_search_result.html')))
     paper = @scraper.extract(@html.css('.title').first)
     assert_equal(
@@ -20,6 +20,34 @@ class HamburgBuergerschaftScraperTest < ActiveSupport::TestCase
         originators: {
           people: ['Birgit Stöver'],
           parties: ['CDU']
+        },
+        answerers: {
+          ministries: ['Senat']
+        }
+      }, paper)
+  end
+
+  test 'extract major paper' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hamburg_result_1549.html')))
+    paper = @scraper.extract(@html.css('.title').first)
+    assert_equal(
+      {
+        legislative_term: '21',
+        full_reference: '21/1549',
+        reference: '1549',
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Hamburg – Stadt mit Courage: Landesprogramm zur Förderung demokratischer Kultur, Vorbeugung und Bekämpfung von Rechtsextremismus und das Beratungsnetzwerk gegen Rechtsextremismus (BNW)',
+        url: 'https://www.buergerschaft-hh.de/ParlDok/dokument/49756/hamburg-%E2%80%93-stadt-mit-courage-landesprogramm-zur-f%C3%B6rderung-demokratischer-kultur-vorbeugung-und-bek%C3%A4mpfung-von-rechtsextremismus-und-das-beratungsnetzwerk.pdf',
+        published_at: Date.parse('2015-09-10'),
+        originators: {
+          people: [
+            'Dr. Ludwig Flocken',
+            'Dirk Nockemann',
+            'Dr. Alexander Wolf',
+            'Andrea Oelschlaeger',
+            'Dr. Joachim Körner'
+          ],
+          parties: ['AfD']
         },
         answerers: {
           ministries: ['Senat']

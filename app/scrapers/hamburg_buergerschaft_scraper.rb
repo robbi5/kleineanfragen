@@ -91,6 +91,11 @@ module HamburgBuergerschaftScraper
 
     originators = next_row.next_element.element_children[1].text.strip
     originators = NamePartyExtractor.new(originators).extract
+
+    if doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
+      originators[:people].delete_if {|name| originators[:parties].include? name }
+    end
+
     {
       legislative_term: legislative_term,
       full_reference: full_reference,
