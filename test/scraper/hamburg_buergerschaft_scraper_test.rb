@@ -54,4 +54,37 @@ class HamburgBuergerschaftScraperTest < ActiveSupport::TestCase
         }
       }, paper)
   end
+
+  test 'extract other major paper, same party' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hamburg_result_2013.html')))
+    paper = @scraper.extract(@html.css('.title').first)
+    assert_equal(
+      {
+        legislative_term: '21',
+        full_reference: '21/2013',
+        reference: '2013',
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Auswärtige Unterbringung bei den Hilfen zur Erziehung',
+        url: 'https://www.buergerschaft-hh.de/ParlDok/dokument/50260/ausw%C3%A4rtige-unterbringung-bei-den-hilfen-zur-erziehung.pdf',
+        published_at: Date.parse('2015-10-23'),
+        originators: {
+          people: [
+            'Sabine Boeddinghaus',
+            'Deniz Celik',
+            'Martin Dolzer',
+            'Norbert Hackbusch',
+            'Inge Hannemann',
+            'Stephan Jersch',
+            'Cansu Özdemir',
+            'Christiane Schneider',
+            'Heike Sudmann',
+            'Mehmet Yildiz'
+          ],
+          parties: ['DIE LINKE']
+        },
+        answerers: {
+          ministries: ['Senat']
+        }
+      }, paper)
+  end
 end

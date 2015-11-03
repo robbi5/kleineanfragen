@@ -25,7 +25,7 @@ class NamePartyExtractor
       sa = s.strip.split(',').map(&:strip)
       unless sa.size == 2 # party missing
         party = sa.pop
-        parties << party.sub(/Fraktion\s+(?:der\s+)?/, '')
+        parties << self.class.clean_party(party)
       end
       next if sa.blank?
       if sa.last.include?(' ')
@@ -87,7 +87,7 @@ class NamePartyExtractor
       m = ['', line.strip] if m.nil?
       person = m[1].gsub(/\p{Z}+/, ' ').strip
       people << person unless person.blank? || person.match(/^\(.+\)$/)
-      parties << m[2].gsub(/\p{Z}+/, ' ').strip.sub(/^Fraktion\s+(?:der\s+)?/, '') unless m[2].nil?
+      parties << self.class.clean_party(m[2]) unless m[2].nil?
     end
 
     { people: people, parties: parties.uniq }
@@ -95,5 +95,9 @@ class NamePartyExtractor
 
   def self.looks_like_party?(text)
     !text.match(/\A([A-Z][a-zA-Z]{2}|\p{Lu}{2,}[[:alnum:]\s\/]+)\z/).nil? || text.downcase.strip == 'fraktionslos'
+  end
+
+  def self.clean_party(name)
+    name.gsub(/\p{Z}+/, ' ').strip.sub(/Fraktion\s+(?:der\s+)?/, '')
   end
 end

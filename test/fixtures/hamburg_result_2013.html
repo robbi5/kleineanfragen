@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <title>Parlamentsdatenbank: Dokumentennummer</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <meta name="keywords" content="Drucksachen, Plenarprotokoll, Parlamentsdokumentation, Bibliothek, Verzeichnis, Parlament, Dokumente, parldok, Drucksachen, Anfragen, Tagesordnungen, Protokolle, TK-Export"/>
+        <meta name="viewport" content="width=device-width; initial-scale=1.0;"/>
+        <meta name="author" content="Bürgerschaft der Freien und Hansestadt Hamburg"/>
+        <meta name="robots" content="index, nofollow"/>
+        <meta name="geo.region" content="DE-HH"/>
+        <meta name="description" content="Die Parlamentsdatenbank ist das Informationssystem der Hamburgischen Bürgerschaft. Sie dokumentiert die öffentlich zugängliche Arbeit der Abgeordneten und des Parlaments und enthält alle Drucksachen und Protokolle."/>
+        <meta name="generator" content="ParlDok 3.1.7.605, entwickelt von der J3S GmbH (http://www.j3s.de)"/>
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="https://www.buergerschaft-hh.de/parldok/index.rss"/>
+        <link rel="stylesheet" type="text/css" href="/ParlDok/t/hh/s/site.css" media="all"/>
+        <link rel="stylesheet" type="text/css" href="/ParlDok/t/def/s/all.css" media="all"/>
+        <link rel="stylesheet" type="text/css" href="/ParlDok/t/hh/s/overlay.css" media="all"/>
+        <link rel="stylesheet" type="text/css" href="/ParlDok/t/hh/s/print.css" id="print-style" media="print"/>
+        <link rel="stylesheet" type="text/css" href="/ParlDok/t/def/s/ui-lightness/jquery-ui-datapicker.css" media="all"/>
+        <script type="text/javascript" src="/ParlDok/t/def/s/j/jQuery-1.10.2.js" ></script>
+        <script type="text/javascript" src="/ParlDok/t/def/s/j/jquery-ui-1.10.3.custom.min.js" ></script>
+        <script type="text/javascript" src="/ParlDok/t/def/s/j/javascript.js" ></script>
+        <script type="text/javascript">
+            //<![CDATA[
+                function printStyle(vorgang) {
+                    if (!vorgang) {
+                        $('#print-style').attr('href', '/ParlDok/t/hh/s/print.css');
+                        window.print();
+                    } else {
+                        $('#print-style').attr('href', '/ParlDok/t/hh/s/print-vorgang.css');
+                        window.print();
+                    }
+                }
+
+                function freeSearchTop() {
+                    var words = $("#topFreeSearch").val();
+                    if (!words || words == "") {
+                        showMessage("Bitte geben Sie einen Suchbegriff ein.");
+                        $("#topFreeSearch").focus();
+                        return false;
+                    }
+                    return true;
+                }
+            //]]>
+        </script>
+
+        <link rel="shortcut icon" href="/ParlDok/t/hh/s/i/favicon.ico" type="image/x-icon"/>
+        <link rel="icon" href="/ParlDok/t/hh/s/i/favicon.ico" type="image/x-icon"/>
+        
+
+    </head>
+    <body>
+    <noscript>
+      <div class="error-message">
+      <br /><br /><br />
+        Bitte aktivieren Sie Javascript, um den vollen Funktionsumfang der Parlamentsdokumentation nutzen zu können.
+      <br /><br /><br />
+      </div>
+    </noscript>
+    <script type="text/javascript">
+      //<![CDATA[
+          if (!navigator.cookieEnabled) {
+            document.write('<div class="error-message"><br /><br /><br />Bitte aktivieren Sie Sitzungs-Cookies, um diese Anwendung nutzen zu können.<br /><br /><br /></div>');
+          }
+      //]]>
+     </script>
+        <!-- Default texts and parameters -->
+        
+
+<div id="hidden-param">
+    <!-- URLs -->
+    <span id="url-update-descriptors">/ParlDok/docnumber/loaddescriptors</span>
+    <span id="url-descriptor-references">/ParlDok/docnumber/descriptorreferences</span>
+    <span id="url-reload-speaker-persons">/ParlDok/docnumber/reloadspeakerpersons</span>
+    <span id="url-reload-persons">/ParlDok/docnumber/loadurheber</span>
+    <span id="url-reload-beratungsstand">/ParlDok/docnumber/loadberatungsstand</span>
+    <span id="url-reload-systematics">/ParlDok/docnumber/loadsystematiks</span>
+
+    <!-- MESSAGES -->
+    <span id="msg-unknown-error">Es ist ein Fehler aufgetreten.</span>
+    <span id="msg-reload">Die Seite wird neu geladen.</span>
+    <span id="msg-unknown-error-page-reload">Es ist ein Fehler aufgetreten. Die Seite wird neu geladen.</span>
+    <span id="msg-empty-keywords">Es fehlt eine Eingabe im Feld "Ausgewählte Suchbegriffe".</span>
+    <span id="msg-wrong-date-format">Fehlerhafte Datumseingabe</span>
+    <span id="msg-no-speaker-set">Keine Person ausgewählt</span>
+    <span id="msg-no-criteria-set">Keine Suchkriterien eingegeben.</span>
+    <span id="msg-no-doc-number-set">Es fehlt die Eingabe der Dokumentnummer.</span>
+    <span id="msg-doc-no-number">Die Dokumentnummer muss eine Zahl beinhalten.</span>
+    <span id="msg-no-free-search-set">Bitte geben Sie einen Suchbegriff ein.</span>
+</div>
+
+
+         <div id="wrapper">
+            <div id="header">
+            <!-- START Header -->
+                <header class="header-image" role="banner">
+                    <span >
+                        <a href="https://www.hamburgische-buergerschaft.de/" id="logo" class="logo-img" title="Logo hamburg.de: Zur Startseite">
+                            <img alt="Logo hamburg.de: Zur Startseite" src="/ParlDok/t/hh/s/i/headnavigation-desktop.png"/>
+                        </a>
+                    </span>
+                    <img style="margin-top: 15px; margin-left: -20px" class="" alt="In den Räumen der Parlamentarischen Informationsdienste." src="/ParlDok/t/hh/s/i/3-1-parlamentsdatenbank-bild.jpg"/>
+                </header>
+            <!-- // END Header -->
+                <div class="headback">
+                  <h2 class="pagetitle"><a href="/ParlDok/info">Datenbankrecherche</a></h2>
+                     <nav id="navigation" role="navigation" class="dark-blue">
+                      <!-- START Navigation -->
+                     <ul class="main-navigation">
+                        <li class="main-nav home" title="Startseite"><a class="main-a" href="/ParlDok/index"></a></li>
+                        <li class="main-nav" style="padding-left: 20px; padding-right: 20px;"><a class="main-a" href="/ParlDok/neuedokumente">Aktuelle Dokumente</a></li>
+                        <li class="main-nav active" style="padding-left: 20px; padding-right: 20px;"><a class="main-a" href="/ParlDok/dokumentennummer">Dokumentnummer</a></li>
+                        <li class="main-nav" style="padding-left: 20px; padding-right: 20px;"><a class="main-a" href="/ParlDok/formalkriterien">Formalkriterien</a></li>
+                        <li class="main-nav" style="padding-left: 20px; padding-right: 20px;"><a class="main-a" href="/ParlDok/schlagworte">Schlagworte</a></li>
+                        <li class="main-nav search" style="padding-left: 20px; padding-right: 20px;"><a class="main-a" href="/ParlDok/freiesuche">Freie Suche</a></li>
+                    </ul>
+                    </nav>
+                  </div>
+              </div>
+            <div id="main" role="main">
+
+                <div id="content" class="article">
+                    
+    
+    <h3 class="screenreader">Suchergebnisse</h3>
+
+    
+        <div class="page-head-height">
+            <div class="pd_resultcount">
+                
+                    Dokumente
+                1 - 1 von 1 
+                 
+                
+            </div>
+
+            
+        
+        </div>
+
+        
+        
+
+        
+
+            <table id="parldokresult">            
+            
+            <tr><td colspan="4"><hr /></td></tr> 
+            <tr>
+                <th id="result-dokument" rowspan ="2">Dokument</th>
+                <th id="result-titel" colspan="3">Titel</th>
+            </tr>
+            <tr>
+                <th id="result-nummer">Nummer</th>
+                <th id="result-typ">Typ</th>
+                <th id="result-datum">Datum</th>
+            </tr>
+            <tr>
+                <th id="result-vorgang">Vorgang</th>
+                <th id="result-urheber" colspan="3">Urheber</th>
+            </tr>
+
+            <tr><td colspan="4"><hr /></td></tr> 
+            
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/ParlDok/dokument/50260/ausw%c3%a4rtige-unterbringung-bei-den-hilfen-zur-erziehung.pdf"  title="PDF Dokument &#246;ffnen (26,8 KB)" >
+                                        <img src="/ParlDok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (26,8 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/ParlDok/dokument/50260/ausw%c3%a4rtige-unterbringung-bei-den-hilfen-zur-erziehung.pdf"  title="PDF Dokument &#246;ffnen (26,8 KB)" >Ausw&#228;rtige Unterbringung bei den Hilfen zur Erziehung</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">21/2013</td>
+                    <td headers="result-typ">Gro&#223;e Anfrage</td>
+                    <td headers="result-datum">23.10.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Sabine Boeddinghaus (Fraktion DIE LINKE),  Deniz Celik (Fraktion DIE LINKE),  Martin Dolzer (Fraktion DIE LINKE),  Norbert Hackbusch (Fraktion DIE LINKE),  Inge Hannemann (Fraktion DIE LINKE),  Stephan Jersch (Fraktion DIE LINKE),  Cansu &#214;zdemir (Fraktion DIE LINKE),  Christiane Schneider (Fraktion DIE LINKE),  Heike Sudmann (Fraktion DIE LINKE),  Mehmet Yildiz (Fraktion DIE LINKE), Fraktion DIE LINKE
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+
+            </table> 
+
+        
+
+            <input type="button" value="Zurück" name="Back" onclick="location.replace('/ParlDok/dokumentennummer');"/>
+    
+                </div>
+            </div>
+            <!-- START Footer -->
+
+            <footer id="footer" role="contentinfo">
+                <div class="content-info-social">
+                    <ul class="content-info">
+                        <li><a href="/ParlDok/hilfe">Hilfe</a></li>
+                        <li><a href="http://www.parlamentsspiegel.de" target="_blank">Parlamentsspiegel</a></li>
+                        <li><a href="https://www.hamburgische-buergerschaft.de/impressum/">Impressum</a></li>
+                    </ul>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

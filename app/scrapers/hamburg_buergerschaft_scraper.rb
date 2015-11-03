@@ -93,7 +93,7 @@ module HamburgBuergerschaftScraper
     originators = NamePartyExtractor.new(originators).extract
 
     if doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
-      originators[:people].delete_if {|name| originators[:parties].include? name }
+      originators[:people].delete_if { |name| originators[:parties].include? NamePartyExtractor.clean_party(name) }
     end
 
     {
