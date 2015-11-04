@@ -42,7 +42,7 @@ class ReviewController < ApplicationController
       @papers[b.id] = b.papers.where(['created_at >= ?', Date.today])
       @ministries[b.id] = b.ministries.where(['created_at >= ?', Date.today])
     end
-    @count = @papers.map(&:size).reduce(&:+)
+    @count = @papers.values.map(&:size).reduce(&:+)
     @people = Person.where(['created_at >= ?', Date.today])
     @organizations = Organization.where(['created_at >= ?', Date.today])
   end
