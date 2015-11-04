@@ -17,11 +17,11 @@ class BayernPDFExtractor
       m = @contents.match(regex)
       next unless m
 
-      person = m[1].gsub(/\p{Z}/, ' ').gsub("\n", ' ').gsub(' und', ', ')
+      person = m[1].gsub(/\p{Z}+/, ' ').gsub("\n", ' ').gsub(' und', ', ').gsub(/(\S+)\s-(\S+)/, '\1-\2')
       if person.include?(',')
-        people.concat person.split(',').map { |s| s.gsub(/\p{Z}+/, ' ').strip }
+        people.concat person.split(',').map { |s| s.strip }
       else
-        people << person.gsub(/\p{Z}+/, ' ').strip
+        people << person.strip
       end
       parties << m[2].gsub(/[\n\p{Z}]+/, ' ').strip
 
