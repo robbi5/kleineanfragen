@@ -79,6 +79,15 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Minister des Innern und für Kommunales', answerers[:ministries].first
   end
 
+  test 'unnecessary suffix' do
+    paper = Struct.new(:contents).new(
+      PREFIX + 'der Minister für Ländliche Entwicklung, Umwelt und Landwirtschaft des Landes Brandenburg' + SUFFIX)
+    answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Minister für Ländliche Entwicklung, Umwelt und Landwirtschaft', answerers[:ministries].first
+  end
+
   test 'typo in Landesregierung' do
     paper = Struct.new(:contents).new(
       'Namens der Landregierung beantwortet der Minister der Justiz und für Europa und Verbraucherschutz' + SUFFIX)

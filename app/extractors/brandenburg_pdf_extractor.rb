@@ -34,6 +34,7 @@ class BrandenburgPDFExtractor
                .strip
                .gsub(/\p{Other}/, '') # invisible chars & private use unicode
                .gsub(/,$/, '')
+               .gsub(/\s+des\s+Landes\s+Brandenburg$/, '') # unnecessary suffix
 
     ministries << ministry unless ministry.blank?
 
