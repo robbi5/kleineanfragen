@@ -22,4 +22,12 @@ class SchleswigHolsteinPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 1, answerers[:ministries].size
     assert_equal 'Minister/in für Bildung und Wissenschaft', answerers[:ministries].first
   end
+
+  test 'no ministry' do
+    paper = paper_with_contents("und \n \n\nAntwort \n \nder Landesregierung - \n \nVorbemerkung der Landesregierung:")
+
+    answerers = SchleswigHolsteinPDFExtractor.new(paper).extract_answerers
+
+    assert_nil answerers
+  end
 end
