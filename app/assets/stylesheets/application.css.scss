@@ -703,4 +703,13 @@ span.twitter-typeahead {
       margin: 10px 0 5px 5px;
     }
   }
+
+  &.subscribe-block--light {
+    background: #F5F5F5;
+
+    h3 {
+      color: #545454;
+      text-shadow: none;
+    }
+  }
 }
