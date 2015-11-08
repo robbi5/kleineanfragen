@@ -5,7 +5,7 @@ class BerlinPDFExtractor
 
   # \n.................................\nSenatsverwaltung für Stadtentwicklung und Umwelt\n
   # \n_____________________________\nSenatsverwaltung für Gesundheit und Soziales\n
-  ANSWERERS = /\n[\.\_]{28,40}\s+(Senatsverwaltung\s+.+)\s\s+/m
+  ANSWERERS = /\n[\.\_]{28,40}\s+(Senatsverwaltung\s+.+)\s\s+\(/m
 
   def extract_answerers
     return nil if @contents.blank?
