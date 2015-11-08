@@ -1,7 +1,7 @@
 <% content_for :main_fullwidth_append do %>
 <div class="subscribe-block">
   <div class="container">
-    <h3>Lasse dich bei neuen kleinen Anfragen aus <%= @body.name %> benachrichtigen.</h3>
+    <h3>Lass dich bei neuen kleinen Anfragen aus <%= @body.name %> benachrichtigen.</h3>
     <ul>
       <li><%= link_to 'per E-Mail abonnieren', body_subscribe_path(body: @body), class: 'btn btn-default' %></li>
       <li><%= link_to 'als Feed abonnieren', body_feed_url(body: @body, format: :atom), class: 'btn btn-default' %></li>
