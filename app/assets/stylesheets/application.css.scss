@@ -234,7 +234,6 @@ $grid-float-breakpoint:   320px;
   }
 }
 
-
 span.twitter-typeahead {
   .tt-dropdown-menu {
     position: absolute;
@@ -295,6 +294,9 @@ span.twitter-typeahead {
   }
 }
 
+.page-content {
+  margin-bottom: 20px;
+}
 
 .bodies-list {
   list-style: none;
@@ -667,7 +669,7 @@ span.twitter-typeahead {
   background: #757F9A;
   background: linear-gradient(20deg, #757F9A 10%, #BEC8DA 90%);
   padding: 15px;
-  margin: 20px 0;
+  margin: 0 0 20px 0;
 
   h3 {
     @extend .h4;
