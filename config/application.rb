@@ -36,6 +36,9 @@ module Kleineanfragen
     # active job
     config.active_job.queue_adapter = :resque
 
+    # Ohai developers!
+    config.action_dispatch.default_headers.merge!('X-Developer' => 'Looking for raw data? Try /data.')
+
     # applicaton config:
     # path for storing paper pdfs
     config.x.paper_storage = Rails.root.join('data')

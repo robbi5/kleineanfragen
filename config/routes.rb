@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
   get 'recent' => 'paper#recent'
 
+  get 'data', to: redirect('/info/daten')
+
   get 'info' => 'info#index'
   get 'info/daten'
   get 'info/kontakt'
