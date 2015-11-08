@@ -42,10 +42,11 @@
 </header>
 
 <main>
-  <%= yield :main_fullwidth %>
+  <%= yield :main_fullwidth_prepend %>
   <div class="container">
     <%= yield %>
   </div>
+  <%= yield :main_fullwidth_append %>
 </main>
 
 <footer class="app-footer container">

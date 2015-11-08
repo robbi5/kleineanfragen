@@ -1,7 +1,7 @@
 <% title "Suche nach #{@term}" + (!@papers.first_page? ? " (Seite #{@papers.current_page})" : '') %>
 <%- content_for :head do %><%= auto_discovery_link_tag(:atom, search_url(q: @query, format: :atom), title: "Suche nach #{@term}") %><% end -%>
 
-<% content_for :main_fullwidth do %>
+<% content_for :main_fullwidth_prepend do %>
 <%= form_tag "/search", method: :get, role: 'search', class: 'search', enforce_utf8: false do %>
   <div class="jumbotron jumbotron--search">
     <div class="container">
