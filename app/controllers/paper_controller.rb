@@ -37,7 +37,7 @@ class PaperController < ApplicationController
 
   def redirect_by_id
     @paper = Paper.find(params[:paper].to_i)
-    redirect_to paper_path(@paper.body, @paper.legislative_term, @paper)
+    redirect_to paper_path(@paper.body, @paper.legislative_term, @paper, format: mime_extension(request.format))
   end
 
   def report
