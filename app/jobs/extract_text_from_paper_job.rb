@@ -97,6 +97,8 @@ class ExtractTextFromPaperJob < PaperJob
     text.gsub!(/(\p{L}+)\-\p{Zs}*\r?\n\n?(\p{L}+)/m, "\\1\\2\n")
     # soft hyphen
     text.gsub!(/\u00AD/, '')
+    # utf8 replacement char
+    text.gsub!(/\uFFFD/, ' ')
     # private use area
     text.gsub!(/\p{InPrivate_Use_Area}/, ' ')
     text
