@@ -19,7 +19,7 @@ class HessenPDFExtractor
     if m.nil?
       m = @contents.match(/Antwort\s\n+der Landesregierung\s\n+auf die Große Anfrage/)
       if m.nil?
-        return { ministries: [] }
+        return nil
       else
         return { ministries: ['Landesregierung'] }
       end

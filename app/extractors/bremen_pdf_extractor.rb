@@ -13,7 +13,7 @@ class BremenPDFExtractor
     # parties = []
     return nil if !@contents.include?('und Fraktion')
     m = @contents.match(ORIGINATORS)
-    return {} if m.nil?
+    return nil if m.nil?
 
     m[1].split(',').each do |person|
       person = person.gsub(/\p{Z}/, ' ')

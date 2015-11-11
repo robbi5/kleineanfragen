@@ -22,8 +22,7 @@ class BrandenburgPDFExtractor
     ministries = []
 
     m = @contents.match(ANSWERERS)
-
-    return { ministries: [] } if m.nil?
+    return nil if m.nil?
 
     ministry = m[1]
                .gsub(/\p{Z}/, ' ')

@@ -12,6 +12,7 @@ class BerlinPDFExtractor
     ministries = []
 
     m = @contents.match(ANSWERERS)
+    return nil if m.nil?
 
     ministry = m[1]
                .gsub(/\p{Z}/, ' ')
