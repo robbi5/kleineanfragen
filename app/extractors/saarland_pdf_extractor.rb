@@ -4,6 +4,7 @@ class SaarlandPDFExtractor
   end
 
   ORIGINATORS = /Anfrage\s+de[rs]\s+Abgeordneten\s+([^\(]+)\s+\(([^\)]+)\)/m
+  IS_MAJOR = /W\s?O\s?R\s?T\s+.+?\s+zu\sder\s+[gG]roßen\sAnfrage/m
 
   def extract_originators
     return nil if @contents.nil?
@@ -22,6 +23,15 @@ class SaarlandPDFExtractor
     end
 
     { people: people, parties: parties }
+  end
+
+  def extract_doctype
+    return nil if @contents.nil?
+    if !@contents.scan(IS_MAJOR).blank?
+      Paper::DOCTYPE_MAJOR_INTERPELLATION
+    else
+      Paper::DOCTYPE_WRITTEN_INTERPELLATION
+    end
   end
 
   private

@@ -3,13 +3,22 @@ class DeterminePaperTypeJob < PaperJob
 
   EXTRACTORS = {
     'MV' => MvPDFHasAnswerExtractor,
-    'HH' => HamburgPDFHasAnswerExtractor
+    'HH' => HamburgPDFHasAnswerExtractor,
+    'SL' => SaarlandPDFExtractor
   }
 
   def perform(paper)
     return unless EXTRACTORS.keys.include?(paper.body.state)
     fail "No Text for Paper [#{paper.body.state} #{paper.full_reference}]" if paper.contents.blank?
-    paper.is_answer = EXTRACTORS[paper.body.state].new(paper).is_answer?
+    ex = EXTRACTORS[paper.body.state].new(paper)
+
+    paper.is_answer = ex.is_answer? if ex.respond_to? :is_answer?
+
+    if ex.respond_to? :extract_doctype
+      type = ex.extract_doctype
+      paper.doctype = type unless type.nil?
+    end
+
     paper.save
   end
 end
