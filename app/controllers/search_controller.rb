@@ -13,7 +13,7 @@ class SearchController < ApplicationController
     @term = search.term
     @conditions = search.conditions
 
-    @bodies = Body.all.map { |body| OpenStruct.new(name: body.name, state: body.state) }
+    @bodies = Body.all.order(state: :asc).map { |body| OpenStruct.new(name: body.name, state: body.state) }
     @doctypes = Paper::DOCTYPES.map { |doctype| OpenStruct.new(key: doctype, name: t(doctype, scope: [:paper, :doctype]).to_s) }
 
     @papers = self.class.search_papers(@term, @conditions, page: params[:page], per_page: 10)
