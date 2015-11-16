@@ -112,6 +112,28 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
       }, paper)
   end
 
+  test 'extract paper with ministry staatskanzlei like 16/4965' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_detail_4965.html')))
+    record = @scraper.extract_records(@html).first
+    paper = @scraper.extract_paper(record, check_pdf: false)
+
+    assert_equal(
+      {
+        legislative_term: '16',
+        full_reference: '16/4965',
+        reference: '4965',
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        title: 'Umgang der Ministerpräsidentin mit Kritik zu den Abläufen rund um den Nürburgring',
+        url: 'http://www.landtag.rlp.de/landtag/drucksachen/4965-16.pdf',
+        published_at: Date.parse('2015-04-30'),
+        originators: { people: ['Alexander Licht'], parties: ['CDU'] },
+        is_answer: true,
+        answerers: { ministries: [
+          'Staatskanzlei'
+        ] }
+      }, paper)
+  end
+
   test 'extract complete paper from Major' do
     @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_major_detail.html')))
     record = @scraper.extract_records(@html).first

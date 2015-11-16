@@ -32,7 +32,8 @@ module RheinlandPfalzLandtagScraper
   def self.extract_ministries(ministry_line)
     ministry_line.split(/Ministerium/)
       .reject(&:empty?)
-      .map { |s| "Ministerium #{s.strip.gsub(/\s*,$/, '')}" }
+      .map { |s| s.strip.gsub(/\s*,$/, '').sub(/^Ministerium\s+/, '') }
+      .map { |s| s != 'Staatskanzlei' ? "Ministerium #{s}" : s }
       .uniq
   end
 
