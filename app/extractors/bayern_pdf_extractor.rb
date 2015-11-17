@@ -39,7 +39,7 @@ class BayernPDFExtractor
     # Antwort\nStaatsministerin für Gesundheit und Pflege\nvom 21.04.2015
     p = @contents.match(/Antwort\n(?:[dD]e[rs]\s+)?Staatsminister(?:s|in)?\s+(für\s+[\p{L}\s\,]+)\s+vom/m)
     if p
-      ministry = p[1].gsub(/\n/, '').strip
+      ministry = p[1].gsub(/\n/, ' ').gsub(/\s+/, ' ').strip
       ministries << "Staatsministerium #{ministry}"
     end
 
@@ -63,7 +63,12 @@ class BayernPDFExtractor
     # Antwort\ndes Staatsministeriums des Innern, für Bau und Verkehr\nvom 10.10.2014
     m = @contents.match(/Antwort\s+d[ea]s (St?aatsministeriums?\s[\p{L}\s\,\-\u00AD]+)\s+vom/m)
     if m
-      ministry = m[1].gsub(/\u00AD/, '').gsub(/(\p{L}+)\-\p{Zs}*\n(\p{L}+)/m, '\1\2').gsub(/\n/, '').strip
+      ministry = m[1]
+                 .gsub(/\u00AD/, '')
+                 .gsub(/(\p{L}+)\-\p{Zs}*\n(\p{L}+)/m, '\1\2')
+                 .gsub(/\n/, ' ')
+                 .gsub(/\s+/, ' ')
+                 .strip
       ministry.gsub!(/^St?aatsministeriums/, 'Staatsministerium') # remove typo, Genitiv
       ministries << ministry
     end
