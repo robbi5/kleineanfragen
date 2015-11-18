@@ -53,7 +53,7 @@ class NamePartyExtractor
         if part.include? '('
           part.gsub!(/(.+)\([^\)]+\)/, '\1')
         end
-        part        
+        part
       end
       people << sa.reverse.join(' ') unless sa.size == 0
     end

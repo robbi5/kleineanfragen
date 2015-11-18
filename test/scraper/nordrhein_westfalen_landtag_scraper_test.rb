@@ -50,4 +50,18 @@ class NordrheinWestfalenLandtagScraperTest < ActiveSupport::TestCase
 
     assert_equal ['CDU'], paper[:originators][:parties]
   end
+
+  test 'extract originators from major paper with a four names and two parties' do
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/nordrhein_westfalen_landtag_scraper_detail_7576.html')))
+    block = @scraper.extract_blocks(html).first
+    paper = @scraper.extract_paper_details(block)
+
+    assert_equal(
+      {
+        originators: {
+          people: ['Norbert Römer', 'Marc Herter', 'Reiner Priggen', 'Sigrid Beer'],
+          parties: ['SPD', 'GRÜNE']
+        }
+      }, paper)
+  end
 end
