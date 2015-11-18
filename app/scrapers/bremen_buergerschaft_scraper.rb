@@ -4,8 +4,19 @@ module BremenBuergerschaftScraper
   BASE_URL = 'https://www.bremische-buergerschaft.de'
   TYPES = ['KlAnfr u. AntwSen', 'MdS Senat (Antwort)']
 
+  DEFAULT_MODE = :final
+  TERM_MODE = {
+    18 => :final,
+    19 => :preliminary
+  }
+
   def self.extract_results(table)
     table.css('tr')
+  end
+
+  def self.extract_preliminary_results(page)
+    content = page.at_css('.fliesstext')
+    content.css('ul.smul1 li')
   end
 
   def self.extract_full_reference(tr)
@@ -100,16 +111,88 @@ module BremenBuergerschaftScraper
     }
   end
 
+  def self.extract_paper_preliminary(item)
+    br = item.at_css('br')
+    drs_text = br.previous.text.strip
+    drs = drs_text.match(/Drsnr.:\s(.+)/).try(:[], 1)
+    fail "HB [?]: drsnr missing for item with text: #{item.text}" if drs.nil?
+
+    full_reference = drs.strip
+    legislative_term, reference = full_reference.split('/')
+
+    link = item.at_css('a')
+    fail "HB [?]: link missing for item with text: #{item.text}" if link.nil?
+
+    path = link.attributes['href']
+    url = Addressable::URI.parse(BASE_URL).join(path).normalize.to_s
+
+    meta = BremenBuergerschaftScraper.extract_meta_preliminary(link.text)
+    {
+      full_reference: full_reference,
+      legislative_term: legislative_term,
+      reference: reference,
+      title: meta[:title],
+      url: url,
+      doctype: meta[:doctype],
+      # published_at unknown
+      originators: meta[:originators],
+      answerers: meta[:answerers]
+    }
+  end
+
+  def self.extract_meta_preliminary(link_text)
+    o = link_text.match(/(.+) - Antwort des Senats auf die ([kK]leine|[gG]roße) Anfrage der (.+)/)
+    party = o[3].strip.gsub(/Fraktion\s+(?:der\s+)?/, '')
+    parties = []
+    parties << party unless party.blank?
+
+    {
+      title: o[1].strip,
+      doctype: o[2].downcase == 'große' ? Paper::DOCTYPE_MAJOR_INTERPELLATION : Paper::DOCTYPE_MINOR_INTERPELLATION,
+      originators: { people: [], parties: parties },
+      answerers: { ministries: ['Senat'] }
+    }
+  end
+
   class Overview < Scraper
-    SEARCH_URL = BASE_URL + '/index.php?id=507'
+    SEARCH_PRELIMINARY_URL = BASE_URL + '/index.php?id=506'
+    SEARCH_FINAL_URL = BASE_URL + '/index.php?id=507'
 
     def supports_streaming?
       true
     end
 
-    def scrape
-      streaming = block_given?
+    def scrape(&block)
+      mode = TERM_MODE.try(:[], @legislative_term) || DEFAULT_MODE
+
       papers = []
+      block = -> (paper) { papers << paper } unless block_given?
+
+      send("scrape_#{mode}".to_sym, &block)
+
+      papers unless block_given?
+    end
+
+    def scrape_preliminary
+      m = mechanize
+      # to initialize session
+      m.get BASE_URL
+      mp = m.get SEARCH_PRELIMINARY_URL + '&suchbegriff=Antwort+des+Senats'
+
+      items = BremenBuergerschaftScraper.extract_preliminary_results(mp.body)
+      items.each do |item|
+        begin
+          paper = BremenBuergerschaftScraper.extract_paper_preliminary(item)
+          next if paper[:legislative_term] != @legislative_term
+        rescue => e
+          logger.warn e
+          next
+        end
+        yield paper
+      end
+    end
+
+    def scrape_final
       m = mechanize
       # to initialize session
       m.get BASE_URL
@@ -126,14 +209,9 @@ module BremenBuergerschaftScraper
             logger.warn e
             next
           end
-          if streaming
-            yield paper
-          else
-            papers << paper
-          end
+          yield paper
         end
       end
-      papers unless streaming
     end
 
     def submit_search(m, type)
@@ -151,13 +229,30 @@ module BremenBuergerschaftScraper
   end
 
   class Detail < DetailScraper
-    SEARCH_URL = BASE_URL + '/index.php?id=507'
+    SEARCH_PRELIMINARY_URL = BASE_URL + '/index.php?id=506'
+    SEARCH_FINAL_URL = BASE_URL + '/index.php?id=507'
 
     def scrape
+      mode = TERM_MODE.try(:[], @legislative_term) || DEFAULT_MODE
+      send("scrape_#{mode}".to_sym)
+    end
+
+    def scrape_preliminary
       m = mechanize
       # get a session
       m.get BASE_URL
-      mp = m.get SEARCH_URL
+      mp = m.get SEARCH_PRELIMINARY_URL + "&suchbegriff=#{full_reference}"
+
+      items = BremenBuergerschaftScraper.extract_preliminary_results(mp.body)
+      return nil if items.nil? || items.size < 1
+      BremenBuergerschaftScraper.extract_paper(items.first)
+    end
+
+    def scrape_final
+      m = mechanize
+      # get a session
+      m.get BASE_URL
+      mp = m.get SEARCH_FINAL_URL
       form = mp.form 'theForm'
       fail "HB [#{full_reference}]: search form missing" if form.nil?
 

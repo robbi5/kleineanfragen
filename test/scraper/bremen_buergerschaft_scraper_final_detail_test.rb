@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BremenBuergerschaftScraperDetailTest < ActiveSupport::TestCase
+class BremenBuergerschaftScraperFinalDetailTest < ActiveSupport::TestCase
   def setup
     @scraper = BremenBuergerschaftScraper
   end

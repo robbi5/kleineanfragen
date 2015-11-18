@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BremenBuergerschaftScraperOverviewMinorTest < ActiveSupport::TestCase
+class BremenBuergerschaftScraperFinalOverviewMinorTest < ActiveSupport::TestCase
   def setup
     @scraper = BremenBuergerschaftScraper
     @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bremen_buergerschaft_scraper_overview_minor.html')))
