@@ -244,7 +244,7 @@ module BremenBuergerschaftScraper
       mp = m.get SEARCH_PRELIMINARY_URL + "&suchbegriff=#{full_reference}"
 
       items = BremenBuergerschaftScraper.extract_preliminary_results(mp.body)
-      return nil if items.nil? || items.size < 1
+      fail "HB [#{full_reference}]: result item missing" if items.nil? || items.size < 1
       BremenBuergerschaftScraper.extract_paper(items.first)
     end
 
