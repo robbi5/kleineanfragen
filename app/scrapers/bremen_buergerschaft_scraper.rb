@@ -179,7 +179,7 @@ module BremenBuergerschaftScraper
       m.get BASE_URL
       mp = m.get SEARCH_PRELIMINARY_URL + '&suchbegriff=Antwort+des+Senats'
 
-      items = BremenBuergerschaftScraper.extract_preliminary_results(mp.body)
+      items = BremenBuergerschaftScraper.extract_preliminary_results(mp.root)
       items.each do |item|
         begin
           paper = BremenBuergerschaftScraper.extract_paper_preliminary(item)
@@ -243,7 +243,7 @@ module BremenBuergerschaftScraper
       m.get BASE_URL
       mp = m.get SEARCH_PRELIMINARY_URL + "&suchbegriff=#{full_reference}"
 
-      items = BremenBuergerschaftScraper.extract_preliminary_results(mp.body)
+      items = BremenBuergerschaftScraper.extract_preliminary_results(mp.root)
       fail "HB [#{full_reference}]: result item missing" if items.nil? || items.size < 1
       BremenBuergerschaftScraper.extract_paper(items.first)
     end
