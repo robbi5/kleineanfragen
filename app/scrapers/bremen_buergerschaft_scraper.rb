@@ -183,7 +183,7 @@ module BremenBuergerschaftScraper
       items.each do |item|
         begin
           paper = BremenBuergerschaftScraper.extract_paper_preliminary(item)
-          next if paper[:legislative_term] != @legislative_term
+          next if paper[:legislative_term].to_i != @legislative_term
         rescue => e
           logger.warn e
           next
@@ -215,7 +215,7 @@ module BremenBuergerschaftScraper
     end
 
     def submit_search(m, type)
-      mp = m.get SEARCH_URL
+      mp = m.get SEARCH_FINAL_URL
       form = mp.form 'theForm'
       fail 'HB: search form missing' if form.nil?
 
