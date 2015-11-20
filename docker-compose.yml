@@ -40,7 +40,7 @@ tika:
 #   - "9998:9998"
 
 elasticsearch:
-  image: elasticsearch
+  image: elasticsearch:1.7
 ## if you want to use elasticsearch head (standalone):
 #  command: elasticsearch -Des.http.cors.enabled=true
 #  ports:
