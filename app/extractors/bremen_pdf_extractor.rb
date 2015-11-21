@@ -44,7 +44,7 @@ class BremenPDFExtractor
     m = @contents.match(/\s+\d+\.\s+Wahlperiode\s+([\d\.]+)\s+/m)
     return nil if m.nil?
 
-    if m[1].match(/\d+\.\d{2}\.\d{2}/)
+    if m[1].match(/\A\d+\.\d{2}\.\d{2}\z/)
       Date.strptime(m[1], '%d.%m.%y')
     else
       Date.parse m[1]

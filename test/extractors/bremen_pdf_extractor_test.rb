@@ -40,8 +40,14 @@ class BremenPDFExtractorTest < ActiveSupport::TestCase
   #  assert_equal 'Björn Tschöpe', originators[:people].sixth
   #end
 
-  test 'extract published_at from simple' do
+  test 'extract published_at from simple paper' do
     paper = paper_with_contents('\n 19. Wahlperiode 10.11.15 \n')
+    published_at = BremenPDFExtractor.new(paper).extract_published_at
+    assert_equal Date.parse('2015-11-10'), published_at
+  end
+
+  test 'extract published_at from simple paper with full year' do
+    paper = paper_with_contents('\n 19. Wahlperiode 10.11.2015 \n')
     published_at = BremenPDFExtractor.new(paper).extract_published_at
     assert_equal Date.parse('2015-11-10'), published_at
   end
