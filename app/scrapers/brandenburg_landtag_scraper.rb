@@ -65,16 +65,16 @@ module BrandenburgLandtagScraper
     end
   end
 
-  def self.extract_originators(meta_text, doctype)
+  def self.extract_originators(originator_text, doctype)
     if doctype == Paper::DOCTYPE_MINOR_INTERPELLATION
       # KlAnfr 123 Aaaaaa Bbbbbb (ABC), Cccccc Ddddddd (ABC) 11.12.2014 Drs 6/123 (1 S.)
-      meta = meta_text.strip.match(/\s(\D+ \(.+\),?)\s+[\d\.]+\s+Drs/)
+      meta = originator_text.strip.match(/\s(\D+ \(.+\),?)\s+[\d\.]+\s+Drs/)
       return nil if meta.nil?
       NamePartyExtractor.new(meta[1]).extract
     else
       # GrAnfr 123 (ABC, ABC) 11.12.2014 Drs 6/123 (1 S.)
       parties = []
-      meta_text.split('(')[1].split(')')[0].split(',').each { |p| parties.push(p.strip) }
+      originator_text.split('(')[1].split(')')[0].split(',').each { |p| parties.push(p.strip) }
       { people: [], parties: parties }
     end
   end
@@ -107,8 +107,9 @@ module BrandenburgLandtagScraper
     return nil if doctype.nil?
 
     data = extract_meta_rows(item)
-
     answer_row = data.find { |row| row.text.include?('Antw') }
+    originator_row = data.find { |row| row.text.start_with?('KlAnfr') || row.text.start_with?('GrAnfr') }
+
     link = answer_row.search('a').find { |el| el.text.include?('/') }
     fail 'BB [?] Cannot get Link' if link.nil?
     # skip BePr
@@ -118,8 +119,8 @@ module BrandenburgLandtagScraper
     url = Addressable::URI.parse(BASE_URL).join(path).normalize.to_s
     full_reference = extract_full_reference(link)
     legislative_term, reference = extract_reference(full_reference)
-    originators = extract_originators(meta.text, doctype)
-    published_at = extract_published_at(meta.text)
+    originators = extract_originators(originator_row.text, doctype)
+    published_at = extract_published_at(answer_row.text)
 
     {
       legislative_term: legislative_term,
