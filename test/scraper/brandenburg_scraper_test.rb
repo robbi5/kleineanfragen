@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
+class BrandenburgScraperTest < ActiveSupport::TestCase
   def setup
     @scraper = BrandenburgLandtagScraper
     @overview = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/brandenburg_scraper_overview.html')).force_encoding('windows-1252'))
@@ -125,5 +125,28 @@ class BrandenburgScraperOverviewTest < ActiveSupport::TestCase
         parties: ['CDU', 'DIE LINKE']
       }, @scraper.extract_originators(meta, Paper::DOCTYPE_MINOR_INTERPELLATION)
     )
+  end
+
+  test 'test extract details #33' do
+    detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/brandenburg_scraper_detail_6_2973.html')).force_encoding('windows-1252'))
+    body = @scraper.extract_body(detail)
+    item = @scraper.extract_detail_item(body)
+    paper = @scraper.extract_detail_paper(item)
+
+    assert_equal(
+      {
+        legislative_term: '6',
+      full_reference: '6/2973',
+      reference: '2973',
+      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+      title: 'Unterbringung von Flüchtlingen in den Landkreisen Brandenburgs, Stand 30.09.2015',
+      url: 'http://www.parldok.brandenburg.de/parladoku/w6/drs/ab_2900/2973.pdf',
+      published_at: Date.parse('2015-11-12'),
+      originators: {
+      people: ['Andrea Johlige'],
+      parties: ['DIE LINKE']
+    },
+      is_answer: true
+    }, paper)
   end
 end
