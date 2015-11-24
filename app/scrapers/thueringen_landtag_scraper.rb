@@ -71,6 +71,8 @@ module ThueringenLandtagScraper
     }
   end
 
+  UNSOPPORTED = ['Unterrichtung/Landesregierung', 'Mündliche Anfrage']
+
   def self.extract_paper(title_el)
     next_row = extract_next_row(title_el)
     title_text = extract_title_text(title_el)
@@ -78,6 +80,7 @@ module ThueringenLandtagScraper
     legislative_term, reference = extract_reference(full_reference)
     path = extract_path(title_el)
     url = extract_url(path)
+    return nil if UNSOPPORTED.include? extract_doctype_el(next_row).text.strip
     meta = extract_meta(next_row)
     fail "doctype unknown for Paper [TH #{full_reference}]" if meta.nil?
 
@@ -124,6 +127,7 @@ module ThueringenLandtagScraper
         results.each do |title_el|
           begin
             paper = ThueringenLandtagScraper.extract_paper(title_el)
+            next if paper.nil?
           rescue => e
             logger.warn e
             next
@@ -179,7 +183,7 @@ module ThueringenLandtagScraper
 
       body = mp.search("//table[@id='parldokresult']")
       paper = ThueringenLandtagScraper.extract_paper(body.at_css('.title'))
-
+      return nil if paper.nil?
       button = body.at_css('.parldokresult-vorgang')
       fail "TH [#{full_reference}]: no button to show details found" if button.nil?
 
