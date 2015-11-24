@@ -156,11 +156,11 @@ module BundestagScraper
   def self.extract_doctype(doc)
     type = extract_type(doc)
     case type
-      when 'Kleine Anfrage'
-          Paper::DOCTYPE_MINOR_INTERPELLATION
-        when 'Große Anfrage'
-          Paper::DOCTYPE_MAJOR_INTERPELLATION
-      end
+    when 'Kleine Anfrage'
+      Paper::DOCTYPE_MINOR_INTERPELLATION
+    when 'Große Anfrage'
+      Paper::DOCTYPE_MAJOR_INTERPELLATION
+    end
   end
 
   def self.extract_doc(content)
@@ -168,7 +168,6 @@ module BundestagScraper
     comment_end = content.index('-->', comment_start)
     xml = content[comment_start...comment_end]
     xml = xml.strip.gsub(/<-.*->/, '') # remove nested "comments"
-
     Nokogiri.parse xml
   end
 

@@ -5,7 +5,6 @@ class BundestagScraperTest < ActiveSupport::TestCase
     @scraper = BundestagScraper
     @content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bundestag_detail.html')).force_encoding('windows-1252')).to_s
     @content_xml = @scraper.extract_doc(@content)
-
   end
 
   test 'extract details' do
