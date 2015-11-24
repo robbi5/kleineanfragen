@@ -108,7 +108,7 @@ module BrandenburgLandtagScraper
 
     data = extract_meta_rows(item)
     answer_row = data.find { |row| row.text.include?('Antw') }
-    originator_row = data.find { |row| row.text.start_with?('KlAnfr') || row.text.start_with?('GrAnfr')}
+    originator_row = data.find { |row| row.text.start_with?('KlAnfr') || row.text.start_with?('GrAnfr') }
 
     link = answer_row.search('a').find { |el| el.text.include?('/') }
     fail 'BB [?] Cannot get Link' if link.nil?
