@@ -73,25 +73,16 @@ module BundestagScraper
 
   def self.scrape_vorgang(mechanize, detail_url)
     page = mechanize.get detail_url
-    comment_start = page.content.index '<?xml'
-    comment_end = page.content.index('-->', comment_start)
-    xml = page.content[comment_start...comment_end]
-    xml = xml.strip.gsub(/<-.*->/, '') # remove nested "comments"
+    content = page.content
+    doc = extract_doc(content)
 
-    doc = Nokogiri.parse xml
-    type = doc.at_css('VORGANG VORGANGSTYP').text
-    status = doc.at_css('VORGANG AKTUELLER_STAND').text
-    fail "#{detail_url}: ignored, status: #{status}" unless status == 'Beantwortet'
-
-    doctype = case type
-              when 'Kleine Anfrage'
-                Paper::DOCTYPE_MINOR_INTERPELLATION
-              when 'Große Anfrage'
-                Paper::DOCTYPE_MAJOR_INTERPELLATION
-              end
+    doctype = extract_doctype(doc)
     fail "#{detail_url}: doctype unknown: #{type}" if doctype.blank?
 
-    title = doc.at_css('VORGANG TITEL').text.strip
+    status = extract_status(doc)
+    fail "#{detail_url}: ignored, status: #{status}" unless status == 'Beantwortet'
+
+    title = extract_title(doc)
     legislative_term = doc.at_css('VORGANG WAHLPERIODE').text.to_i
 
     url = nil
@@ -152,5 +143,35 @@ module BundestagScraper
       is_answer: true,
       answerers: answerers
     }
+  end
+
+  def self.extract_title(doc)
+    doc.at_css('VORGANG TITEL').text.strip
+  end
+
+  def self.extract_status(doc)
+    doc.at_css('VORGANG AKTUELLER_STAND').text
+  end
+
+  def self.extract_doctype(doc)
+    type = extract_type(doc)
+    case type
+    when 'Kleine Anfrage'
+      Paper::DOCTYPE_MINOR_INTERPELLATION
+    when 'Große Anfrage'
+      Paper::DOCTYPE_MAJOR_INTERPELLATION
+    end
+  end
+
+  def self.extract_doc(content)
+    comment_start = content.index '<?xml'
+    comment_end = content.index('-->', comment_start)
+    xml = content[comment_start...comment_end]
+    xml = xml.strip.gsub(/<-.*->/, '') # remove nested "comments"
+    Nokogiri.parse xml
+  end
+
+  def self.extract_type(doc)
+    doc.at_css('VORGANG VORGANGSTYP').text
   end
 end
