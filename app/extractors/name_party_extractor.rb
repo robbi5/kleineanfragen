@@ -97,7 +97,7 @@ class NamePartyExtractor
 
   # just "Fraktion der SPD"
   def extract_faction
-    { parties: self.class.clean_party(@text.strip) }
+    { people: [], parties: [self.class.clean_party(@text.strip)] }
   end
 
   def self.looks_like_party?(text)

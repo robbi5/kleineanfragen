@@ -384,6 +384,6 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
   end
 
   test 'fraction: best case scenario' do
-    assert_equal({ parties: 'SPD' }, NamePartyExtractor.new('Fraktion der SPD', :faction).extract)
+    assert_equal({ people: [], parties: ['SPD'] }, NamePartyExtractor.new('Fraktion der SPD', :faction).extract)
   end
 end
