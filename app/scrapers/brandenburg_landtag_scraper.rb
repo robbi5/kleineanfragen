@@ -66,7 +66,6 @@ module BrandenburgLandtagScraper
   end
 
   def self.extract_originators(originator_text, doctype)
-
     if doctype == Paper::DOCTYPE_MINOR_INTERPELLATION
       # KlAnfr 123 Aaaaaa Bbbbbb (ABC), Cccccc Ddddddd (ABC) 11.12.2014 Drs 6/123 (1 S.)
       meta = originator_text.strip.match(/\s(\D+ \(.+\),?)\s+[\d\.]+\s+Drs/)
@@ -108,11 +107,8 @@ module BrandenburgLandtagScraper
     return nil if doctype.nil?
 
     data = extract_meta_rows(item)
-
     answer_row = data.find { |row| row.text.include?('Antw') }
     originator_row = data.find { |row| row.text.start_with?('KlAnfr') || row.text.start_with?('GrAnfr')}
-
-
 
     link = answer_row.search('a').find { |el| el.text.include?('/') }
     fail 'BB [?] Cannot get Link' if link.nil?
