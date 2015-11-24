@@ -51,7 +51,7 @@ class BadenWuerttembergPDFExtractorTest < ActiveSupport::TestCase
 
     answerers = BadenWuerttembergPDFExtractor.new(paper).extract_answerers
 
-    assert_not_nil answerers, 'originators should not be nil'
+    assert_not_nil answerers, 'answerers should not be nil'
     assert_equal 1, answerers[:ministries].size
     assert_equal 'Ministerium für Kultus, Jugend und Sport', answerers[:ministries].first
   end
