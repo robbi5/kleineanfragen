@@ -10,6 +10,7 @@ class BundestagPDFExtractor
     return nil if @contents.nil?
     people = []
     parties = []
+    blacklist = ['weiterer Abgeordneter', 'weitrerer Abgeordneter']
 
     @contents.scan(ORIGINATORS).each do |m|
       m[0].split(',').each do |person|
@@ -23,7 +24,7 @@ class BundestagPDFExtractor
                  .sub(/^Kleine\s+Anfrage\s+der\s+Abgeordneten\s+/, '') # duplicate prefix
                  .sub(/^Abgeordneten\s+/, '') # duplicate prefix
                  .sub(/\s*weiterer?\s+Abgeordneter\s*$/, '') # duplicate suffix
-        people << person unless person.blank? || person == 'weiterer Abgeordneter'
+        people << person unless person.blank? || blacklist.include?(person)
       end
       party = m[1].gsub("\n", ' ')
               .strip
