@@ -2,6 +2,7 @@ class NamePartyExtractor
   NAME_BRACKET_PARTY = :nbp
   NAME_PARTY_COMMA = :npc
   REVERSED_NAME_PARTY = :rnp
+  FACTION = :faction
 
   def initialize(text, format = NAME_BRACKET_PARTY)
     @text = text
@@ -13,6 +14,7 @@ class NamePartyExtractor
     when NAME_BRACKET_PARTY then extract_nbp
     when NAME_PARTY_COMMA then extract_npc
     when REVERSED_NAME_PARTY then extract_rnp
+    when FACTION then extract_faction
     else fail 'Unknown format'
     end
   end
@@ -91,6 +93,11 @@ class NamePartyExtractor
     end
 
     { people: people, parties: parties.uniq }
+  end
+
+  # just "Fraktion der SPD"
+  def extract_faction
+    { parties: self.class.clean_party(@text.strip) }
   end
 
   def self.looks_like_party?(text)

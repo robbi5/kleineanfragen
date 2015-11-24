@@ -382,4 +382,8 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
   test 'looks_like_party? BÜNDNIS 90/DIE GRÜNEN' do
     assert NamePartyExtractor.looks_like_party? 'BÜNDNIS 90/DIE GRÜNEN'
   end
+
+  test 'fraction: best case scenario' do
+    assert_equal({ parties: 'SPD' }, NamePartyExtractor.new('Fraktion der SPD', :faction).extract)
+  end
 end
