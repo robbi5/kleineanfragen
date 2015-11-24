@@ -34,4 +34,20 @@ class BadenWuerttembergPDFExtractor
     party = m[1].strip
     { parties: [party], people: [] }
   end
+
+  ANSWERERS = /und\s+Antwort\s+des\s+(Ministeriums.*)(?:\s+\n)/m
+
+  def extract_answerers
+    return nil if @contents.blank?
+    ministries = []
+
+    m = @contents.match(ANSWERERS)
+    return nil if m.nil?
+
+    # clean and normalize ministry name
+    ministry = m[1].gsub(/Ministeriums/, 'Ministerium')
+    ministries << ministry unless ministry.blank?
+
+    { ministries: ministries }
+  end
 end

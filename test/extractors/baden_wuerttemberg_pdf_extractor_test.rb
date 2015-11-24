@@ -44,4 +44,15 @@ class BadenWuerttembergPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 1, originators[:parties].size
     assert_equal 'FDP/DVP', originators[:parties].first
   end
+
+  test 'get answerers from paper' do
+    c = "Kleine Anfrage\n\ndes Abg. Helmut Walter Rüeck CDU\n\nund\n\nAntwort\n\ndes Ministeriums für Kultus, Jugend und Sport\n\nUmsetzung der Inklusion im Landkreis Schwäbisch Hall"
+    paper = paper(Paper::DOCTYPE_MINOR_INTERPELLATION, c)
+
+    answerers = BadenWuerttembergPDFExtractor.new(paper).extract_answerers
+
+    assert_not_nil answerers, 'originators should not be nil'
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Ministerium für Kultus, Jugend und Sport', answerers[:ministries].first
+  end
 end
