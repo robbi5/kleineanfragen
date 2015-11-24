@@ -134,8 +134,8 @@ class BrandenburgScraperTest < ActiveSupport::TestCase
     paper = @scraper.extract_detail_paper(item)
 
     assert_equal(
-      {
-        legislative_term: '6',
+    {
+      legislative_term: '6',
       full_reference: '6/2973',
       reference: '2973',
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
@@ -143,9 +143,9 @@ class BrandenburgScraperTest < ActiveSupport::TestCase
       url: 'http://www.parldok.brandenburg.de/parladoku/w6/drs/ab_2900/2973.pdf',
       published_at: Date.parse('2015-11-12'),
       originators: {
-      people: ['Andrea Johlige'],
-      parties: ['DIE LINKE']
-    },
+        people: ['Andrea Johlige'],
+        parties: ['DIE LINKE']
+      },
       is_answer: true
     }, paper)
   end
