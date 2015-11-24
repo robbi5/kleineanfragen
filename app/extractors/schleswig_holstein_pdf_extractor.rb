@@ -3,7 +3,7 @@ class SchleswigHolsteinPDFExtractor
     @contents = paper.contents
   end
 
-  ANSWERERS = /und\s+Antwort\s+der\s+Landesregierung\s+-[ ]+(.+?)\s+\n\s+/m
+  ANSWERERS = /und\s+Antwort\s+der\s+Landesregierung\s+.[ ]+(.+?)\s+\n\s+/m
 
   def extract_answerers
     return nil if @contents.blank?
