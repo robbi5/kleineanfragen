@@ -11,6 +11,5 @@ class BundestagScraperTest < ActiveSupport::TestCase
     assert_equal(Paper::DOCTYPE_MINOR_INTERPELLATION, @scraper.extract_doctype(@content_xml))
     assert_equal('Beantwortet', @scraper.extract_status(@content_xml))
     assert_equal('Einsatz von Flugzeugen, Hubschraubern und Drohnen beim G7-Gipfel in Bayern', @scraper.extract_title(@content_xml))
-    assert_equal(Paper::DOCTYPE_MINOR_INTERPELLATION, @scraper.extract_doctype(@content_xml))
   end
 end
