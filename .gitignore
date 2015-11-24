@@ -11,6 +11,9 @@
 /db/*.sqlite3
 /db/*.sqlite3-journal
 
+# Maven
+target/
+
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
@@ -21,3 +24,17 @@
 
 # config vars
 .env
+
+# defaults for IDEs
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
