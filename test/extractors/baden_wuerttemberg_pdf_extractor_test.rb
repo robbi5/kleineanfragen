@@ -17,6 +17,21 @@ class BadenWuerttembergPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'FDP/DVP', originators[:parties].first
   end
 
+  test 'minor interpellation, three people, one with a 3 letter surname' do
+    c = "\n\nKleine Anfrage\n\nder Abg. Helmut Rau, Volker Schebesta und Willi Stächele CDU\n" +
+        "und\nAntwort\n"
+    paper = paper(Paper::DOCTYPE_MINOR_INTERPELLATION, c)
+
+    originators = BadenWuerttembergPDFExtractor.new(paper).extract_originators
+
+    assert_equal 3, originators[:people].size
+    assert_equal 'Helmut Rau', originators[:people].first
+    assert_equal 'Volker Schebesta', originators[:people].second
+    assert_equal 'Willi Stächele', originators[:people].third
+    assert_equal 1, originators[:parties].size
+    assert_equal 'CDU', originators[:parties].first
+  end
+
   test 'minor interpellation, three people, two parties' do
     c = "\n\nKleine Anfrage\n\nder Abg. Alexander Salomon und Dr. Gisela Splett GRÜNE\n" +
         "und des Abg. Johannes Stober SPD\n\n" +
