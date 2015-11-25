@@ -94,16 +94,31 @@ module BundestagScraper
       url = node.at_css('DRS_LINK').try(:text)
       full_reference = node.at_css('DRS_NUMMER').text
     end
-
     fail "#{detail_url}: ignored, no paper found" unless found && !url.blank?
 
     reference = full_reference.split('/').last
-
     normalized_url = Addressable::URI.parse(url).normalize.to_s
-    date = nil
+    answerers, date, originators = extract_answerers_date_and_originators(doc)
+    fail "#{full_reference}: no date found" if date.nil?
+    published_at = Date.parse(date)
+    {
+      legislative_term: legislative_term,
+      full_reference: full_reference,
+      reference: reference,
+      doctype: doctype,
+      title: title,
+      url: normalized_url,
+      published_at: published_at,
+      originators: originators,
+      is_answer: true,
+      answerers: answerers
+    }
+  end
 
+  def self.extract_answerers_date_and_originators(doc)
     originators = { people: [], parties: [] }
     answerers = { ministries: [] }
+    date = nil
     doc.css('VORGANGSABLAUF VORGANGSPOSITION').each do |node|
       urheber = node.at_css('URHEBER').text
       # originator entry should always have a 'PERSOENLICHER_URHEBER'
@@ -129,22 +144,7 @@ module BundestagScraper
         end
       end
     end
-
-    fail "#{full_reference}: no date found" if date.nil?
-    published_at = Date.parse(date)
-
-    {
-      legislative_term: legislative_term,
-      full_reference: full_reference,
-      reference: reference,
-      doctype: doctype,
-      title: title,
-      url: normalized_url,
-      published_at: published_at,
-      originators: originators,
-      is_answer: true,
-      answerers: answerers
-    }
+    [answerers, date, originators]
   end
 
   def self.extract_title(doc)
