@@ -4,7 +4,7 @@ class BremenPDFExtractor
     @doctype = paper.doctype
   end
 
-  ORIGINATORS = /\d+.+[\?\.\\](?:\n\n(.+)\s+und\s+Fraktion\s+[^\n]+)+.+(?:Antwort\s+des\s+Senats|Der\s+Senat\s+beantwortet)/m
+  ORIGINATORS = /\d+.+[\?\.\\](?:\n\n(.+?)\s+und\s+Fraktion\s+[^\n]+)(?:\n\n(.+?)\s+und\s+Fraktion\s+[^\n]+)*.+(?:Antwort\s+des\s+Senats|Der\s+Senat\s+beantwortet)/m
   # PARTIES = /Kleine\s+Anfrage\s+der\s+Fraktion\s+(?:der)?(.+?)\s+vom?/m
 
   def extract_originators
@@ -15,7 +15,10 @@ class BremenPDFExtractor
     m = @contents.match(ORIGINATORS)
     return nil if m.nil?
 
-    m[1].split(',').each do |person|
+    originators = m[1].split(',')
+    originators.concat m[2].split(',') unless m[2].nil?
+
+    originators.each do |person|
       person = person.gsub(/\p{Z}/, ' ')
                .gsub("\n", ' ')
                .gsub(/\s+/, ' ')
