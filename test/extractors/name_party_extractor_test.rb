@@ -371,6 +371,17 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal 'ABC', pair[:parties].first
   end
 
+  test 'npc: people seperated by comma and und, one party but surname only 3 letters' do
+    pair = NamePartyExtractor.new("Vorname Nac, Anderer Name und Andre Name ABC", :npc).extract
+
+    assert_equal 3, pair[:people].size
+    assert_equal 'Vorname Nac', pair[:people].first
+    assert_equal 'Anderer Name', pair[:people].second
+    assert_equal 'Andre Name', pair[:people].third
+    assert_equal 1, pair[:parties].size
+    assert_equal 'ABC', pair[:parties].first
+  end
+
   test 'looks_like_party? FDP' do
     assert NamePartyExtractor.looks_like_party? 'FDP'
   end
