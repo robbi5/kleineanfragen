@@ -50,4 +50,13 @@ class SaarlandPDFExtractorOriginatorsTest < ActiveSupport::TestCase
     assert_equal 'Michael Neyses', originators[:people].second
     assert_equal 'PIRATEN', originators[:parties].first
   end
+
+  test 'major interpellation' do
+    paper = Struct.new(:contents).new("SCHRIFTLICHE ANTWORT\n\nder Regierung des Saarlandes\nzu der\n\nGroßen Anfrage der B90/Grüne-Landtagsfraktion\n")
+
+    originators = SaarlandPDFExtractor.new(paper).extract_originators
+    assert_not_nil originators
+    assert_not_nil originators[:parties]
+    assert_equal 'B90/Grüne', originators[:parties].first
+  end
 end
