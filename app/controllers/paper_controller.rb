@@ -10,6 +10,7 @@ class PaperController < ApplicationController
         format.html
         format.pdf { redirect_to @paper.download_url }
         format.txt { render plain: @paper.contents }
+        format.json
       end
     end
   end

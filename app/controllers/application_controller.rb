@@ -11,6 +11,8 @@ class ApplicationController < ActionController::Base
       'pdf'
     when Mime::TXT
       'txt'
+    when Mime::JSON
+      'json'
     else
       ''
     end
