@@ -17,7 +17,7 @@ class ExtractTextFromPaperJob < PaperJob
 
     fail "Can't extract text from Paper [#{paper.body.state} #{paper.full_reference}]" if text.blank?
 
-    text = clean_text(text)
+    text = self.class.clean_text(text)
 
     paper.contents = text
     paper.save
@@ -90,11 +90,11 @@ class ExtractTextFromPaperJob < PaperJob
     text.join("\n\n")
   end
 
-  def clean_text(text)
+  def self.clean_text(text)
     # windows newlines
     text.gsub!(/\r\n/, "\n")
     # "be-\npflanzt" -> "bepflanzt\n", "be- \npflanzt" -> "bepflanzt\n"
-    text.gsub!(/(\p{L}+)\-\p{Zs}*\r?\n\n?(\p{L}+)/m, "\\1\\2\n")
+    text.gsub!(/(\p{L}+)\-\p{Zs}*\r?\n\n?(\p{Ll}+)/m, "\\1\\2\n")
     # soft hyphen
     text.gsub!(/\u00AD/, '')
     # utf8 replacement char
