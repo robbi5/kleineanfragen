@@ -1,0 +1,772 @@
+
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <title>Landtag Mecklenburg Vorpommern - Formalkriterien</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+        <link rel="shortcut icon" href="/Parldok/t/mv/s/i/favicon.ico" type="image/x-icon"/>
+        <link rel="icon" href="/Parldok/t/mv/s/i/favicon.ico" type="image/x-icon"/>
+        <meta name="viewport" content="width=device-width; initial-scale=1.0;"/>
+        <meta name="author" content="Landtag Mecklenburg-Vorpommern"/>
+        <meta name="robots" content="index, nofollow"/>
+        <meta name="geo.region" content="DE-MV"/>
+        <meta name="generator" content="ParlDok 3.1.5.469, entwickelt von der J3S GmbH (http://www.j3s.de)"/>
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.dokumentation.landtag-mv.de/Parldok/index.rss"/>
+        <link rel="stylesheet" type="text/css" href="/Parldok/t/mv/s/site.css" media="screen"/>
+        <link rel="stylesheet" type="text/css" href="/Parldok/t/def/s/all.css" media="all"/>
+        <link rel="stylesheet" type="text/css" href="/Parldok/t/mv/s/overlay.css" media="all"/>
+        <link rel="stylesheet" type="text/css" href="/Parldok/t/mv/s/print.css" id="print-style" media="print"/>
+        <link rel="stylesheet" type="text/css" href="/Parldok/t/def/s/ui-lightness/jquery-ui-datapicker.css" media="all"/>
+        <script type="text/javascript" src="/Parldok/t/def/s/j/jQuery-1.10.2.js" ></script>
+        <script type="text/javascript" src="/Parldok/t/def/s/j/jquery-ui-1.10.3.custom.min.js" ></script>
+        <script type="text/javascript" src="/Parldok/t/def/s/j/javascript.js" ></script>
+        <script type="text/javascript">
+            //<![CDATA[
+            $(document).ready(function () {
+                // start slide show
+                var speed = 3500;
+                var timeout = 10000;
+                $('#header-images-slideshow img:gt(0)').hide();
+                var $elem = $("#header-images-slideshow");
+                setInterval(function () {
+                    $elem.children().eq(0).fadeOut(speed).next('img')
+                                .fadeIn(speed).end().appendTo($elem);
+                },
+                    timeout);
+
+                // Page Scroll
+                $('#scrollToTop').click(function () {
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 1000);
+                    return false;
+                });
+
+                // scroll position
+                $(window).scroll(function () {
+                    var st = $(window).scrollTop() + 300;
+                    $("#scrollToTop img").stop().animate({
+                        top: st + "px"
+                    }, 500);
+                });
+
+                // remove from breadcrumb first element
+                var children = $("#breadcrumb").children().length;
+                if (children > 2) {
+                    $("#breadcrumb").children().first().remove();
+                    $("#breadcrumb").children().first().remove();
+                } else {
+                    $("#breadcrumb").children().first().remove();
+                }
+
+            });
+                function printStyle(vorgang) {
+                    if (!vorgang) {
+                        $('#print-style').attr('href', '/Parldok/t/mv/s/print.css');
+                        window.print();
+                    } else {
+                        $('#print-style').attr('href', '/Parldok/t/mv/s/print-vorgang.css');
+                        window.print();
+                    }
+                }
+                function freeSearchTop() {
+                    var words = $("#topFreeSearch").val();
+                    if (!words || words == "") {
+                        showMessage("Bitte geben Sie einen Suchbegriff ein.");
+                        $("#topFreeSearch").focus();
+                        return false;
+                    }
+                    return true;
+                }
+            //]]>
+        </script>
+        
+
+    </head>
+    <body>
+    <noscript>
+      <div class="error-message">
+      <br /><br /><br />
+        Bitte aktivieren Sie Javascript, um den vollen Funktionsumfang der Parlamentsdokumentation nutzen zu können.
+      <br /><br /><br />
+      </div>
+    </noscript>
+     <script type="text/javascript">
+      //<![CDATA[
+         if (!navigator.cookieEnabled) {
+             document.write('<div class="error-message"><br /><br /><br />Bitte aktivieren Sie Sitzungs-Cookies, um diese Anwendung nutzen zu können.<br /><br /><br /></div>');
+         }
+      //]]>
+     </script>
+
+        <!-- Default texts and parameters -->
+        
+
+<div id="hidden-param">
+    <!-- URLs -->
+    <span id="url-update-descriptors">/Parldok/criteria/loaddescriptors</span>
+    <span id="url-descriptor-references">/Parldok/criteria/descriptorreferences</span>
+    <span id="url-reload-speaker-persons">/Parldok/criteria/reloadspeakerpersons</span>
+    <span id="url-reload-persons">/Parldok/criteria/loadurheber</span>
+    <span id="url-reload-beratungsstand">/Parldok/criteria/loadberatungsstand</span>
+    <span id="url-reload-systematics">/Parldok/criteria/loadsystematiks</span>
+
+    <!-- MESSAGES -->
+    <span id="msg-unknown-error">Es ist ein Fehler aufgetreten.</span>
+    <span id="msg-reload">Die Seite wird neu geladen.</span>
+    <span id="msg-unknown-error-page-reload">Es ist ein Fehler aufgetreten. Die Seite wird neu geladen.</span>
+    <span id="msg-empty-keywords">Es fehlt eine Eingabe im Feld "Ausgewählte Suchbegriffe".</span>
+    <span id="msg-wrong-date-format">Fehlerhafte Datumseingabe</span>
+    <span id="msg-no-speaker-set">Keine Person ausgewählt</span>
+    <span id="msg-no-criteria-set">Keine Suchkriterien eingegeben.</span>
+    <span id="msg-no-doc-number-set">Es fehlt die Eingabe der Dokumentnummer.</span>
+    <span id="msg-doc-no-number">Die Dokumentnummer muss eine Zahl beinhalten.</span>
+    <span id="msg-no-free-search-set">Bitte geben Sie einen Suchbegriff ein.</span>
+</div>
+
+
+        <div id="container">
+            <div class="screenreader">
+                <p>
+                    Landtag Mecklenburg-Vorpommern. 
+                    <a href="http://www.landtag-mv.de/">">Direkt zum Hauptinhalt dieser Seite.</a>
+                    <a href="http://www.landtag-mv.de/">">Zum Randinhalt dieser Seite.</a>
+                </p>
+            </div>
+            <div id="header">
+                <div id="header-logo">
+                    <a href="http://www.landtag-mv.de/" title="Startseite Landtag-MV"><img src="/Parldok/t/mv/s/i/mv-landtag_logo.gif" alt="Landtag-MV" /></a>
+                </div>
+                <div id="header-functions">
+                    <table class="table-border">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="/Parldok/hilfe">Hilfe</a>
+                                        </li>
+                                        <li>
+                                            &nbsp;|&nbsp;
+                                        </li>
+                                        <li>
+                                            <a href="http://www.Parlamentsspiegel.de">Parlamentsspiegel</a>
+                                        </li>
+                                    </ul>
+                                    <p id="printUrl">www.landtag-mv.de</p>
+                                </td>
+                                <td>
+                                    <form action="/Parldok/freiesuche" method="post" onsubmit="return freeSearchTop();" >
+				                        <input id="topFreeSearch" name="SearchWords" placeholder="Suchbegriff eingeben" type="text"/>
+
+                                        
+
+<input type="hidden" value="1" name="SearchType" />
+<input type="hidden" value="" name="LegislaturperiodenNummer" />
+<input type="hidden" value="" name="Datum" />
+<input type="hidden" value="" name="DatumVon" />
+<input type="hidden" value="" name="DatumBis" />
+<input type="hidden" value="0" name="Operation" />
+<input type="hidden" value="" name="UrheberPersonenId" />
+<input type="hidden" value="0" name="Redebeitraege" />
+<input type="hidden" value="" name="UrheberSonstigeId" />
+<input type="hidden" value="" name="DokumententypId" />
+<input type="hidden" value="" name="BeratungsstandId" />
+<input type="hidden" value="" name="AktuellerBeratungsstand" />
+
+
+                                        <input src="/Parldok/t/mv/s/i/searchBox_submit_btn.gif" type="image" alt="Suchen" title="Suchen"/>
+			                        </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="header-images">
+                <div id="header-images-slideshow">
+                    <img alt="" src="/Parldok/t/mv/s/i/h/Schlossinsel.jpg" />
+                    <img alt="" src="/Parldok/t/mv/s/i/h/Vereidigung_der_Landesregierung_01.jpg"  />
+                    <img alt="" src="/Parldok/t/mv/s/i/h/Schloss_von_Nordostenl.jpg" />
+                    <img alt="" src="/Parldok/t/mv/s/i/h/Fahnen_Hauptportal.jpg" />
+                    <img alt="" src="/Parldok/t/mv/s/i/h/Niklothalle.jpg" />
+                    <img alt="" src="/Parldok/t/mv/s/i/h/Medien_im_Plenarsaal.jpg" />
+                    <img alt="" src="/Parldok/t/mv/s/i/h/Ausschussberatung_WP_6_01.jpg" />
+                </div>
+            </div> 
+
+            <div id="navigation">
+                <div id="navigation-head">
+                    <table class="table-border">
+                        <tr>
+                            <td id="navigation-head-home">
+                                <a href="/Parldok/index" target="_self">Parlaments-dokumentation</a>
+                            </td>
+                            <td id="navigation-head-ground"><div></div></td>
+                        </tr>
+                    </table>
+                </div>
+            
+                <div id="navigation-content">
+                    <ul>
+                        <li><a href="/Parldok/neuedokumente">Aktuelle Dokumente</a></li>
+                        <li>&nbsp;|&nbsp;</li>
+                        <li><a href="/Parldok/dokumentennummer">Dokumentnummer</a></li>
+                        <li>&nbsp;|&nbsp;</li>
+                        <li class="active"><a href="/Parldok/formalkriterien" style="font.weight: bold">Formalkriterien</a></li>
+                        <li>&nbsp;|&nbsp;</li>
+                        <li><a href="/Parldok/schlagworte">Schlagworte</a></li>
+                        <li>&nbsp;|&nbsp;</li>
+                        <li><a href="/Parldok/themenbereiche">Themenbereiche</a></li>
+                        <li>&nbsp;|&nbsp;</li>
+                        <li><a href="/Parldok/freiesuche">Freie Suche</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="page">
+                <div class="page-options" >
+                    <ul>
+                        <li id="home-button"><a href="/Parldok/index"><img src="/Parldok/t/mv/s/i/bc_home.gif" alt="Startseite" title="Startseite" /></a></li>
+                        <li id="breadcrumb">
+                            <a href="/Parldok/index">Parlamentsdokumentation</a><span class="separator"></span><span class="breadcrumb-selected">Formalkriterien</span>
+                        </li>
+                    </ul>
+                </div>
+            
+                <div class="page-options" id="page-option">
+                    <ul>
+                        <li>
+                            <a href="/Parldok/hilfe">Hilfe</a>
+                        </li>
+                        <li>&nbsp;|&nbsp;</li>
+                        <li>
+                            <a href="#" onclick="printStyle();return false;">Seite drucken</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <a href="#top" id="scrollToTop">
+	            <img id="topBTN1" src="/Parldok/t/mv/s/i/top_btn_left.gif" alt="Zum Seitenanfang" />
+                <img id="topBTN2" src="/Parldok/t/mv/s/i/top_btn_left.gif" alt="Zum Seitenanfang" />
+            </a>
+            <div id="main-content">
+      	        <a class="jump" id="Hauptinhalt"></a>
+                <div id="content">
+                    
+    
+    <h3 class="screenreader">Suchergebnisse</h3>
+
+    
+        <h4 class="screenreader">Seite 1</h4>
+    
+        <div class="page-head-height">
+            <div class="pd_resultcount">
+                
+                    Dokumente
+                1 - 10 von 2865 
+                 
+                
+                            (<a href="/Parldok/formalkriterien?param=true" id="search-refine" title="Ihre Suche hat 2865 Treffer gefunden, klicken Sie hier, um Ihre Suche zu verfeinern.">Suche verfeinern</a>)
+                       
+            </div>
+
+            <div class="pd_resultnavigation">Seite <span class='page-disable'>&lt;&lt;</span><span title="Seite 1" class="activepage">1</span><a href="/Parldok/formalkriterien/2" title="Seite 2">2</a><a href="/Parldok/formalkriterien/3" title="Seite 3">3</a><a href="/Parldok/formalkriterien/4" title="Seite 4">4</a><a href="/Parldok/formalkriterien/5" title="Seite 5">5</a><a href="/Parldok/formalkriterien/6" title="Seite 6">6</a><a href="/Parldok/formalkriterien/7" title="Seite 7">7</a><a href="/Parldok/formalkriterien/8" title="Seite 8">8</a><a href="/Parldok/formalkriterien/9" title="Seite 9">9</a><a href="/Parldok/formalkriterien/10" title="Seite 10">10</a>...<a href="/Parldok/formalkriterien/2" onclick="this.clickto=setTimeout('location.href=\''+this.href+'\'',100);return false" ondblclick="if(this.clickto)clearTimeout(this.clickto);location.href='/Parldok/formalkriterien/287'; return false" title="Nächste Seite / Letzte Seite (Doppelklick)">&gt;&gt;</a></div>
+            
+        
+        </div>
+
+        
+        
+
+        
+
+            <table id="parldokresult">            
+            
+            <tr><td colspan="4"><hr /></td></tr> 
+            <tr>
+                <th id="result-dokument" rowspan ="2">Dokument</th>
+                <th id="result-titel" colspan="3">Titel</th>
+            </tr>
+            <tr>
+                <th id="result-nummer">Nummer</th>
+                <th id="result-typ">Typ</th>
+                <th id="result-datum">Datum</th>
+            </tr>
+            <tr>
+                <th id="result-vorgang">Vorgang</th>
+                <th id="result-urheber" colspan="3">Urheber</th>
+            </tr>
+
+            <tr><td colspan="4"><hr /></td></tr> 
+            
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/Parldok/dokument/36897/ukrainistik-und-baltistik-an-der-universit%c3%a4t-greifswald.pdf"  title="PDF Dokument &#246;ffnen (10,9 KB)" >
+                                        <img src="/Parldok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (10,9 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/Parldok/dokument/36897/ukrainistik-und-baltistik-an-der-universit%c3%a4t-greifswald.pdf"  title="PDF Dokument &#246;ffnen (10,9 KB)" >Ukrainistik und Baltistik an der Universit&#228;t Greifswald</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">6/4677</td>
+                    <td headers="result-typ">Kleine Anfrage und Antwort</td>
+                    <td headers="result-datum">19.11.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                            <button class="parldokresult-vorgang" onclick="location.href='/Parldok/vorgaenge/36897/kriterien/1'">Vorgang<br />anzeigen</button>
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Johannes Saalfeld (B90/GR), Landesregierung (Ministerium f&#252;r Bildung, Wissenschaft und Kultur)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/Parldok/dokument/36896/schulabbruchquoten-im-bundesvergleich.pdf"  title="PDF Dokument &#246;ffnen (93,8 KB)" >
+                                        <img src="/Parldok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (93,8 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/Parldok/dokument/36896/schulabbruchquoten-im-bundesvergleich.pdf"  title="PDF Dokument &#246;ffnen (93,8 KB)" >Schulabbruchquoten im Bundesvergleich</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">6/4674</td>
+                    <td headers="result-typ">Kleine Anfrage und Antwort</td>
+                    <td headers="result-datum">19.11.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                            <button class="parldokresult-vorgang" onclick="location.href='/Parldok/vorgaenge/36896/kriterien/1'">Vorgang<br />anzeigen</button>
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Ulrike Berger (B90/GR), Landesregierung (Ministerium f&#252;r Bildung, Wissenschaft und Kultur)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/Parldok/dokument/36859/beschwerden-%c3%bcber-unterbringung.pdf"  title="PDF Dokument &#246;ffnen (7,4 KB)" >
+                                        <img src="/Parldok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (7,4 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/Parldok/dokument/36859/beschwerden-%c3%bcber-unterbringung.pdf"  title="PDF Dokument &#246;ffnen (7,4 KB)" >Beschwerden &#252;ber Unterbringung</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">6/4629</td>
+                    <td headers="result-typ">Kleine Anfrage und Antwort</td>
+                    <td headers="result-datum">19.11.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                            <button class="parldokresult-vorgang" onclick="location.href='/Parldok/vorgaenge/36859/kriterien/1'">Vorgang<br />anzeigen</button>
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Tino M&#252;ller (NPD), Landesregierung (Ministerium f&#252;r Inneres und Sport)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/Parldok/dokument/36833/unterricht-im-fach-%e2%80%9ephilosophieren-mit-kindern%e2%80%9c-bzw-%e2%80%9ephilosophie%e2%80%9c-sowie-%e2%80%9eevangelische-religion%e2%80%9c-an-den-%c3%b6ffentlichen-allgemein-bildenden-schulen.pdf"  title="PDF Dokument &#246;ffnen (173 KB)" >
+                                        <img src="/Parldok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (173 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/Parldok/dokument/36833/unterricht-im-fach-%e2%80%9ephilosophieren-mit-kindern%e2%80%9c-bzw-%e2%80%9ephilosophie%e2%80%9c-sowie-%e2%80%9eevangelische-religion%e2%80%9c-an-den-%c3%b6ffentlichen-allgemein-bildenden-schulen.pdf"  title="PDF Dokument &#246;ffnen (173 KB)" >Unterricht im Fach „Philosophieren mit Kindern“ bzw. „Philosophie“ sowie „evangelische Religion“ an den &#246;ffentlichen allgemein bildenden Schulen in Mecklenburg-Vorpommern</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">6/4617</td>
+                    <td headers="result-typ">Kleine Anfrage und Antwort</td>
+                    <td headers="result-datum">19.11.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                            <button class="parldokresult-vorgang" onclick="location.href='/Parldok/vorgaenge/36833/kriterien/1'">Vorgang<br />anzeigen</button>
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Simone Oldenburg (DIE LINKE), Landesregierung (Ministerium f&#252;r Bildung, Wissenschaft und Kultur)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/Parldok/dokument/36820/standortanalysen-repr%c3%a4sentativer-tierhaltungsanlagen.pdf"  title="PDF Dokument &#246;ffnen (84,8 KB)" >
+                                        <img src="/Parldok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (84,8 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/Parldok/dokument/36820/standortanalysen-repr%c3%a4sentativer-tierhaltungsanlagen.pdf"  title="PDF Dokument &#246;ffnen (84,8 KB)" >Standortanalysen repr&#228;sentativer Tierhaltungsanlagen</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">6/4609</td>
+                    <td headers="result-typ">Kleine Anfrage und Antwort</td>
+                    <td headers="result-datum">19.11.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                            <button class="parldokresult-vorgang" onclick="location.href='/Parldok/vorgaenge/36820/kriterien/1'">Vorgang<br />anzeigen</button>
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                        Dr. Ursula Karlowski (B90/GR), Landesregierung (Ministerium f&#252;r Landwirtschaft, Umwelt und Verbraucherschutz)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/Parldok/dokument/36869/verfahren-zur-verwendung-zus%c3%a4tzlicher-mittel-in-der-kulturf%c3%b6rderung.pdf"  title="PDF Dokument &#246;ffnen (12,5 KB)" >
+                                        <img src="/Parldok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (12,5 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/Parldok/dokument/36869/verfahren-zur-verwendung-zus%c3%a4tzlicher-mittel-in-der-kulturf%c3%b6rderung.pdf"  title="PDF Dokument &#246;ffnen (12,5 KB)" >Verfahren zur Verwendung zus&#228;tzlicher Mittel in der Kulturf&#246;rderung</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">6/4640</td>
+                    <td headers="result-typ">Kleine Anfrage und Antwort</td>
+                    <td headers="result-datum">17.11.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                            <button class="parldokresult-vorgang" onclick="location.href='/Parldok/vorgaenge/36869/kriterien/1'">Vorgang<br />anzeigen</button>
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Torsten Koplin (DIE LINKE), Ausschuss f&#252;r Bildung, Wissenschaft und Kultur
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/Parldok/dokument/36848/deutschkurse-f%c3%bcr-fl%c3%bcchtlinge-und-asylsuchende-an-den-volkshochschulen-mecklenburg-vorpommerns.pdf"  title="PDF Dokument &#246;ffnen (30,7 KB)" >
+                                        <img src="/Parldok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (30,7 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/Parldok/dokument/36848/deutschkurse-f%c3%bcr-fl%c3%bcchtlinge-und-asylsuchende-an-den-volkshochschulen-mecklenburg-vorpommerns.pdf"  title="PDF Dokument &#246;ffnen (30,7 KB)" >Deutschkurse f&#252;r Fl&#252;chtlinge und Asylsuchende an den Volkshochschulen Mecklenburg-Vorpommerns</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">6/4626</td>
+                    <td headers="result-typ">Kleine Anfrage und Antwort</td>
+                    <td headers="result-datum">16.11.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                            <button class="parldokresult-vorgang" onclick="location.href='/Parldok/vorgaenge/36848/kriterien/1'">Vorgang<br />anzeigen</button>
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Simone Oldenburg (DIE LINKE), Landesregierung (Ministerium f&#252;r Bildung, Wissenschaft und Kultur)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/Parldok/dokument/36805/digitalisierung-in-mecklenburg-vorpommern.pdf"  title="PDF Dokument &#246;ffnen (94,9 KB)" >
+                                        <img src="/Parldok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (94,9 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/Parldok/dokument/36805/digitalisierung-in-mecklenburg-vorpommern.pdf"  title="PDF Dokument &#246;ffnen (94,9 KB)" >Digitalisierung in Mecklenburg-Vorpommern</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">6/4574</td>
+                    <td headers="result-typ">Kleine Anfrage und Antwort</td>
+                    <td headers="result-datum">16.11.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                            <button class="parldokresult-vorgang" onclick="location.href='/Parldok/vorgaenge/36805/kriterien/1'">Vorgang<br />anzeigen</button>
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Helmut Holter (DIE LINKE), Landesregierung (Ministerium f&#252;r Inneres und Sport)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/Parldok/dokument/36857/sonn-und-feiertagsarbeit-in-mecklenburg-vorpommern.pdf"  title="PDF Dokument &#246;ffnen (133 KB)" >
+                                        <img src="/Parldok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (133 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/Parldok/dokument/36857/sonn-und-feiertagsarbeit-in-mecklenburg-vorpommern.pdf"  title="PDF Dokument &#246;ffnen (133 KB)" >Sonn- und Feiertagsarbeit in Mecklenburg-Vorpommern</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">6/4627</td>
+                    <td headers="result-typ">Kleine Anfrage und Antwort</td>
+                    <td headers="result-datum">12.11.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                            <button class="parldokresult-vorgang" onclick="location.href='/Parldok/vorgaenge/36857/kriterien/1'">Vorgang<br />anzeigen</button>
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         Barbara Borchardt (DIE LINKE),  Henning Foerster (DIE LINKE), Landesregierung (Ministerium f&#252;r Arbeit, Gleichstellung und Soziales)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+                <tr>
+                    <td headers="result-dokument" rowspan="2" class="doc">
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="/Parldok/dokument/36865/bef%c3%b6rderung-von-kindern-zu-kindertagesst%c3%a4tten.pdf"  title="PDF Dokument &#246;ffnen (11,7 KB)" >
+                                        <img src="/Parldok/t/def/s/i/icon.pdf.gif" alt="PDF Dokument &#246;ffnen (11,7 KB)" />
+                                    </a> 
+                                </td>
+                                 
+                                
+                            </tr>
+                        </table>
+                    </td>
+                    <td headers="result-titel" colspan="3" class="title">
+                        <a href="/Parldok/dokument/36865/bef%c3%b6rderung-von-kindern-zu-kindertagesst%c3%a4tten.pdf"  title="PDF Dokument &#246;ffnen (11,7 KB)" >Bef&#246;rderung von Kindern zu Kindertagesst&#228;tten</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td headers="result-nummer">6/4635</td>
+                    <td headers="result-typ">Kleine Anfrage und Antwort</td>
+                    <td headers="result-datum">11.11.2015</td>
+                </tr>
+
+                <tr>
+                    <td headers="result-vorgang" style="vertical-align: top;">
+                        
+                            <button class="parldokresult-vorgang" onclick="location.href='/Parldok/vorgaenge/36865/kriterien/1'">Vorgang<br />anzeigen</button>
+                        
+                    </td>
+                    <td headers="result-urheber" colspan="3" style="width: 100%;">
+                         J&#252;rgen Suhr (B90/GR),  Silke Gajek (B90/GR), Landesregierung (Ministerium f&#252;r Arbeit, Gleichstellung und Soziales)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        
+                        
+                    </td>
+                </tr>
+                <tr><td colspan="4"><hr /></td></tr>
+            
+
+            </table> 
+
+        <div class="pd_resultnavigation">Seite <span class='page-disable'>&lt;&lt;</span><span title="Seite 1" class="activepage">1</span><a href="/Parldok/formalkriterien/2" title="Seite 2">2</a><a href="/Parldok/formalkriterien/3" title="Seite 3">3</a><a href="/Parldok/formalkriterien/4" title="Seite 4">4</a><a href="/Parldok/formalkriterien/5" title="Seite 5">5</a><a href="/Parldok/formalkriterien/6" title="Seite 6">6</a><a href="/Parldok/formalkriterien/7" title="Seite 7">7</a><a href="/Parldok/formalkriterien/8" title="Seite 8">8</a><a href="/Parldok/formalkriterien/9" title="Seite 9">9</a><a href="/Parldok/formalkriterien/10" title="Seite 10">10</a>...<a href="/Parldok/formalkriterien/2" onclick="this.clickto=setTimeout('location.href=\''+this.href+'\'',100);return false" ondblclick="if(this.clickto)clearTimeout(this.clickto);location.href='/Parldok/formalkriterien/287'; return false" title="Nächste Seite / Letzte Seite (Doppelklick)">&gt;&gt;</a></div>
+            
+
+            <input type="button" value="Zurück" name="Back" onclick="location.replace('/Parldok/formalkriterien');"/>
+    
+                </div>
+           
+            </div>
+        </div> <!-- container -->
+        <div id="footer">
+            <div class="layout"></div>
+    	    <div class="breakLine"></div>
+            <div id="footer-navigation">
+                <ul class="naviUl" id="navi-bottom">
+                    <li><a href="http://www.landtag-mv.de/kontakt.html" target="_self" title="Kontakt">Kontakt</a></li>
+                    <li>&nbsp;|&nbsp;</li>
+                    <li><a href="http://www.landtag-mv.de/impressum.html" target="_self" title="Impressum">Impressum</a>&nbsp;</li>
+                </ul>
+                <ul class="naviUl">
+                    <li>© <a href="http://www.landtag-mv.de/meta/impressum.html">Landtag MV 2012</a></li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>

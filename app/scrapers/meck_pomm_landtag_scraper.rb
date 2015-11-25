@@ -79,13 +79,12 @@ module MeckPommLandtagScraper
     end
 
     ministries = []
-    originators = next_row.next_element.element_children[1].text.strip
-    match_ministry = originators.match(/(.+), Landesregierung \((.+)\)/)
+    meta_row = next_row.next_element.element_children[1].text.strip
+    match_ministry = meta_row.match(/.+\), Landesregierung \((.+)\)/)
+    originators = meta_row.match(/(.+\)),/)
+    originators = NamePartyExtractor.new(originators[1]).extract
     if match_ministry
-      ministries << match_ministry[2]
-      originators = NamePartyExtractor.new(match_ministry[1]).extract
-    else
-      originators = NamePartyExtractor.new(originators).extract
+      ministries << match_ministry[1]
     end
 
     {
