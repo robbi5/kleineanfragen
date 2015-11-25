@@ -1,84 +1,46 @@
 require 'date'
 
 module BremenBuergerschaftScraper
-  BASE_URL = 'https://www.bremische-buergerschaft.de'
-  TYPES = ['KlAnfr u. AntwSen', 'MdS Senat (Antwort)']
+  BASE_URL = 'https://paris.bremische-buergerschaft.de'
+  SEARCH_URL = BASE_URL + '/starweb/paris/servlet.starweb?path=paris/LISSH.web'
+  TYPES = [
+    'KLEINE ANFRAGE UND ANTWORT DES SENATS',
+    'MITTEILUNG DES SENATS (ANTWORT AUF GROẞE ANFRAGEN)',
+    'MITTEILUNG DES SENATS (ANTWORT AUF  GROẞE ANFRAGE)'
+  ]
 
-  DEFAULT_MODE = :final
-  TERM_MODE = {
-    18 => :final,
-    19 => :preliminary
-  }
-
-  def self.extract_results(table)
-    table.css('tr')
+  def self.extract_records(page)
+    page.search('//tbody[@name="RecordRepeater"]')
   end
 
-  def self.extract_preliminary_results(page)
-    content = page.at_css('.fliesstext')
-    content.css('ul.smul1 li')
+  def self.extract_detail_block(page)
+    page.search('./tr[@name="Repeat_Fund"]/td[3]').first
   end
 
-  def self.extract_full_reference(tr)
-    tr.element_children[0].text.strip
+  def self.extract_full_reference(link)
+    link.text.strip
   end
 
   def self.extract_reference(full_reference)
     full_reference.split('/')
   end
 
-  def self.extract_doctype(tr)
-    doctype = tr.element_children[1].text.match(/(KlAnfr|MdS Senat)/)
-
-    if doctype[1].downcase == 'klanfr'
-      Paper::DOCTYPE_MINOR_INTERPELLATION
-    elsif doctype[1].downcase == 'mds senat'
-      Paper::DOCTYPE_MAJOR_INTERPELLATION
-    end
+  def self.extract_title(block)
+    block.search('./tr[@name="Repeat_WHET"]/td[2]').first.text
   end
 
-  def self.extract_title(tr)
-    tr.element_children[2].text.match(/(.+)\s+(?:Urheber|PlPr)/m)[1].gsub(/\n/, ' ').strip
+  def self.extract_url(link)
+    path = link.attributes['href']
+    Addressable::URI.parse(path).normalize.to_s
   end
 
-  def self.extract_url(tr)
-    path = tr.element_children[3].element_children[2]['href']
-    Addressable::URI.parse(BASE_URL).join(path).normalize.to_s
-  end
-
-  def self.extract_paper(tr)
-    title = extract_title(tr)
-    full_reference = extract_full_reference(tr)
-    url = extract_url(tr)
-    legislative_term, reference = extract_reference(full_reference)
-
-    doctype = extract_doctype(tr)
-    fail "[HB #{full_reference}] doctype unknown for Paper" if doctype.nil?
-
-    {
-      legislative_term: legislative_term,
-      full_reference: full_reference,
-      reference: reference,
-      doctype: doctype,
-      title: title,
-      url: url,
-      is_answer: true,
-      answerers: { ministries: ['Senat'] }
-    }
-  end
-
+  # metadata is one big td, lines are seperated by <br>
+  # split it at the <br>s, so we get an array of lines again
   def self.extract_meta_rows(element)
     data = []
-    first = true
     element.search('br').each do |br|
       frag = Nokogiri::HTML.fragment('')
       el = br
-      if first
-        first = false
-        f = Nokogiri::HTML.fragment('')
-        f << el.previous.clone
-        data << f
-      end
       loop do
         el = el.next
         break if el.nil? || el.try(:name) == 'br'
@@ -89,193 +51,153 @@ module BremenBuergerschaftScraper
     data
   end
 
-  def self.extract_paper_detail(mp)
-    detail_body = mp.search('//table/tr/td[contains(@class, "tdtext")]').last
-    published_at = nil
-    origniators = nil
-    extract_meta_rows(detail_body).each do |row|
-      if row.text.include?('KlAnfr') || row.text.include?('GrAnfr')
-        origniators = row.text.match(/.+Urheber:(?<org>.+)/)
+  def self.extract_meta(rows)
+    if rows.first.text.match(/Kleine\s+Anfrage/m)
+      results = rows.first.text.match(/Kleine\s+Anfrage\s+und\s+Antwort\s+des\s+Senats\s+vom\s+([\d\.]+),\s+Urheber:\s+(.+)/)
+      return nil if results.nil?
+      {
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        originators: results[2].strip,
+        published_at: results[1]
+      }
+    else
+      o_results = a_results = nil
+      rows.each do |line|
+        match = line.text.match(/Große\s+Anfrage\s+vom\s+.+,\s+Urheber:\s+(.+)/)
+        o_results = match if match && !line.text.include?('Antwort')
+        match = line.text.match(/Mitteilung\s+des\s+Senats\s+.+vom\s+([\d\.]+),/m)
+        a_results = match if match
       end
-      if row.text.include?('KlAnfr')
-        published_at = row.text.match(/.+?\s([\d\.]+)/)
-      end
-      if row.text.include?('MdS Senat (Antwort)')
-        published_at = row.text.match(/.+\s+([\d\.]+)/)
-      end
+      return nil if o_results.nil? || a_results.nil?
+      {
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        originators: o_results[1].strip,
+        published_at: a_results[1]
+      }
     end
-    return nil if origniators.nil? || published_at.nil?
-    {
-      published_at: Date.parse(published_at[1].strip),
-      originators: { people: [], parties: origniators[1].split(',').map(&:strip) }
-    }
   end
 
-  def self.extract_paper_preliminary(item)
-    br = item.at_css('br')
-    drs_text = br.previous.text.strip
-    drs = drs_text.match(/Drsnr.:\s(.+)/).try(:[], 1)
-    fail "HB [?]: drsnr missing for item with text: #{item.text}" if drs.nil?
+  def self.extract_link(meta_rows)
+    answer_row = meta_rows.find { |row| row.text.include?('Antwort') }
+    answer_row.search('a').find { |el| el.text.include?('/') }
+  end
 
-    full_reference = drs.strip
-    legislative_term, reference = full_reference.split('/')
+  def self.extract_paper(item)
+    title = extract_title(item)
+    meta_block = extract_detail_block(item)
+    fail "HB [?]: no meta information found. Paper title: #{title}" if meta_block.nil?
 
-    link = item.at_css('a')
-    fail "HB [?]: link missing for item with text: #{item.text}" if link.nil?
+    meta_rows = extract_meta_rows(item)
+    link = extract_link(meta_rows)
+    fail "HB [?]: no link element found. Paper title: #{title}" if link.nil?
 
-    path = link.attributes['href']
-    url = Addressable::URI.parse(BASE_URL).join(path).normalize.to_s
+    full_reference = extract_full_reference(link)
+    url = extract_url(link)
+    legislative_term, reference = extract_reference(full_reference)
 
-    meta = BremenBuergerschaftScraper.extract_meta_preliminary(link.text)
+    meta = extract_meta(meta_rows)
+
+    originators = { people: [], parties: meta[:originators].split(',').map(&:strip) }
+    published_at = Date.parse(meta[:published_at])
+
     {
-      full_reference: full_reference,
       legislative_term: legislative_term,
+      full_reference: full_reference,
       reference: reference,
-      title: meta[:title],
-      url: url,
       doctype: meta[:doctype],
-      # published_at unknown
-      originators: meta[:originators],
-      answerers: meta[:answerers]
-    }
-  end
-
-  def self.extract_meta_preliminary(link_text)
-    o = link_text.match(/(.+) - Antwort des Senats auf die ([kK]leine|[gG]roße) Anfrage der (.+)/)
-    party = o[3].strip.gsub(/Fraktion\s+(?:der\s+)?/, '')
-    parties = []
-    parties << party unless party.blank?
-
-    {
-      title: o[1].strip,
-      doctype: o[2].downcase == 'große' ? Paper::DOCTYPE_MAJOR_INTERPELLATION : Paper::DOCTYPE_MINOR_INTERPELLATION,
-      originators: { people: [], parties: parties },
-      answerers: { ministries: ['Senat'] }
+      title: title,
+      url: url,
+      is_answer: true,
+      originators: originators,
+      answerers: { ministries: ['Senat'] },
+      published_at: published_at
     }
   end
 
   class Overview < Scraper
-    SEARCH_PRELIMINARY_URL = BASE_URL + '/index.php?id=506'
-    SEARCH_FINAL_URL = BASE_URL + '/index.php?id=507'
-
     def supports_streaming?
       true
     end
 
-    def scrape(&block)
-      mode = TERM_MODE.try(:[], @legislative_term) || DEFAULT_MODE
-
+    def scrape
+      streaming = block_given?
       papers = []
-      block = -> (paper) { papers << paper } unless block_given?
 
-      send("scrape_#{mode}".to_sym, &block)
-
-      papers unless block_given?
-    end
-
-    def scrape_preliminary
       m = mechanize
-      # to initialize session
-      m.get BASE_URL
-      mp = m.get SEARCH_PRELIMINARY_URL + '&suchbegriff=Antwort+des+Senats'
+      mp = m.get SEARCH_URL
+      search_form = mp.form '__form'
+      fail 'HB: search form missing' if search_form.nil?
 
-      items = BremenBuergerschaftScraper.extract_preliminary_results(mp.root)
+      # fill search form
+      search_form.field_with(name: '__action').value = 19
+      search_form.field_with(name: '12_LISSH_WP').value = @legislative_term
+      search_form.field_with(name: '07_LISSH_DTYP').value = TYPES.join('; ')
+      # only search in landtag
+      search_form.field_with(name: '11_LISSH_PARL').value = 'L'
+      mp = m.submit(search_form)
+
+      # Fail if no hits
+      fail 'HB: search returns no results' if mp.search('//span[@name="HitCountZero"]').size > 0
+
+      # get all papers on one page
+      search_form = mp.form '__form'
+      search_form.field_with(name: '__action').value = 20
+      search_form.field_with(name: 'LimitMaximumHitCount').options.find { |opt| opt.text.include? 'alle' }.select
+      mp = m.submit(search_form)
+
+      # switch to full view
+      search_form = mp.form '__form'
+      search_form.field_with(name: '__action').value = 50
+      search_form.field_with(name: 'LISSH_Browse_ReportFormatList').value = 'LISSH_Vorgaenge_Report'
+      mp = m.submit(search_form)
+
+      items = BremenBuergerschaftScraper.extract_records(mp)
       items.each do |item|
         begin
-          paper = BremenBuergerschaftScraper.extract_paper_preliminary(item)
-          next if paper[:legislative_term].to_i != @legislative_term
+          paper = BremenBuergerschaftScraper.extract_paper(item)
         rescue => e
           logger.warn e
           next
         end
-        yield paper
-      end
-    end
-
-    def scrape_final
-      m = mechanize
-      # to initialize session
-      m.get BASE_URL
-      # search form
-      TYPES.each do |type|
-        mp = submit_search(m, type)
-        body = mp.search("//table[@id='suchergebnisse']")
-        fail "HB [#{full_reference}]: result page missing" if body.nil?
-        results = BremenBuergerschaftScraper.extract_results(body)
-        results.each do |table_row|
-          begin
-            paper = BremenBuergerschaftScraper.extract_paper(table_row)
-          rescue => e
-            logger.warn e
-            next
-          end
+        if streaming
           yield paper
+        else
+          papers << paper
         end
       end
-    end
 
-    def submit_search(m, type)
-      mp = m.get SEARCH_FINAL_URL
-      form = mp.form 'theForm'
-      fail 'HB: search form missing' if form.nil?
-
-      fail 'HB: legislative_term missing' if !form.field_with(name: 'lp').options.any? { |opt| opt.value == @legislative_term.to_s }
-      form.field_with(name: 'lp').value = @legislative_term
-      form.field_with(name: 'vorlageart').value = type
-      submit_button = form.submits.find { |btn| btn.value == 'suchen' }
-      mp = m.submit(form, submit_button)
-      mp
+      papers unless streaming
     end
   end
 
   class Detail < DetailScraper
-    SEARCH_PRELIMINARY_URL = BASE_URL + '/index.php?id=506'
-    SEARCH_FINAL_URL = BASE_URL + '/index.php?id=507'
-
     def scrape
-      mode = TERM_MODE.try(:[], @legislative_term) || DEFAULT_MODE
-      send("scrape_#{mode}".to_sym)
-    end
-
-    def scrape_preliminary
       m = mechanize
       # get a session
       m.get BASE_URL
-      mp = m.get SEARCH_PRELIMINARY_URL + "&suchbegriff=#{full_reference}"
+      mp = m.get SEARCH_URL
+      search_form = mp.form '__form'
+      fail "HB [#{full_reference}]: search form missing" if search_form.nil?
 
-      items = BremenBuergerschaftScraper.extract_preliminary_results(mp.root)
-      fail "HB [#{full_reference}]: result item missing" if items.nil? || items.size < 1
+      # fill search form
+      search_form.field_with(name: '__action').value = 20
+      search_form.field_with(name: '12_LISSH_WP').value = @legislative_term
+      search_form.field_with(name: '05_LISSH_DNR').value = @reference
+      # only search in landtag
+      search_form.field_with(name: '11_LISSH_PARL').value = 'L'
+      mp = m.submit(search_form)
+
+      # Fail if no hits
+      fail "HB [#{full_reference}]: search returns no results" if mp.search('//div[@name="NoReportGenerated"]/*').size > 0
+
+      # switch to full view
+      search_form = mp.form '__form'
+      search_form.field_with(name: '__action').value = 50
+      search_form.field_with(name: 'LISSH_Browse_ReportFormatList').value = 'LISSH_Vorgaenge_Report'
+      mp = m.submit(search_form)
+
+      items = BremenBuergerschaftScraper.extract_records(mp)
       BremenBuergerschaftScraper.extract_paper(items.first)
-    end
-
-    def scrape_final
-      m = mechanize
-      # get a session
-      m.get BASE_URL
-      mp = m.get SEARCH_FINAL_URL
-      form = mp.form 'theForm'
-      fail "HB [#{full_reference}]: search form missing" if form.nil?
-
-      fail 'HB: legislative_term missing' if !form.field_with(name: 'lp').options.any? { |opt| opt.value == @legislative_term.to_s }
-      form.field_with(name: 'lp').value = @legislative_term
-      form.field_with(name: 'vorlageart').value = TYPES.join(';')
-      form.field_with(name: 'drucksachennr').value = @reference
-      submit_button = form.submits.find { |btn| btn.value == 'suchen' }
-      mp = m.submit(form, submit_button)
-
-      body = mp.search("//table[@id='suchergebnisse']")
-      fail "HB [#{full_reference}]: result page missing" if body.nil?
-      paper = BremenBuergerschaftScraper.extract_paper(body.at_css('tr'))
-
-      process_url = body.at_css('tr').element_children[3].at_css('a').attributes['href'].value
-      fail "HB [#{full_reference}]: no button for details found" if process_url.nil?
-
-      mp = m.get Addressable::URI.parse(BASE_URL).join(process_url).normalize.to_s
-
-      complete_paper = BremenBuergerschaftScraper.extract_paper_detail(mp)
-      fail "HB [#{full_reference}]: no details found" if complete_paper.nil?
-
-      paper.merge complete_paper
     end
   end
 end
