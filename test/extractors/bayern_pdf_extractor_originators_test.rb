@@ -102,6 +102,19 @@ class BayernPDFExtractorOriginatorsTest < ActiveSupport::TestCase
     assert_equal 'BÜNDNIS 90/DIE GRÜNEN', originators[:parties].first
   end
 
+  # der Abgeordneten Joachim Unterländer, Kerstin Schreyer\n-Stäblein CSU
+  test 'two people, newline within double name' do
+    paper = Struct.new(:contents).new("der Abgeordneten Joachim Unterländer, Kerstin Schreyer\n" +
+            '-Stäblein CSU')
+
+    originators = BayernPDFExtractor.new(paper).extract_originators
+
+    assert_equal 2, originators[:people].size
+    assert_equal 'Joachim Unterländer', originators[:people][0]
+    assert_equal 'Kerstin Schreyer-Stäblein', originators[:people][1]
+    assert_equal 'CSU', originators[:parties].first
+  end
+
   # der Abgeordneten Markus Ganserer, Martin Stümpfig, Christine Kamm BÜNDNIS 90/DIE GRÜNEN
   test 'three people, no newline before party' do
     paper = Struct.new(:contents).new('der Abgeordneten Markus Ganserer, Martin Stümpfig, Christine Kamm BÜNDNIS 90/DIE GRÜNEN')
