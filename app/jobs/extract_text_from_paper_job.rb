@@ -22,7 +22,6 @@ class ExtractTextFromPaperJob < PaperJob
     paper.contents = text
     paper.save
 
-    ExtractPublishedAtJob.perform_later(paper)
     ContainsTableJob.perform_later(paper)
     ExtractOriginatorsJob.perform_later(paper)
     ExtractAnswerersJob.perform_later(paper)
