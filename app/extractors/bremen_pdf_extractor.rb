@@ -15,11 +15,8 @@ class BremenPDFExtractor
     m = @contents.match(ORIGINATORS)
     return nil if m.nil?
 
-    if m[2]
-      originators = m[1].split(',').concat(m[2].split(','))
-    else
-      originators = m[1].split(',')
-    end
+    originators = m[1].split(',')
+    originators.concat m[2].split(',') unless m[2].nil?
 
     originators.each do |person|
       person = person.gsub(/\p{Z}/, ' ')

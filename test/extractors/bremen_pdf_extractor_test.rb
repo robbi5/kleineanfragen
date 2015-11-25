@@ -23,19 +23,19 @@ class BremenPDFExtractorTest < ActiveSupport::TestCase
   end
 
   test 'two groups, six people, two parties' do
-   paper = paper_with_contents(
-     PREFIX + "Björn Fecker, Dirk Schmidtmann, Dr. Maike Schaefer,\n" +
-     "Dr. Matthias Güldner und Fraktion Bündnis 90/Die Grünen\n\n" +
-     "Sükrü Senkal,\nBjörn Tschöpe und Fraktion der SPD" + SUFFIX)
+    paper = paper_with_contents(
+      PREFIX + "Björn Fecker, Dirk Schmidtmann, Dr. Maike Schaefer,\n" +
+      "Dr. Matthias Güldner und Fraktion Bündnis 90/Die Grünen\n\n" +
+      "Sükrü Senkal,\nBjörn Tschöpe und Fraktion der SPD" + SUFFIX)
 
-   originators = BremenPDFExtractor.new(paper).extract_originators
+    originators = BremenPDFExtractor.new(paper).extract_originators
 
-   assert_equal 6, originators[:people].size
-   assert_equal 'Björn Fecker', originators[:people].first
-   assert_equal 'Dirk Schmidtmann', originators[:people].second
-   assert_equal 'Dr. Maike Schaefer', originators[:people].third
-   assert_equal 'Dr. Matthias Güldner', originators[:people].fourth
-   assert_equal 'Sükrü Senkal', originators[:people].fifth
-   assert_equal 'Björn Tschöpe', originators[:people][5]
+    assert_equal 6, originators[:people].size
+    assert_equal 'Björn Fecker', originators[:people].first
+    assert_equal 'Dirk Schmidtmann', originators[:people].second
+    assert_equal 'Dr. Maike Schaefer', originators[:people].third
+    assert_equal 'Dr. Matthias Güldner', originators[:people].fourth
+    assert_equal 'Sükrü Senkal', originators[:people].fifth
+    assert_equal 'Björn Tschöpe', originators[:people][5]
   end
 end
