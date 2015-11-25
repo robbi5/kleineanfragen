@@ -77,7 +77,7 @@ module BundestagScraper
     doc = extract_doc(content)
 
     doctype = extract_doctype(doc)
-    fail "#{detail_url}: doctype unknown: #{type}" if doctype.blank?
+    fail "#{detail_url}: doctype unknown: #{doctype}" if doctype.blank?
 
     status = extract_status(doc)
     fail "#{detail_url}: ignored, status: #{status}" unless status == 'Beantwortet'
@@ -106,15 +106,17 @@ module BundestagScraper
     answerers = { ministries: [] }
     doc.css('VORGANGSABLAUF VORGANGSPOSITION').each do |node|
       urheber = node.at_css('URHEBER').text
-      if urheber.starts_with?('Antwort') || node.at_css('FUNDSTELLE_LINK').try(:text) == url
-        _, ministry = urheber.match(/Antwort,(?:\s+Urheber :)?\s+([^(]*)/).to_a
+      # originator entry should always have a 'PERSOENLICHER_URHEBER'
+      is_ministry = node.at_css('PERSOENLICHER_URHEBER').nil?
+      if is_ministry
+        _, ministry = urheber.match(/.*,(?:\s+Urheber :)?\s+([^(]*)/).to_a
         unless ministry.nil?
           ministry = ministry.strip.sub(/^Bundesregierung, /, '')
           answerers[:ministries] << ministry
         end
         fundstelle = node.at_css('FUNDSTELLE').text
         _, date = fundstelle.match(/(\d+\.\d+\.\d+)\s/).to_a
-      elsif urheber.starts_with? 'Kleine Anfrage'
+      else
         node.css('PERSOENLICHER_URHEBER').each do |unode|
           originators[:people] << [
             unode.at_css('PERSON_TITEL').try(:text),
