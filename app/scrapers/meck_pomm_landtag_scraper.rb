@@ -86,6 +86,9 @@ module MeckPommLandtagScraper
     if match_ministry
       ministries << match_ministry[1]
     end
+    if ministries.empty? && meta_row.match(/Landesregierung/)
+      ministries << 'Landesregierung'
+    end
 
     {
       legislative_term: legislative_term,
