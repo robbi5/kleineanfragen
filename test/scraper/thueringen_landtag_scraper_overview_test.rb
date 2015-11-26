@@ -19,7 +19,7 @@ class ThueringenLandtagScraperTest < ActiveSupport::TestCase
                           <td headers=\"result-nummer\">6/517</td>
                           <td headers=\"result-typ\"> Antwort auf Kleine Anfrage</td>
                           <td headers=\"result-datum\">21.04.2015</td>
-                      
+
     END
     assert_equal html, next_row.inner_html
   end

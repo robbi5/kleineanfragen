@@ -71,8 +71,6 @@ module ThueringenLandtagScraper
     }
   end
 
-  UNSOPPORTED = ['Unterrichtung/Landesregierung', 'Mündliche Anfrage']
-
   def self.extract_paper(title_el)
     next_row = extract_next_row(title_el)
     title_text = extract_title_text(title_el)
@@ -80,7 +78,10 @@ module ThueringenLandtagScraper
     legislative_term, reference = extract_reference(full_reference)
     path = extract_path(title_el)
     url = extract_url(path)
-    return nil if UNSOPPORTED.include? extract_doctype_el(next_row).text.strip
+    doctype_text = extract_doctype_el(next_row).text
+    puts doctype_text.strip
+    is_interpellation = doctype_text.include?('Kleine Anfrage') || doctype_text.include?('Große Anfrage')
+    return nil unless is_interpellation
     meta = extract_meta(next_row)
     fail "doctype unknown for Paper [TH #{full_reference}]" if meta.nil?
 
