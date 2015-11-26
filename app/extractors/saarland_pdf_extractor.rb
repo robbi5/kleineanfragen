@@ -3,23 +3,31 @@ class SaarlandPDFExtractor
     @contents = paper.contents
   end
 
-  ORIGINATORS = /Anfrage\s+de[rs]\s+Abgeordneten\s+([^\(]+)\s+\(([^\)]+)\)/m
+  PEOPLE = /Anfrage\s+de[rs]\s+Abgeordneten\s+([^\(]+)\s+\(([^\)]+)\)/m
+  PARTY = /Anfrage\s+der\s+(.*)-Landtagsfraktion/m
+
   IS_MAJOR = /W\s?O\s?R\s?T\s+.+?\s+zu\sder\s+[gG]roßen\sAnfrage/m
 
   def extract_originators
     return nil if @contents.nil?
     people = []
     parties = []
-    m = @contents.match(ORIGINATORS)
-    return nil if m.nil?
+    match_people = @contents.match(PEOPLE)
+    match_parties = @contents.match(PARTY)
+    return nil if match_people.nil? && match_parties.nil?
 
-    party = clean_text(m[2])
-    parties << party
+    unless match_people.nil?
+      party = clean_text(match_people[2])
+      parties << party
+      names = clean_text(match_people[1])
+      names.gsub(' und ', ',').split(',').each do |person|
+        p = person.strip
+        people << p unless p.blank?
+      end
+    end
 
-    names = clean_text(m[1])
-    names.gsub(' und ', ',').split(',').each do |person|
-      p = person.strip
-      people << p unless p.blank?
+    unless match_parties.nil?
+      parties << match_parties[1]
     end
 
     { people: people, parties: parties }
