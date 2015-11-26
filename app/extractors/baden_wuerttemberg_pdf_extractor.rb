@@ -62,7 +62,7 @@ class BadenWuerttembergPDFExtractor
 
   def add_to(ministries, ministry)
     # multiple ministries involved
-    if !ministry.includes?(', dem Ministerium') && !ministry.includes?('und dem Ministerium')
+    if !ministry.include?(', dem Ministerium') && !ministry.include?('und dem Ministerium')
       ministries << ministry unless ministry.blank?
     else
       ministry.split(/und\s+dem\s+|,\s+dem\s+/).each do |splitted|
