@@ -111,7 +111,7 @@ module HessenScraper
   def self.extract_answer_line(text)
     text.split("\n").each do |s|
       s = s.gsub(/\p{Z}+/, ' ').strip
-      return s if s.include?('Antw') || s.include?('und Antw')
+      return s if s.include?('Antw ') || s.include?('und Antw')
     end
     nil
   end
@@ -121,13 +121,13 @@ module HessenScraper
   end
 
   def self.get_matches_for_date_pattern(line)
-    /\d{2}\.\d{2}\.\d{4}/.match line
+    line.match(/(\d{2}\.\d{2}\.\d{4})/)
   end
 
   def self.get_date_from_detail_line(line)
     matches = get_matches_for_date_pattern(line)
     return nil if matches.nil?
-    Date.parse(matches[(matches.length - 1)])
+    Date.parse(matches.last)
   end
 
   class Overview < Scraper

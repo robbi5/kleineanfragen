@@ -137,4 +137,18 @@ class HessenTest < ActiveSupport::TestCase
         is_answer: true
       }, paper)
   end
+
+  test 'extract whole paper from detail page like 19/1616' do
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_detail_19_1616.html')))
+    block = @scraper.extract_detail_block(html)
+    paper = @scraper.extract_detail_paper(block)
+    assert_equal Date.parse('2015-04-13'), paper[:published_at]
+  end
+
+  test 'extract whole paper from detail page like 19/1615' do
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_detail_19_1615.html')))
+    block = @scraper.extract_detail_block(html)
+    paper = @scraper.extract_detail_paper(block)
+    assert_equal Date.parse('2015-05-02'), paper[:published_at]
+  end
 end
