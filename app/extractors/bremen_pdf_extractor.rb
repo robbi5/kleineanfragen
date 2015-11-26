@@ -6,13 +6,13 @@ class BremenPDFExtractor
   end
 
   ORIGINATORS = /\d+.+[\?\.\\](?:\n\n(.+?)\s+und\s+Fraktion\s+[^\n]+)(?:\n\n(.+?)\s+und\s+Fraktion\s+[^\n]+)*.+(?:Antwort\s+des\s+Senats|Der\s+Senat\s+beantwortet)/m
-  FACTIONS = /Antwort\s+des\s+Senats\s+auf\s+die\s......\s+Anfrage der(.*)/m
+  FACTIONS = /Antwort\s+des\s+Senats\s+auf\s+die\s\S+\s+Anfrage der(.*)/m
 
   def extract_originators
     return nil if @contents.nil? || @doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
     people = []
     parties = []
-    if @contents.include?('und Fraktion')
+    if @contents.include?('Anfrage der Fraktion')
       shortened_title = @title[0..30]
       faction_match = @contents.match(FACTIONS)
       unless faction_match.nil? || !faction_match[1].include?(shortened_title)

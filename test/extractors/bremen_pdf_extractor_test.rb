@@ -43,8 +43,28 @@ class BremenPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Björn Tschöpe', originators[:people][5]
   end
 
-  test 'factions' do
-    paper = paper_with_contents_and_title("Antwort des Senats auf die Kleine Anfrage der Fraktion der SPD und Fraktion DIE LINKE\n\n\n\n\nSituation des ttz Bremerhaven\n\n\nAntwort des Senats\n\nauf die Kleine Anfrage der Fraktion der SPD und Fraktion DIE LINKE\n\nvom 9. September 2015\n\n„Situation des ttz Bremerhaven“\n\nDie Fraktion der SPD  und Fraktion DIE LINKEhat folgende Kleine Anfrage an den Senat", 'Situation des ttz Bremerhaven')
+  test 'fraction' do
+    paper = paper_with_contents_and_title(
+      "Antwort des Senats auf die Kleine Anfrage der Fraktion der SPD \n\n\n\n\n" +
+      "Stand der Ausbildungsgarantie \n\n \n\n\n\n \n \n\n" +
+      "Antwort des Senats \n\n\n" +
+      "auf die Kleine Anfrage der Fraktion der SPD \n\n\nvom 15. Oktober 2015 ", 'Stand der Ausbildungsgarantie')
+    originators = BremenPDFExtractor.new(paper).extract_originators
+    assert_not_nil originators
+    assert_not_nil originators[:parties]
+    assert_equal 1, originators[:parties].size
+    assert_equal 'SPD', originators[:parties].first
+  end
+
+  test 'two fractions' do
+    paper = paper_with_contents_and_title(
+      "Antwort des Senats auf die Kleine Anfrage der Fraktion der SPD und Fraktion DIE LINKE\n\n\n\n\n" +
+      "Situation des ttz Bremerhaven\n\n\n" +
+      "Antwort des Senats\n\n" +
+      "auf die Kleine Anfrage der Fraktion der SPD und Fraktion DIE LINKE\n\n" +
+      "vom 9. September 2015\n\n" +
+      "„Situation des ttz Bremerhaven“\n\n" +
+      'Die Fraktion der SPD  und Fraktion DIE LINKEhat folgende Kleine Anfrage an den Senat', 'Situation des ttz Bremerhaven')
     originators = BremenPDFExtractor.new(paper).extract_originators
     assert_not_nil originators
     assert_not_nil originators[:parties]
