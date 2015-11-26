@@ -2,7 +2,7 @@ class NamePartyExtractor
   NAME_BRACKET_PARTY = :nbp
   NAME_PARTY_COMMA = :npc
   REVERSED_NAME_PARTY = :rnp
-  FACTION = :faction
+  FRACTION = :fraction
 
   def initialize(text, format = NAME_BRACKET_PARTY)
     @text = text
@@ -14,7 +14,7 @@ class NamePartyExtractor
     when NAME_BRACKET_PARTY then extract_nbp
     when NAME_PARTY_COMMA then extract_npc
     when REVERSED_NAME_PARTY then extract_rnp
-    when FACTION then extract_faction
+    when FRACTION then extract_fraction
     else fail 'Unknown format'
     end
   end
@@ -95,12 +95,13 @@ class NamePartyExtractor
     { people: people, parties: parties.uniq }
   end
 
-  # e.g. "Fraktion der SPD, Fraktion der CDU und Fraktion DIE LINKE"
-  def extract_faction
+  def extract_fraction
     parties = []
+
     @text.split(/,| und /).each do |splitted|
       parties << self.class.clean_party(splitted.strip)
     end
+
     { people: [], parties: parties }
   end
 

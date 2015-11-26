@@ -372,7 +372,7 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
   end
 
   test 'npc: people seperated by comma and und, one party but surname only 3 letters' do
-    pair = NamePartyExtractor.new("Vorname Nac, Anderer Name und Andre Name ABC", :npc).extract
+    pair = NamePartyExtractor.new('Vorname Nac, Anderer Name und Andre Name ABC', :npc).extract
 
     assert_equal 3, pair[:people].size
     assert_equal 'Vorname Nac', pair[:people].first
@@ -395,21 +395,18 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
   end
 
   test 'fraction: best case scenario' do
-    assert_equal({ people: [], parties: ['SPD'] }, NamePartyExtractor.new('Fraktion der SPD', :faction).extract)
+    pair = NamePartyExtractor.new('Fraktion der SPD', :fraction).extract
+    assert_equal({ people: [], parties: ['SPD'] }, pair)
   end
 
-  test 'multiple comma separated fractions' do
-    assert_equal(
-      { people: [], parties: ['SPD', 'CDU'] },
-      NamePartyExtractor.new('Fraktion der SPD, Fraktion der CDU', :faction).extract
-    )
+  test 'fraction: two comma separated fractions' do
+    pair = NamePartyExtractor.new('Fraktion der SPD, Fraktion der CDU', :fraction).extract
+    assert_equal({ people: [], parties: ['SPD', 'CDU'] }, pair)
   end
 
-  test 'two fractions' do
-    assert_equal(
-      { people: [], parties: ['SPD', 'DIE LINKE'] },
-      NamePartyExtractor.new('Fraktion der SPD und Fraktion DIE LINKE', :faction).extract
-    )
+  test 'fraction: two und seperated fractions' do
+    pair = NamePartyExtractor.new('Fraktion der SPD und Fraktion DIE LINKE', :fraction).extract
+    assert_equal({ people: [], parties: ['SPD', 'DIE LINKE'] }, pair)
   end
 
   test 'test for BW 15/3704' do

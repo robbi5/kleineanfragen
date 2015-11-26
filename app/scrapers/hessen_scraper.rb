@@ -102,7 +102,7 @@ module HessenScraper
     contains_faction = !originators.match('Fraktion').nil?
     is_single_originator = originators.match(',').nil?
     if contains_faction && is_single_originator
-      NamePartyExtractor.new(originators, NamePartyExtractor::FACTION).extract
+      NamePartyExtractor.new(originators, NamePartyExtractor::FRACTION).extract
     else
       NamePartyExtractor.new(originators, NamePartyExtractor::REVERSED_NAME_PARTY).extract
     end
