@@ -111,4 +111,16 @@ class BadenWuerttembergPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Ministerium für Finanzen und Wirtschaft', answerers[:ministries].third
     assert_equal 'Ministerium für Wissenschaft, Forschung und Kunst', answerers[:ministries].fourth
   end
+
+  test 'get major minitryx' do
+    c = "en?\n\nGroße Anfrage\n\nder Fraktion der FDP/DVP\n\nund\n\nAntwort\n\nder Landesregierung\n\nInnovation im
+Wechselspiel von Wissenschaft und Wirtschaft\n\nDru"
+    paper = paper_with_title(Paper::DOCTYPE_MINOR_INTERPELLATION, c, 'Innovation im Wechselspiel von Wissenschaft und Wirtschaft')
+
+    answerers = BadenWuerttembergPDFExtractor.new(paper).extract_answerers
+
+    assert_not_nil answerers
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Landesregierung', answerers[:ministries].first
+  end
 end

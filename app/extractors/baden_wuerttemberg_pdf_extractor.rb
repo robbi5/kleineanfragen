@@ -41,6 +41,10 @@ class BadenWuerttembergPDFExtractor
 
   def extract_answerers
     return nil if @contents.blank?
+
+    m = @contents.match(ORIGINATORS_MAJOR)
+    return { ministries: ['Landesregierung'] } unless m.nil?
+
     ministries = []
 
     m = @contents.match(ANSWERERS)
