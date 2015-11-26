@@ -64,4 +64,12 @@ class NordrheinWestfalenLandtagScraperTest < ActiveSupport::TestCase
         }
       }, paper)
   end
+
+  test 'regression, was invalid date, 16/8774' do
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/nordrhein_westfalen_landtag_scraper_overview_16_8774.html')))
+    block = @scraper.extract_blocks(html).first
+    paper = @scraper.extract_paper(block)
+
+    assert_equal Date.parse('2015-05-27'), paper[:published_at]
+  end
 end
