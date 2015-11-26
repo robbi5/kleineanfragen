@@ -99,7 +99,7 @@ module BundestagScraper
     reference = full_reference.split('/').last
     normalized_url = Addressable::URI.parse(url).normalize.to_s
     ado = extract_answerers_date_and_originators(doc)
-    fail "#{full_reference}: no date found" if date.nil?
+    fail "#{full_reference}: no date found" if ado[:date].nil?
     published_at = Date.parse(ado[:date])
 
     {
