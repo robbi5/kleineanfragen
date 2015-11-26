@@ -61,7 +61,7 @@ class BadenWuerttembergPDFExtractor
   end
 
   def add_to(ministries, ministry)
-    # multiple ministries involved
+    # multiple ministries
     if !ministry.include?(', dem Ministerium') && !ministry.include?('und dem Ministerium')
       ministries << ministry unless ministry.blank?
     else
