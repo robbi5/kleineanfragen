@@ -93,7 +93,7 @@ module HessenScraper
     first_date_matched = false
     lines = lines.map do |line|
       # we can ignore everything after a line with a date
-      first_date_matched = true if !get_matches_for_date_pattern(line).nil?
+      first_date_matched = true if !get_matches_for_date_pattern(line).empty?
       line.gsub(/\p{Z}+/, ' ').strip
       line = nil if first_date_matched
       line
@@ -121,7 +121,7 @@ module HessenScraper
   end
 
   def self.get_matches_for_date_pattern(line)
-    line.match(/(\d{2}\.\d{2}\.\d{4})/)
+    line.scan(/\d{2}\.\d{2}\.\d{4}/)
   end
 
   def self.get_date_from_detail_line(line)
