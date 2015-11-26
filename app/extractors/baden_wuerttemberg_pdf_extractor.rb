@@ -2,6 +2,7 @@ class BadenWuerttembergPDFExtractor
   def initialize(paper)
     @contents = paper.contents
     @doctype = paper.doctype
+    @title = paper.title
   end
 
   ORIGINATORS_MINOR = /Kleine\s+Anfrage\s+de(?:r|s)\s+Abg.\s+(.+?)\s+und\s+Antwort/m
@@ -47,21 +48,40 @@ class BadenWuerttembergPDFExtractor
 
     # clean and normalize ministry name
     ministry = normalize_ministry(m[1])
-    ministries << ministry unless ministry.blank?
+
+    add_to(ministries, ministry)
 
     related_ministry_match = @contents.match(RELATED_MINISTRY)
     unless related_ministry_match.nil?
       related_ministry = normalize_ministry(related_ministry_match[1])
-      ministries << related_ministry unless related_ministry.blank?
+      add_to(ministries, related_ministry)
     end
 
     { ministries: ministries }
   end
 
+  def add_to(ministries, ministry)
+    # multiple ministries involved
+    if !ministry.includes?(', dem Ministerium') && !ministry.includes?('und dem Ministerium')
+      ministries << ministry unless ministry.blank?
+    else
+      ministry.split(/und\s+dem\s+|,\s+dem\s+/).each do |splitted|
+        ministries << splitted.strip unless splitted.blank?
+      end
+    end
+  end
+
   def normalize_ministry(ministry)
+    # regex matches too much, but the next line is the papers title... so cut it and everything after
+    # use just part of the title to prevent new line issues
+    shortened_title = @title[0..30]
+    unless ministry.index(shortened_title).nil?
+      ministry = ministry[0, ministry.index(shortened_title)].strip
+    end
+
     ministry
       .gsub("\n", ' ')
-      .gsub(/Ministeriums/, 'Ministerium')
-      .gsub(/ministeriums/, 'ministerium')
+      .gsub(/\s+/, ' ')
+      .gsub(/inisteriums/, 'inisterium')
   end
 end
