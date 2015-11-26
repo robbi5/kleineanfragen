@@ -7,7 +7,8 @@ class ExtractAnswerersJob < PaperJob
     'BY' => BayernPDFExtractor,
     'HE' => HessenPDFExtractor,
     'SN' => SachsenPDFExtractor,
-    'SH' => SchleswigHolsteinPDFExtractor
+    'SH' => SchleswigHolsteinPDFExtractor,
+    'BW' => BadenWuerttembergPDFExtractor
   }
 
   def perform(paper)

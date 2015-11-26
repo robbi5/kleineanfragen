@@ -59,4 +59,51 @@ class BadenWuerttembergPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 1, originators[:parties].size
     assert_equal 'FDP/DVP', originators[:parties].first
   end
+
+  test 'get answerers from paper' do
+    c = "Kleine Anfrage\n\ndes Abg. Helmut Walter Rüeck CDU\n\nund\n\nAntwort\n\ndes Ministeriums für Kultus, Jugend und Sport\n\nUmsetzung der Inklusion im Landkreis Schwäbisch Hall"
+    paper = paper(Paper::DOCTYPE_MINOR_INTERPELLATION, c)
+
+    answerers = BadenWuerttembergPDFExtractor.new(paper).extract_answerers
+
+    assert_not_nil answerers, 'answerers should not be nil'
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Ministerium für Kultus, Jugend und Sport', answerers[:ministries].first
+  end
+
+  test 'get Staaatsministerium' do
+    c = "des Abg. Dr. Bernhard Lasotta CDU\n\nund\n\nAntwort\n\ndes Staatsministeriums\n\nBefreiung von Hospizen von der Rundfunkgebührenpflicht"
+    paper = paper(Paper::DOCTYPE_MINOR_INTERPELLATION, c)
+
+    answerers = BadenWuerttembergPDFExtractor.new(paper).extract_answerers
+
+    assert_not_nil answerers
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Staatsministerium', answerers[:ministries].first
+  end
+
+  test 'get related ministries' do
+    c = "und\n\nAntwort des Staatsministeriums\n\nBefrMit Schreiben vom 6. September 2012 Nr. III/ beantwortet das Staatsministerium\nim Einvernehmen mit dem Ministerium für Arbeit und Sozialordnung, Familie,\nFrauen und Senioren die Kleine Anfrage wie folgt:"
+    paper = paper(Paper::DOCTYPE_MINOR_INTERPELLATION, c)
+
+    answerers = BadenWuerttembergPDFExtractor.new(paper).extract_answerers
+
+    assert_not_nil answerers
+    assert_equal 2, answerers[:ministries].size
+    assert_equal 'Staatsministerium', answerers[:ministries].first
+    assert_equal 'Ministerium für Arbeit und Sozialordnung, Familie, Frauen und Senioren', answerers[:ministries].second
+    end
+
+  test 'get multiple related ministries' do
+    c = "und\n\nAntwort\n\ndes Staatsministeriums\n\nProjekt Übermorgenmacherinnen und Übermorgenmacher\n\nMit Schreiben vom 6. September 2012 Nr. III/ beantwortet das Staatsministerium\nim Einvernehmen mit dem \n\nMinisterium für Arbeit und Sozialordnung, Familie,\n\nFrauen und Senioren, dem Ministerium für Finanzen und Wirtschaft und dem Ministerium\n\nfür Wissenschaft, Forschung und Kunst die Kleine Anfrage wie"
+    paper = paper(Paper::DOCTYPE_MINOR_INTERPELLATION, c)
+
+    answerers = BadenWuerttembergPDFExtractor.new(paper).extract_answerers
+
+    assert_not_nil answerers
+    assert_equal 2, answerers[:ministries].size
+    assert_equal 'Staatsministerium', answerers[:ministries].first
+    assert_equal 'Ministerium für Finanzen und Wirtschaft', answerers[:ministries].seconde
+    assert_equal 'Ministerium für Arbeit und Sozialordnung, Familie, Frauen und Senioren', answerers[:ministries].third
+  end
 end

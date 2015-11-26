@@ -34,4 +34,34 @@ class BadenWuerttembergPDFExtractor
     party = m[1].strip
     { parties: [party], people: [] }
   end
+
+  ANSWERERS = /und\s+Antwort\s+des\s+((Staats)*[mM]inisteriums.*)(?:\s+\n)/m
+  RELATED_MINISTRY = /(?:im\s+Einvernehmen\s+mit\s+dem\s+)(Ministerium.*)(?:\s+die\s+(?:[kK]leine|[gG]roße)?\s*An)/m
+
+  def extract_answerers
+    return nil if @contents.blank?
+    ministries = []
+
+    m = @contents.match(ANSWERERS)
+    return nil if m.nil?
+
+    # clean and normalize ministry name
+    ministry = normalize_ministry(m[1])
+    ministries << ministry unless ministry.blank?
+
+    related_ministry_match = @contents.match(RELATED_MINISTRY)
+    unless related_ministry_match.nil?
+      related_ministry = normalize_ministry(related_ministry_match[1])
+      ministries << related_ministry unless related_ministry.blank?
+    end
+
+    { ministries: ministries }
+  end
+
+  def normalize_ministry(ministry)
+    ministry
+      .gsub("\n", ' ')
+      .gsub(/Ministeriums/, 'Ministerium')
+      .gsub(/ministeriums/, 'ministerium')
+  end
 end
