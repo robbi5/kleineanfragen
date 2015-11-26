@@ -411,4 +411,11 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
       NamePartyExtractor.new('Fraktion der SPD und Fraktion DIE LINKE', :faction).extract
     )
   end
+
+  test 'test for BW 15/3704' do
+    pair = NamePartyExtractor.new('Dr. Hans-Ulrich Rülke FDP/DVP', :npc).extract
+    assert_equal 1, pair[:people].size
+    assert_equal 'Dr. Hans-Ulrich Rülke', pair[:people].first
+    assert_equal 'FDP/DVP', pair[:parties].first
+  end
 end

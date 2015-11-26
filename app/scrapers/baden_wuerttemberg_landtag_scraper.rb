@@ -49,7 +49,7 @@ module BadenWuerttembergLandtagScraper
 
   def self.extract_doctype(match_result)
     case match_result.downcase
-    when 'klanfr'
+    when 'klanfr', 'klanf'
       Paper::DOCTYPE_MINOR_INTERPELLATION
     when 'granfr'
       Paper::DOCTYPE_MAJOR_INTERPELLATION
