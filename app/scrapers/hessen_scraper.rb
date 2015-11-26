@@ -99,7 +99,13 @@ module HessenScraper
       line
     end
     originators = lines.reject(&:nil?).join(' ')
-    NamePartyExtractor.new(originators, NamePartyExtractor::REVERSED_NAME_PARTY).extract
+    contains_faction = !originators.match('Fraktion').nil?
+    is_single_originator = originators.match(',').nil?
+    if contains_faction && is_single_originator
+      NamePartyExtractor.new(originators, NamePartyExtractor::FACTION).extract
+    else
+      NamePartyExtractor.new(originators, NamePartyExtractor::REVERSED_NAME_PARTY).extract
+    end
   end
 
   def self.extract_answer_line(text)
