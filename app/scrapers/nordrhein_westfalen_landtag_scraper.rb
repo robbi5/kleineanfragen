@@ -35,7 +35,7 @@ module NordrheinWestfalenLandtagScraper
     fail "unknown doctype for paper [NW #{full_reference}]" if meta[:doctype].nil?
 
     date_text = link.next.text.strip
-    date = date_text.match(/([\d\.]+)/)[1]
+    date = date_text.match(/(\d+[-.\/]\d+[-.\/]\d+)/)[1]
 
     url = link.attributes['href'].value
     url = Addressable::URI.parse(BASE_URL).join(url).normalize.to_s

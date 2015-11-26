@@ -25,6 +25,26 @@ class NordrheinWestfalenLandtagScraperTest < ActiveSupport::TestCase
       }, paper)
   end
 
+  test 'extract complete paper with different date text' do
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/nordrhein_westfalen_landtag_scraper_detail_8774.html')))
+    block = @scraper.extract_blocks(html).first
+    paper = @scraper.extract_paper(block, resolve_pdf: false)
+
+    assert_equal(
+      {
+        legislative_term: '16',
+        full_reference: '16/8774',
+        reference: '8774',
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        title: 'Unterrichtsbedingungen an Schulen der Stadt Bottrop - Wie sieht die aktuelle Faktenlage aus zur Unterrichtsversorgung, zum Personalbedarf, zum Altersdurchschnitt der Lehrerkollegien und zu den Klassengrößen?',
+        url: 'http://www.landtag.nrw.de/portal/WWW/dokumentenarchiv/Dokument?Id=MMD16/8774%7C1%7C0',
+        published_at: Date.parse('2015-05-27'),
+        originators: nil,
+        is_answer: true,
+        answerers: { ministries: ['MSW'] }
+      }, paper)
+  end
+
   test 'extract all papers' do
     @scraper.extract_blocks(@html).each do |block|
       paper = @scraper.extract_paper(block, resolve_pdf: false)
