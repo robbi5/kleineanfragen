@@ -5,6 +5,11 @@ json.full_reference @paper.full_reference
 json.legislative_term @legislative_term
 json.reference @paper.reference
 
+json.body do
+  json.name @body.name
+  json.state @body.state
+end
+
 json.title @paper.title
 
 json.interpellation_type @paper.doctype
