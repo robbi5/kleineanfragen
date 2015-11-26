@@ -6,6 +6,7 @@ class ExtractAnswerersJob < PaperJob
     'BE' => BerlinPDFExtractor,
     'BY' => BayernPDFExtractor,
     'HE' => HessenPDFExtractor,
+    'MV' => MeckPommPDFExtractor,
     'SN' => SachsenPDFExtractor,
     'SH' => SchleswigHolsteinPDFExtractor
   }
