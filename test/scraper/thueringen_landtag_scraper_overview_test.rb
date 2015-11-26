@@ -14,14 +14,8 @@ class ThueringenLandtagScraperTest < ActiveSupport::TestCase
   test 'get next_row from from title_el' do
     results = @scraper.extract_results(@html)
     next_row = @scraper.extract_next_row(results.first)
-    html = <<-END.gsub(/^ {6}/, '').sub(/\n$/, '')
-
-                          <td headers=\"result-nummer\">6/517</td>
-                          <td headers=\"result-typ\"> Antwort auf Kleine Anfrage</td>
-                          <td headers=\"result-datum\">21.04.2015</td>
-
-    END
-    assert_equal html, next_row.inner_html
+    html = "<td headers=\"result-nummer\">6/517</td> <td headers=\"result-typ\"> Antwort auf Kleine Anfrage</td> <td headers=\"result-datum\">21.04.2015</td>".gsub(/^ {6}/, '').sub(/\n$/, '')
+    assert_equal html, next_row.inner_html.strip.gsub(/\s+/, ' ')
   end
 
   test 'get title from title_el' do
