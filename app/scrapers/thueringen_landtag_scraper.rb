@@ -79,7 +79,6 @@ module ThueringenLandtagScraper
     path = extract_path(title_el)
     url = extract_url(path)
     doctype_text = extract_doctype_el(next_row).text
-    puts doctype_text.strip
     is_interpellation = doctype_text.include?('Kleine Anfrage') || doctype_text.include?('Große Anfrage')
     return nil unless is_interpellation
     meta = extract_meta(next_row)
