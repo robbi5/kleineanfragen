@@ -5,7 +5,11 @@ class BremenPDFExtractorTest < ActiveSupport::TestCase
   SUFFIX = "\n\n\n— 2 —\n\n\nD a z u\n\nAntwort des Senats vom"
 
   def paper_with_contents(contents)
-    Struct.new(:contents, :doctype).new(contents, Paper::DOCTYPE_MINOR_INTERPELLATION)
+    paper_with_contents_and_title(contents, 'some title')
+  end
+
+  def paper_with_contents_and_title(contents, title)
+    Struct.new(:contents, :doctype, :title).new(contents, Paper::DOCTYPE_MINOR_INTERPELLATION, title)
   end
 
   test 'four people, one party' do
@@ -37,5 +41,15 @@ class BremenPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Dr. Matthias Güldner', originators[:people].fourth
     assert_equal 'Sükrü Senkal', originators[:people].fifth
     assert_equal 'Björn Tschöpe', originators[:people][5]
+  end
+
+  test 'factions' do
+    paper = paper_with_contents_and_title("Antwort des Senats auf die Kleine Anfrage der Fraktion der SPD und Fraktion DIE LINKE\n\n\n\n\nSituation des ttz Bremerhaven\n\n\nAntwort des Senats\n\nauf die Kleine Anfrage der Fraktion der SPD und Fraktion DIE LINKE\n\nvom 9. September 2015\n\n„Situation des ttz Bremerhaven“\n\nDie Fraktion der SPD  und Fraktion DIE LINKEhat folgende Kleine Anfrage an den Senat", 'Situation des ttz Bremerhaven')
+    originators = BremenPDFExtractor.new(paper).extract_originators
+    assert_not_nil originators
+    assert_not_nil originators[:parties]
+    assert_equal 2, originators[:parties].size
+    assert_equal 'SPD', originators[:parties].first
+    assert_equal 'DIE LINKE', originators[:parties].second
   end
 end
