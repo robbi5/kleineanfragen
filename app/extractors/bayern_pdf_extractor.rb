@@ -19,7 +19,7 @@ class BayernPDFExtractor
 
       person = m[1].gsub(/\p{Z}+/, ' ').gsub("\n", ' ').gsub(' und', ', ').gsub(/(\S+)\s-(\S+)/, '\1-\2')
       if person.include?(',')
-        people.concat person.split(',').map { |s| s.strip }
+        people.concat person.split(',').map(&:strip)
       else
         people << person.strip
       end
