@@ -95,9 +95,13 @@ class NamePartyExtractor
     { people: people, parties: parties.uniq }
   end
 
-  # just "Fraktion der SPD"
+  # e.g. "Fraktion der SPD, Fraktion der CDU und Fraktion DIE LINKE"
   def extract_faction
-    { people: [], parties: [self.class.clean_party(@text.strip)] }
+    parties = []
+    @text.split(/,| und /).each do |splitted|
+      parties << self.class.clean_party(splitted.strip)
+    end
+    { people: [], parties: parties }
   end
 
   def self.looks_like_party?(text)

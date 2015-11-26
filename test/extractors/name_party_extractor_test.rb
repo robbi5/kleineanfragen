@@ -386,4 +386,18 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
   test 'fraction: best case scenario' do
     assert_equal({ people: [], parties: ['SPD'] }, NamePartyExtractor.new('Fraktion der SPD', :faction).extract)
   end
+
+  test 'multiple comma separated fractions' do
+    assert_equal(
+      { people: [], parties: ['SPD', 'CDU'] },
+      NamePartyExtractor.new('Fraktion der SPD, Fraktion der CDU', :faction).extract
+    )
+  end
+
+  test 'two fractions' do
+    assert_equal(
+      { people: [], parties: ['SPD', 'DIE LINKE'] },
+      NamePartyExtractor.new('Fraktion der SPD und Fraktion DIE LINKE', :faction).extract
+    )
+  end
 end
