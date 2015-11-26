@@ -17,7 +17,7 @@ class BremenPDFExtractor
       faction_match = @contents.match(FACTIONS)
       unless faction_match.nil? || !faction_match[1].include?(shortened_title)
         factions = faction_match[1]
-        factions = factions[0..(factions.index(shortened_title) - 1)].gsub('\n', ' ')
+        factions = factions[0..(factions.index(shortened_title) - 1)].gsub("\n", ' ')
         factions = NamePartyExtractor.new(factions, NamePartyExtractor::FACTION).extract
         parties.concat factions[:parties]
       end
