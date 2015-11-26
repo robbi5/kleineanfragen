@@ -77,7 +77,7 @@ module BundestagScraper
     doc = extract_doc(content)
 
     doctype = extract_doctype(doc)
-    fail "#{detail_url}: doctype unknown: #{type}" if doctype.blank?
+    fail "#{detail_url}: doctype unknown: #{doctype}" if doctype.blank?
 
     status = extract_status(doc)
     fail "#{detail_url}: ignored, status: #{status}" unless status == 'Beantwortet'
@@ -94,27 +94,45 @@ module BundestagScraper
       url = node.at_css('DRS_LINK').try(:text)
       full_reference = node.at_css('DRS_NUMMER').text
     end
-
     fail "#{detail_url}: ignored, no paper found" unless found && !url.blank?
 
     reference = full_reference.split('/').last
-
     normalized_url = Addressable::URI.parse(url).normalize.to_s
-    date = nil
+    ado = extract_answerers_date_and_originators(doc)
+    fail "#{full_reference}: no date found" if date.nil?
+    published_at = Date.parse(ado[:date])
 
+    {
+      legislative_term: legislative_term,
+      full_reference: full_reference,
+      reference: reference,
+      doctype: doctype,
+      title: title,
+      url: normalized_url,
+      published_at: published_at,
+      originators: ado[:originators],
+      is_answer: true,
+      answerers: ado[:answerers]
+    }
+  end
+
+  def self.extract_answerers_date_and_originators(doc)
     originators = { people: [], parties: [] }
     answerers = { ministries: [] }
+    date = nil
     doc.css('VORGANGSABLAUF VORGANGSPOSITION').each do |node|
       urheber = node.at_css('URHEBER').text
-      if urheber.starts_with?('Antwort') || node.at_css('FUNDSTELLE_LINK').try(:text) == url
-        _, ministry = urheber.match(/Antwort,(?:\s+Urheber :)?\s+([^(]*)/).to_a
+      # originator entry should always have a 'PERSOENLICHER_URHEBER'
+      is_ministry = node.at_css('PERSOENLICHER_URHEBER').nil?
+      if is_ministry
+        _, ministry = urheber.match(/.*,(?:\s+Urheber :)?\s+([^(]*)/).to_a
         unless ministry.nil?
           ministry = ministry.strip.sub(/^Bundesregierung, /, '')
           answerers[:ministries] << ministry
         end
         fundstelle = node.at_css('FUNDSTELLE').text
         _, date = fundstelle.match(/(\d+\.\d+\.\d+)\s/).to_a
-      elsif urheber.starts_with? 'Kleine Anfrage'
+      else
         node.css('PERSOENLICHER_URHEBER').each do |unode|
           originators[:people] << [
             unode.at_css('PERSON_TITEL').try(:text),
@@ -127,22 +145,7 @@ module BundestagScraper
         end
       end
     end
-
-    fail "#{full_reference}: no date found" if date.nil?
-    published_at = Date.parse(date)
-
-    {
-      legislative_term: legislative_term,
-      full_reference: full_reference,
-      reference: reference,
-      doctype: doctype,
-      title: title,
-      url: normalized_url,
-      published_at: published_at,
-      originators: originators,
-      is_answer: true,
-      answerers: answerers
-    }
+    { answerers: answerers, date: date, originators: originators }
   end
 
   def self.extract_title(doc)
