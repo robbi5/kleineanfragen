@@ -167,7 +167,7 @@ class Paper < ActiveRecord::Base
 
   def description
     desc = []
-    desc << "#{doctype_human.titleize} #{full_reference} aus #{body.name}."
+    desc << "#{doctype_human.titleize} #{full_reference} aus #{ApplicationController.helpers.body_with_prefix(body)}."
     if originator_people.size > 0
       desc << " Eingereicht von #{originator_people.map(&:name).join(', ')}, " +
         "#{originator_organizations.map(&:name).join(', ')}."

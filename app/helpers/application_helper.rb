@@ -44,4 +44,8 @@ module ApplicationHelper
   def relative_time_dativ(time)
     time_tag(time, time_ago_in_words_dativ(time), title: time)
   end
+
+  def body_with_prefix(body)
+    (body.state == 'BT' ? 'dem ' : '') + body.name
+  end
 end

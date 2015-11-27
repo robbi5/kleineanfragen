@@ -10,8 +10,8 @@ class SubscriptionMailer < ApplicationMailer
 
     if @subscription.subtype == 'body'
       body = Body.find_by_state(@subscription.query)
-      subject = I18n.t(:'email.subject.body', count: @papers.size, body: body.name)
-      @first_line = I18n.t(:'email.new_interpellations.body', count: @papers.size, body: body.name)
+      subject = I18n.t(:'email.subject.body', count: @papers.size, body: ApplicationController.helpers.body_with_prefix(body))
+      @first_line = I18n.t(:'email.new_interpellations.body', count: @papers.size, body: ApplicationController.helpers.body_with_prefix(body))
     elsif @subscription.subtype == 'search'
       subject = I18n.t(:'email.subject.search', count: @papers.size, query: @subscription.query)
       @first_line = I18n.t(:'email.new_interpellations.search', count: @papers.size, query: @subscription.query)
