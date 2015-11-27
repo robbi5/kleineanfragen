@@ -21,7 +21,7 @@ class HessenTest < ActiveSupport::TestCase
   end
 
   test 'get reference from block' do
-    assert_equal ['19', '1774'], @scraper.extract_reference(@blocks.first)
+    assert_equal '19/1774', @scraper.extract_reference(@blocks.first)
   end
 
   test 'extract_interpellation_type' do
@@ -125,8 +125,8 @@ class HessenTest < ActiveSupport::TestCase
     assert_equal(
       {
         legislative_term: '19',
-        full_reference: '19/1017',
-        reference: '1017',
+        full_reference: '19/1829',
+        reference: '1829',
         doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
         title: 'Evaluation der Lehrerbildung in Hessen',
         published_at: Date.parse('2015-04-15'),
