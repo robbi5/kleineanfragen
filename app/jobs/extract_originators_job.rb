@@ -7,7 +7,8 @@ class ExtractOriginatorsJob < PaperJob
     'BY' => BayernPDFExtractor,
     'HB' => BremenPDFExtractor,
     'SL' => SaarlandPDFExtractor,
-    'TH' => ThueringenPDFExtractor
+    'TH' => ThueringenPDFExtractor,
+    'RP' => RheinlandPfalzPDFExtractor
   }
 
   def perform(paper)
