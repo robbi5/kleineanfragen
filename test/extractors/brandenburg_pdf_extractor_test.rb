@@ -12,7 +12,7 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
 
     assert_equal 1, answerers[:ministries].size
-    assert_equal 'Ministerin für Wissenschaft, Forschung und Kultur', answerers[:ministries].first
+    assert_equal 'Ministerium für Wissenschaft, Forschung und Kultur', answerers[:ministries].first
   end
 
   test 'newline in name' do
@@ -22,7 +22,7 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
 
     assert_equal 1, answerers[:ministries].size
-    assert_equal 'Ministerin für Arbeit, Soziales, Gesundheit, Frauen und Familie', answerers[:ministries].first
+    assert_equal 'Ministerium für Arbeit, Soziales, Gesundheit, Frauen und Familie', answerers[:ministries].first
   end
 
   test 'newline and spaces in name' do
@@ -31,7 +31,7 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
 
     assert_equal 1, answerers[:ministries].size
-    assert_equal 'Minister des Innern und für Kommunales', answerers[:ministries].first
+    assert_equal 'Ministerium des Innern und für Kommunales', answerers[:ministries].first
   end
 
   test 'chef' do
@@ -58,7 +58,7 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
 
     assert_equal 1, answerers[:ministries].size
-    assert_equal 'Minister der Finanzen', answerers[:ministries].first
+    assert_equal 'Ministerium der Finanzen', answerers[:ministries].first
   end
 
   test 'suffix without space' do
@@ -67,7 +67,7 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
 
     assert_equal 1, answerers[:ministries].size
-    assert_equal 'Minister des Innern und für Kommunales', answerers[:ministries].first
+    assert_equal 'Ministerium des Innern und für Kommunales', answerers[:ministries].first
   end
 
   test 'suffix lowercased' do
@@ -76,7 +76,7 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
 
     assert_equal 1, answerers[:ministries].size
-    assert_equal 'Minister des Innern und für Kommunales', answerers[:ministries].first
+    assert_equal 'Ministerium des Innern und für Kommunales', answerers[:ministries].first
   end
 
   test 'unnecessary suffix' do
@@ -85,7 +85,7 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
 
     assert_equal 1, answerers[:ministries].size
-    assert_equal 'Minister für Ländliche Entwicklung, Umwelt und Landwirtschaft', answerers[:ministries].first
+    assert_equal 'Ministerium für Ländliche Entwicklung, Umwelt und Landwirtschaft', answerers[:ministries].first
   end
 
   test 'typo in Landesregierung' do
@@ -94,7 +94,7 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
 
     assert_equal 1, answerers[:ministries].size
-    assert_equal 'Minister der Justiz und für Europa und Verbraucherschutz', answerers[:ministries].first
+    assert_equal 'Ministerium der Justiz und für Europa und Verbraucherschutz', answerers[:ministries].first
   end
 
   test 'im namen' do
@@ -103,6 +103,6 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
 
     assert_equal 1, answerers[:ministries].size
-    assert_equal 'Minister für Wirtschaft und Energie', answerers[:ministries].first
+    assert_equal 'Ministerium für Wirtschaft und Energie', answerers[:ministries].first
   end
 end
