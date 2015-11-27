@@ -49,7 +49,7 @@ class MeckPommOverviewScraperTest < ActiveSupport::TestCase
           parties: ['DIE LINKE']
         },
         answerers: {
-          ministries: []
+          ministries: ['Ministerium für Bildung, Wissenschaft und Kultur']
         }
       }, paper)
   end
