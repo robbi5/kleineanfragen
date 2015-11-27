@@ -26,7 +26,7 @@ class ReviewController < ApplicationController
           'WHERE p.body_id = ? AND p.frozen_at IS NULL AND a.id IS NULL', b.id]
       )
       @incomplete[b.state].uniq!
-      @incomplete[b.state].keep_if { |p| p.is_answer == true && !p.frozen? }
+      @incomplete[b.state].keep_if { |p| p.is_answer == true && !p.frozen? && p.problems.size > 0 }
       @count += @incomplete[b.state].size
     end
   end

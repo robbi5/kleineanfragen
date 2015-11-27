@@ -237,13 +237,19 @@ class Paper < ActiveRecord::Base
     p << :wrong_published_at if published_at.nil? || published_at > Date.today
     p << :missing_page_count if page_count.nil?
     p << :missing_contents if contents.nil?
-    p << :missing_originator_people if originator_people.size == 0 && doctype != DOCTYPE_MAJOR_INTERPELLATION
+    p << :missing_originator_people if originator_people.size == 0 && !empty_originator_people_allowed?
     p << :missing_originator_organizations if originator_organizations.size == 0
     p << :missing_answerers if paper_answerers.size == 0
     p
   end
 
   protected
+
+  def empty_originator_people_allowed?
+    doctype == DOCTYPE_MAJOR_INTERPELLATION ||
+      (body.state == 'BT' && title.start_with?('Politisch motivierte ')) ||
+      (body.state == 'HB')
+  end
 
   def normalize(name, prefix, body = nil)
     return name if Rails.configuration.x.nomenklatura_api_key.blank?
