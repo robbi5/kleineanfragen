@@ -59,8 +59,8 @@ class MeckPommLandtagScraperDetailTest < ActiveSupport::TestCase
     paper = @scraper.extract(body.at_css('.title'))
 
     assert_equal(
-        {
-            legislative_term: '6',
+      {
+        legislative_term: '6',
         full_reference: '6/4640',
         reference: '4640',
         doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
@@ -68,13 +68,13 @@ class MeckPommLandtagScraperDetailTest < ActiveSupport::TestCase
         url: 'http://www.dokumentation.landtag-mv.de/Parldok/dokument/36869/verfahren-zur-verwendung-zus%C3%A4tzlicher-mittel-in-der-kulturf%C3%B6rderung.pdf',
         published_at: Date.parse('Tue, 17 Nov 2015'),
         originators: {
-        people: ['Torsten Koplin'],
-        parties: ['DIE LINKE']
-    },
+          people: ['Torsten Koplin'],
+          parties: ['DIE LINKE']
+        },
         answerers: {
-        ministries: ['Landesregierung']
-    }
-    }, paper)
+          ministries: ['Landesregierung']
+        }
+      }, paper)
   end
 
   test 'extract details 6/4151 minor without party' do

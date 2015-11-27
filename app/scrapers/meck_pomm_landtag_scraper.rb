@@ -95,16 +95,13 @@ module MeckPommLandtagScraper
     if match_ministry
       ministries << match_ministry[1]
     end
-    if ministries.empty? && meta_row.match(/Ausschuss/)
+    if ministries.empty? && meta_row.match(/(?:Ausschuss|Landesregierung)/)
       has_name = meta_row.match(/(Ausschuss)(\s+.+)/)
       if has_name
         ministries << has_name[1].gsub('Ausschuss', 'Ministerium') + has_name[2]
       else
         ministries << 'Landesregierung'
       end
-    end
-    if ministries.empty? && meta_row.match(/Landesregierung/)
-      ministries << 'Landesregierung'
     end
 
     {
