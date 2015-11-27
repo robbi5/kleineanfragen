@@ -105,4 +105,15 @@ class BrandenburgPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 1, answerers[:ministries].size
     assert_equal 'Ministerium für Wirtschaft und Energie', answerers[:ministries].first
   end
+
+  test 'default answerer' do
+    paper = Struct.new(:contents).new(
+      "Antwort\nder Landesregierung\nauf die Kleine Anfrage 94\nder Abgeordneten Dr. Ulrike Liedtke\nder
+SPD-Fraktion\nDrucksache 6/195\nMusikalische Bildung")
+    answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
+
+    assert_not_nil answerers
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Landesregierung', answerers[:ministries].first
+  end
 end
