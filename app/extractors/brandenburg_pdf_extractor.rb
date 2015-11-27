@@ -20,24 +20,26 @@ class BrandenburgPDFExtractor
   def extract_answerers
     return nil if @contents.nil?
     ministries = []
-
     m = @contents.match(ANSWERERS)
-    return nil if m.nil?
 
-    ministry = m[1]
-               .gsub(/\p{Z}/, ' ')
-               .gsub(/\-\n+/, '')
-               .gsub("\n", ' ')
-               .gsub(/\s+/, ' ')
-               .gsub(/\s+,\s+/, ', ')
-               .strip
-               .gsub(/\p{Other}/, '') # invisible chars & private use unicode
-               .gsub(/,$/, '')
-               .gsub(/\s+des\s+Landes\s+Brandenburg$/, '') # unnecessary suffix
-               .gsub(/^Minister(?:in)?\s/, 'Ministerium ') # normalize ministry
+    unless m.nil?
+      ministry = m[1]
+                 .gsub(/\p{Z}/, ' ')
+                 .gsub(/\-\n+/, '')
+                 .gsub("\n", ' ')
+                 .gsub(/\s+/, ' ')
+                 .gsub(/\s+,\s+/, ', ')
+                 .strip
+                 .gsub(/\p{Other}/, '') # invisible chars & private use unicode
+                 .gsub(/,$/, '')
+                 .gsub(/\s+des\s+Landes\s+Brandenburg$/, '') # unnecessary suffix
+                 .gsub(/^Minister(?:in)?\s/, 'Ministerium ') # normalize ministry
+      ministries << ministry unless ministry.blank?
+    end
 
-    ministries << ministry unless ministry.blank?
-
+    if ministries.empty? && !@contents.match(/Antwort\s+der\s+Landesregierung\s+auf\s+die\s+Kleine\s+Anfrage/m).nil?
+      ministries << 'Landesregierung'
+    end
     { ministries: ministries }
   end
 end
