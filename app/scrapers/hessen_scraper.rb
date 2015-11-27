@@ -121,8 +121,9 @@ module HessenScraper
     links = block.css('a')
     if links.size > 1
       links[1].text
+    else
+      links[0].text
     end
-    links[0].text
   end
 
   def self.get_matches_for_date_pattern(line)
