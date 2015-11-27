@@ -186,6 +186,18 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
+  test 'extract meta information from detail with wrong Klanf instead of Klanfr' do
+    text = 'KlAnf Dr. Hans-Ulrich Rülke FDP/DVP 01.07.2013 und Antw MVI Drs 15/3704'
+    actual = @scraper.extract_meta(text)
+    expected = {
+      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+      published_at: Date.parse('2013-07-01'),
+      originators: { people: ['Dr. Hans-Ulrich Rülke'], parties: ['FDP/DVP'] },
+      answerers: { ministries: ['MVI'] }
+    }
+    assert_equal(expected, actual)
+  end
+
   test 'extract meta information from detail with multiple originator parties' do
     text = 'GrAnfr CDU, GRÜNE, SPD und FDP/DVP 13.02.2013 und Antw LReg Drs 15/3038 (40 S.)'
     actual = @scraper.extract_meta(text)
