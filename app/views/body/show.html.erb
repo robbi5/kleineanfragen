@@ -38,7 +38,7 @@
     <% if @body.ministries.size > 0 %>
     <h3>Behörden:</h3>
     <ul>
-      <% @body.ministries.each do |ministry| %>
+      <% @body.ministries.order(name: :asc).each do |ministry| %>
       <li><%= link_to ministry.name, ministry_path(@body, ministry) %></li>
       <% end %>
     </ul>
