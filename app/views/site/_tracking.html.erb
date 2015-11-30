@@ -6,7 +6,7 @@
   _paq.push(['enableLinkTracking']);
 <% if !Rails.env.development? -%>
   (function() {
-    var u="https://piwik.okfn.de/";
+    var u="https://traffic.okfn.de/";
     _paq.push(['setTrackerUrl', u+'piwik.php']);
     _paq.push(['setSiteId', 9]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
@@ -17,5 +17,5 @@
 <% end -%>
 </script>
 <% if !Rails.env.development? -%>
-<noscript><p><img src="https://piwik.okfn.de/piwik.php?idsite=9" style="border:0;" alt="" /></p></noscript>
+<noscript><p><img src="https://traffic.okfn.de/piwik.php?idsite=9" style="border:0;" alt="" /></p></noscript>
 <%- end -%>
