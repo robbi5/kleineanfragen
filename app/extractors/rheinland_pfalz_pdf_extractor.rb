@@ -9,6 +9,8 @@ class RheinlandPfalzPDFExtractor
     return nil if @contents.nil?
 
     m = @contents.match(ORIGINATORS)
+    return nil if m.nil?
+
     names = m[1].gsub(/\p{Z}/, ' ')
             .gsub("\n", ' ')
             .gsub(/\s+/, ' ')
