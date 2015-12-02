@@ -21,7 +21,7 @@ class MeckPommPDFExtractor
     { ministries: ministries }
   end
 
-  def extract_origniators
+  def extract_originators
     return nil if @contents.nil?
     parties = []
 

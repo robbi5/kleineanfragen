@@ -28,7 +28,7 @@ class MeckPommPDFExtractorTest < ActiveSupport::TestCase
       "KLEINE ANFRAGE\n\nder Abgeordneten Barbara Borchardt und Torsten Koplin, Fraktion DIE LINKE\n"
     )
 
-    origniators_party = MeckPommPDFExtractor.new(paper).extract_origniators
+    origniators_party = MeckPommPDFExtractor.new(paper).extract_originators
 
     assert_equal 1, origniators_party[:parties].size
     assert_equal 'DIE LINKE', origniators_party[:parties].first
@@ -41,7 +41,7 @@ class MeckPommPDFExtractorTest < ActiveSupport::TestCase
       'asdfasdf asdf a asdf HALLO'
     )
 
-    origniators_party = MeckPommPDFExtractor.new(paper).extract_origniators
+    origniators_party = MeckPommPDFExtractor.new(paper).extract_originators
 
     assert_equal 1, origniators_party[:parties].size
     assert_equal 'DIE LINKE', origniators_party[:parties].first
