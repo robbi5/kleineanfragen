@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class PersonTest < ActiveSupport::TestCase
+  setup do
+    ENV['NOMENKLATURA_HOST'] = 'localhost'
+    ENV['NOMENKLATURA_APIKEY'] = 'dummy'
+  end
+
   test 'nk_sync: throws exception when in multiple bodies' do
     p = people(:multi_body_person)
     assert_equal 2, p.papers.size
