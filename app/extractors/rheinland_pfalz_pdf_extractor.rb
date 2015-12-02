@@ -3,7 +3,7 @@ class RheinlandPfalzPDFExtractor
     @contents = paper.contents
   end
 
-  ORIGINATORS = /K\s*l\s*e\s*i\s*n\s*e\s*A\s*n\s*f\s*r\s*a\s*g\s*e\n\nde[rs]\s+Abgeordneten\s+(.+)\n\nund/m
+  ORIGINATORS = /K\s*l\s*e\s*i\s*n\s*e\s*A\s*n\s*f\s*r\s*a\s*g\s*e\n\nde[rs]\s+Abgeordneten\s+(.+?)\n\nund\s+A\s*n\s*t\s*w\s*o\s*r\s*t/m
 
   def extract_originators
     return nil if @contents.nil?
