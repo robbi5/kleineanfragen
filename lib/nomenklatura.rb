@@ -1,6 +1,6 @@
 #
 # Simple Nomenklatura (https://github.com/pudo/nomenklatura) API client
-# Only for API version 2, so only master and opennames.org
+# Only for API version 2, so only master
 # Based on the https://github.com/pudo/pynomenklatura Python API client
 #
 module Nomenklatura
@@ -10,8 +10,9 @@ module Nomenklatura
 
     def initialize(options = {})
       options = { api_prefix: '/api/2/' }.merge(options)
-      host = options[:host] || ENV['NOMENKLATURA_HOST'] || 'http://opennames.org'
+      host = options[:host] || ENV['NOMENKLATURA_HOST']
       key = options[:api_key] || ENV['NOMENKLATURA_APIKEY']
+      fail 'host or api_key are missing' if host.nil? || key.nil?
       self.class.base_uri(host)
       self.class.default_params(api_key: key)
       if host[-1] == '/' && options[:api_prefix][0] == '/'
