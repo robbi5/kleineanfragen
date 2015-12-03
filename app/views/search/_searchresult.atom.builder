@@ -1,7 +1,14 @@
 url = paper_url(body: paper.body, legislative_term: paper.legislative_term, paper: paper)
 feed.entry paper, published: paper.published_at, updated: paper.updated_at, url: url do |entry|
   # items like in html search result
+
   title = details[:highlight].try(:fetch, :title, nil).try(:html_safe) || paper.title
+
+  if params[:feedformat] == 'twitter'
+    title = "#{paper.body.state}: #{title}"
+    title += " (#{paper.originators.map(&:name).join(', ')})" if title.size < 120
+  end
+
   snippet = details[:highlight].try(:fetch, :contents, nil) || ''
   snippet += '&hellip;' unless snippet.blank?
 
