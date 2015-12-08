@@ -44,13 +44,13 @@ class SachsenPDFExtractor
     first_block = first_block.mb_chars.downcase.to_s
 
     # remove prefix
-    first_block.gsub!(/^s.chsisches\s+/, '')
+    first_block.gsub!(/^s.chsisches?\s+/, '')
 
     # add missing prefix
     first_block.gsub!(/^des/, 'staatsministerium des')
 
     # remove things after the name
-    m = first_block.match(/(.+?)\s+(?:postfach|freistaat|der\s+staat)/)
+    m = first_block.match(/(.+?)\s+(?:postfach|freistaat|der\s+staat|s.chsische)/)
     if !m.nil?
       first_block = m[1]
     end

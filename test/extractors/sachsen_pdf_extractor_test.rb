@@ -42,6 +42,9 @@ class SachsenPDFExtractorTest < ActiveSupport::TestCase
     'STAATSMIN1STBR1UM DES INNERN Freistaat SAC\'S-iSFTMj .jrv^n^' => 'Staatsministerium des Innern',
     'STAATSMIN1STER1UM DES INIMECTi Freistaat SÄCHSE1N'            => 'Staatsministerium des Innern',
 
+    # Staatskanzlei
+    'SÄCHSISCHE STAATSKANZLEI SÄCHSISCHE STAATSKANZLEI 01095 Dre'  => 'Staatskanzlei',
+
     'Anlage zu KA 6/2578 Seite 1 von 7 Im Monat August 2015 w'     => nil,
     '6-2137_Seite_01 6-2137_Seite_02 6-2137_Seite_03 6-2137_Se'    => nil
   }
