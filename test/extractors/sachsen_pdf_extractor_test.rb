@@ -13,6 +13,9 @@ class SachsenPDFExtractorTest < ActiveSupport::TestCase
 
     'STAATSMINISTERIUI\\4 FÜR UMWELT UND LANDWIRTSCHAFT SÄCHSISCH' => 'Staatsministerium für Umwelt und Landwirtschaft',
     'STAATSI/INISTERIUM FÜR UMWELT UND LANDWIRTSCHAFT SACHSISCHE'  => 'Staatsministerium für Umwelt und Landwirtschaft',
+    '(oto sf ¡.r, o c{ STAATSNIINISTERIUI\\4 FÜR UMWELT UND TAND'  => 'Staatsministerium für Umwelt und Landwirtschaft',
+    'STAATSNIINISTERIUI\\4 FÜR UMWELT UND TAND'                    => 'Staatsministerium für Umwelt und Landwirtschaft',
+
     'SÄCHSISCHES STAATSMINISTERIUM DER FINANZEN Postfach 100 948'  => 'Staatsministerium der Finanzen',
     'SACHSISCHES STAATSMINISTERIUM DER JUSTIZ Hosp¡talstr 7 | 010' => 'Staatsministerium der Justiz',
     'Sächsisches Staatsministerium für Wirtschaft, Arbeit und Ver' => 'Staatsministerium für Wirtschaft, Arbeit und Verkehr',

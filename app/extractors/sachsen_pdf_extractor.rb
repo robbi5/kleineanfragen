@@ -39,6 +39,7 @@ class SachsenPDFExtractor
                   .gsub('MINISTETOUM', 'MINISTERIUM')
                   .gsub('MIIMISTERIUM', 'MINISTERIUM')
                   .gsub('MlNlSTERlUM', 'MINISTERIUM')
+                  .gsub(/\p{Punctuation}/, '')
 
     # lowercase it
     first_block = first_block.mb_chars.downcase.to_s
