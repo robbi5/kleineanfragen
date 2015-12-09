@@ -10,7 +10,7 @@ module HessenScraper
   end
 
   def self.extract_reference(block)
-    block.at_css('span[name="OFR_Drs"]').content.split('/')
+    block.at_css('span[name="OFR_Drs"]').content
   end
 
   def self.extract_interpellation_type(block)
@@ -33,10 +33,11 @@ module HessenScraper
   end
 
   def self.extract_paper(block)
-    leg, ref = extract_reference(block)
+    full_reference = extract_reference(block)
+    leg, ref = full_reference.split('/')
     {
       legislative_term: leg,
-      full_reference: [leg, ref].join('/'),
+      full_reference: full_reference,
       reference: ref,
       doctype: extract_interpellation_type(block),
       title: extract_title(block),
@@ -51,12 +52,12 @@ module HessenScraper
   def self.extract_detail_paper(block)
     response_line = extract_answer_line(block.content)
     return nil if response_line.nil?
-
-    leg, ref = extract_detail_reference(block)
+    full_reference = extract_detail_reference(block)
+    leg, ref = full_reference.split('/')
     date = get_date_from_detail_line(response_line)
     {
       legislative_term: leg,
-      full_reference: [leg, ref].join('/'),
+      full_reference: full_reference,
       reference: ref,
       doctype: extract_detail_type(block),
       title: extract_detail_title(block),
@@ -117,7 +118,12 @@ module HessenScraper
   end
 
   def self.extract_detail_reference(block)
-    block.at_css('a').content.split('/')
+    links = block.css('a')
+    if links.size > 1
+      links[1].text
+    else
+      links[0].text
+    end
   end
 
   def self.get_matches_for_date_pattern(line)
