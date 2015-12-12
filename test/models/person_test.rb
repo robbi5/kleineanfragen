@@ -6,15 +6,11 @@ class PersonTest < ActiveSupport::TestCase
     ENV['NOMENKLATURA_APIKEY'] = 'dummy'
   end
 
-  test 'nk_sync: throws exception when in multiple bodies' do
+  test 'nk_dataset: throws exception when in multiple bodies' do
     p = people(:multi_body_person)
     assert_equal 2, p.papers.size
 
-    assert_raises Exception do
-      Nomenklatura::Dataset.stub_any_instance(:entity_by_name, nil) do
-        p.nomenklatura_sync!
-      end
-    end
+    assert_raises(Exception) { p.nomenklatura_dataset }
   end
 
   test 'nk_sync: person with same name, do nothing' do

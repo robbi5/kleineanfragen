@@ -1,7 +1,7 @@
 module NkSyncable
   extend ActiveSupport::Concern
 
-  def nomenklatura_sync!
+  def nomenklatura_dataset
     if has_attribute?(:body) || has_attribute?(:body_id)
       state = body.state
     elsif self.class.method_defined? :bodies
@@ -13,7 +13,11 @@ module NkSyncable
 
     model_name = self.class.name.underscore.pluralize
 
-    dataset = Nomenklatura::Dataset.new("ka-#{model_name}-#{state.downcase}")
+    "ka-#{model_name}-#{state.downcase}"
+  end
+
+  def nomenklatura_sync!
+    dataset = Nomenklatura::Dataset.new(nomenklatura_dataset)
     entity = dataset.entity_by_name(name).dereference
     if entity.invalid?
       # invalid: remove self
