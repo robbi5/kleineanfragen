@@ -24,4 +24,21 @@ class ContainsTableJobTest < ActiveSupport::TestCase
     probability = ContainsTableJob.recognize(text)
     assert_operator probability, :>=, 1
   end
+
+  test 'some more numbers like in BE 17/14442' do
+    text = "U1 96,4 97,1 96,3 98,3 98,3 97,6 96,1 96,0 96,0 \n\n" +
+           "U2 96,1 95,1 97,6 97,6 98,1 97,4 97,3 96,8 97,1 \n\n" +
+           'U3 98,8 98,2 98,3 99,0 99,4 99,2 99,0 98,8 98,8'
+    probability = ContainsTableJob.recognize(text)
+    assert_operator probability, :>=, 1
+  end
+
+  test 'month table in BE 17/14442' do
+    text = "Juni 2014 21.844  \n\n" +
+           "Juli 2014 32.982  \n\n" +
+           "Juli 2014 -20.000 -1.113 -439 -220 -7.722 -7.276 -6.109  \n\n" +
+           'Summe 233.217'
+    probability = ContainsTableJob.recognize(text)
+    assert_operator probability, :>=, 1
+  end
 end

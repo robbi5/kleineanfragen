@@ -53,6 +53,12 @@ class ContainsTableJob < PaperJob
       probability += 1
     end
 
+    # Hint 8: "\nAAA 10,1 10,2 10,3\nBBB 20 21,1 22,2"
+    m = contents.match(/\n(\s+\S+\s+([\-\d\.,]+\s+)+\n)+/m)
+    if m
+      probability += 0.5 * m.size
+    end
+
     probability
   end
 end
