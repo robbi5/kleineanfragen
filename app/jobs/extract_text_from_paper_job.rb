@@ -9,8 +9,8 @@ class ExtractTextFromPaperJob < PaperJob
       text = extract_tika(paper)
     elsif !Abbyy.application_id.blank? && options[:method] == :abbyy
       text = extract_abbyy(paper)
-    elsif options[:method] == :a9t9
-      text = extract_a9t9(paper)
+    elsif options[:method] == :ocrspace
+      text = extract_ocrspace(paper)
     else
       text = extract_local(paper)
     end
@@ -74,15 +74,15 @@ class ExtractTextFromPaperJob < PaperJob
     text.body.force_encoding('utf-8').strip
   end
 
-  def extract_a9t9(paper)
+  def extract_ocrspace(paper)
     url = paper.public_url(true)
     fail "No copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] in s3 found" if url.nil?
-    response = Excon.post('https://ocr.a9t9.com/api/Parse/Image',
+    response = Excon.post('https://ocr.space/api/Parse/Image',
                           body: URI.encode_www_form(apikey: 'helloworld', url: url, language: 'ger'),
                           headers: { 'Content-Type' => 'application/x-www-form-urlencoded', 'Accept' => 'application/json' })
     fail 'Couldn\'t get response' if response.status != 200
     data = JSON.parse response.body
-    fail "Error from a9t9: #{data['ErrorMessage']}, #{data['ErrorDetails']}" if data['OCRExitCode'] > 1 || data['IsErroredOnProcessing'] != false
+    fail "Error from ocr.space: #{data['ErrorMessage']}, #{data['ErrorDetails']}" if data['OCRExitCode'] > 1 || data['IsErroredOnProcessing'] != false
     text = []
     data['ParsedResults'].each do |result|
       text << result['ParsedText'].strip
