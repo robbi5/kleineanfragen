@@ -67,4 +67,16 @@ class BerlinPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 1, answerers[:ministries].size
     assert_equal 'Senatsverwaltung für Stadtentwicklung und Umwelt', answerers[:ministries].first
   end
+
+  test 'normal ministry with long attachment, two spaces and open brace' do
+    paper = Struct.new(:contents).new(
+      PREFIX_LINE + "\nSenatsverwaltung für \n\nGesundheit und Soziales " +
+      "\n\n\n \n(Eingang beim Abgeordnetenhaus am 07. Dez. 2015) " +
+      "\n\n\nAnlage zur Schriftlichen Anfrage 17/17386\n\ndummy  (")
+
+    answerers = BerlinPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Senatsverwaltung für Gesundheit und Soziales', answerers[:ministries].first
+  end
 end
