@@ -56,15 +56,13 @@ class MeckPommPDFExtractorTest < ActiveSupport::TestCase
         "minderjährigen Ausländer in den Jahren 2012, 2013 und 2014 auf die Landtagsdrucksache\n" +
         "6/3568 (Kleine Anfrage der Abgeordneten Jacqueline Bernhardt und Dr. Hikmat Al-\n" +
         "Sabty, Fraktion DIE LINKE zur Situation der unbegleiteten minderjährigen Flüchtlinge vom\n" +
-        "13. Januar 2015)."
+        "13. Januar 2015).\n"
     )
 
     origniators_party = MeckPommPDFExtractor.new(paper).extract_originators
     puts origniators_party
-    # FIXME fix scraper bug and write assert
+    # FIXME: fix scraper bug and write assert
   end
-
-
 end
 
 
