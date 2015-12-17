@@ -47,7 +47,6 @@ class MeckPommPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'DIE LINKE', origniators_party[:parties].first
   end
 
-
   test 'regression 6/4717' do
     paper = Struct.new(:contents).new(
       "[...]KLEINE ANFRAGE\nder Abgeordneten Jacqueline Bernhardt, Fraktion DIE LINKE\n" +
