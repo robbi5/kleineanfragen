@@ -33,12 +33,42 @@ class ContainsTableJobTest < ActiveSupport::TestCase
     assert_operator probability, :>=, 1
   end
 
-  test 'month table in BE 17/14442' do
+  test 'simple faked table' do
+    text = "AAA -11.234\nBBB 123\nCCC 1,23\n"
+    probability = ContainsTableJob.recognize(text)
+    assert_operator probability, :>=, 1
+  end
+
+  test 'month table from BE 17/14442' do
     text = "Juni 2014 21.844  \n\n" +
            "Juli 2014 32.982  \n\n" +
            "Juli 2014 -20.000 -1.113 -439 -220 -7.722 -7.276 -6.109  \n\n" +
            'Summe 233.217'
     probability = ContainsTableJob.recognize(text)
     assert_operator probability, :>=, 1
+  end
+
+  test 'table from TH 6/1379' do
+    text = "\nStellenanteil Anzahl der Verträge\n" +
+           "unter 25 Prozent 10\n" +
+           "25 bis 50 Prozent 17\n" +
+           "50 bis 75 Prozent 25\n" +
+           "75 bis 100 Prozent 31\n"
+    probability = ContainsTableJob.recognize(text)
+    assert_operator probability, :>=, 1
+  end
+
+  test 'no table: some text with a date' do
+    text = "Antwort des Niedersächsischen Ministeriums für Inneres und Sport namens der Landesregierung\n" +
+           " vom 09.12.2015,  \n\n"+
+           'gezeichnet '
+    probability = ContainsTableJob.recognize(text)
+    assert_operator probability, :<, 1
+  end
+
+  test 'no table: some date on a new line' do
+    text = "\n\n  \n \n\n \n\n \n\n \n\n \n\n \n\n \n\n \n\n \n\n \n\n \n\n \n\n \n\n5.8.2015 \n\n \n\n\n\n 2 \n\n"
+    probability = ContainsTableJob.recognize(text)
+    assert_operator probability, :<, 1
   end
 end

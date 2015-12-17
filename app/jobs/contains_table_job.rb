@@ -43,7 +43,7 @@ class ContainsTableJob < PaperJob
     end
 
     # Hint 6: \d\n\d\n\d\n...
-    m = contents.match(/(\d[\d\s]+\n[\d][\s\d]+)+/m)
+    m = contents.scan(/(\d[\p{Zs}\d]+\n[\d][\p{Zs}\d]+)+/m)
     if m
       probability += 0.5 * m.size
     end
@@ -53,8 +53,10 @@ class ContainsTableJob < PaperJob
       probability += 1
     end
 
-    # Hint 8: "\nAAA 10,1 10,2 10,3\nBBB 20 21,1 22,2"
-    m = contents.match(/\n(\s+\S+\s+([\-\d\.,]+\s+)+\n)+/m)
+    # Hint 8: "\nAAA 10,1 10,2 10,3\nBBB 20 21,1 -1.022,2"
+    # m = contents.match(/\n(\s+\S+\s+([\-\d\.,]+\s+)+\n)+/m)
+    # m = contents.match(/\n(\p{Zs}*\S+\p{Zs}+(\-?\d*\.?\d+(?:\,\d+)?\p{Zs}*)+\n)+/m)
+    m = contents.scan(/\n(\p{Zs}*\S+\p{Zs}+(\-?(?:\d*\.?\d+|\d{1,3}(?:\.\d{3})*(?:\,\d+)?)\p{Zs}*)+)/m)
     if m
       probability += 0.5 * m.size
     end
