@@ -26,15 +26,15 @@ class ContainsTableJobTest < ActiveSupport::TestCase
   end
 
   test 'some more numbers like in BE 17/14442' do
-    text = "U1 96,4 97,1 96,3 98,3 98,3 97,6 96,1 96,0 96,0 \n\n" +
+    text = "\nU1 96,4 97,1 96,3 98,3 98,3 97,6 96,1 96,0 96,0 \n\n" +
            "U2 96,1 95,1 97,6 97,6 98,1 97,4 97,3 96,8 97,1 \n\n" +
-           'U3 98,8 98,2 98,3 99,0 99,4 99,2 99,0 98,8 98,8'
+           "U3 98,8 98,2 98,3 99,0 99,4 99,2 99,0 98,8 98,8\n"
     probability = ContainsTableJob.recognize(text)
     assert_operator probability, :>=, 1
   end
 
   test 'simple faked table' do
-    text = "AAA -11.234\nBBB 123\nCCC 1,23\n"
+    text = "\nAAA -11.234\nBBB 123\nCCC 1,23\n"
     probability = ContainsTableJob.recognize(text)
     assert_operator probability, :>=, 1
   end

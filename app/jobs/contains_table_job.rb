@@ -54,9 +54,7 @@ class ContainsTableJob < PaperJob
     end
 
     # Hint 8: "\nAAA 10,1 10,2 10,3\nBBB 20 21,1 -1.022,2"
-    # m = contents.match(/\n(\s+\S+\s+([\-\d\.,]+\s+)+\n)+/m)
-    # m = contents.match(/\n(\p{Zs}*\S+\p{Zs}+(\-?\d*\.?\d+(?:\,\d+)?\p{Zs}*)+\n)+/m)
-    m = contents.scan(/\n(\p{Zs}*\S+\p{Zs}+(\-?(?:\d*\.?\d+|\d{1,3}(?:\.\d{3})*(?:\,\d+)?)\p{Zs}*)+)/m)
+    m = contents.scan(/\n(\p{Zs}*\S+\p{Zs}+(\-?(?:\d*\.?\d+|\d{1,3}(?:\.\d{3})*(?:\,\d+)?)\p{Zs}*)+)\n/m)
     if m
       probability += 0.5 * m.size
     end
