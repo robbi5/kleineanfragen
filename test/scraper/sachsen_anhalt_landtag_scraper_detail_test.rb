@@ -3,7 +3,7 @@ require 'test_helper'
 class SachsenAnhaltLandtagScraperDetailTest < ActiveSupport::TestCase
   def setup
     @scraper = SachsenAnhaltLandtagScraper
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sachsen_anhalt_landtag_scraper_detail.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/st/detail.html')))
   end
 
   test 'extract detail info' do

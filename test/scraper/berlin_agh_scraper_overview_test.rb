@@ -3,11 +3,11 @@ require 'test_helper'
 class BerlinAghScraperOverviewTest < ActiveSupport::TestCase
   def setup
     @scraper = BerlinAghScraper
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/berlin_agh_scraper_overview.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/be/overview.html')))
   end
 
   def paper_from_fixture(reference)
-    html = Nokogiri::HTML(File.read(Rails.root.join("test/fixtures/berlin_agh_scraper_overview_#{reference}.html")))
+    html = Nokogiri::HTML(File.read(Rails.root.join("test/fixtures/be/overview_#{reference}.html")))
     body = @scraper.extract_body(html)
     seperator = @scraper.extract_seperators(body).first
     @scraper.extract_paper(seperator)

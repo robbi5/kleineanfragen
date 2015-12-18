@@ -3,7 +3,7 @@ require 'test_helper'
 class BremenBuergerschaftScraperOverviewTest < ActiveSupport::TestCase
   def setup
     @scraper = BremenBuergerschaftScraper
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bremen_buergerschaft_scraper_overview.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hb/overview.html')))
   end
 
   test 'get search results from resultpage' do

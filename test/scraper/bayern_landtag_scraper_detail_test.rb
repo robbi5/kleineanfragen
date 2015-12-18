@@ -6,7 +6,7 @@ class BayernLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract detail info' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bayern_landtag_scraper_detail.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/by/detail.html')))
     block = @scraper.extract_first_rows(@html).first
     paper = @scraper.extract_paper(block)
 
@@ -27,7 +27,7 @@ class BayernLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract correct title from detail, even if abstact is included' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bayern_landtag_scraper_detail_6191.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/by/detail_6191.html')))
     block = @scraper.extract_first_rows(@html).first
     paper = @scraper.extract_paper(block)
 

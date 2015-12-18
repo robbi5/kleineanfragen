@@ -3,11 +3,11 @@ require 'test_helper'
 class SaarlandScraperOverviewTest < ActiveSupport::TestCase
   def setup
     @scraper = SaarlandScraper
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/saarland_scraper_overview.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sl/overview.html')))
   end
 
-  entry = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/saarland_scraper_single_row.html')))
-  invalid_entry = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/saarland_scraper_single_invalid_row.html')))
+  entry = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sl/single_row.html')))
+  invalid_entry = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sl/single_invalid_row.html')))
 
   test 'read table from resultpage' do
     entries = @scraper.extract_entries(@html)

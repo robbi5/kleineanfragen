@@ -3,7 +3,7 @@ require 'test_helper'
 class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   def setup
     @scraper = RheinlandPfalzLandtagScraper
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_detail.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail.html')))
   end
 
   test 'extract complete paper' do
@@ -26,7 +26,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract paper with additional link like in 16/4097' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_detail_4097.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_4097.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -46,7 +46,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract paper with multiple ministries like in 16/3813' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_detail_3813.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_3813.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -69,7 +69,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract paper without party like 16/863' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_detail_863.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_863.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -91,7 +91,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract paper with two meta_rows like 16/1734' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_detail_1734.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_1734.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -113,7 +113,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract paper with ministry staatskanzlei like 16/4965' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_detail_4965.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_4965.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -135,7 +135,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract complete paper from Major' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_major_detail.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/major_detail.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -155,7 +155,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract complete paper from Major with more information and links' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_major_detail_4503.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/major_detail_4503.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -175,7 +175,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract complete paper from Major with an additional answer' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_major_detail_579.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/major_detail_579.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -195,7 +195,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract complete major paper with multiple originator parties' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_major_detail_2887.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/major_detail_2887.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 

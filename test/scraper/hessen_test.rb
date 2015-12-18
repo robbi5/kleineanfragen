@@ -3,10 +3,10 @@ require 'test_helper'
 class HessenTest < ActiveSupport::TestCase
   def setup
     @scraper = HessenScraper
-    @overview = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_overview.html')))
-    @detail_minor = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_detail_minor.html')))
-    @detail_major = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_detail_major.html')))
-    @search = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_search.html')))
+    @overview = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/he/overview.html')))
+    @detail_minor = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/he/detail_minor.html')))
+    @detail_major = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/he/detail_major.html')))
+    @search = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/he/search.html')))
     @blocks = @scraper.extract_blocks @overview
   end
 
@@ -96,7 +96,7 @@ class HessenTest < ActiveSupport::TestCase
   end
 
   test 'extract fraktion like in 1585' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_detail_1585.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/he/detail_1585.html')))
     block = @scraper.extract_detail_block(html)
     text = @scraper.extract_originator_text(block)
     assert_equal(
@@ -107,7 +107,7 @@ class HessenTest < ActiveSupport::TestCase
   end
 
   test 'extract fraktion from a big block like in 382' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_detail_382.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/he/detail_382.html')))
     block = @scraper.extract_detail_block(html)
     text = @scraper.extract_originator_text(block)
     assert_equal(
@@ -118,7 +118,7 @@ class HessenTest < ActiveSupport::TestCase
   end
 
   test 'extract whole paper from detail page like 19/1017' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_detail_1017.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/he/detail_1017.html')))
     block = @scraper.extract_detail_block(html)
     paper = @scraper.extract_detail_paper(block)
 
@@ -139,14 +139,14 @@ class HessenTest < ActiveSupport::TestCase
   end
 
   test 'extract whole paper from detail page like 19/1616' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_detail_19_1616.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/he/detail_19_1616.html')))
     block = @scraper.extract_detail_block(html)
     paper = @scraper.extract_detail_paper(block)
     assert_equal Date.parse('2015-04-13'), paper[:published_at]
   end
 
   test 'extract whole paper from detail page like 19/1615' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hessen_detail_19_1615.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/he/detail_19_1615.html')))
     block = @scraper.extract_detail_block(html)
     paper = @scraper.extract_detail_paper(block)
     assert_equal Date.parse('2015-04-02'), paper[:published_at]

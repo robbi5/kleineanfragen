@@ -3,7 +3,7 @@ require 'test_helper'
 class NordrheinWestfalenLandtagScraperTest < ActiveSupport::TestCase
   def setup
     @scraper = NordrheinWestfalenLandtagScraper
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/nordrhein_westfalen_landtag_scraper_overview.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/nw/overview.html')))
   end
 
   test 'extract complete paper' do
@@ -26,7 +26,7 @@ class NordrheinWestfalenLandtagScraperTest < ActiveSupport::TestCase
   end
 
   test 'extract complete paper with different date text' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/nordrhein_westfalen_landtag_scraper_detail_8774.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/nw/detail_8774.html')))
     block = @scraper.extract_blocks(html).first
     paper = @scraper.extract_paper(block, resolve_pdf: false)
 
@@ -53,7 +53,7 @@ class NordrheinWestfalenLandtagScraperTest < ActiveSupport::TestCase
   end
 
   test 'extract additional paper details' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/nordrhein_westfalen_landtag_scraper_detail.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/nw/detail.html')))
     block = @scraper.extract_blocks(html).first
     paper = @scraper.extract_paper_details(block)
 
@@ -64,7 +64,7 @@ class NordrheinWestfalenLandtagScraperTest < ActiveSupport::TestCase
   end
 
   test 'extract additional paper details from major interpellation' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/nordrhein_westfalen_landtag_scraper_detail_7452.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/nw/detail_7452.html')))
     block = @scraper.extract_blocks(html).first
     paper = @scraper.extract_paper_details(block)
 
@@ -72,7 +72,7 @@ class NordrheinWestfalenLandtagScraperTest < ActiveSupport::TestCase
   end
 
   test 'extract originators from major paper with a four names and two parties' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/nordrhein_westfalen_landtag_scraper_detail_7576.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/nw/detail_7576.html')))
     block = @scraper.extract_blocks(html).first
     paper = @scraper.extract_paper_details(block)
 

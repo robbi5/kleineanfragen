@@ -6,7 +6,7 @@ class BerlinAghScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract complete paper, written interpellation' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/berlin_agh_scraper_detail.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/be/detail.html')))
     body = @scraper.extract_body(html)
     seperator = @scraper.extract_seperators(body).first
     paper = @scraper.extract_paper(seperator)
@@ -27,7 +27,7 @@ class BerlinAghScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract complete paper, minor interpellation' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/berlin_agh_scraper_detail_17_13104.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/be/detail_17_13104.html')))
     body = @scraper.extract_body(html)
     seperator = @scraper.extract_seperators(body).first
     paper = @scraper.extract_paper(seperator)

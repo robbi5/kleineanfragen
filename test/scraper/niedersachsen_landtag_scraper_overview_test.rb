@@ -2,7 +2,7 @@ require 'test_helper'
 
 class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
   def setup
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/niedersachsen_landtag_scraper_overview.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/ni/overview.html')))
     @scraper = NiedersachsenLandtagScraper
   end
 
@@ -122,7 +122,7 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
   end
 
   test 'extract results from container in major paper' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/niedersachsen_landtag_scraper_overview_gr.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/ni/overview_major.html')))
     block = @scraper.extract_blocks(html).first
     details = @scraper.extract_references_block(block)
     container = @scraper.extract_container(details)
@@ -133,7 +133,7 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
   end
 
   test 'extract complete major paper' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/niedersachsen_landtag_scraper_overview_gr.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/ni/overview_major.html')))
     block = @scraper.extract_blocks(html).first
     paper = @scraper.extract_paper(block)
 

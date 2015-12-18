@@ -5,7 +5,7 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
     @scraper = SchleswigHolsteinLandtagScraper
     @html = Nokogiri::HTML(
       File.read(
-        Rails.root.join('test/fixtures/schleswig_holstein_landtag_scraper_overview.html')
+        Rails.root.join('test/fixtures/sh/overview.html')
       ).force_encoding('WINDOWS-1252')
     )
     @table = @scraper.extract_table @html
@@ -62,7 +62,7 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
   end
 
   test 'get major paper' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/schleswig_holstein_landtag_scraper_major.html')).force_encoding('WINDOWS-1252'))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sh/major.html')).force_encoding('WINDOWS-1252'))
     table = @scraper.extract_table html
     blocks = @scraper.extract_blocks table
     paper = @scraper.extract_major_paper blocks[0]
@@ -83,7 +83,7 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
   test 'block is minor or major' do
     assert_equal false, @scraper.major?(@blocks[0])
 
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/schleswig_holstein_landtag_scraper_major.html')).force_encoding('WINDOWS-1252'))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sh/major.html')).force_encoding('WINDOWS-1252'))
     table = @scraper.extract_table html
     block = @scraper.extract_blocks table
     assert_equal true, @scraper.major?(block)
@@ -91,7 +91,7 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
   end
 
   test 'update details' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/schleswig_holstein_landtag_scraper_major_detail.html')).force_encoding('WINDOWS-1252'))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sh/major_detail.html')).force_encoding('WINDOWS-1252'))
     block = @scraper.extract_detail_block(html)
     assert_equal false, block.nil?
     line = @scraper.extract_originator_line block

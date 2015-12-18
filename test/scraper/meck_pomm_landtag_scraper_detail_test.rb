@@ -6,7 +6,7 @@ class MeckPommLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract details' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/meck_pomm_landtag_scraper_detail.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/mv/detail.html')))
     body = html.search("//table[@id = 'parldokresult']")
     paper = @scraper.extract(body.at_css('.title'))
 
@@ -30,7 +30,7 @@ class MeckPommLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract details 6/1597' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/meck_pomm_landtag_scraper_detail_6_1597.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/mv/detail_6_1597.html')))
     body = html.search("//table[@id = 'parldokresult']")
     paper = @scraper.extract(body.at_css('.title'))
 
@@ -54,7 +54,7 @@ class MeckPommLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract details 6/4640 without minisitry' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/meck_pomm_landtag_scraper_detail_6_4640.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/mv/detail_6_4640.html')))
     body = html.search("//table[@id = 'parldokresult']")
     paper = @scraper.extract(body.at_css('.title'))
 
@@ -78,7 +78,7 @@ class MeckPommLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract details 6/4151 minor without party' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/meck_pomm_landtag_scraper_detail_6_4151.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/mv/detail_6_4151.html')))
     body = html.search("//table[@id = 'parldokresult']")
     paper = @scraper.extract(body.at_css('.title'))
 
@@ -102,7 +102,7 @@ class MeckPommLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract details major interpellation with Answerers' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/meck_pomm_landtag_scraper_detail_6_3870.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/mv/detail_6_3870.html')))
     body = html.search("//table[@id = 'parldokresult']")
     paper = @scraper.extract(body.at_css('.title'))
 
@@ -126,7 +126,7 @@ class MeckPommLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract details major interpellation without Answerers' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/meck_pomm_landtag_scraper_detail_6_2572.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/mv/detail_6_2572.html')))
     body = html.search("//table[@id = 'parldokresult']")
     paper = @scraper.extract(body.at_css('.title'))
 

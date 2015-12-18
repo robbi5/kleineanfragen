@@ -3,7 +3,7 @@ require 'test_helper'
 class BayernLandtagScraperOverviewTest < ActiveSupport::TestCase
   def setup
     @scraper = BayernLandtagScraper
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bayern_landtag_scraper_overview.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/by/overview.html')))
   end
 
   test 'extract first rows from search result page' do

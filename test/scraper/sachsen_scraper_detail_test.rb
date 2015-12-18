@@ -6,7 +6,7 @@ class SachsenScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract detail first page' do
-    content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sachsen_scraper_detail_search.html')))
+    content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sn/detail_search.html')))
 
     item = @scraper.extract_overview_items(content).first
     paper = @scraper.extract_detail_paper(item)
@@ -29,7 +29,7 @@ class SachsenScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract detail vorgang page' do
-    content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sachsen_scraper_detail_vorgang.html')))
+    content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sn/detail_vorgang.html')))
 
     answered_at = @scraper::Detail.extract_answered_at(content)
     buttons = @scraper::Detail.extract_pdf_buttons(content)
@@ -49,7 +49,7 @@ class SachsenScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract answerer from vorgang page' do
-    content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sachsen_scraper_detail_vorgang_vorgang.html')))
+    content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sn/detail_vorgang_vorgang.html')))
 
     answerer = @scraper::Detail.extract_vorgang_answerer(content)
 

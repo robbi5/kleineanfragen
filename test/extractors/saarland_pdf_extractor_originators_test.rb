@@ -32,7 +32,7 @@ class SaarlandPDFExtractorOriginatorsTest < ActiveSupport::TestCase
   end
 
   test 'one person, whole' do
-    paper = Struct.new(:contents).new(File.read(Rails.root.join('test/fixtures/saarland_paper.txt')))
+    paper = Struct.new(:contents).new(File.read(Rails.root.join('test/fixtures/sl/paper.txt')))
     originators = SaarlandPDFExtractor.new(paper).extract_originators
 
     assert_equal 1, originators[:people].size

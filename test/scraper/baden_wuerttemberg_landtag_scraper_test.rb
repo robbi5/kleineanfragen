@@ -4,9 +4,9 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
   def setup
     @scraper = BadenWuerttembergLandtagScraper
     @search_url = 'http://www.landtag-bw.de/cms/render/live/de/sites/LTBW/home/dokumente/die-initiativen/gesamtverzeichnis/contentBoxes/suche-initiative.html?'
-    @legislative_page = Mechanize.new.get('file://' + Rails.root.join('test/fixtures/baden_wuerttemberg_legislative_term_page.html').to_s)
-    @result_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/baden_wuerttemberg_result_page.html')))
-    @detail_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/baden_wuerttemberg_detail_page.html')))
+    @legislative_page = Mechanize.new.get('file://' + Rails.root.join('test/fixtures/bw/legislative_term_page.html').to_s)
+    @result_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bw/result_page.html')))
+    @detail_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bw/detail_page.html')))
   end
 
   test 'get legislative start and end date from url' do
@@ -211,7 +211,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
   end
 
   test 'extract meta information from major detail link' do
-    detail_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/baden_wuerttemberg_detail_page_major.html')))
+    detail_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bw/detail_page_major.html')))
     link = @scraper.get_detail_link(detail_page)
     actual = @scraper.extract_meta(link.text)
     expected = {

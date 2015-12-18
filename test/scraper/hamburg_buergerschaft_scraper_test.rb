@@ -6,7 +6,7 @@ class HamburgBuergerschaftScraperTest < ActiveSupport::TestCase
   end
 
   test 'extract minor paper' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hamburg_search_result.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hh/result.html')))
     paper = @scraper.extract(@html.css('.title').first)
     assert_equal(
       {
@@ -28,7 +28,7 @@ class HamburgBuergerschaftScraperTest < ActiveSupport::TestCase
   end
 
   test 'extract major paper' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hamburg_result_1549.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hh/result_1549.html')))
     paper = @scraper.extract(@html.css('.title').first)
     assert_equal(
       {
@@ -56,7 +56,7 @@ class HamburgBuergerschaftScraperTest < ActiveSupport::TestCase
   end
 
   test 'extract other major paper, same party' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hamburg_result_2013.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hh/result_2013.html')))
     paper = @scraper.extract(@html.css('.title').first)
     assert_equal(
       {

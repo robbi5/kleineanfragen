@@ -2,7 +2,7 @@ require 'test_helper'
 
 class RheinlandPfalzLandtagScraperOverviewTest < ActiveSupport::TestCase
   def setup
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_overview.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/overview.html')))
     @scraper = RheinlandPfalzLandtagScraper
   end
 
@@ -94,7 +94,7 @@ class RheinlandPfalzLandtagScraperOverviewTest < ActiveSupport::TestCase
   end
 
   test 'extract meta from details in major paper' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_overview_major.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/overview_major.html')))
     block = @scraper.extract_records(html).first
     details = @scraper.extract_detail_block(block)
     meta = @scraper.extract_meta(details)
@@ -104,7 +104,7 @@ class RheinlandPfalzLandtagScraperOverviewTest < ActiveSupport::TestCase
   end
 
   test 'extract complete major paper' do
-    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rheinland_pfalz_landtag_scraper_overview_major.html')))
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/overview_major.html')))
     block = @scraper.extract_records(html).first
     paper = @scraper.extract_paper(block, check_pdf: false)
     assert_equal(

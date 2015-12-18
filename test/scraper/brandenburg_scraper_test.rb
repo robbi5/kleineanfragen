@@ -3,8 +3,8 @@ require 'test_helper'
 class BrandenburgScraperTest < ActiveSupport::TestCase
   def setup
     @scraper = BrandenburgLandtagScraper
-    @overview = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/brandenburg_scraper_overview.html')).force_encoding('windows-1252'))
-    @detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/brandenburg_scraper_detail.html')).force_encoding('windows-1252'))
+    @overview = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bb/overview.html')).force_encoding('windows-1252'))
+    @detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bb/detail.html')).force_encoding('windows-1252'))
   end
 
   # webpage states that it shows 671 results but actually displays 482
@@ -77,7 +77,7 @@ class BrandenburgScraperTest < ActiveSupport::TestCase
   end
 
   test 'extract major interpellation detail paper 614' do
-    detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/brandenburg_scraper_detail_614.html')).force_encoding('windows-1252'))
+    detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bb/detail_614.html')).force_encoding('windows-1252'))
     body = @scraper.extract_body(detail)
     item = @scraper.extract_detail_item(body)
     paper = @scraper.extract_detail_paper(item)
@@ -128,7 +128,7 @@ class BrandenburgScraperTest < ActiveSupport::TestCase
   end
 
   test 'test extract details #33' do
-    detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/brandenburg_scraper_detail_6_2973.html')).force_encoding('windows-1252'))
+    detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bb/detail_6_2973.html')).force_encoding('windows-1252'))
     body = @scraper.extract_body(detail)
     item = @scraper.extract_detail_item(body)
     paper = @scraper.extract_detail_paper(item)

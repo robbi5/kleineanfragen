@@ -6,7 +6,7 @@ class BremenBuergerschaftScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract whole major paper' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bremen_buergerschaft_scraper_detail_96.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/hb/detail_96.html')))
     items = @scraper.extract_records(@html)
     paper = @scraper.extract_paper(items.first)
     assert_equal(

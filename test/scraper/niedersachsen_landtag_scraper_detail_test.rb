@@ -6,7 +6,7 @@ class NiedersachsenLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract detail info' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/niedersachsen_landtag_scraper_detail.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/ni/detail.html')))
     block = @scraper.extract_detail_block(@html)
     paper = @scraper.extract_paper(block)
 
@@ -31,7 +31,7 @@ class NiedersachsenLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract detail info with attachments' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/niedersachsen_landtag_scraper_detail_attachment.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/ni/detail_attachment.html')))
     block = @scraper.extract_detail_block(@html)
     paper = @scraper.extract_paper(block)
 
@@ -56,7 +56,7 @@ class NiedersachsenLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract detail info from paper with additional empty row like 4243' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/niedersachsen_landtag_scraper_detail_4243.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/ni/detail_4243.html')))
     block = @scraper.extract_detail_block(@html)
     paper = @scraper.extract_paper(block)
 
@@ -81,7 +81,7 @@ class NiedersachsenLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract detail info from major interpellation like 4370' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/niedersachsen_landtag_scraper_detail_4370.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/ni/detail_4370.html')))
     block = @scraper.extract_detail_block(@html)
     paper = @scraper.extract_paper(block)
 

@@ -3,7 +3,7 @@ require 'test_helper'
 class SachsenScraperOverviewTest < ActiveSupport::TestCase
   def setup
     @scraper = SachsenScraper
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sachsen_scraper_overview.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sn/overview.html')))
   end
 
   test 'extract meta data for minor interpellation' do

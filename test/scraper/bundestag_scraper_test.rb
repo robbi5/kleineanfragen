@@ -3,7 +3,7 @@ require 'test_helper'
 class BundestagScraperTest < ActiveSupport::TestCase
   def setup
     @scraper = BundestagScraper
-    @content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bundestag_detail.html')).force_encoding('windows-1252')).to_s
+    @content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bt/detail.html')).force_encoding('windows-1252')).to_s
     @content_xml = @scraper.extract_doc(@content)
   end
 
@@ -20,14 +20,14 @@ class BundestagScraperTest < ActiveSupport::TestCase
   end
 
   test 'extract ministrie for 18/5644' do
-    assert_answerer('test/fixtures/bundestag_detail_18_5644.html', ['Bundesministerium für Verkehr und digitale Infrastruktur'])
+    assert_answerer('test/fixtures/bt/detail_18_5644.html', ['Bundesministerium für Verkehr und digitale Infrastruktur'])
   end
 
   test 'extract ministrie for 18/678' do
-    assert_answerer('test/fixtures/bundestag_detail_18_678.html', ['Bundesministerium des Innern'])
+    assert_answerer('test/fixtures/bt/detail_18_678.html', ['Bundesministerium des Innern'])
   end
 
   test 'extract ministrie for 18/5714' do
-    assert_answerer('test/fixtures/bundestag_detail_18_5714.html', ['Bundeskanzleramt'])
+    assert_answerer('test/fixtures/bt/detail_18_5714.html', ['Bundeskanzleramt'])
   end
 end

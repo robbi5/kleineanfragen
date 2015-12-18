@@ -3,7 +3,7 @@ require 'test_helper'
 class MeckPommOverviewScraperTest < ActiveSupport::TestCase
   def setup
     @scraper = MeckPommLandtagScraper
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/meck_pomm_landtag_scraper_overview.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/mv/overview.html')))
     @body = @html.search("//table[@id = 'parldokresult']")
   end
 

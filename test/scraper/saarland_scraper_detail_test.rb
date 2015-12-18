@@ -3,7 +3,7 @@ require 'test_helper'
 class SaarlandScraperDetailTest < ActiveSupport::TestCase
   def setup
     @scraper = SaarlandScraper
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/saarland_scraper_detail.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sl/detail.html')))
   end
 
   test 'build text parameter' do
@@ -21,7 +21,7 @@ class SaarlandScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract paper from search result' do
-    mp = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/saarland_scraper_detail.html')))
+    mp = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sl/detail.html')))
     entry = @scraper.extract_search_entry(mp, '14', '0374')
     paper = @scraper.extract_paper_from_search_entry(entry, '14', '0374')
     assert_equal(
