@@ -59,8 +59,9 @@ class MeckPommPDFExtractorTest < ActiveSupport::TestCase
     )
 
     origniators_party = MeckPommPDFExtractor.new(paper).extract_originators
-    puts origniators_party
-    # FIXME: fix scraper bug and write assert
+
+    assert_equal 1, origniators_party[:parties].size
+    assert_equal 'DIE LINKE', origniators_party[:parties].first
   end
 end
 
