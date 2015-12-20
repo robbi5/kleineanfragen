@@ -46,6 +46,22 @@ class MeckPommPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 1, origniators_party[:parties].size
     assert_equal 'DIE LINKE', origniators_party[:parties].first
   end
+
+  test 'regression 6/4717' do
+    paper = Struct.new(:contents).new(
+      "[...]KLEINE ANFRAGE\nder Abgeordneten Jacqueline Bernhardt, Fraktion DIE LINKE\n" +
+        "Unbegleitete minderjährige Ausländer\nund [...]\n" +
+        "Die Landesregierung verweist bezüglich der Anzahl der aufgenommenen unbegleiteten\n" +
+        "minderjährigen Ausländer in den Jahren 2012, 2013 und 2014 auf die Landtagsdrucksache\n" +
+        "6/3568 (Kleine Anfrage der Abgeordneten Jacqueline Bernhardt und Dr. Hikmat Al-\n" +
+        "Sabty, Fraktion DIE LINKE zur Situation der unbegleiteten minderjährigen Flüchtlinge vom\n" +
+        "13. Januar 2015).\n"
+    )
+
+    origniators_party = MeckPommPDFExtractor.new(paper).extract_originators
+    puts origniators_party
+    # FIXME: fix scraper bug and write assert
+  end
 end
 
 
