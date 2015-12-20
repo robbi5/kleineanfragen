@@ -6,7 +6,7 @@ class MeckPommPDFExtractor
   # Der Minister für Bildung, Wissenschaft und Kultur hat namens der Landesregierung die Kleine Anfrage mit
 
   ANSWERERS = /\s*(?:Der|Die)\s+(Minister.+?.*)(?:\shat\s+namens\s+der\s+Landesregierung\s+die)\s+(?:[kK]leine|[gG]roße)?\s*An/m
-  ORIGINATORS_PARTY = /KLEINE\s+ANFRAGE\s*de[rs]\s+Abgeordneten\s+.+,\s+Fraktion\s+(?:d[ei][er])?(.+?)\n/m
+  ORIGINATORS_PARTY = /KLEINE\s+ANFRAGE\s*de[rs]\s+Abgeordneten\s+.+?,\s+Fraktion\s+(?:d[ei][er])?(.+?)\n/m
 
   def extract_answerers
     return nil if @contents.nil?
