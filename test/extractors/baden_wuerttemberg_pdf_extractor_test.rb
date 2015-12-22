@@ -112,9 +112,9 @@ class BadenWuerttembergPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Ministerium für Wissenschaft, Forschung und Kunst', answerers[:ministries].fourth
   end
 
-  test 'get major minitryx' do
-    c = "en?\n\nGroße Anfrage\n\nder Fraktion der FDP/DVP\n\nund\n\nAntwort\n\nder Landesregierung\n\nInnovation im
-Wechselspiel von Wissenschaft und Wirtschaft\n\nDru"
+  test 'get major ministry' do
+    c = "en?\n\nGroße Anfrage\n\nder Fraktion der FDP/DVP\n\nund\n\n" +
+        "Antwort\n\nder Landesregierung\n\nInnovation im Wechselspiel von Wissenschaft und Wirtschaft\n\nDru"
     paper = paper_with_title(Paper::DOCTYPE_MINOR_INTERPELLATION, c, 'Innovation im Wechselspiel von Wissenschaft und Wirtschaft')
 
     answerers = BadenWuerttembergPDFExtractor.new(paper).extract_answerers
@@ -122,5 +122,28 @@ Wechselspiel von Wissenschaft und Wirtschaft\n\nDru"
     assert_not_nil answerers
     assert_equal 1, answerers[:ministries].size
     assert_equal 'Landesregierung', answerers[:ministries].first
+  end
+
+  test 'get related ministry if suffix is near' do
+    c = "und\n\nAntwort\n\ndes Ministeriums für Integration\n\n" +
+        "Kostenerstattung für Kommunen bei Aufwendungen \n\nim Zusammenhang mit der Flüchtlingsaufnahme\n\n" +
+        "[...]\n" +
+        "Mit Schreiben vom 8. Dezember 2015 Nr. 2-0141.5/15/7712 beantwortet das\n" +
+        " Ministerium für Integration im Einvernehmen mit dem Ministerium für Finanzen\n" +
+        "und Wirtschaft die Kleine Anfrage wie folgt:\n" +
+        "[...]\nn" +
+        "Zu 2.:\n\nIst die Anmietung"
+    paper = paper_with_title(
+      Paper::DOCTYPE_MINOR_INTERPELLATION,
+      c,
+      'Kostenerstattung für Kommunen bei Aufwendungen im Zusammenhang mit der Flüchtlingsaufnahme'
+    )
+
+    answerers = BadenWuerttembergPDFExtractor.new(paper).extract_answerers
+
+    assert_not_nil answerers
+    assert_equal 2, answerers[:ministries].size
+    assert_equal 'Ministerium für Integration', answerers[:ministries].first
+    assert_equal 'Ministerium für Finanzen und Wirtschaft', answerers[:ministries].second
   end
 end

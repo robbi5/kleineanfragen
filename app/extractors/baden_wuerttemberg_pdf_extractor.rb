@@ -36,8 +36,8 @@ class BadenWuerttembergPDFExtractor
     { parties: [party], people: [] }
   end
 
-  ANSWERERS = /und\s+Antwort\s+des\s+((Staats)*[mM]inisteriums.*)(?:\s+\n)/m
-  RELATED_MINISTRY = /(?:im\s+Einvernehmen\s+mit\s+dem\s+)(Ministerium.*)(?:\s+die\s+(?:[kK]leine|[gG]roße)?\s*An)/m
+  ANSWERERS = /und\s+Antwort\s+des\s+((?:Staats)?[mM]inisteriums.*)(?:\s+\n)/m
+  RELATED_MINISTRY = /im\s+Einvernehmen\s+mit\s+dem\s+(Ministerium.+?)\s+die\s+(?:[kK]leine|[gG]roße)?\s*An/m
 
   def extract_answerers
     return nil if @contents.blank?
