@@ -79,8 +79,7 @@ gem 'abbyy', '~> 0.2.1'
 gem 'image_optim', '~> 0.21.0'
 
 # search!
-# pin to merge of searchkick#429 until a new version is released
-gem 'searchkick', github: 'ankane/searchkick', ref: 'c29c5be0e37356957061ce42ee1ecc9d67ac7409'
+gem 'searchkick', '~> 0.9.1'
 gem 'patron', '~> 0.4.18'
 
 # storage

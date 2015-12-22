@@ -8,7 +8,7 @@ class Paper < ActiveRecord::Base
   DOCTYPE_WRITTEN_INTERPELLATION = 'written'
 
   # enable search
-  searchkick language: 'German',
+  searchkick language: 'german',
              text_start: [:title],
              word_start: [:title],
              highlight: [:title, :contents],

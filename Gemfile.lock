@@ -1,13 +1,3 @@
-GIT
-  remote: git://github.com/ankane/searchkick.git
-  revision: c29c5be0e37356957061ce42ee1ecc9d67ac7409
-  ref: c29c5be0e37356957061ce42ee1ecc9d67ac7409
-  specs:
-    searchkick (0.9.0)
-      activemodel
-      elasticsearch (>= 1)
-      hashie
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -261,6 +251,10 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    searchkick (0.9.1)
+      activemodel
+      elasticsearch (>= 1)
+      hashie
     sentry-raven (0.15.2)
       faraday (>= 0.7.6)
     sinatra (1.4.6)
@@ -343,7 +337,7 @@ DEPENDENCIES
   resque-sentry (~> 1.2.0)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
-  searchkick!
+  searchkick (~> 0.9.1)
   sentry-raven
   slack-notifier (~> 1.3.1)
   sqlite3
