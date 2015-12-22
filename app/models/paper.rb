@@ -23,6 +23,8 @@ class Paper < ActiveRecord::Base
       o = old_searchkick_index_options
       # remove index: "not_analyzed"
       o[:mappings][:_default_][:properties]['contents'][:fields].delete('contents')
+      # replace & by und - https://github.com/ankane/searchkick/commit/f8714d22778e450a5eacd0e4acbca000142b1812
+      o[:settings][:analysis][:char_filter][:ampersand][:mappings] = ['&=> und ']
       o
     end
   end
