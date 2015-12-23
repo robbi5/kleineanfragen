@@ -63,19 +63,19 @@ class ContainsTableJobTest < ActiveSupport::TestCase
            " vom 09.12.2015,  \n\n"+
            'gezeichnet '
     probability = ContainsTableJob.recognize(text)
-    assert_equal probability, 0
+    assert_equal 0, probability
   end
 
   test 'no table: some date on a new line' do
     text = "\n\n  \n \n\n \n\n \n\n \n\n \n\n \n\n \n\n \n\n \n\n \n\n \n\n \n\n \n\n5.8.2015 \n\n \n\n\n\n 2 \n\n"
     probability = ContainsTableJob.recognize(text)
-    assert_equal probability, 0
+    assert_equal 0, probability
   end
 
   test 'no table: two date lines' do
     text = "Schriftliche Anfrage\ndes Abgeordneten ...\nvom 14.09.2015\n" +
            "\n\n\nAntwort\ndes Staatsministeriums für ...\nvom 22.10.2015\n"
     probability = ContainsTableJob.recognize(text)
-    assert_equal probability, 0
+    assert_equal 0, probability
   end
 end

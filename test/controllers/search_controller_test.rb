@@ -6,7 +6,7 @@ class SearchControllerTest < ActionController::TestCase
 
     search = SearchController.parse_query(query)
 
-    assert_equal search.term, 'single "quoted string"'
-    assert_equal search.conditions, body: ['BY'], doctype: ['major']
+    assert_equal 'single "quoted string"', search.term
+    assert_equal({ body: ['BY'], doctype: ['major'] }, search.conditions)
   end
 end
