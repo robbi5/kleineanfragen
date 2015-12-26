@@ -18,7 +18,6 @@ class SachsenPDFExtractorTest < ActiveSupport::TestCase
 
     'SÄCHSISCHES STAATSMINISTERIUM DER FINANZEN Postfach 100 948'  => 'Staatsministerium der Finanzen',
     'SACHSISCHES STAATSMINISTERIUM DER JUSTIZ Hosp¡talstr 7 | 010' => 'Staatsministerium der Justiz',
-    'Sächsisches Staatsministerium für Wirtschaft, Arbeit und Ver' => 'Staatsministerium für Wirtschaft, Arbeit und Verkehr',
 
     # Kultus
     'SÄCHSISCHES STAATSMINISTERIUM FÜR KULTUS Postfach 10 09 10'   => 'Staatsministerium für Kultus',
@@ -48,8 +47,14 @@ class SachsenPDFExtractorTest < ActiveSupport::TestCase
     # Staatskanzlei
     'SÄCHSISCHE STAATSKANZLEI SÄCHSISCHE STAATSKANZLEI 01095 Dre'  => 'Staatskanzlei',
 
+    # Wirtschaft
+    'Sächsisches Staatsministerium für Wirtschaft, Arbeit und Ver' => 'Staatsministerium für Wirtschaft, Arbeit und Verkehr',
+    'Seite 1 von 3 Sächsisches Staatsministerium für Wirtschaft'   => 'Staatsministerium für Wirtschaft, Arbeit und Verkehr',
+    'Seite 1 von 2 Sächsisches Staatsministerium für Wirtschaft'   => 'Staatsministerium für Wirtschaft, Arbeit und Verkehr',
+
     'Anlage zu KA 6/2578 Seite 1 von 7 Im Monat August 2015 w'     => nil,
-    '6-2137_Seite_01 6-2137_Seite_02 6-2137_Seite_03 6-2137_Se'    => nil
+    '6-2137_Seite_01 6-2137_Seite_02 6-2137_Seite_03 6-2137_Se'    => nil,
+    '2015-12-23T13:29:54+0100 GRP: Elektronisches Dokumentations'  => nil
   }
   # rubocop:enable Style/ExtraSpacing
 

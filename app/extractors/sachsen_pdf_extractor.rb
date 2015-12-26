@@ -6,6 +6,7 @@ class SachsenPDFExtractor
   # from: https://de.wikipedia.org/wiki/S%C3%A4chsische_Staatsregierung
   MINISTRIES = [
     'Staatskanzlei',
+    'Staatsministerium für Wirtschaft',
     'Staatsministerium für Wirtschaft, Arbeit und Verkehr',
     'Staatsministerium der Finanzen',
     'Staatsministerium des Innern',
@@ -15,6 +16,11 @@ class SachsenPDFExtractor
     'Staatsministerium für Umwelt und Landwirtschaft',
     'Staatsministerium für Wissenschaft und Kunst'
   ]
+
+  # using alias, else Staatsministerium für Umwelt und Land_wirtschaft_ matches
+  ALIAS = {
+    'Staatsministerium für Wirtschaft' => 'Staatsministerium für Wirtschaft, Arbeit und Verkehr'
+  }
 
   THRESHOLD = 0.63
 
@@ -44,6 +50,9 @@ class SachsenPDFExtractor
     # lowercase it
     first_block = first_block.mb_chars.downcase.to_s
 
+    # remove page count
+    first_block.gsub!(/seite [i\d]+ von \d+\s*/, '')
+
     # remove prefix
     first_block.gsub!(/^s.chsisches?\s+/, '')
 
@@ -63,7 +72,10 @@ class SachsenPDFExtractor
     # FuzzyMatch.new(MINISTRIES).explain(first_block, threshold: THRESHOLD)
 
     ministries = []
-    ministries << result unless result.nil?
+    if !result.nil?
+      result = ALIAS[result] unless ALIAS[result].nil?
+      ministries << result
+    end
 
     { ministries: ministries }
   end
