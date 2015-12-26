@@ -2,7 +2,7 @@ module NiedersachsenLandtagScraper
   BASE_URL = 'http://www.nilas.niedersachsen.de'
 
   def self.extract_blocks(page)
-    page.search('//table[@id="listTable"]//table[@id="listTable"]').map(&:previous_element)
+    page.search('//table[@id="listTable"]/tr[2]/td[2]/table[@id="listTable"]/preceding-sibling::table[1]')
   end
 
   def self.extract_references_block(block)
