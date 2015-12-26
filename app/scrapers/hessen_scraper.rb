@@ -64,7 +64,8 @@ module HessenScraper
       published_at: date,
       originators: extract_originators(extract_originator_text(block)),
       # unanswered papers often have a future publishing date
-      is_answer: (date <= Date.today)
+      # if its really an answer gets checked in DeterminePaperTypeJob
+      is_answer: (date <= Date.today ? nil : false)
     }
   end
 

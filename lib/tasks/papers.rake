@@ -88,6 +88,12 @@ namespace :papers do
     ReimportPapersPDFJob.perform_later
   end
 
+  desc 'Reimport empty Hessen PDFs'
+  task :reimport_hessen_pdfs, :environment do
+    Rails.logger.info 'Adding job for reimporting Hessen PDFs'
+    ReimportHessenPapersPDFJob.perform_later
+  end
+
   desc 'Send Search Subscription Emails'
   task :send_search_subscriptions, :environment do
     Rails.logger.info 'Adding job for sending search subscription emails'

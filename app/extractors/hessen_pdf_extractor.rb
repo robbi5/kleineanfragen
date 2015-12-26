@@ -44,4 +44,11 @@ class HessenPDFExtractor
 
     { ministries: ministries }
   end
+
+  ANSWER_TAG = /und\s+Antwort/m
+
+  def is_answer?
+    return nil if @contents.blank?
+    @contents.scan(ANSWER_TAG).present?
+  end
 end
