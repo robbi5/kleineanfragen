@@ -64,6 +64,13 @@ $grid-float-breakpoint:   320px;
   min-width: 170px;
 }
 
+.navbar-nav {
+  display: none;
+  @media (min-width: $screen-xs-min) {
+    display: block;
+  }
+}
+
 .app-footer.container {
   margin-top: 25px;
   color: $gray-light;
