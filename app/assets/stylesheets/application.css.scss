@@ -533,8 +533,12 @@ span.twitter-typeahead {
 }
 
 .selectpicker > li.selected > a {
-  background: #757F9A;
-  color: #fff;
+  color: #757F9A;
+}
+.selectpicker > li.selected > a:before {
+  content: '\002714';
+  margin-left: -13px;
+  position: absolute;
 }
 
 .searchresult-title mark {
