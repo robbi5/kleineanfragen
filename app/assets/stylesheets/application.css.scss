@@ -333,14 +333,16 @@ span.twitter-typeahead {
     margin-bottom: 0;
     padding-left: 0;
     @media (min-width: $screen-xs-min) {
-      padding-left: 55px;
+      padding-left: 60px;
     }
   }
 
   .source {
     display: inline-block;
-    margin-left: -55px;
     float: left;
+    @media (min-width: $screen-xs-min) {
+      margin-left: -60px;
+    }
   }
 
   .paper-id {
@@ -368,14 +370,28 @@ span.twitter-typeahead {
     p {
       padding-left: 0;
       @media (min-width: $screen-xs-min) {
-        padding-left: 75px;
+        padding-left: 80px;
       }
     }
     .source-and-title {
-      padding-left: 75px;
+      padding-left: 60px;
+      @media (min-width: $screen-xs-min) {
+        padding-left: 80px;
+      }
     }
     .source {
-      margin-left: -75px;
+      margin-left: -60px;
+      @media (min-width: $screen-xs-min) {
+        margin-left: -80px;
+      }
+    }
+    .label {
+      display: block;
+      margin-top: 5px;
+      @media (min-width: $screen-xs-min) {
+        display: inline;
+        margin-top: 0;
+      }
     }
   }
 }
