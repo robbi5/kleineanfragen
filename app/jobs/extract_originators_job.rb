@@ -7,6 +7,7 @@ class ExtractOriginatorsJob < PaperJob
     'BY' => BayernPDFExtractor,
     'HB' => BremenPDFExtractor,
     'MV' => MeckPommPDFExtractor,
+    'NW' => NordrheinWestfalenPDFExtractor,
     'RP' => RheinlandPfalzPDFExtractor,
     'SL' => SaarlandPDFExtractor,
     'TH' => ThueringenPDFExtractor
