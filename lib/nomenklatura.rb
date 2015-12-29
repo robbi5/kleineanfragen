@@ -97,13 +97,13 @@ module Nomenklatura
     #
     # look for an entity by name, if it doesn't exist, create one. return cleaned/same name
     # or nil if invalid
-    def lookup(name)
+    def lookup(name, attributes: {})
       entity = entity_by_name(name).dereference
       return nil if entity.invalid?
       return entity.name
     rescue NoMatch
       begin
-        create_entity(name)
+        create_entity(name, attributes: attributes)
       rescue InvalidRequest => inv
         # caching problem on api side
         raise unless inv.errors.try(:[], 'name') == 'Entity already exists.'
