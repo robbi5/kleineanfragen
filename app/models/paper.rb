@@ -257,7 +257,7 @@ class Paper < ActiveRecord::Base
     return name if Rails.configuration.x.nomenklatura_api_key.blank?
     dataset_name = "ka-#{prefix}" + (!body.nil? ? "-#{body.state.downcase}" : '')
     nk_attr = {}
-    nk_attr['first_paper_path'] = Rails.application.routes.url_helpers.paper_path(body, legislative_term, self) if self.persisted?
+    nk_attr['first_paper_path'] = Rails.application.routes.url_helpers.paper_path(body, legislative_term, self) if self.persisted? && !body.nil?
     Nomenklatura::Dataset.new(dataset_name).lookup(name, attributes: nk_attr)
   end
 
