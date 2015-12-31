@@ -8,11 +8,28 @@
   <% end %>
 </div>
 
-<ol class="paper-list">
-  <%= render partial: 'paper/paper', collection: @papers %>
-</ol>
+<div class="page-content row">
+  <div class="col-md-8 clearfix">
+    <ol class="paper-list">
+      <%= render partial: 'paper/paper', collection: @papers %>
+    </ol>
 
-<p class="pagination-total"><%= @papers.total_count %> <%= t :kleine_anfragen, count: @papers.total_count %></p>
-<%= paginate @papers %>
+    <p class="pagination-total"><%= @papers.total_count %> <%= t :kleine_anfragen, count: @papers.total_count %></p>
+    <%= paginate @papers %>
+  </div>
+  <div class="col-md-4">
+    <% if @body.ministries.size > 0 %>
+    <div class="ministry-others">
+      <h3>Andere Behörden:</h3>
+      <ul>
+        <% @body.ministries.order(name: :asc).each do |ministry| %>
+        <% next if ministry == @ministry %>
+        <li><%= link_to ministry.name, ministry_path(@body, ministry) %> <small>(<%= ministry.papers.count %>)</small></li>
+        <% end %>
+      </ul>
+    </div>
+    <% end %>
+  </div>
+</div>
 
 <!-- Ministry/<%= @ministry.id %> -->
