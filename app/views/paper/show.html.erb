@@ -38,9 +38,12 @@
     <p><%= @paper.doctype_human.titleize %></p>
     <p>
       Eingereicht von:<br class="hidden-xs hidden-sm"/>
-      <% o_people = @paper.originator_people.collect(&:name) %>
+      <%-
+        o_people = @paper.originator_people.collect(&:name)
+        o_orgs = @paper.originator_organizations.collect(&:name)
+      -%>
       <%= o_people.join(', ') %><% if o_people.size > 0 %><br class="hidden-xs hidden-sm"/><% end %>
-      <%= @paper.originator_organizations.collect(&:name).join(', ') %>
+      <%= o_orgs.join(', ') %>
     </p>
     <% if @paper.answerer_ministries.size > 0 %>
     <p>
@@ -72,6 +75,11 @@
     <% end %>
   </div>
   <div class="col-md-9 col-md-pull-3 paper-viewer-wrapper">
+    <% if o_orgs.map(&:downcase).include? 'npd' %>
+    <div class="alert alert-nuts">
+      <p><strong>Hinweis:</strong> Diese Anfrage kann Spuren von Rechtsextremismus enthalten.</p>
+    </div>
+    <% end %>
     <iframe src="<%= paper_pdf_viewer_path %>" width="100%" height="600px" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
   </div>
 </div>

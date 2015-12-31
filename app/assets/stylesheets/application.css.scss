@@ -683,6 +683,17 @@ span.twitter-typeahead {
   }
 }
 
+.alert-nuts {
+  background: #FBEACD;
+  color: #4C3F29;
+  border-radius: 0;
+  padding: 6px 10px;
+  margin: 0 0 5px 0;
+  @media (min-width: $screen-md-min) {
+    margin-top: -5px;
+  }
+}
+
 .dump-iframe {
   width: 100%;
   border: 1px solid #AAA;
