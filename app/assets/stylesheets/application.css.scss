@@ -132,6 +132,17 @@ $grid-float-breakpoint:   320px;
   }
 }
 
+// copied from .h1 and .h2, because @extend is not possible in @media
+.page-header h1 {
+  font-size: 25px;
+  line-height: 1.2;
+
+  @media (min-width: $screen-sm-min) {
+    font-size: 30px;
+    line-height: 1.1;
+  }
+}
+
 .feed-icon {
   width: 24px;
   height: 24px;
