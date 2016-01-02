@@ -409,6 +409,11 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal({ people: [], parties: ['SPD', 'DIE LINKE'] }, pair)
   end
 
+  test 'fraction: two semicolon seperated fractions' do
+    pair = NamePartyExtractor.new('Fraktion der CDU; Fraktion BÜNDNIS 90/DIE GRÜNEN', :fraction).extract
+    assert_equal({ people: [], parties: ['CDU', 'BÜNDNIS 90/DIE GRÜNEN'] }, pair)
+  end
+
   test 'test for BW 15/3704' do
     pair = NamePartyExtractor.new('Dr. Hans-Ulrich Rülke FDP/DVP', :npc).extract
     assert_equal 1, pair[:people].size

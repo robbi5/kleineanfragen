@@ -98,7 +98,7 @@ class NamePartyExtractor
   def extract_fraction
     parties = []
 
-    @text.split(/,| und /).each do |splitted|
+    @text.split(/,| und |;/).each do |splitted|
       parties << self.class.clean_party(splitted.strip)
     end
 
