@@ -30,10 +30,10 @@ class Paper < ActiveRecord::Base
   end
 
   belongs_to :body
-  has_many :paper_originators
+  has_many :paper_originators, dependent: :destroy
   has_many :originator_people, through: :paper_originators, source: :originator, source_type: 'Person'
   has_many :originator_organizations, through: :paper_originators, source: :originator, source_type: 'Organization'
-  has_many :paper_answerers
+  has_many :paper_answerers, dependent: :destroy
   has_many :answerer_people, through: :paper_answerers, source: :answerer, source_type: 'Person'
   # has_many :answerer_organizations, through: :paper_answerers, source: :answerer, source_type: 'Organization'
   has_many :answerer_ministries, through: :paper_answerers, source: :answerer, source_type: 'Ministry'
@@ -45,8 +45,7 @@ class Paper < ActiveRecord::Base
   default_scope { where(is_answer: true) }
 
   def originators
-    # TODO: why is .delete_if(&:nil?) needed, why can be an originator nil?
-    paper_originators.sort_by { |org| org.originator_type == 'Person' ? 1 : 2 }.map(&:originator).delete_if(&:nil?)
+    paper_originators.sort_by { |org| org.originator_type == 'Person' ? 1 : 2 }.map(&:originator)
   end
 
   def answerers
