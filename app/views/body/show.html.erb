@@ -43,6 +43,15 @@
       <% end %>
     </ul>
     <% end %>
+
+    <% if @body.organizations.size > 0 %>
+    <h3>Fraktionen:</h3>
+    <ul>
+      <% @body.organizations.order(name: :asc).each do |organization| %>
+      <li><%= link_to organization.name, organization_path(@body, organization) %> <small>(<%= organization.papers.where(body: @body).count %>)</small></li>
+      <% end %>
+    </ul>
+    <% end %>
   </div>
 </div>
 

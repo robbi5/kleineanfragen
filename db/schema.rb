@@ -11,19 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150818191716) do
+ActiveRecord::Schema.define(version: 20160102120618) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "bodies", force: :cascade do |t|
     t.text     "name"
-    t.string   "state",      limit: 2
+    t.string   "state",                   limit: 2
     t.text     "website"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "slug"
-    t.boolean  "use_mirror_for_download",             default: false
+    t.boolean  "use_mirror_for_download",           default: false
   end
 
   add_index "bodies", ["name"], name: "index_bodies_on_name", unique: true, using: :btree
@@ -78,9 +78,11 @@ ActiveRecord::Schema.define(version: 20150818191716) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "slug"
   end
 
   add_index "organizations", ["name"], name: "index_organizations_on_name", unique: true, using: :btree
+  add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
 
   create_table "organizations_people", id: false, force: :cascade do |t|
     t.integer "organization_id"

@@ -24,7 +24,7 @@ five:
 
 six:
   paper: paper_be_17_1000
-  originator: shortened_middle_name_person (Person)
+  originator: shortened_middle_name_person (Person), someparty (Organization)
 
 seven:
   paper: paper_be_17_1000

@@ -43,6 +43,7 @@ Rails.application.routes.draw do
 
   get ':body/abo' => 'body#subscribe', as: :body_subscribe
   get ':body/behoerde/:ministry' => 'ministry#show', as: :ministry
+  get ':body/fraktion/:organization' => 'organization#show', as: :organization
 
   post ':body/:legislative_term/:paper/report' => 'paper#send_report', as: :paper_send_report, constraints: { legislative_term: /[0-9]+/ }
   get ':body/:legislative_term/:paper/report' => 'paper#report', as: :paper_report, constraints: { legislative_term: /[0-9]+/ }

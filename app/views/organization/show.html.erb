@@ -1,0 +1,35 @@
+<% title "#{@body.name}: #{@organization.name}" -%>
+<%- content_for :head do %><%= auto_discovery_link_tag(:atom, organization_url(body: @body, organization: @organization, format: :atom)) %><% end -%>
+
+<div class="page-header page-header--has-feed">
+  <h1><%= link_to @body.name, @body %> &mdash; <%= @organization.name %></h1>
+  <%= link_to organization_url(body: @body, organization: @organization, format: :atom), class: 'feed', title: 'neue Anfragen als Atom-Feed abonnieren' do %>
+    <span class="sr-only">neue Anfragen als Atom-Feed abonnieren:</span><%= image_tag('feed-icon.svg', class: 'feed-icon', alt: 'Atom-Feed') %>
+  <% end %>
+</div>
+
+<div class="page-content row">
+  <div class="col-md-8 clearfix">
+    <ol class="paper-list">
+      <%= render partial: 'paper/paper', collection: @papers %>
+    </ol>
+
+    <p class="pagination-total"><%= @papers.total_count %> <%= t :kleine_anfragen, count: @papers.total_count %></p>
+    <%= paginate @papers %>
+  </div>
+  <div class="col-md-4">
+    <% if @body.organizations.size > 0 %>
+    <div class="organization-others">
+      <h3>Andere Fraktionen:</h3>
+      <ul>
+        <% @body.organizations.order(name: :asc).each do |organization| %>
+        <% next if organization == @organization %>
+        <li><%= link_to organization.name, organization_path(@body, organization) %> <small>(<%= organization.papers.count %>)</small></li>
+        <% end %>
+      </ul>
+    </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Organization/<%= @organization.id %> -->

@@ -5,3 +5,7 @@ one:
 
 two:
   name: SecondOrga
+
+someparty:
+  name: SomeParty
+  slug: someparty

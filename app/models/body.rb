@@ -3,6 +3,7 @@ class Body < ActiveRecord::Base
   friendly_id :name, use: :slugged
   has_many :papers, -> { answers }
   has_many :ministries
+  has_many :organizations, -> { distinct }, through: :papers, source: :originator_organizations
   has_many :scraper_results
 
   validates :name, uniqueness: true
