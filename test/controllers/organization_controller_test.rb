@@ -2,7 +2,7 @@ require 'test_helper'
 
 class OrganizationControllerTest < ActionController::TestCase
   test 'should get show' do
-    paper(:paper_be_17_1000).originator_organizations << organization(:someparty)
+    papers(:paper_be_17_1000).originator_organizations << organizations(:someparty)
 
     get :show, 'body' => 'berlin', 'organization' => 'someparty'
     assert_response :success
