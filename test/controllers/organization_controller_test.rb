@@ -2,6 +2,8 @@ require 'test_helper'
 
 class OrganizationControllerTest < ActionController::TestCase
   test 'should get show' do
+    paper(:paper_be_17_1000).originator_organizations << organization(:someparty)
+
     get :show, 'body' => 'berlin', 'organization' => 'someparty'
     assert_response :success
     assert_not_nil assigns(:body)
