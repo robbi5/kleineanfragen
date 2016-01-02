@@ -42,7 +42,7 @@
         o_people = @paper.originator_people.collect(&:name)
         o_orgs = @paper.originator_organizations
       -%>
-      <%= o_people.join(', ') %><% if o_people.size > 0 %><br class="hidden-xs hidden-sm"/><% end %>
+      <%= o_people.join(', ') %><% if o_people.size > 0 %><span class="visible-xs-inline visible-sm-inline">,</span><br class="hidden-xs hidden-sm" /><% end %>
       <%= safe_join(o_orgs.map { |org| link_to org.name, organization_path(@body, org) }, ', ') %>
     </p>
     <% if @paper.answerer_ministries.size > 0 %>
