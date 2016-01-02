@@ -23,6 +23,7 @@ json.originators do
   end
   json.organizations @paper.originator_organizations do |organization|
     json.name organization.name
+    json.html_url organization_url(@body, organization)
   end
 end
 
