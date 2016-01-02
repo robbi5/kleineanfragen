@@ -24,7 +24,7 @@
       <ul>
         <% @body.organizations.order(name: :asc).each do |organization| %>
         <% next if organization == @organization %>
-        <li><%= link_to organization.name, organization_path(@body, organization) %> <small>(<%= organization.papers.count %>)</small></li>
+        <li><%= link_to organization.name, organization_path(@body, organization) %> <small>(<%= organization.papers.where(body: @body).count %>)</small></li>
         <% end %>
       </ul>
     </div>
