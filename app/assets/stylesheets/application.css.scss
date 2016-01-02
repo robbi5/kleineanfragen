@@ -93,8 +93,30 @@ $grid-float-breakpoint:   320px;
   height: 75px
 }
 
-.footer-related {
-  text-align: right;
+.footer-links ul {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  // reset the left/right padding of the <li>s
+  margin-left: -5px;
+  margin-right: -5px;
+}
+
+.footer-links li {
+  padding: 2px 5px;
+}
+
+.footer-links a {
+  padding: 2px 0;
+  display: inline-block;
+}
+
+.footer-related ul {
+  @media (min-width: $screen-sm-min) {
+    justify-content: flex-end;
+  }
 }
 
 .page-header {

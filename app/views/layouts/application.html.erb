@@ -63,29 +63,26 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-6">
-      <p>
-        <%= link_to 'Über diese Seite', info_path %>
-        &bull;
-        <%= link_to 'Daten(qualität) & API', info_daten_path %>
-        &bull;
-        <%= link_to 'Mitmachen', info_mitmachen_path %>
-        <br/>
-        <%= link_to 'Datenschutz', info_datenschutz_path, 'data-no-turbolink' => true %>
-        &bull;
-        <%= link_to 'Kontakt & Impressum', info_kontakt_path %>
-        &bull;
-        <a href="https://twitter.com/kleineanfragen">@kleineanfragen auf Twitter</a>
-      </p>
+    <div class="col-sm-6">
+      <nav class="footer-links">
+        <ul>
+          <li><%= link_to 'Über diese Seite', info_path %></li>
+          <li><%= link_to 'Daten(qualität) & API', info_daten_path %></li>
+          <li><%= link_to 'Mitmachen', info_mitmachen_path %></li>
+          <li><%= link_to 'Datenschutz', info_datenschutz_path, 'data-no-turbolink' => true %></li>
+          <li><%= link_to 'Kontakt & Impressum', info_kontakt_path %></li>
+          <li><a href="https://twitter.com/kleineanfragen">@kleineanfragen auf Twitter</a></li>
+        </ul>
+      </nav>
     </div>
-    <div class="col-xs-6 footer-related">
-      <p>
-        <a href="http://offenesparlament.de">OffenesParlament.de</a>
-        &bull;
-        <a href="https://politik-bei-uns.de">Politik-Bei-Uns.de</a>
-        &bull;
-        <a href="https://fragdenstaat.de">FragDenStaat.de</a>
-      </p>
+    <div class="col-sm-6">
+      <nav class="footer-links footer-related">
+        <ul>
+          <li><a href="http://offenesparlament.de">OffenesParlament.de</a></li>
+          <li><a href="https://politik-bei-uns.de">Politik-Bei-Uns.de</a></li>
+          <li><a href="https://fragdenstaat.de">FragDenStaat.de</a></li>
+        </ul>
+      </nav>
     </div>
   </div>
 </footer>
