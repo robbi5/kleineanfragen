@@ -38,6 +38,10 @@ class Paper < ActiveRecord::Base
   # has_many :answerer_organizations, through: :paper_answerers, source: :answerer, source_type: 'Organization'
   has_many :answerer_ministries, through: :paper_answerers, source: :answerer, source_type: 'Ministry'
 
+  has_many :paper_relations, foreign_key: :paper_id, dependent: :destroy
+  has_many :reverse_paper_relations, class_name: :PaperRelation, foreign_key: :other_paper_id, dependent: :destroy
+  has_many :related_papers, through: :paper_relations, source: :other_paper
+
   scope :search_import, -> { includes(:body) }
 
   # ATTENTION: use .unscoped if you want to access "raw" papers

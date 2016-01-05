@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160102120618) do
+ActiveRecord::Schema.define(version: 20160102161745) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,6 +109,18 @@ ActiveRecord::Schema.define(version: 20160102120618) do
   add_index "paper_originators", ["originator_type", "originator_id"], name: "index_paper_originators_on_originator_type_and_originator_id", using: :btree
   add_index "paper_originators", ["paper_id"], name: "index_paper_originators_on_paper_id", using: :btree
 
+  create_table "paper_relations", force: :cascade do |t|
+    t.integer  "paper_id",       null: false
+    t.integer  "other_paper_id", null: false
+    t.string   "reason"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "paper_relations", ["other_paper_id"], name: "index_paper_relations_on_other_paper_id", using: :btree
+  add_index "paper_relations", ["paper_id", "other_paper_id", "reason"], name: "index_paper_relations_on_p_and_other_p_and_reason", unique: true, using: :btree
+  add_index "paper_relations", ["paper_id"], name: "index_paper_relations_on_paper_id", using: :btree
+
   create_table "papers", force: :cascade do |t|
     t.integer  "body_id"
     t.integer  "legislative_term"
@@ -166,4 +178,6 @@ ActiveRecord::Schema.define(version: 20160102120618) do
 
   add_foreign_key "ministries", "bodies"
   add_foreign_key "paper_answerers", "papers"
+  add_foreign_key "paper_relations", "papers"
+  add_foreign_key "paper_relations", "papers", column: "other_paper_id"
 end
