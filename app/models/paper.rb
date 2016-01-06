@@ -94,7 +94,8 @@ class Paper < ActiveRecord::Base
       contains_table: contains_table,
       doctype: doctype,
       published_at: published_at,
-      created_at: created_at
+      created_at: created_at,
+      faction: originator_organizations.map(&:slug)
     }
   end
 

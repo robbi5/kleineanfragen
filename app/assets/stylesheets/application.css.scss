@@ -567,6 +567,13 @@ span.twitter-typeahead {
   margin-bottom: 15px;
   padding: 5px 0;
 
+  @media (min-width: $screen-sm-min) {
+    line-height: 2.5;
+  }
+  @media (min-width: $screen-lg-min) {
+    line-height: inherit;
+  }
+
   .form-group label {
     vertical-align: middle;
     margin-bottom: 0;
@@ -582,6 +589,10 @@ span.twitter-typeahead {
 }
 .facetbar-heading, .facetbar-group {
   margin-right: 15px;
+}
+
+.facetbar-group:last-child {
+  margin-right: 0;
 }
 
 .facetbar-group select {

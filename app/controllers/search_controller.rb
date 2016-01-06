@@ -3,7 +3,7 @@ class SearchController < ApplicationController
     @query = params[:q].presence
     redirect_to(root_url) && return if @query.blank?
 
-    if params[:table].present? || params[:body].present? || params[:doctype].present?
+    if params[:table].present? || params[:body].present? || params[:doctype].present? || params[:faction].present?
       query = params_to_nice_query
       redirect_to search_path(params: { q: query })
       return
@@ -14,19 +14,23 @@ class SearchController < ApplicationController
     @conditions = search.conditions
 
     @bodies = Body.all.order(state: :asc).map { |body| OpenStruct.new(name: body.name, state: body.state) }
+    @factions = Organization.all.order(slug: :asc).map { |faction| OpenStruct.new(name: faction.name, slug: faction.slug) }
     @doctypes = Paper::DOCTYPES.map { |doctype| OpenStruct.new(key: doctype, name: t(doctype, scope: [:paper, :doctype]).to_s) }
 
     @papers = self.class.search_papers(@term, @conditions, page: params[:page], per_page: 10)
   end
 
   def self.parse_query(query)
-    terms = SearchTerms.new(query || '', %w(table body doctype))
+    terms = SearchTerms.new(query || '', %w(table body doctype faction))
     term = terms.query.presence || '*'
 
     conditions = {}
     conditions[:contains_table] = true if terms['table']
     if terms['body']
       conditions[:body] = Body.all.select { |body| terms.body.include? body.state }.map(&:state)
+    end
+    if terms['faction']
+      conditions[:faction] = Organization.all.select { |org| terms.faction.include? org.slug }.map(&:slug)
     end
     if terms['doctype']
       conditions[:doctype] = Paper::DOCTYPES.select { |doctype| terms.doctype.include? doctype }
@@ -41,7 +45,7 @@ class SearchController < ApplicationController
         where: conditions,
         fields: ['title^10', :contents],
         highlight: { tag: '<mark>' },
-        facets: [:contains_table, :body, :doctype],
+        facets: [:contains_table, :body, :doctype, :faction],
         smart_facets: true,
         execute: false,
         misspellings: false,
@@ -135,6 +139,10 @@ class SearchController < ApplicationController
     if params[:doctype].present?
       doctypes = Paper::DOCTYPES.select { |doctype| params[:doctype].include? doctype }
       q << 'doctype:' + doctypes.join(',')
+    end
+    if params[:faction].present?
+      factions = Organization.all.map(&:slug).select { |faction| params[:faction].include? faction }
+      q << 'faction:' + factions.join(',')
     end
     q.join ' '
   end

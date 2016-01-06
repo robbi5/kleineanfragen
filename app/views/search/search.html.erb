@@ -29,7 +29,7 @@
       </div>
       <div class="form-group facetbar-group">
         <label for="body">Parlament:</label>
-        <% @bodies.map! {|body| body.name = body.name + ' ' + write_facet_count('body', body.state); body }%>
+        <% @bodies.map! { |body| body.name = body.name + ' ' + write_facet_count('body', body.state); body }%>
         <%= select_tag :body, options_from_collection_for_select(@bodies, 'state', 'name', @conditions[:body]),
                        multiple: true,
                        class: 'selectpicker',
@@ -37,11 +37,19 @@
       </div>
       <div class="form-group facetbar-group">
         <label for="body">Typ:</label>
-        <% @doctypes.map! {|doctype| doctype.name = doctype.name + ' ' + write_facet_count('doctype', doctype.key); doctype }%>
+        <% @doctypes.map! { |doctype| doctype.name = doctype.name + ' ' + write_facet_count('doctype', doctype.key); doctype }%>
         <%= select_tag :doctype, options_from_collection_for_select(@doctypes, 'key', 'name', @conditions[:doctype]),
                        multiple: true,
                        class: 'selectpicker',
                        title: 'alle Anfragen' %>
+      </div>
+      <div class="form-group facetbar-group">
+        <label for="faction">Fraktion:</label>
+        <% @factions.map! { |faction| faction.name = faction.name + ' ' + write_facet_count('faction', faction.slug); faction }%>
+        <%= select_tag :faction, options_from_collection_for_select(@factions, 'slug', 'name', @conditions[:faction]),
+                       multiple: true,
+                       class: 'selectpicker',
+                       title: 'alle Fraktionen' %>
       </div>
     </div>
   </div>
