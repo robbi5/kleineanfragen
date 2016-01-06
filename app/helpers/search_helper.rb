@@ -6,7 +6,7 @@ module SearchHelper
 
   def write_facet_count(key, term)
     count = facet_count(key, term)
-    count.present? ? "(#{count})" : ''
+    count.present? ? "(#{number_with_delimiter(count)})" : ''
   end
 
   # look into actionview / atom_feed_helper
