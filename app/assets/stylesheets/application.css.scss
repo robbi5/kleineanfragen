@@ -599,6 +599,11 @@ span.twitter-typeahead {
   vertical-align: middle;
 }
 
+// force through increased specificity
+.facetbar-group .btn-group.bootstrap-select.bootstrap-select {
+  width: 200px
+}
+
 .selectpicker > li.selected > a {
   color: #757F9A;
 }
