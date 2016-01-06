@@ -19,5 +19,5 @@
   <% end %>
 </ol>
 
-<p class="pagination-total"><%= @papers.total_count %> <%= t :kleine_anfragen, count: @papers.total_count %></p>
+<p class="pagination-total"><%= number_with_delimiter @papers.total_count %> <%= t :kleine_anfragen, count: @papers.total_count %></p>
 <%= paginate @papers %>

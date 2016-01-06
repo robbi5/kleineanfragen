@@ -14,7 +14,7 @@
       <%= render partial: 'paper/paper', collection: @papers %>
     </ol>
 
-    <p class="pagination-total"><%= @papers.total_count %> <%= t :kleine_anfragen, count: @papers.total_count %></p>
+    <p class="pagination-total"><%= number_with_delimiter @papers.total_count %> <%= t :kleine_anfragen, count: @papers.total_count %></p>
     <%= paginate @papers %>
   </div>
   <div class="col-md-4">
@@ -24,7 +24,7 @@
       <ul>
         <% @body.ministries.order(name: :asc).each do |ministry| %>
         <% next if ministry == @ministry %>
-        <li><%= link_to ministry.name, ministry_path(@body, ministry) %> <small>(<%= ministry.papers.count %>)</small></li>
+        <li><%= link_to ministry.name, ministry_path(@body, ministry) %> <small>(<%= number_with_delimiter ministry.papers.count %>)</small></li>
         <% end %>
       </ul>
     </div>

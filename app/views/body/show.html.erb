@@ -15,7 +15,7 @@
       <li class="row">
         <h2 class="col-xs-9 col-sm-10"><%= link_to "#{term.to_s}. Wahlperiode", legislative_term_path(@body, term) %></h2>
         <div class="paper-count col-xs-3 col-sm-2">
-          <span><%= count %></span><br/>
+          <span><%= number_with_delimiter count %></span><br/>
           <%= t :anfragen, count: count %>
         </div>
       </li>
@@ -39,7 +39,7 @@
     <h3>Behörden:</h3>
     <ul>
       <% @body.ministries.order(name: :asc).each do |ministry| %>
-      <li><%= link_to ministry.name, ministry_path(@body, ministry) %> <small>(<%= ministry.papers.count %>)</small></li>
+      <li><%= link_to ministry.name, ministry_path(@body, ministry) %> <small>(<%= number_with_delimiter ministry.papers.count %>)</small></li>
       <% end %>
     </ul>
     <% end %>
@@ -48,7 +48,7 @@
     <h3>Fraktionen:</h3>
     <ul>
       <% @body.organizations.order(name: :asc).each do |organization| %>
-      <li><%= link_to organization.name, organization_path(@body, organization) %> <small>(<%= organization.papers.where(body: @body).count %>)</small></li>
+      <li><%= link_to organization.name, organization_path(@body, organization) %> <small>(<%= number_with_delimiter organization.papers.where(body: @body).count %>)</small></li>
       <% end %>
     </ul>
     <% end %>
