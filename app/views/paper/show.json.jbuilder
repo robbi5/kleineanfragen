@@ -30,6 +30,7 @@ end
 json.answerers do
   json.ministries @paper.answerer_ministries do |ministry|
     json.name ministry.name
+    json.html_url ministry_url(@body, ministry)
   end
 end
 
