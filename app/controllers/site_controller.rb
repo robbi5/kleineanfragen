@@ -6,6 +6,7 @@ class SiteController < ApplicationController
               .limit(10)
               .includes(:body, :paper_originators)
               .order(published_at: :desc, reference: :desc)
+    @count = Paper.count.round(-1)
     fresh_when last_modified: @papers.maximum(:updated_at), public: true
   end
 end
