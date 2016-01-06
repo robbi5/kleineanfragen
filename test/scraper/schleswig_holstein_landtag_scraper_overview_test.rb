@@ -65,7 +65,7 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
     html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sh/major.html')).force_encoding('WINDOWS-1252'))
     table = @scraper.extract_table html
     blocks = @scraper.extract_blocks table
-    paper = @scraper.extract_major_paper blocks[0]
+    paper = @scraper.extract_major_paper(blocks[0], check_pdf: false)
     assert_equal(
       {
         legislative_term: '17',
@@ -116,7 +116,7 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
         originators: { people: ['Hans-Jörn Arp', 'Johannes Callsen'], parties: ['CDU'] },
         is_answer: true,
         answerers: { ministries: ['Minister/in für Wirtschaft, Arbeit, Verkehr und Technologie'] }
-      }, @scraper.extract_minor_paper(@blocks[15]))
+      }, @scraper.extract_minor_paper(@blocks[15], check_pdf: false))
   end
 
   test 'get full paper where answerers are unknown' do
@@ -132,6 +132,6 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
         originators: { people: ['Uli König'], parties: ['PIRATEN'] },
         is_answer: true,
         answerers: { ministries: [] }
-      }, @scraper.extract_minor_paper(@blocks[294]))
+      }, @scraper.extract_minor_paper(@blocks[294], check_pdf: false))
   end
 end

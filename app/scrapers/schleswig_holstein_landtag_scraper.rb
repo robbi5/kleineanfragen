@@ -53,32 +53,52 @@ module SchleswigHolsteinLandtagScraper
     second_cell.child.next.next.next.content
   end
 
-  def self.extract_major_paper(block)
+  def self.raise_if_pdf_not_available(url, full_reference)
+    begin
+      resp = Scraper.patron_session.head(url)
+    rescue => e
+      raise "SH [#{full_reference}]: url throwed #{e}"
+    end
+    if resp.status == 404
+      fail "SH [#{full_reference}]: url throws 404"
+    end
+  end
+
+  def self.extract_major_paper(block, check_pdf: true)
     full_reference = extract_full_reference block
     legislative_term, reference = full_reference.split '/'
     line = extract_detail_line block
     published_at = get_date_from_detail_line line
     return nil if published_at.nil?
+    url = extract_url(block)
+
+    # not all papers are available
+    raise_if_pdf_not_available(url, full_reference) if check_pdf
+
     {
       legislative_term: legislative_term,
       full_reference: full_reference,
       reference: reference,
       doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
       title: extract_title(block),
-      url: extract_url(block),
+      url: url,
       published_at: published_at,
       is_answer: true,
       answerers: { ministries: ['Landesregierung'] }
     }
   end
 
-  def self.extract_minor_paper(block)
+  def self.extract_minor_paper(block, check_pdf: true)
     return nil if !answer?(block)
     full_reference = extract_full_reference(block)
     meta = extract_meta(block)
     fail "SH [#{full_reference}]: missing meta data" if meta.nil?
     url = extract_url(block)
     legislative_term, reference = full_reference.split('/')
+
+    # not all papers are available
+    raise_if_pdf_not_available(url, full_reference) if check_pdf
+
     {
       legislative_term: legislative_term,
       full_reference: full_reference,
