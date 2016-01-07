@@ -30,7 +30,7 @@ class SearchController < ApplicationController
       conditions[:body] = Body.all.select { |body| terms.body.include? body.state }.map(&:state)
     end
     if terms['faction']
-      conditions[:faction] = Organization.all.select { |org| terms.faction.include? org.slug }.map(&:slug)
+      conditions[:faction] = Organization.all.select { |org| [terms.faction].flatten.include? org.slug }.map(&:slug)
     end
     if terms['doctype']
       conditions[:doctype] = Paper::DOCTYPES.select { |doctype| terms.doctype.include? doctype }
