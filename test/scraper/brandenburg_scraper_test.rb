@@ -7,90 +7,96 @@ class BrandenburgScraperTest < ActiveSupport::TestCase
     @detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bb/detail.html')).force_encoding('windows-1252'))
   end
 
-  # webpage states that it shows 671 results but actually displays 482
+  # 25 results
   test 'extract overview items' do
     body = @scraper.extract_body(@overview)
     items = @scraper.extract_overview_items(body)
-    assert_equal 482, items.length
+    assert_equal 25, items.length
   end
 
   test 'extract title from item row' do
     body = @scraper.extract_body(@detail)
     item = @scraper.extract_detail_item(body)
     title = @scraper.extract_title(item)
-    assert_equal 'Umzug der Schulaufsicht von Perleberg nach Neuruppin', title
+    assert_equal 'Kreisumlagen in Brandenburg', title
   end
 
   test 'extract originators' do
     body = @scraper.extract_body(@detail)
     item = @scraper.extract_detail_item(body)
-    meta = @scraper.extract_meta(item)
-    originators = @scraper.extract_originators(meta.text, Paper::DOCTYPE_MINOR_INTERPELLATION)
-    assert_equal 'Gordon Hoffmann', originators[:people][0]
-    assert_equal 'CDU', originators[:parties][0]
+    originator_text = item.at_css('span[name="OFR_BASIS3"]').text.strip
+    originators = @scraper.extract_originators(originator_text)
+
+    assert_equal 'Raik Nowka (CDU), Steeven Bretz (CDU)', originators
   end
 
-  test 'extract published_at' do
+  test 'extract answer data' do
     body = @scraper.extract_body(@detail)
     item = @scraper.extract_detail_item(body)
-    meta = @scraper.extract_meta(item)
-    published_at = @scraper.extract_published_at(meta.text)
-    assert_equal Date.parse('2015-02-13'), published_at
+    answer_text_el = item.css('.topic2').last
+    ad = @scraper.extract_answer_data(answer_text_el.text)
+
+    assert_equal Date.parse('2015-12-21'), ad[:published_at]
+    assert_equal '6/3233', ad[:full_reference]
   end
 
   test 'extract overview paper' do
     body = @scraper.extract_body(@overview)
-    item = @scraper.extract_overview_items(body).last
-    paper = @scraper.extract_paper_overview(item)
+    items = @scraper.extract_overview_items(body)
+    item = items.first
+    paper = @scraper.extract_paper(item)
 
     assert_equal(
       {
         legislative_term: '6',
-        full_reference: '6/39',
-        reference: '39',
-        url: 'http://www.parldok.brandenburg.de/parladoku/w6/drs/ab_0001/39.pdf',
-        published_at: Date.parse('2014-11-03'),
-        is_answer: true
+        full_reference: '6/3264',
+        reference: '3264',
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        title: 'Windenergieanlagen - Begleitung der Schwertransporte durch die Polizei',
+        url: 'https://www.parlamentsdokumentation.brandenburg.de/parladoku/w6/drs/ab_3200/3264.pdf',
+        published_at: Date.parse('2015-12-30'),
+        is_answer: true,
+        originators: { people: ['Thomas Jung', 'Andreas Kalbitz'], parties: ['AfD'] }
       }, paper)
   end
 
   test 'extract detail paper' do
     body = @scraper.extract_body(@detail)
     item = @scraper.extract_detail_item(body)
-    paper = @scraper.extract_detail_paper(item)
+    paper = @scraper.extract_paper(item)
 
     assert_equal(
       {
         legislative_term: '6',
-        full_reference: '6/618',
-        reference: '618',
+        full_reference: '6/3233',
+        reference: '3233',
         doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-        title: 'Umzug der Schulaufsicht von Perleberg nach Neuruppin',
-        url: 'http://www.parldok.brandenburg.de/parladoku/w6/drs/ab_0600/618.pdf',
-        published_at: Date.parse('2015-02-13'),
+        title: 'Kreisumlagen in Brandenburg',
+        url: 'https://www.parlamentsdokumentation.brandenburg.de/parladoku/w6/drs/ab_3200/3233.pdf',
+        published_at: Date.parse('2015-12-21'),
         originators: {
-          people: ['Gordon Hoffmann'],
+          people: ['Raik Nowka', 'Steeven Bretz'],
           parties: ['CDU']
         },
         is_answer: true
       }, paper)
   end
 
-  test 'extract major interpellation detail paper 614' do
-    detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bb/detail_614.html')).force_encoding('windows-1252'))
+  test 'extract major interpellation detail paper 2926' do
+    detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bb/detail_2926.html')).force_encoding('windows-1252'))
     body = @scraper.extract_body(detail)
     item = @scraper.extract_detail_item(body)
-    paper = @scraper.extract_detail_paper(item)
+    paper = @scraper.extract_paper(item)
 
     assert_equal(
       {
         legislative_term: '6',
-        full_reference: '6/614',
-        reference: '614',
+        full_reference: '6/2926',
+        reference: '2926',
         doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
-        title: 'Situation von Flüchtlingen und Asylbewerbern in Brandenburg',
-        url: 'http://www.parldok.brandenburg.de/parladoku/w6/drs/ab_0600/614.pdf',
-        published_at: Date.parse('2015-02-12'),
+        title: 'Medienwirtschaft im Land Brandenburg',
+        url: 'https://www.parlamentsdokumentation.brandenburg.de/parladoku/w6/drs/ab_2900/2926.pdf',
+        published_at: Date.parse('2015-11-05'),
         originators: {
           people: [],
           parties: ['CDU']
@@ -99,54 +105,52 @@ class BrandenburgScraperTest < ActiveSupport::TestCase
       }, paper)
   end
 
-  test 'multiple parties on major interpellations' do
-    meta = <<-END.gsub(/^ {6}/, '').sub(/\n$/, '')
-                  GrAnfr 10   (SPD,DIE LINKE)  13.01.2015 Drs
-                  6/420 (1 S.)Antw   (LReg)  13.02.2015 Drs
-                  6/618 (3 S.)
-    END
+  test 'extract date ranges' do
+    opt = Struct.new(:value, :text)
+    options = [
+      opt.new(6, '6. Wahlperiode (seit 08.10.2014)'),
+      opt.new(5, '5. Wahlperiode (21.10.2009 - 08.10.2014)'),
+      opt.new(4, '4. Wahlperiode (13.10.2004 - 21.10.2009)'),
+      opt.new('1:6', 'alle Wahlperioden'),
+    ]
+    ranges = @scraper.get_daterange(options)
+
     assert_equal(
       {
-        people: [],
-        parties: ['SPD', 'DIE LINKE']
-      }, @scraper.extract_originators(meta, Paper::DOCTYPE_MAJOR_INTERPELLATION)
-    )
+        6 => ['08.10.2014', nil],
+        5 => ['21.10.2009', '08.10.2014'],
+        4 => ['13.10.2004', '21.10.2009']
+      }, ranges)
   end
 
-  test 'multiple people on minor interpellation' do
-    meta = <<-END.gsub(/^ {6}/, '').sub(/\n$/, '')
-              KlAnfr 179   Gordon Freeman (CDU), Black Widow (DIE LINKE)  13.01.2015 Drs
-              6/420 (1 S.)Antw   (LReg)  13.02.2015 Drs
-              6/618 (3 S.)
-    END
+  test 'get dates from period' do
+    period = ['21.10.2009', '08.10.2014']
+    dates = @scraper.get_dates period
+
     assert_equal(
-      {
-        people: ['Gordon Freeman', 'Black Widow'],
-        parties: ['CDU', 'DIE LINKE']
-      }, @scraper.extract_originators(meta, Paper::DOCTYPE_MINOR_INTERPELLATION)
-    )
+      [
+        [Date.parse('2009-10-21'), Date.parse('2010-10-18')],
+        [Date.parse('2010-10-19'), Date.parse('2011-10-16')],
+        [Date.parse('2011-10-17'), Date.parse('2012-10-13')],
+        [Date.parse('2012-10-14'), Date.parse('2013-10-11')],
+        [Date.parse('2013-10-12'), Date.parse('2014-10-08')]
+      ], dates)
   end
 
-  test 'test extract details #33' do
-    detail = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bb/detail_6_2973.html')).force_encoding('windows-1252'))
-    body = @scraper.extract_body(detail)
-    item = @scraper.extract_detail_item(body)
-    paper = @scraper.extract_detail_paper(item)
+  test 'get dates from current period' do
+    period = ['08.10.2014', nil]
+    travel_to Date.parse('2016-01-11') do
+      dates = @scraper.get_dates period
 
-    assert_equal(
-      {
-        legislative_term: '6',
-        full_reference: '6/2973',
-        reference: '2973',
-        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-        title: 'Unterbringung von Flüchtlingen in den Landkreisen Brandenburgs, Stand 30.09.2015',
-        url: 'http://www.parldok.brandenburg.de/parladoku/w6/drs/ab_2900/2973.pdf',
-        published_at: Date.parse('2015-11-12'),
-        originators: {
-          people: ['Andrea Johlige'],
-          parties: ['DIE LINKE']
-        },
-        is_answer: true
-      }, paper)
+      assert_equal(
+        [
+          [Date.parse('2014-10-08'), Date.parse('2015-01-07')],
+          [Date.parse('2015-01-08'), Date.parse('2015-04-09')],
+          [Date.parse('2015-04-10'), Date.parse('2015-07-10')],
+          [Date.parse('2015-07-11'), Date.parse('2015-10-10')],
+          [Date.parse('2015-10-11'), Date.parse('2016-01-10')],
+          [Date.parse('2016-01-11'), (Date.today + 1.day)]
+        ], dates)
+    end
   end
 end

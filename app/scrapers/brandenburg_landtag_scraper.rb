@@ -1,26 +1,36 @@
 require 'date'
 
 module BrandenburgLandtagScraper
-  BASE_URL = 'http://www.parldok.brandenburg.de'
+  BASE_URL = 'https://www.parlamentsdokumentation.brandenburg.de'
+  START_URL = BASE_URL + '/starweb/LBB/ELVIS/index.html'
+
   # smaller searches or brandenburg times out
   # search five years for every half month
   SEARCH_PARTS = 5
 
-  def self.get_dates(wp)
-    # WP is index, startdate, enddate are values
-    periods = [
-      nil,
-      nil,
-      nil,
-      ['1.09.1999', '30.09.2004'],
-      ['1.09.2004', '30.09.2009'],
-      ['1.09.2009', '30.09.2014'],
-      ['1.09.2014', '30.09.2019']
-    ]
-    return nil if periods[wp].nil?
+  def self.get_daterange(options)
+    ranges = {}
+    options.each do |el|
+      key = el.value
+      braces = el.text.strip.match(/\s+\((.+)\)/)
+      next if braces.nil?
+      b = braces[1]
+      if b.start_with? 'seit'
+        # 6. Wahlperiode (seit 08.10.2014)
+        range = [b.gsub(/seit\s+/, ''), nil]
+      elsif b.include? '-'
+        # 5. Wahlperiode (21.10.2009 - 08.10.2014)
+        range = b.split(/\s+-\s+/)
+      end
+      ranges[key.to_i] = range
+    end
+    ranges
+  end
 
-    start_time = Date.parse(periods[wp].first)
-    end_time = Date.parse(periods[wp].last)
+  def self.get_dates(period)
+    return nil if period.nil? || period.first.nil?
+    start_time = Date.parse(period.first)
+    end_time = period.last.nil? ? (Date.today + 1.day) : Date.parse(period.last)
     # all dates from starttime to endtime
     dates = start_time.step(end_time).to_a
     # each sliced to approximatly equal length
@@ -34,128 +44,81 @@ module BrandenburgLandtagScraper
   end
 
   def self.extract_detail_item(body)
-    body.search('//table[@class="tabcol"]')[2]
+    extract_overview_items(body).first
   end
 
   def self.extract_overview_items(body)
-    body.search('//span[@name="OFR_WWK4"]')
+    # use "Record Repeater" directly below "ReportGenerated",
+    # in "HitCountReportConditional" are a lot of empty "Record Repeater"s
+    body.search('//div[@name="ReportGenerated"][1]/div[@starweb_type="Record Repeater"][position() < last()]')
   end
 
   def self.extract_title(item)
-    item.search('.//tr[2]/td[2]').text
-  end
-
-  def self.extract_full_reference(link)
-    link.text
-  end
-
-  def self.extract_reference(full_reference)
-    full_reference.split('/')
-  end
-
-  def self.extract_meta(item)
-    item.at_css('table')
+    item.search('.//h4').text
   end
 
   def self.extract_doctype(meta_block)
-    if meta_block.text.include?('KlAnfr')
+    if meta_block.text.include?('Kleine Anfrage')
       Paper::DOCTYPE_MINOR_INTERPELLATION
-    elsif meta_block.text.include?('GrAnfr')
+    elsif meta_block.text.match(/Gro.+?e Anfrage/)
       Paper::DOCTYPE_MAJOR_INTERPELLATION
     end
   end
 
-  def self.extract_originators(originator_text, doctype)
-    if doctype == Paper::DOCTYPE_MINOR_INTERPELLATION
-      # KlAnfr 123 Aaaaaa Bbbbbb (ABC), Cccccc Ddddddd (ABC) 11.12.2014 Drs 6/123 (1 S.)
-      meta = originator_text.strip.match(/\s(\D+ \(.+\),?)\s+[\d\.]+\s+Drs/)
-      return nil if meta.nil?
-      NamePartyExtractor.new(meta[1]).extract
-    else
-      # GrAnfr 123 (ABC, ABC) 11.12.2014 Drs 6/123 (1 S.)
-      parties = []
-      originator_text.split('(')[1].split(')')[0].split(',').each { |p| parties.push(p.strip) }
-      { people: [], parties: parties }
-    end
+  def self.extract_answer_data(answer_text)
+    m = answer_text.strip.match(/Antwort\s+\(.+?\)\s+([\d\.]+)\s+Drucksache\s+(\d+\/\d+)\s+/)
+    {
+      published_at: Date.parse(m[1]),
+      full_reference: m[2]
+    }
   end
 
-  def self.extract_published_at(meta_text)
-    date = meta_text.match(/Antw\s+\(LReg\)\s+([\d\.]+)/)[1]
-    Date.parse(date)
+  def self.extract_originators(originator_text)
+    o = originator_text.match(/(.+)\s+([\d\.]+)\s+Drucksache\s+\d+\/\d+\s/)
+    o[1].strip
   end
 
-  # metadata is one big td, lines are seperated by <br> (and <!--XX-->)
-  # split it at the <br>s, so we get an array of lines again
-  def self.extract_meta_rows(element)
-    data = []
-    element.search('br').each do |br|
-      frag = Nokogiri::HTML.fragment('')
-      el = br
-      loop do
-        el = el.next
-        break if el.nil? || el.try(:name) == 'br'
-        frag << el.clone
-      end
-      data << frag
-    end
-    data
-  end
+  def self.extract_paper(item)
+    originator_row = item.at_css('div[name="Repeat_TYP"]')
+    answer_row = item.at_css('div[name="Repeat_DBE"]')
+    return nil if originator_row.nil? || answer_row.nil?
+    link = answer_row.at_css('a[href$="pdf"]')
+    answer_text_el = answer_row.at_css('.topic2')
+    answer_text = answer_text_el.text.strip
 
-  def self.extract_detail_paper(item)
-    meta = extract_meta(item)
-    doctype = extract_doctype(meta)
-    return nil if doctype.nil?
-
-    data = extract_meta_rows(item)
-    answer_row = data.find { |row| row.text.include?('Antw') }
-    originator_row = data.find { |row| row.text.start_with?('KlAnfr') || row.text.start_with?('GrAnfr') }
-
-    link = answer_row.search('a').find { |el| el.text.include?('/') }
-    fail 'BB [?] Cannot get Link' if link.nil?
-    # skip BePr
-    return nil if !link.previous.text.include?('Drs')
+    ad = extract_answer_data(answer_text)
+    full_reference = ad[:full_reference]
 
     path = link.attributes['href'].value
     url = Addressable::URI.parse(BASE_URL).join(path).normalize.to_s
-    full_reference = extract_full_reference(link)
-    legislative_term, reference = extract_reference(full_reference)
-    originators = extract_originators(originator_row.text, doctype)
-    published_at = extract_published_at(answer_row.text)
+
+    type_row = originator_row.at_css('span[name="OFR_BASIS2"]')
+    doctype = extract_doctype(type_row)
+
+    originator_text = originator_row.at_css('span[name="OFR_BASIS3"]').text.strip
+    o = extract_originators(originator_text)
+    if doctype == Paper::DOCTYPE_MINOR_INTERPELLATION
+      originators = NamePartyExtractor.new(o).extract
+    elsif doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
+      originators = NamePartyExtractor.new(o, NamePartyExtractor::FRACTION).extract
+    end
 
     {
-      legislative_term: legislative_term,
+      legislative_term: full_reference.split('/').first,
       full_reference: full_reference,
-      reference: reference,
+      reference: full_reference.split('/').last,
       doctype: doctype,
-      title: extract_title(item),
+      title: extract_title(originator_row),
       url: url,
-      published_at: published_at,
+      published_at: ad[:published_at],
       originators: originators,
       # answerers in pdf
       is_answer: true
     }
   end
 
-  def self.extract_paper_overview(item)
-    return nil unless item.content.include?('Drucksache')
-    link = item.at_css('a')
-    full_reference = link.text.strip
-    path = link.attributes['href'].value
-    url = Addressable::URI.parse(BASE_URL).join(path).normalize.to_s
-    date = link.next.text.match(/([\d\.]+)/)[1]
-
-    {
-      legislative_term: full_reference.split('/').first,
-      full_reference: full_reference,
-      reference: full_reference.split('/').last,
-      url: url,
-      published_at: Date.parse(date),
-      is_answer: true
-    }
-  end
-
   class Overview < Scraper
-    SEARCH_URL = BASE_URL + '/starweb/LTBB/servlet.starweb?path=LTBB/lissh.web'
+    SEARCH_URL = BASE_URL + '/starweb/LBB/ELVIS/servlet.starweb?path=LBB/ELVIS/LISSH.web&AdvancedSearch=yes'
     TYPE = 'ANTWORT' # 'Kleine Anfrage;Große Anfrage' doesn't contain answers
 
     def supports_streaming?
@@ -165,29 +128,58 @@ module BrandenburgLandtagScraper
     def scrape
       streaming = block_given?
       m = mechanize
-      papers = []
-      dates = BrandenburgLandtagScraper.get_dates @legislative_term
-      fail "BB: WP #{@legislative_term} is not configured" if dates.nil?
 
-      dates.each do |date|
+      # initialize session
+      mp = m.get START_URL
+
+      form = mp.form 'SucheLISSH'
+      fail 'Cannot get start page form' if form.nil?
+      opt = form.field_with(name: 'LISSH_WP').options
+
+      # extract dates from search select
+      dateranges = BrandenburgLandtagScraper.get_daterange opt
+
+      dates = BrandenburgLandtagScraper.get_dates dateranges[@legislative_term]
+      fail "BB: Couldn't extract dates for legislative term #{@legislative_term}" if dates.nil?
+
+      papers = []
+      dates.reverse_each do |date|
         mp = m.get SEARCH_URL
+        fail 'Starweb backend is down' if mp.body.include? 'STARWebInactive.htm'
+
+        # navigate to extended search page
+        redir_form = mp.form '__form'
+        fail 'Cannot get redirection form' if redir_form.nil?
+        redir_form.field_with(name: '__action').value = 39
+        mp = m.submit(redir_form)
+
         search_form = mp.form '__form'
         fail 'Cannot get search form' if search_form.nil?
 
         # fill search form
-        search_form.field_with(name: 'wplist').value = @legislative_term
-        search_form.field_with(name: '__action').value = 4
-        search_form.field_with(name: 'Suchzeile5').value = 'DRUCKSACHE'
-        search_form.field_with(name: 'Suchzeile6').value = TYPE
-        search_form.field_with(name: 'Suchzeile7').value = date.first.strftime('%e.%-m.%Y')
-        search_form.field_with(name: 'Suchzeile8').value = date.last.strftime('%e.%-m.%Y')
-        search_form.field_with(name: 'maxtrefferlist1').options.find { |opt| opt.text.include? 'alle' }.select
+        search_form.field_with(name: 'LISSH_WP_ADV').value = @legislative_term
+        search_form.field_with(name: '__action').value = 72
+        search_form.field_with(name: 'LISSH_DART_ADV').value = 'DRUCKSACHE'
+        search_form.field_with(name: 'LISSH_DTYP').value = TYPE
+        search_form.field_with(name: 'LISSH_DatumV').value = date.first.strftime('%e.%-m.%Y')
+        search_form.field_with(name: 'LISSH_DatumB').value = date.last.strftime('%e.%-m.%Y')
+        # search_form.field_with(name: 'LimitMaximumHitCount').options.find { |opt| opt.text.include? 'alle' }.select
+        # all is broken, hardcode fixed value instead:
+        search_form.field_with(name: 'LimitMaximumHitCount').value = 'S99{ITEMS -1:-100000}' # works on other starwebs
+        mp = m.submit(search_form)
+
+        search_form = mp.form '__form'
+        fail 'Cannot get search form on result page' if search_form.nil?
+
+        # get more items
+        search_form.field_with(name: '__action').value = 175
+        search_form.field_with(name: 'NumPerSegment').options.find { |opt| opt.text.include? 'alle' }.select
         mp = m.submit(search_form)
 
         body = BrandenburgLandtagScraper.extract_body(mp)
         BrandenburgLandtagScraper.extract_overview_items(body).each do |item|
           begin
-            paper = BrandenburgLandtagScraper.extract_paper_overview(item)
+            paper = BrandenburgLandtagScraper.extract_paper(item)
           rescue => e
             logger.warn e
             next
@@ -205,19 +197,19 @@ module BrandenburgLandtagScraper
   end
 
   class Detail < DetailScraper
-    START_URL = BASE_URL + '/starweb/LTBB/start.html'
-    SEARCH_URL = BASE_URL + '/starweb/LTBB/servlet.starweb?path=LTBB/lisshfl.web&id=LTBBWEBDOKFL&format=WEBLANGFL&search='
+    SEARCH_URL = BASE_URL + '/starweb/LBB/ELVIS/servlet.starweb?path=LBB/ELVIS/LISSH.web&Standardsuche=yes&search='
 
     def scrape
       m = mechanize
       # initialize session
       m.get START_URL
       # get paper
-      mp = m.get SEARCH_URL + CGI.escape("DART=D AND WP=#{@legislative_term} AND DNR,KORD=#{@reference}")
+      mp = m.get SEARCH_URL + CGI.escape("WP=#{@legislative_term} AND DNR=#{@reference}")
+      mp = m.submit mp.form('__form')
 
       body = BrandenburgLandtagScraper.extract_body(mp)
       item = BrandenburgLandtagScraper.extract_detail_item(body)
-      BrandenburgLandtagScraper.extract_detail_paper(item)
+      BrandenburgLandtagScraper.extract_paper(item)
     end
   end
 end
