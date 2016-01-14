@@ -205,10 +205,15 @@ module BrandenburgLandtagScraper
       m.get START_URL
       # get paper
       mp = m.get SEARCH_URL + CGI.escape("WP=#{@legislative_term} AND DNR=#{@reference}")
-      mp = m.submit mp.form('__form')
+      form = mp.form('__form')
+      form.field_with(name: '__action').value = 51
+      mp = m.submit form
 
       body = BrandenburgLandtagScraper.extract_body(mp)
+
       item = BrandenburgLandtagScraper.extract_detail_item(body)
+      fail 'Cannot get detail item' if item.nil?
+
       BrandenburgLandtagScraper.extract_paper(item)
     end
   end
