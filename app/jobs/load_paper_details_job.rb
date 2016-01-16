@@ -8,6 +8,7 @@ class LoadPaperDetailsJob < PaperJob
 
     logger.info "Loading details for Paper [#{paper.body.state} #{paper.full_reference}]"
     scraper = paper.body.scraper::Detail.new(paper.legislative_term, paper.reference)
+    logger.progname = "LoadPaperDetailsJob #{paper.body.state}"
     scraper.logger = logger
 
     results = scraper.scrape

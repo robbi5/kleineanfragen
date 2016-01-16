@@ -45,6 +45,7 @@ class ImportNewPapersJob < ActiveJob::Base
     @body = body
     @legislative_term = legislative_term
     @scraper = @body.scraper::Overview.new(legislative_term)
+    logger.progname = "ImportNewPapersJob #{@body.state}"
     @scraper.logger = logger
     @load_details = @body.scraper.const_defined?(:Detail)
     @new_papers = 0
