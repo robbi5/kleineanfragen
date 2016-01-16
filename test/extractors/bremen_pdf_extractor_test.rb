@@ -75,6 +75,20 @@ class BremenPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'CDU', originators[:parties].first
   end
 
+  test 'fraction with date appended, title in quotes' do
+    paper = paper_with_contents_and_title(
+      "Antwort des Senats \n" +
+      "auf die Kleine Anfrage der Fraktion DIE LINKE vom 17.11.15 \n\n" +
+      "„Waffen- und Munitionsexporte über die Bremischen Häfen 2014-2015“ \n\n\n" +
+      "Die Fraktion DIE LINKE hat folgende Kleine Anfrage an den Senat gerichtet: \n",
+      'Waffen- und Munitionsexporte über die Bremischen Häfen 2014-2015')
+    originators = BremenPDFExtractor.new(paper).extract_originators
+    assert_not_nil originators
+    assert_not_nil originators[:parties]
+    assert_equal 1, originators[:parties].size
+    assert_equal 'DIE LINKE', originators[:parties].first
+  end
+
   test 'two fractions' do
     paper = paper_with_contents_and_title(
       "Antwort des Senats auf die Kleine Anfrage der Fraktion der SPD und Fraktion DIE LINKE\n\n\n\n\n" +
