@@ -7,6 +7,7 @@ atom_feed(
   feed.title "kleineAnfragen: Anfragen aus #{@body.name}"
   feed.updated @papers.maximum(:updated_at)
   feed.author { |author| author.name 'kleineAnfragen' }
+  feed.link Rails.configuration.x.push_hub, rel: 'hub' unless Rails.configuration.x.push_hub.blank?
 
   @papers.each do |paper|
     render(partial: 'paper/paper', locals: { feed: feed, paper: paper })

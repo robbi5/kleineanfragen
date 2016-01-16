@@ -10,6 +10,7 @@ class ImportNewPapersJob < ActiveJob::Base
 
   # NOTE: after_perform must be before around_perform, else @result won't be filled
   after_perform do
+    NotifyPuSHHubBodyFeedJob.perform_later(@body) if @result.success?
     SendBodySubscriptionsJob.perform_later(@body) if @result.success?
   end
 

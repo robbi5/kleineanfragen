@@ -55,5 +55,7 @@ module Kleineanfragen
     config.action_mailer.default_options = { from: config.x.email_from }
     # report slack webhook url
     config.x.report_slack_webhook = ENV['REPORT_SLACK_WEBHOOK']
+    # pubsubhubbub hub url
+    config.x.push_hub = ENV['PUSH_HUB']
   end
 end
