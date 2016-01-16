@@ -24,6 +24,8 @@ Rails.application.routes.draw do
   get 'info/datenschutz'
   get 'info/mitmachen'
 
+  get 'static/kleineanfragen.svg', to: redirect { ActionController::Base.helpers.asset_path('kleineanfragen.svg') }
+
   get 'review' => 'review#index'
   get 'review/papers'
   get 'review/ministries'
