@@ -15,6 +15,6 @@ class NotifyPuSHHubBodyFeedJob < ActiveJob::Base
       headers: { 'Content-Type' => 'application/x-www-form-urlencoded' }
     )
 
-    fail 'Couldn\'t get response' if response.status != 200
+    fail "Couldn't get response, status #{response.status}" unless [200, 204].include?(response.status)
   end
 end
