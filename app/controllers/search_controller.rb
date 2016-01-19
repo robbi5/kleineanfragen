@@ -25,9 +25,15 @@ class SearchController < ApplicationController
     @papers = self.class.search_papers(@term, @conditions, page: params[:page], per_page: 10)
   end
 
-  def self.parse_query(query)
+  def self.simple_parse_query(query)
     terms = SearchTerms.new(query || '', %w(table body doctype faction pages))
     term = terms.query.presence || '*'
+    { terms: terms, term: term }
+  end
+
+  def self.parse_query(query)
+    q = simple_parse_query(query)
+    terms = q[:terms]
 
     conditions = {}
     conditions[:contains_table] = true if terms['table']
@@ -44,7 +50,7 @@ class SearchController < ApplicationController
       conditions[:pages] = EsQueryParser.convert_range(terms.pages)
     end
 
-    OpenStruct.new(term: term, conditions: conditions, raw_terms: terms)
+    OpenStruct.new(term: q[:term], conditions: conditions, raw_terms: terms)
   end
 
   def self.search_papers(term, conditions, options = {})
@@ -121,8 +127,8 @@ class SearchController < ApplicationController
   end
 
   def autocomplete
-    # FIXME: remove conditions, feed only raw text
-    render json: Paper.search(params[:q], fields: [{ 'title^1.5' => :text_start }, { title: :word_start }], limit: 5).map(&:autocomplete_data)
+    q = self.class.simple_parse_query(params[:q])
+    render json: Paper.search(q[:term], fields: [{ 'title^1.5' => :text_start }, { title: :word_start }], limit: 5).map(&:autocomplete_data)
   end
 
   def subscribe
