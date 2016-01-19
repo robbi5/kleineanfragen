@@ -1,5 +1,5 @@
 # Search term parser from https://gist.github.com/1477730
-# Modified to allow periods (and other non-letter chars) in unquoted field values
+# Modified to allow periods, other non-letter chars and >=/<= in unquoted field values
 # and field names.
 #
 # Helper class to help parse out more advanced search terms
@@ -44,6 +44,8 @@ class SearchTerms
       :                       # find the value delimiter
       (
         [\w,\-]+              # match any word-like values
+        |                     # -or-
+        [\<\>]=?\d+           # match any greater, less than numbers
         |                     # -or-
         (?:"(?:.+|[^\"])*")   # match any quoted values
       )

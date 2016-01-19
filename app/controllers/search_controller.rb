@@ -3,7 +3,11 @@ class SearchController < ApplicationController
     @query = params[:q].presence
     redirect_to(root_url) && return if @query.blank?
 
-    if params[:table].present? || params[:body].present? || params[:doctype].present? || params[:faction].present?
+    if params[:table].present? ||
+       params[:body].present? ||
+       params[:doctype].present? ||
+       params[:faction].present? ||
+       params[:pages].present?
       query = params_to_nice_query
       redirect_to search_path(params: { q: query })
       return
@@ -11,6 +15,7 @@ class SearchController < ApplicationController
 
     search = self.class.parse_query(@query)
     @term = search.term
+    @display_term = term_and_advanced_conditions(search.term, search.raw_terms)
     @conditions = search.conditions
 
     @bodies = Body.all.order(state: :asc).map { |body| OpenStruct.new(name: body.name, state: body.state) }
@@ -21,7 +26,7 @@ class SearchController < ApplicationController
   end
 
   def self.parse_query(query)
-    terms = SearchTerms.new(query || '', %w(table body doctype faction))
+    terms = SearchTerms.new(query || '', %w(table body doctype faction pages))
     term = terms.query.presence || '*'
 
     conditions = {}
@@ -35,8 +40,11 @@ class SearchController < ApplicationController
     if terms['doctype']
       conditions[:doctype] = Paper::DOCTYPES.select { |doctype| terms.doctype.include? doctype }
     end
+    if terms['pages']
+      conditions[:pages] = EsQueryParser.convert_range(terms.pages)
+    end
 
-    OpenStruct.new(term: term, conditions: conditions)
+    OpenStruct.new(term: term, conditions: conditions, raw_terms: terms)
   end
 
   def self.search_papers(term, conditions, options = {})
@@ -45,7 +53,7 @@ class SearchController < ApplicationController
         where: conditions,
         fields: ['title^10', :contents],
         highlight: { tag: '<mark>' },
-        facets: [:contains_table, :body, :doctype, :faction],
+        facets: [:contains_table, :body, :doctype, :faction, :pages],
         smart_facets: true,
         execute: false,
         misspellings: false,
@@ -113,6 +121,7 @@ class SearchController < ApplicationController
   end
 
   def autocomplete
+    # FIXME: remove conditions, feed only raw text
     render json: Paper.search(params[:q], fields: [{ 'title^1.5' => :text_start }, { title: :word_start }], limit: 5).map(&:autocomplete_data)
   end
 
@@ -144,6 +153,18 @@ class SearchController < ApplicationController
       factions = Organization.all.map(&:slug).select { |faction| params[:faction].include? faction }
       q << 'faction:' + factions.join(',')
     end
+    if params[:pages].present?
+      q << 'pages:' + params[:pages].strip
+    end
     q.join ' '
+  end
+
+  def term_and_advanced_conditions(term, raw_terms)
+    terms = []
+    if raw_terms['pages']
+      terms << 'pages:' + raw_terms['pages'].to_s.strip
+    end
+    terms.unshift term if term != '*' || terms.size == 0
+    terms.join ' '
   end
 end

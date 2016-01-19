@@ -10,6 +10,10 @@ class SearchTermsTest < ActiveSupport::TestCase
     'int_parse' => ['id:123', '', { 'id' => 123 }],
     'int_parse_leading_letter' => ['id:a01', '', 'id' => 'a01'],
     'int_parse_leading_zero' => ['id:001', '', 'id' => '001'],
+    'field_with_lower_than' => ['pages:<100', '', 'pages' => '<100'],
+    'field_with_greater_than' => ['pages:>100', '', 'pages' => '>100'],
+    'field_with_lower_than_equals' => ['pages:<=100', '', 'pages' => '<=100'],
+    'field_with_greater_than_equals' => ['pages:>=100', '', 'pages' => '>=100'],
     'mixed_fields_terms' => ['one two:three four five:six', 'one four', { 'two' => 'three', 'five' => 'six' }],
     'term_in_quotes' => ['"hello world"', '"hello world"', {}],
     'term_with_comma' => ['hello,world', 'hello,world', {}]

@@ -91,6 +91,7 @@ class Paper < ActiveRecord::Base
       reference: reference,
       title: title,
       contents: contents,
+      pages: page_count,
       contains_table: contains_table,
       doctype: doctype,
       published_at: published_at,
