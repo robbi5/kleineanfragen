@@ -1,0 +1,102 @@
+<% title "Erweiterte Suche" %>
+
+<% content_for :main_fullwidth_prepend do %>
+<%= form_tag "/search", method: :get, role: 'search', class: 'search', enforce_utf8: false do %>
+  <div class="jumbotron jumbotron--search">
+    <div class="container">
+      <div class="input-group">
+        <%= text_field_tag 'q', '',
+                           type: :search,
+                           id: :searchq,
+                           class: 'form-control',
+                           placeholder: 'Suche nach Themen wie &quot;Schulen&quot;, &quot;Mobilität&quot;, &hellip;'.html_safe %>
+        <span class="input-group-btn">
+          <%= button_tag 'Suchen', type: :submit, name: nil, class: 'btn btn-success' %>
+        </span>
+      </div>
+    </div>
+  </div>
+<% end %>
+<% end %>
+
+<div class="page-header">
+  <h1>Erweiterte Suche</h1>
+</div>
+
+<p></p>
+
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Syntax</th>
+        <th>Erklärung</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <code>wort</code>
+        </td>
+        <td>
+          Suche nach "<em>wort</em>". Trifft auch auch z.B. <em><strong>wört</strong>erkette</em> zu.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <code>"exakte schreibweise"</code>
+        </td>
+        <td>
+          Suche nach "<em>exakte schreibweise</em>". Trifft nicht bei <em>tolle <strong>schreibweise</strong></em> zu.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <code>body:BE</code><br/>
+          <code>body:BE,BY</code>
+        </td>
+        <td>
+          Suche innerhalb von Parlamenten.<br/>
+          Unterstützte Kürzel: <code><%= @bodies.map(&:state).join(', ') %></code>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <code>doctype:major</code><br/>
+          <code>doctype:minor</code><br/>
+          <code>doctype:written</code>
+        </td>
+        <td>
+          Einschränkung nach Anfragetyp (kleine Anfrage, große Anfrage, schriftliche Anfrage)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <code>faction:fraktionslos</code>
+        </td>
+        <td>
+          Einschränkung nach Fraktion
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <code>pages:5</code><br/>
+          <code>pages:&gt;5</code><br/>
+          <code>pages:&lt;5</code>
+        </td>
+        <td>
+          Einschränkung anhand der Seitenanzahl.<br/>
+          Unterstützt: <code>&lt;5, &gt;5, &lt;=5, &gt;=5
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <code>table:true</code>
+        </td>
+        <td>
+          Nur Anfragen, die Tabellen enthalten
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

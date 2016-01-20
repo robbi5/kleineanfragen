@@ -16,7 +16,7 @@ module ApplicationHelper
   end
 
   def display_header_search?
-    !current_page?(root_path) && !current_page?(search_path)
+    !current_page?(root_path) && !current_page?(search_path) && !current_page?(search_advanced_path)
   end
 
   def feed_url_with_current_page(model, params = {})

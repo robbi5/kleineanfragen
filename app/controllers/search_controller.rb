@@ -131,6 +131,10 @@ class SearchController < ApplicationController
     render json: Paper.search(q[:term], fields: [{ 'title^1.5' => :text_start }, { title: :word_start }], limit: 5).map(&:autocomplete_data)
   end
 
+  def advanced
+    @bodies = Body.all.order(state: :asc)
+  end
+
   def subscribe
     @subscription = Subscription.new
     @subscription.subtype = :search
