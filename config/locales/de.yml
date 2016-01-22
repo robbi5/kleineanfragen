@@ -13,6 +13,8 @@ de:
       minor: 'kleine Anfrage'
       major: 'große Anfrage'
       written: 'schriftliche Anfrage'
+  search:
+    placeholder_html: 'Suche nach Themen wie &quot;Schulen&quot;, &quot;Mobilität&quot;, &hellip;'
   email:
     subject:
       body:

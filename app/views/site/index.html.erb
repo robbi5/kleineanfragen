@@ -6,7 +6,7 @@
     <form action="/search" method="get" role="search" class="search">
       <p><label for="searchq" class="tagline">Suche in über <%= number_with_delimiter @count %> Anfragen:</label></p>
       <div class="input-group">
-        <input type="text" id="searchq" name="q" class="form-control" placeholder="Suche nach Themen wie &quot;Schulen&quot;, &quot;Mobilität&quot;, &hellip;" />
+        <input type="text" id="searchq" name="q" class="form-control" placeholder="<%= t('search.placeholder_html') %>" />
         <span class="input-group-btn">
           <button class="btn btn-success" type="submit">Suchen</button>
         </span>
