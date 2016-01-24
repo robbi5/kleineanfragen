@@ -43,9 +43,9 @@ class SearchTerms
     (?:                       # check if it has a value attached
       :                       # find the value delimiter
       (
-        [\w,\-]+              # match any word-like values
+        [\w,\-\.]+            # match any word-like values
         |                     # -or-
-        [\<\>]=?\d+           # match any greater, less than numbers
+        [\<\>]=?[\d\-\.]+     # match any greater, less than numbers
         |                     # -or-
         (?:"(?:.+|[^\"])*")   # match any quoted values
       )

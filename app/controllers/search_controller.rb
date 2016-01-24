@@ -1,5 +1,5 @@
 class SearchController < ApplicationController
-  PARAMS_TO_CONVERT = %w(table body doctype faction pages)
+  PARAMS_TO_CONVERT = %w(table body doctype faction pages published_at)
   SUPPORTED_PARAMS = %w(q page sort) + PARAMS_TO_CONVERT
   ALLOWED_SORT_FIELDS = %w(published_at pages)
 
@@ -52,6 +52,9 @@ class SearchController < ApplicationController
     if terms['pages']
       conditions[:pages] = EsQueryParser.convert_range(terms.pages)
     end
+    if terms['published_at']
+      conditions[:published_at] = EsQueryParser.convert_date_range(terms.published_at)
+    end
 
     OpenStruct.new(term: q[:term], conditions: conditions, raw_terms: terms)
   end
@@ -62,7 +65,7 @@ class SearchController < ApplicationController
         where: conditions,
         fields: ['title^10', :contents],
         highlight: { tag: '<mark>' },
-        facets: [:contains_table, :body, :doctype, :faction, :pages],
+        facets: [:contains_table, :body, :doctype, :faction, :pages, :published_at],
         smart_facets: true,
         execute: false,
         misspellings: false,
@@ -177,6 +180,9 @@ class SearchController < ApplicationController
     terms = []
     if raw_terms['pages']
       terms << 'pages:' + raw_terms['pages'].to_s.strip
+    end
+    if raw_terms['published_at']
+      terms << 'published_at:' + raw_terms['published_at'].to_s.strip
     end
     terms.unshift term if term != '*' || terms.size == 0
     terms.join ' '
