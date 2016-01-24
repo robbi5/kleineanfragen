@@ -1,6 +1,7 @@
 class SearchController < ApplicationController
   PARAMS_TO_CONVERT = %w(table body doctype faction pages)
-  SUPPORTED_PARAMS = %w(q page) + PARAMS_TO_CONVERT
+  SUPPORTED_PARAMS = %w(q page sort) + PARAMS_TO_CONVERT
+  ALLOWED_SORT_FIELDS = %w(published_at)
 
   def search
     @query = params[:q].presence
@@ -22,11 +23,9 @@ class SearchController < ApplicationController
     @factions = Organization.all.order(slug: :asc).map { |faction| OpenStruct.new(name: faction.name, slug: faction.slug) }
     @doctypes = Paper::DOCTYPES.map { |doctype| OpenStruct.new(key: doctype, name: t(doctype, scope: [:paper, :doctype]).to_s) }
 
-    @papers = self.class.search_papers(@term, @conditions, page: params[:page], per_page: 10)
-  end
-
-  def search_params
-    params.permit(*SUPPORTED_PARAMS)
+    options = { page: params[:page], per_page: 10 }
+    options[:order] = sort_param unless sort_param.nil?
+    @papers = self.class.search_papers(@term, @conditions, options)
   end
 
   def self.simple_parse_query(query)
@@ -181,5 +180,18 @@ class SearchController < ApplicationController
     end
     terms.unshift term if term != '*' || terms.size == 0
     terms.join ' '
+  end
+
+  def sort_param
+    p = params[:sort]
+    return nil if p.blank?
+    k, v = p.split(':', 3)
+    return nil unless ALLOWED_SORT_FIELDS.include? k
+    v = { 'desc' => :desc, 'asc' => :asc }[v] || :desc
+    { k.to_sym => v }
+  end
+
+  def search_params
+    params.permit(*SUPPORTED_PARAMS)
   end
 end
