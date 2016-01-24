@@ -79,7 +79,7 @@ class SearchController < ApplicationController
             {
               gauss: {
                 published_at: {
-                  scale: '4w'
+                  scale: '6w'
                 }
               }
             }
