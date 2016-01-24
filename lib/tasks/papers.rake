@@ -97,7 +97,7 @@ namespace :papers do
   desc 'Reimport missing PDFs'
   task :reimport_missing_pdfs, :environment do
     Rails.logger.info 'Adding job for reimporting missing PDFs'
-    ReimportMissingPDFsJob.perform_later
+    ReimportMissingPDFJob.perform_later
   end
 
   desc 'Send Search Subscription Emails'

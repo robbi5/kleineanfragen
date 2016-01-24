@@ -1,4 +1,4 @@
-class ReimportMissingPDFsJob < ActiveJob::Base
+class ReimportMissingPDFJob < ActiveJob::Base
   queue_as :meta
 
   def perform
