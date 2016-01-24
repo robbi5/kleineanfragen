@@ -101,8 +101,8 @@
   <div class="container">
     <h3>Lass dich bei neuen kleinen Anfragen für diese Suche benachrichtigen.</h3>
     <ul>
-      <li><%= link_to 'per E-Mail abonnieren', search_subscribe_path(q: @query), class: 'btn btn-default' %></li>
-      <li><%= link_to 'als Feed abonnieren', search_url(q: @query, format: :atom), class: 'btn btn-default' %></li>
+      <li><%= link_to 'per E-Mail abonnieren', search_subscribe_path(q: @query), class: 'btn btn-primary btn-icon-email' %></li>
+      <li><%= link_to 'als Feed abonnieren', search_url(q: @query, format: :atom), class: 'btn btn-primary btn-icon-feed' %></li>
     </ul>
     <% if @conditions[:contains_table] %>
     <p class="subscribe-tabletwitter">Neue Anfragen mit Tabellen findest du auch auf Twitter: <a href="https://twitter.com/anfragen_daten">@anfragen_daten</a></p>

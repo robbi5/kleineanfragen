@@ -40,7 +40,10 @@ $font-family-base:        $font-family-sans-serif !default;
 
 // Navbar collapse
 //** Point at which the navbar becomes uncollapsed.
-$grid-float-breakpoint:   320px;
+$grid-float-breakpoint: 320px;
+
+// Colors:
+$brand-primary: #2980b9;
 
 @import "bootstrap";
 @import "bootstrap-select";
@@ -814,4 +817,26 @@ span.twitter-typeahead {
   ul {
     padding-left: 16px;
   }
+}
+
+.btn-icon-feed:before,
+.btn-icon-email:before {
+  content: '';
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  margin-right: 0.5em;
+  background-size: 12px;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+}
+
+// using open iconic icons here, MIT (https://useiconic.com/open)
+.btn-icon-email:before {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIHZpZXdCb3g9IjAgMCA4IDgiPgo8cGF0aCBkPSJNMCAwdjFsNCAyIDQtMnYtMWgtOHptMCAydjRoOHYtNGwtNCAyLTQtMnoiIGZpbGw9IiNmZmYiIC8+Cjwvc3ZnPg==');
+  height: 9px;
+}
+
+.btn-icon-feed:before {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIHZpZXdCb3g9IjAgMCA4IDgiPgo8cGF0aCBkPSJNMSAwdjFjMy4zMiAwIDYgMi42OCA2IDZoMWMwLTMuODYtMy4xNC03LTctN3ptMCAydjFjMi4yMSAwIDQgMS43OSA0IDRoMWMwLTIuNzYtMi4yNC01LTUtNXptMCAydjFjMS4xMSAwIDIgLjg5IDIgMmgxYzAtMS42NS0xLjM1LTMtMy0zem0wIDJjLS41NSAwLTEgLjQ1LTEgMXMuNDUgMSAxIDEgMS0uNDUgMS0xLS40NS0xLTEtMXoiIGZpbGw9IiNmZmYiIC8+Cjwvc3ZnPg==');
 }
