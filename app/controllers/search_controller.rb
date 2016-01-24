@@ -1,15 +1,15 @@
 class SearchController < ApplicationController
+  PARAMS_TO_CONVERT = %w(table body doctype faction pages)
+  SUPPORTED_PARAMS = %w(q page) + PARAMS_TO_CONVERT
+
   def search
     @query = params[:q].presence
     redirect_to(root_url) && return if @query.blank?
 
-    if params[:table].present? ||
-       params[:body].present? ||
-       params[:doctype].present? ||
-       params[:faction].present? ||
-       params[:pages].present?
+    if params.any? { |param, _v| PARAMS_TO_CONVERT.include? param }
       query = params_to_nice_query
-      redirect_to search_path(params: { q: query })
+      clean_params = search_params.to_h.except(*PARAMS_TO_CONVERT).except(*ActionController::Parameters.always_permitted_parameters)
+      redirect_to search_path(params: clean_params.symbolize_keys.merge!({ q: query }))
       return
     end
 
@@ -25,8 +25,12 @@ class SearchController < ApplicationController
     @papers = self.class.search_papers(@term, @conditions, page: params[:page], per_page: 10)
   end
 
+  def search_params
+    params.permit(*SUPPORTED_PARAMS)
+  end
+
   def self.simple_parse_query(query)
-    terms = SearchTerms.new(query || '', %w(table body doctype faction pages))
+    terms = SearchTerms.new(query || '', PARAMS_TO_CONVERT)
     term = terms.query.presence || '*'
     { terms: terms, term: term }
   end
