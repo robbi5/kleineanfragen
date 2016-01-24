@@ -89,6 +89,7 @@ class SearchController < ApplicationController
       }
 
       # use simple_query_string
+      # NOT only works when WHITESPACE is enabled: https://github.com/elastic/elasticsearch/issues/9633
       body[:query][:function_score][:query] = {
         dis_max: {
           queries: [
@@ -96,7 +97,7 @@ class SearchController < ApplicationController
               simple_query_string: {
                 fields: ['title.analyzed^10', 'contents.analyzed'],
                 query: term,
-                flags: 'AND|OR|NOT|PHRASE',
+                flags: 'AND|OR|NOT|PHRASE|WHITESPACE',
                 default_operator: 'AND',
                 analyzer: 'searchkick_search'
               }
@@ -105,7 +106,7 @@ class SearchController < ApplicationController
               simple_query_string: {
                 fields: ['title.analyzed^10', 'contents.analyzed'],
                 query: term,
-                flags: 'AND|OR|NOT|PHRASE',
+                flags: 'AND|OR|NOT|PHRASE|WHITESPACE',
                 default_operator: 'AND',
                 analyzer: 'searchkick_search2'
               }
