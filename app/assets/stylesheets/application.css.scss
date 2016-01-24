@@ -602,6 +602,10 @@ span.twitter-typeahead {
   vertical-align: middle;
 }
 
+.js .facetbar-group select[multiple] {
+  max-height: 2.5rem;
+}
+
 // force through increased specificity
 .facetbar-group .btn-group.bootstrap-select.bootstrap-select {
   width: 200px
