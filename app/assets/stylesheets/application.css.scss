@@ -608,16 +608,24 @@ span.twitter-typeahead {
 
 // force through increased specificity
 .facetbar-group .btn-group.bootstrap-select.bootstrap-select {
-  width: 200px
+  width: auto;
+  max-width: 200px
+}
+
+.facetbar-group .btn-group.bootstrap-select .filter-option {
+  text-overflow: ellipsis;
 }
 
 .selectpicker > li.selected > a {
   color: #757F9A;
 }
-.selectpicker > li.selected > a:before {
-  content: '\002714';
+.selectpicker + .bootstrap-select li.selected a:before {
+  content: '\25CF';
   margin-left: -13px;
   position: absolute;
+}
+.selectpicker[multiple] + .bootstrap-select li.selected a:before {
+  content: '\2714';
 }
 
 .searchresult-title mark {

@@ -52,6 +52,19 @@
                        title: 'alle Fraktionen' %>
       </div>
       <div class="form-group facetbar-group">
+        <label for="faction">Sortieren:</label>
+        <%= select_tag :sort, options_for_select([
+                           ['beste Ergebnisse', ''],
+                           ['Veröffentlicht &uarr;'.html_safe, 'published_at:desc'],
+                           ['Veröffentlicht &darr;'.html_safe, 'published_at:asc'],
+                           ['Seitenanzahl &uarr;'.html_safe, 'pages:desc'],
+                           ['Seitenanzahl &darr;'.html_safe, 'pages:asc']
+                         ], params[:sort]
+                       ),
+                       class: 'selectpicker',
+                       title: 'beste Ergebnisse' %>
+      </div>
+      <div class="form-group facetbar-group">
         <%= link_to 'mehr&hellip;'.html_safe, search_advanced_path, title: 'Erweiterte Suche' %>
       </div>
     </div>

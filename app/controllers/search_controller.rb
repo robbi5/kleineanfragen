@@ -1,7 +1,7 @@
 class SearchController < ApplicationController
   PARAMS_TO_CONVERT = %w(table body doctype faction pages)
   SUPPORTED_PARAMS = %w(q page sort) + PARAMS_TO_CONVERT
-  ALLOWED_SORT_FIELDS = %w(published_at)
+  ALLOWED_SORT_FIELDS = %w(published_at pages)
 
   def search
     @query = params[:q].presence
