@@ -3,25 +3,28 @@ class EsQueryParser
     r = parse_range(text)
     return nil if r.nil?
 
-    v = nil
-    if r[:value].size == 4 && r[:value].to_i.to_s == r[:value]
-      # looks like a year
-      v = r[:value]
-    else
-      # everything else
-      begin
-        v = Date.parse(r[:value]).to_s
-      rescue
-        return nil
+    convert_date = ->(value) do
+      if value.size == 4 && value.to_i.to_s == value
+        # looks like a year
+        value
+      else
+        # everything else
+        Date.parse(value).to_s
       end
     end
-    return nil if v.nil?
 
-    return v if r[:type] == :equals
+    if r[:type] == :equals
+      return convert_date.call(r[:value])
+    elsif r[:type] == :range
+      r[:value] = r[:value].map(&convert_date)
+      return return_range(r)
+    end
 
     h = {}
-    h[r[:type]] = v
+    h[r[:type]] = convert_date.call(r[:value])
     h
+  rescue
+    nil
   end
 
   def self.convert_range(text)
@@ -29,15 +32,24 @@ class EsQueryParser
     return nil if r.nil?
 
     if r[:type] == :equals
-      begin
-        Integer(text)
-      rescue
-        nil
-      end
-    else
-      h = {}
-      h[r[:type]] = r[:value].to_i
-      h
+      return Integer(r[:value])
+    elsif r[:type] == :range
+      r[:value] = r[:value].map { |v| Integer(v) }
+      return return_range(r)
+    end
+
+    h = {}
+    h[r[:type]] = r[:value].to_i
+    h
+  rescue
+    nil
+  end
+
+  def self.return_range(r)
+    if r[:range] == :inclusive
+      { gte: r[:value].first, lte: r[:value].last }
+    elsif r[:range] == :exclusive
+      { gt: r[:value].first, lt: r[:value].last }
     end
   end
 
@@ -53,6 +65,12 @@ class EsQueryParser
       { type: :gt, value: text[1..-1] }
     elsif text.start_with? '<'
       { type: :lt, value: text[1..-1] }
+    elsif text.start_with?('[') && text.include?(' ') && text.end_with?(']')
+      parts = text.gsub(/\A\[(.+)\]\z/, "\\1").split(' ')
+      { type: :range, range: :inclusive, value: [parts.first, parts.last] }
+    elsif text.start_with?('{') && text.include?(' ') && text.end_with?('}')
+      parts = text.gsub(/\A\{(.+)\}\z/, "\\1").split(' ')
+      { type: :range, range: :exclusive, value: [parts.first, parts.last] }
     else
       { type: :equals, value: text }
     end

@@ -8,6 +8,8 @@ class EsQueryParserTest < ActiveSupport::TestCase
     'lt 1' => ['<1', { lt: 1 }],
     'gte 1' => ['>=1', { gte: 1 }],
     'lte 1' => ['<=1', { lte: 1 }],
+    'range incl 1 2' => ['[1 TO 2]', { gte: 1, lte: 2 }],
+    'range excl 1 2' => ['{1 TO 2}', { gt: 1, lt: 2 }],
     'nothing' => ['', nil],
     'not a number' => ['e', nil]
   }
@@ -26,6 +28,8 @@ class EsQueryParserTest < ActiveSupport::TestCase
     'lt iso8601' => ['<2015-12-01', { lt: '2015-12-01' }],
     'gte iso8601' => ['>=2015-12-01', { gte: '2015-12-01' }],
     'lte iso8601' => ['<=2015-12-01', { lte: '2015-12-01' }],
+    'range incl iso8601' => ['[2015-01-01 TO 2015-12-31]', { gte: '2015-01-01', lte: '2015-12-31' }],
+    'range excl iso8601' => ['{2015-01-01 TO 2015-12-31}', { gt: '2015-01-01', lt: '2015-12-31' }],
     'nothing' => ['', nil],
     'not a number' => ['e', nil],
     'not a year' => ['99999', nil],
@@ -37,5 +41,10 @@ class EsQueryParserTest < ActiveSupport::TestCase
       range = EsQueryParser.convert_date_range(input)
       assert_equal output, range
     end
+  end
+
+  test 'return_range' do
+    assert_equal ({ gte: 1, lte: 2 }), EsQueryParser.return_range(type: :range, range: :inclusive, value: [1, 2])
+    assert_equal ({ gt: 1, lt: 2 }), EsQueryParser.return_range(type: :range, range: :exclusive, value: [1, 2])
   end
 end

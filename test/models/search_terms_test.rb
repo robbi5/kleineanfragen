@@ -18,6 +18,11 @@ class SearchTermsTest < ActiveSupport::TestCase
     'field_with_lower_than_equals' => ['pages:<=100', '', 'pages' => '<=100'],
     'field_with_greater_than_equals' => ['pages:>=100', '', 'pages' => '>=100'],
     'field_with_greater_than_equals_with_dots' => ['date:>=10.01.2015', '', 'date' => '>=10.01.2015'],
+    'field_with_incl_range' => ['pages:[10 TO 100]', '', 'pages' => '[10 TO 100]'],
+    'multiple_fields_with_incl_range' => ['pages:[10 TO 100] other:[1 TO 10]', '', { 'pages' => '[10 TO 100]', 'other' => '[1 TO 10]' }],
+    'field_with_excl_range' => ['pages:{10 TO 100}', '', 'pages' => '{10 TO 100}'],
+    'multiple_fields_with_excl_range' => ['pages:{10 TO 100} other:{1 TO 10}', '', { 'pages' => '{10 TO 100}', 'other' => '{1 TO 10}' }],
+    'multiple_fields_with_mixed_ranges' => ['pages:[10 TO 100] other:{1 TO 10}', '', { 'pages' => '[10 TO 100]', 'other' => '{1 TO 10}' }],
     'mixed_fields_terms' => ['one two:three four five:six', 'one four', { 'two' => 'three', 'five' => 'six' }],
     'term_in_quotes' => ['"hello world"', '"hello world"', {}],
     'term_with_comma' => ['hello,world', 'hello,world', {}]

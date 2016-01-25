@@ -47,6 +47,10 @@ class SearchTerms
         |                     # -or-
         [\<\>]=?[\d\-\.]+     # match any greater, less than numbers
         |                     # -or-
+        \{[^\}]+?\}           # match anything between {}
+        |                     # -or-
+        \[[^\]]+?\]           # match anything between []
+        |                     # -or-
         (?:"(?:.+|[^\"])*")   # match any quoted values
       )
     )?
