@@ -19,6 +19,10 @@ class Scraper
     false
   end
 
+  def supports_typed_pagination?
+    false
+  end
+
   def supports_streaming?
     false
   end

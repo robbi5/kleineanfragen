@@ -50,7 +50,9 @@ class ImportNewPapersJob < ActiveJob::Base
     @load_details = @body.scraper.const_defined?(:Detail)
     @new_papers = 0
     @old_papers = 0
-    if @scraper.supports_pagination?
+    if @scraper.supports_typed_pagination?
+      scrape_paginated_type
+    elsif @scraper.supports_pagination?
       scrape_paginated
     else
       scrape_single_page
@@ -74,6 +76,29 @@ class ImportNewPapersJob < ActiveJob::Base
       end
       page += 1
       break unless found_new_paper
+    end
+  end
+
+  def scrape_paginated_type
+    [Paper::DOCTYPE_MINOR_INTERPELLATION, Paper::DOCTYPE_MAJOR_INTERPELLATION].each do |type|
+      page = 1
+      found_new_paper = false
+      loop do
+        logger.info "Importing #{@body.state}, Type: #{type} - Page #{page}"
+        found_new_paper = false
+        found_papers = 0
+        @scraper.scrape_paginated_type(type, page) do |item|
+          found_papers += 1
+          if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference], is_answer: true).exists?
+            @old_papers += 1
+            next
+          end
+          on_item(item)
+          found_new_paper = true
+        end
+        page += 1
+        break if !found_new_paper && found_papers > 0
+      end
     end
   end
 

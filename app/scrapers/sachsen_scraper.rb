@@ -54,13 +54,20 @@ module SachsenScraper
     fail "SN: cannot extract meta data: #{meta_text}" if meta.nil?
     full_reference = meta[:full_reference]
     legislative_term, reference = full_reference.split('/')
+
+    # check answered?
+    answer_soon_text = item.search('.//tr[2]/td[2]').try(:text).try(:strip)
+    if !answer_soon_text.nil? && answer_soon_text.include?('Frist SReg')
+      fail "[SN #{full_reference}] not yet - #{answer_soon_text}"
+    end
+
     {
       legislative_term: legislative_term,
       full_reference: full_reference,
       reference: reference,
       doctype: doctype,
       title: extract_title(item),
-      # url
+      # url is unknown in this step
       url: nil,
       published_at: meta[:published_at],
       originators: meta[:originators],
@@ -163,7 +170,28 @@ module SachsenScraper
       @sleep = 3
     end
 
-    def search(content, type, high_doc_number)
+    def supports_streaming?
+      true
+    end
+
+    def supports_typed_pagination?
+      true
+    end
+
+    def mech
+      @mech ||= mechanize
+    end
+
+    def init_scrape(type, from, to)
+      top = mech.get BASE_URL
+      SachsenScraper.switch_to_term(@legislative_term, mech, top)
+      content = top.frame_with(name: 'content').click
+      search(content, type, from, to)
+      @initialized = true
+      @last_type = type
+    end
+
+    def search(content, type, from, to)
       if type == Paper::DOCTYPE_MAJOR_INTERPELLATION
         type = 'GrAnfr'
       else
@@ -172,41 +200,48 @@ module SachsenScraper
       search_form = content.forms.first
       search_form['__EVENTARGUMENT'] = 'Click'
       search_form['__EVENTTARGET'] = SEARCH_FIELD + '$btn_EinfSuche'
-      search_form[SEARCH_FIELD + '$tf_EinfDoknrVon$ec'] = 1
-      search_form[SEARCH_FIELD + '$tf_EinfDoknrBis$ec'] = high_doc_number
+      search_form[SEARCH_FIELD + '$tf_EinfDoknrVon$ec'] = from
+      search_form[SEARCH_FIELD + '$tf_EinfDoknrBis$ec'] = to
       search_form[SEARCH_FIELD2 + 'OrderBy_logisch_ec_VI'] = 'Eingangsdatum_desc'
       search_form[SEARCH_FIELD2 + 'Doktyp_ec_VI'] = type
       search_form.submit
     end
 
-    def supports_streaming?
-      true
+    def scrape_page(page, type, &block)
+      content = mech.get(BASE_URL + '/parlamentsdokumentation/parlamentsarchiv/trefferliste.aspx?NavSeite=' + page.to_s + '&isHaldeReport=&VolltextSuche=&refferer=')
+
+      SachsenScraper.extract_overview_items(content).each do |item|
+        paper = nil
+        begin
+          paper = SachsenScraper.extract_overview_paper(item, type)
+        rescue => e
+          logger.warn e
+          next
+        end
+        next if paper.nil?
+        yield paper
+      end
+      content
     end
 
-    def scrape_type(m, type, high_doc_number, &block)
-      top = m.get BASE_URL
-      SachsenScraper.switch_to_term(@legislative_term, m, top)
-      content = top.frame_with(name: 'content').click
-      content = search(content, type, high_doc_number)
-
+    def scrape_type(type, from, to, &block)
       page = 1
-      paper = nil
-      while !content.search('//td[@class="dxdvItem_EDAS"]/table')[0].nil?
-        SachsenScraper.extract_overview_items(content).each do |item|
-          begin
-            paper = SachsenScraper.extract_overview_paper(item, type)
-          rescue => e
-            logger.warn e
-            next
-          end
-          next if paper.nil?
-          yield paper
+      last_paper = nil
+      content = nil
+      init_scrape(type, from, to)
+      loop do
+        content = scrape_page(page, type) do |p|
+          last_paper = p
+          block.call(p)
         end
+        break if !content.search('//td[@class="dxdvItem_EDAS"]/table')[0].nil?
         page += 1
-        content = m.get(BASE_URL + '/parlamentsdokumentation/parlamentsarchiv/trefferliste.aspx?NavSeite=' + page.to_s + '&isHaldeReport=&VolltextSuche=&refferer=')
       end
       if !content.search('//*[@id="ctl00_masterContentCallback_content_trWarning"]')[0].nil?
-        scrape_type(m, type, paper[:reference].to_i - 1, &block)
+        # didn't get all papers
+        # use the last document number and search from there again
+        # - we sort DESC, from is a small number again, to is our last paper - 1
+        scrape_type(type, from, last_paper[:reference].to_i - 1, &block)
       end
     end
 
@@ -214,10 +249,16 @@ module SachsenScraper
       high_doc_number = 20000
       papers = []
       block = -> (paper) { papers << paper } unless block_given?
-      m = mechanize
-      scrape_type(m, Paper::DOCTYPE_MINOR_INTERPELLATION, high_doc_number, &block)
-      scrape_type(m, Paper::DOCTYPE_MAJOR_INTERPELLATION, high_doc_number, &block)
+      scrape_type(Paper::DOCTYPE_MINOR_INTERPELLATION, 1, high_doc_number, &block)
+      scrape_type(Paper::DOCTYPE_MAJOR_INTERPELLATION, 1, high_doc_number, &block)
       papers unless block_given?
+    end
+
+    def scrape_paginated_type(type, page, &block)
+      high_doc_number = 20000
+      init_scrape(type, 1, high_doc_number) if !@initialized || @last_type != type
+      scrape_page(page, type, &block)
+      nil
     end
   end
 end
