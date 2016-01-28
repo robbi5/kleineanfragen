@@ -158,6 +158,11 @@ module SachsenScraper
   class Overview < Scraper
     SEARCH_URL = BASE_URL + '/parlamentsdokumentation/parlamentsarchiv/dokumententyp.aspx'
 
+    def initialize(*)
+      super
+      @sleep = 3
+    end
+
     def search(content, type, high_doc_number)
       if type == Paper::DOCTYPE_MAJOR_INTERPELLATION
         type = 'GrAnfr'

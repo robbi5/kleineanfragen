@@ -4,6 +4,7 @@ class Scraper
   def initialize(legislative_term)
     @legislative_term = legislative_term.to_i
     @per_page = 50
+    @sleep = 1
   end
 
   def logger=(logger)
@@ -26,8 +27,8 @@ class Scraper
     mech = Mechanize.new
     mech.read_timeout = 60
     mech.pre_connect_hooks << lambda do |_agent, request|
-      logger.debug "[scraper] mechanize throttle (uri=#{request.path})"
-      sleep 1
+      logger.debug "[scraper] mechanize throttle for #{@sleep}s (uri=#{request.path})"
+      sleep @sleep
     end
     mech.user_agent = Rails.configuration.x.user_agent
     mech
