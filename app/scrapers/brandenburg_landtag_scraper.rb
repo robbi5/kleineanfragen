@@ -171,6 +171,10 @@ module BrandenburgLandtagScraper
         search_form = mp.form '__form'
         fail 'Cannot get search form on result page' if search_form.nil?
 
+        if mp.seach('//div[@id="main"]/div[@class="panelStatus"]').size > 0
+          fail 'Result page showed error'
+        end
+
         # get more items
         search_form.field_with(name: '__action').value = 175
         search_form.field_with(name: 'NumPerSegment').options.find { |opt| opt.text.include? 'alle' }.select
