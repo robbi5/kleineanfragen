@@ -171,7 +171,7 @@ module BrandenburgLandtagScraper
         search_form = mp.form '__form'
         fail 'Cannot get search form on result page' if search_form.nil?
 
-        if mp.seach('//div[@id="main"]/div[@class="panelStatus"]').size > 0
+        if mp.search('//div[@id="main"]/div[@class="panelStatus"]').size > 0
           fail 'Result page showed error'
         end
 
