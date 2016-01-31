@@ -26,6 +26,7 @@ class ExtractTextFromPaperJob < PaperJob
     ExtractOriginatorsJob.perform_later(paper)
     ExtractAnswerersJob.perform_later(paper)
     DeterminePaperTypeJob.perform_later(paper)
+    ExtractRelatedPapersJob.perform_later(paper)
   end
 
   def extract_local(paper)
