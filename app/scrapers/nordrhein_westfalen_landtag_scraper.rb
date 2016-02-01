@@ -1,5 +1,5 @@
 module NordrheinWestfalenLandtagScraper
-  BASE_URL = 'http://www.landtag.nrw.de/portal/WWW'
+  BASE_URL = 'https://www.landtag.nrw.de/portal/WWW'
 
   def self.extract_blocks(mp)
     table = mp.search("//div[@id='content']//table").first
