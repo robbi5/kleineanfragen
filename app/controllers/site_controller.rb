@@ -9,4 +9,9 @@ class SiteController < ApplicationController
     @count = Paper.count.round(-1)
     fresh_when last_modified: @papers.maximum(:updated_at), public: true
   end
+
+  def status
+    expires_now
+    render text: "OK - #{Time.now}"
+  end
 end

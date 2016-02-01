@@ -44,6 +44,8 @@ Rails.application.routes.draw do
   # really short paper url used for debugging jobs
   get 'p:paper' => 'paper#redirect_by_id', constraints: { paper: /[0-9]+/ }
 
+  get 'status' => 'site#status'
+
   get ':body/abo' => 'body#subscribe', as: :body_subscribe
   get ':body/behoerde/:ministry' => 'ministry#show', as: :ministry
   get ':body/fraktion/:organization' => 'organization#show', as: :organization
