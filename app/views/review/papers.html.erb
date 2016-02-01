@@ -5,7 +5,7 @@
 </div>
 
 <% Body.find_each do |b| %>
-<h2><%= link_to b.name, b %>: <%= @incomplete[b.state].size %></h2>
+<h2 id="body-<%= b.state %>"><%= link_to b.name, b %>: <%= @incomplete[b.state].size %></h2>
 <ol class="paper-list">
   <%= render partial: 'paper/paper', collection: @incomplete[b.state], locals: {
     before_meta: lambda do |paper| -%>
