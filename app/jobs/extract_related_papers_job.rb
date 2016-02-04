@@ -57,6 +57,8 @@ class ExtractRelatedPapersJob < PaperJob
       references.concat ind.map(&:second).map { |m| m.strip.gsub(/\s*und\s+/, ',').split(',') }.flatten
     end
 
+    references.concat title.scan(/der [Kk]leinen Anfrage\:? ["'„][^"'“]+?["'“] (\d*\/?[\d\s]+)/).map(&:first)
+
     # remove whitespace
     references = references.reject(&:blank?).map do |ref|
       ref.strip.gsub(/\s+/, '')
@@ -69,6 +71,7 @@ class ExtractRelatedPapersJob < PaperJob
     references = []
     # NRW uses different numbers for the interpellation and the paper reference
     references.concat contents.scan(/(?:der|die) [Kk]leinen? Anfrage \d+ \((?:Drucksachen?|LT-Drs.) (\d+\/[\d\s]+)(?:(?:\sund|,)\s(\d+\/[\d\s]+))*\)/).flatten
+    references.concat contents.scan(/(?:der|die) [Kk]leinen? Anfrage \d+(?:,\s+|\s+unter\s+der\s+)(?:Drucksachen?|LT-Drs.|Landtags-Drucksachen?) (\d+\/[\d\s]+)(?:(?:\sund|,)\s(\d+\/[\d\s]+))*/).flatten
     references.concat contents.scan(/(?:der|die) [Kk]leinen? Anfrage(?:\/Drucksache)? (?:\([^\)]+?\)\s+)?(\d*\/?[\d\s]+)/).map(&:first) if references.blank?
 
     # Note: \p{Initial/Final_Punctuation} is not working for „“
@@ -78,6 +81,7 @@ class ExtractRelatedPapersJob < PaperJob
     references.concat contents.scan(/[Ii]n der [Kk]leinen Anfrage mit der Drucksachen-\s*Nr.?:\s*(\d*\/?[\d\s]+)/).map(&:first)
     references.concat contents.scan(/[Kk]leinen? Anfrage(?:\s*,? ?Drs\.?:?|\s+Drs.-?Nr.:?|\s+Nr.|\s*,?\s*Drucksache)\s+(\d*\/?[\d\s]+)/).map(&:first)
     references.concat contents.scan(/bezieht sich auf Drucksache\s+(\d*\/?[\d\s]+)/).map(&:first)
+    references.concat contents.scan(/Antwort zu (?:\d+\.\/?)* in (\d*\/?[\d\s]+)/).map(&:first)
 
     ind = contents.scan(/(?:in|in\s+der|auf)\s+Drucksache\s+(\d\/[\d\s]+)((?:(?:\s*und|,)\s+\d\/[\d\s]+)*)/)
     if ind

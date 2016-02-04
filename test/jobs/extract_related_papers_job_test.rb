@@ -235,6 +235,30 @@ class ExtractRelatedPapersJobTest < ActiveSupport::TestCase
     assert_equal ['16/2703'], references
   end
 
+  test 'der Kleinen Anfrage 841, Landtags-Drucksache 16/1308' do
+    text = 'Wie bereits in der Beantwortung der Kleinen Anfrage 841, Landtags-Drucksache 16/1308, ausgeführt,'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['16/1308'], references
+  end
+
+  test 'der Kleinen Anfrage 2882 unter der Drucksache 16/4408' do
+    text = 'auf die Antwort der Kleinen Anfrage 2882 unter der Drucksache 16/4408 stelle ich folgende weitere Fragen'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['16/4408'], references
+  end
+
+  test 'Antwort zu 4. in 17/16265' do
+    text = 'werden (Antwort zu 4. in 17/16265),'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['17/16265'], references
+  end
+
+  test 'Antwort zu 4./5. in 17/13120' do
+    text = 'erforderlich (Antwort zu 4./5. in 17/13120)?'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['17/13120'], references
+  end
+
   #
   # major interpellations
   #
@@ -275,6 +299,12 @@ class ExtractRelatedPapersJobTest < ActiveSupport::TestCase
     title = 'Nachfrage zu den Antworten auf die Kleinen Anfragen (Drucksache 6/1809 und 6/1131)'
     references = ExtractRelatedPapersJob.extract_title(title)
     assert_equal ['6/1809', '6/1131'], references
+  end
+
+  test 'Unklarheiten in der Kleinen Anfrage "Großraubtiermanagement in Hessen" 19/1767' do
+    title = 'Unklarheiten in der Kleinen Anfrage "Großraubtiermanagement in Hessen" 19/1767'
+    references = ExtractRelatedPapersJob.extract_title(title)
+    assert_equal ['19/1767'], references
   end
 
 end
