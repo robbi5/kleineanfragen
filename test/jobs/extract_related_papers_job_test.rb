@@ -67,7 +67,6 @@ class ExtractRelatedPapersJobTest < ActiveSupport::TestCase
     assert_equal ['18/171'], references
   end
 
-
   test 'in der Kleinen Anfrage Drucksache 19/2370' do
     text = 'bereits in der Kleinen Anfrage Drucksache 19/2370 mitgeteilt'
     references = ExtractRelatedPapersJob.extract_contents(text)
@@ -194,6 +193,48 @@ class ExtractRelatedPapersJobTest < ActiveSupport::TestCase
     assert_equal ['16/3602'], references
   end
 
+  test 'der Kleinen Anfrage 2524 (Drucksache 16/3917)' do
+    text = 'die Beantwortung der Kleinen Anfrage 2524 (Drucksache 16/3917) verwiesen.'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['16/3917'], references
+  end
+
+  test 'in der Drucksache 6/3045, auf Drucksache 6/2703' do
+    text = 'Bezogen auf die Antwort zu Frage 1 in der Drucksache 6/3045 und den Verweis auf die Kleine Anfrage vom 3. März 2014 auf Drucksache 6/2703: I'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['6/3045', '6/2703'], references
+  end
+
+  test 'zur Kleinen Anfrage auf Drucksache 6/2292' do
+    text = 'Die Angaben für das Schuljahr 2012/13 wurden bereits in der Antwort zur Kleinen Anfrage auf Drucksache 6/2292 vom 13.11.2013 übermittelt.'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['6/2292'], references
+  end
+
+  test 'in Drucksache 6/1686, 6/2198 und 6/2691' do
+    text = 'Der Landesregierung liegen ergänzend zu den in Drucksache 6/1686, 6/2198 und 6/2691 mitgeteilten Informationen'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['6/1686', '6/2198', '6/2691'], references
+  end
+
+  test 'in der Kleinen Anfrage der Abgeordneten ... Drucksache 6/2703' do
+    text = 'Es wird auf die Antwort zu Frage 1 in der Kleinen Anfrage der Abgeordneten Simone Oldenburg und Torsten Koplin, Fraktion DIE LINKE, vom 3. März 2014, Drucksache 6/2703, verwiesen.'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['6/2703'], references
+  end
+
+  test 'auf die Kleine Anfrage/Drucksache 18/67' do
+    text = 'Wie bereits in der Antwort auf die Kleine Anfrage/Drucksache 18/67 vom 01.08.2012 ausgeführt'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['18/67'], references
+  end
+
+  test 'Antwort auf eine Kleine Anfrage, Drucksache 16/2703' do
+    text = 'Antwort auf eine Kleine Anfrage, Drucksache 16/2703'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['16/2703'], references
+  end
+
   #
   # major interpellations
   #
@@ -228,6 +269,12 @@ class ExtractRelatedPapersJobTest < ActiveSupport::TestCase
     title = 'Nachfrage zur Schriftlichen Anfrage 17/17377'
     references = ExtractRelatedPapersJob.extract_title(title)
     assert_equal ['17/17377'], references
+  end
+
+  test 'Nachfrage zu den Antworten auf die Kleinen Anfragen (Drucksache 6/1809 und 6/1131)' do
+    title = 'Nachfrage zu den Antworten auf die Kleinen Anfragen (Drucksache 6/1809 und 6/1131)'
+    references = ExtractRelatedPapersJob.extract_title(title)
+    assert_equal ['6/1809', '6/1131'], references
   end
 
 end
