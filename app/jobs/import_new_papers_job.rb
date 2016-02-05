@@ -87,7 +87,7 @@ class ImportNewPapersJob < ActiveJob::Base
         logger.info "Importing #{@body.state}, Type: #{type} - Page #{page}"
         found_new_paper = false
         found_papers = 0
-        @scraper.scrape_paginated_type(type, page) do |item|
+        has_next_page = @scraper.scrape_paginated_type(type, page) do |item|
           found_papers += 1
           if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference], is_answer: true).exists?
             @old_papers += 1
@@ -97,7 +97,7 @@ class ImportNewPapersJob < ActiveJob::Base
           found_new_paper = true
         end
         page += 1
-        break if !found_new_paper && found_papers > 0
+        break if !has_next_page || (!found_new_paper && found_papers > 0)
       end
     end
   end

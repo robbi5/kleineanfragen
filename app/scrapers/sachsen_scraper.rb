@@ -87,7 +87,20 @@ module SachsenScraper
     nav.forms.first.submit
   end
 
+  def self.has_pagination?(contents)
+    script = contents.search('//div[@id="ctl00_masterContentCallback"]/script').try(:text)
+    return false if script.nil?
+    m = script.match(/v_i_show\s+=\s+([\-\d]+);/)
+    return false if m.nil?
+    m[1] != '0'
+  end
+
   class Detail < DetailScraper
+    def initialize(*)
+      super
+      @sleep = 3
+    end
+
     def scrape
       m = mechanize
       top = m.get BASE_URL
@@ -257,8 +270,8 @@ module SachsenScraper
     def scrape_paginated_type(type, page, &block)
       high_doc_number = 20000
       init_scrape(type, 1, high_doc_number) if !@initialized || @last_type != type
-      scrape_page(page, type, &block)
-      nil
+      content = scrape_page(page, type, &block)
+      SachsenScraper.has_pagination?(content)
     end
   end
 end
