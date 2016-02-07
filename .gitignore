@@ -21,3 +21,6 @@
 
 # config vars
 .env
+
+# deployment
+/config/deploy.rb
