@@ -46,4 +46,29 @@ class ReviewController < ApplicationController
     @people = Person.where(['created_at >= ?', Date.today])
     @organizations = Organization.where(['created_at >= ?', Date.today])
   end
+
+  def relations
+    @papers = Paper.joins(:paper_relations)
+              .group('papers.id') # :paper_id doesn't work
+              .having('count(paper_relations.id)>0')
+              .order(id: :desc)
+              .page params[:page]
+    @reference_lines = {}
+    @papers.each do |paper|
+      id = paper.id
+      known_references = paper.related_papers.map(&:full_reference)
+      lines = paper.contents.scan(/\D{1,30}\d{1,2}\/[\d\s]+\D{1,30}/)
+              .reject { |l| l.include? paper.full_reference }
+              .map do |l|
+                m = l.strip.match(/(\d{1,2}\/[\d\s]+)/)
+                full_reference = m[1].gsub(/\s/, '')
+                cls = known_references.include?(full_reference) ? 'known' : ''
+                s = l.strip.split(m[1])
+                line = ''.html_safe << s[0] << "<mark class='#{cls}'>#{m[1]}</mark>".html_safe << s[1]
+                [full_reference, line]
+              end
+      @reference_lines[id] ||= []
+      @reference_lines[id].concat Hash[lines].values # lazy uniq
+    end
+  end
 end

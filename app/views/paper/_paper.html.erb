@@ -1,5 +1,6 @@
 <%
 show_body = false if show_body.nil?
+show_meta = true if show_meta.nil?
 before_meta = lambda {|*args|} if before_meta.nil?
 prepend_meta = lambda {|*args|} if prepend_meta.nil?
 after_meta = lambda {|*args|} if after_meta.nil?
@@ -13,11 +14,13 @@ after_meta = lambda {|*args|} if after_meta.nil?
     <%= link_to_paper paper.title, paper %>
   </p>
   <%= capture paper, &before_meta %>
+  <% if show_meta %>
   <p class="meta">
     <%= capture paper, &prepend_meta %>
     Eingereicht von: <%= paper.originators.collect(&:name).join(', ') %>
     <%- if !paper.published_at.nil? -%> &mdash; Veröffentlicht am <%= time_tag(paper.published_at, l(paper.published_at))%><%- end -%>
      &mdash; <%= paper.page_count || '?' %> <%= t :pages, count: paper.page_count || 0 -%><%- if paper.contains_table %>, enthält Tabelle<% end %>
   </p>
+  <% end %>
   <%= capture paper, &after_meta %>
 </li>

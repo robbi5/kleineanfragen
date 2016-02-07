@@ -1,0 +1,32 @@
+<%- content_for :head do %><%= noindex() %><% end -%>
+<%- title 'Review / Zusammenhängende Anfragen' -%>
+<div class="page-header">
+  <h1><%= link_to 'Review', review_path %> / Zusammenhängende Anfragen (<%= number_with_delimiter @papers.total_count %>)</h1>
+</div>
+
+<ol class="paper-list review-list-relations">
+  <% @papers.each do |paper| %>
+  <%= render partial: 'paper/paper', object: paper, locals: {
+    show_body: true,
+    before_meta: lambda do |paper| -%>
+    <code class="paper-id"><%= paper.try(:id) %></code>
+  <% end,
+     after_meta: lambda do |paper| -%>
+     <% if !@reference_lines[paper.id].nil? %>
+     <div class="reference-lines well">
+      <% @reference_lines[paper.id].each do |line| %>
+      <p>&hellip;<%= line.html_safe %>&hellip;</p>
+      <% end %>
+     </div>
+     <% end %>
+
+     <ul class="paper-list" style="margin-left: 60px;">
+      <%= render partial: 'paper/paper', collection: paper.related_papers, locals: { show_body: true, show_meta: false } %>
+     </ul>
+  <% end } -%>
+  <% end %>
+</ol>
+
+
+<p class="pagination-total"><%= t :related_papers, count: @papers.total_count %></p>
+<%= paginate @papers %>

@@ -30,6 +30,9 @@ de:
       search:
         one: 'Es ist eine neue kleine Anfrage für die Suche nach "%{query}" eingegangen'
         other: 'Es sind %{count} neue kleine Anfragen für die Suche nach "%{query}" eingegangen'
+  related_papers:
+    one: Eine zusammenhängende Anfrage
+    other: '%{count} zusammenhängende Anfragen'
   views:
     pagination:
       first: "&#8676; Erste Seite"

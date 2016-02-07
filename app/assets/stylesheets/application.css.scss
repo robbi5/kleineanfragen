@@ -852,3 +852,23 @@ span.twitter-typeahead {
 .btn-icon-feed:before {
   background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIHZpZXdCb3g9IjAgMCA4IDgiPgo8cGF0aCBkPSJNMSAwdjFjMy4zMiAwIDYgMi42OCA2IDZoMWMwLTMuODYtMy4xNC03LTctN3ptMCAydjFjMi4yMSAwIDQgMS43OSA0IDRoMWMwLTIuNzYtMi4yNC01LTUtNXptMCAydjFjMS4xMSAwIDIgLjg5IDIgMmgxYzAtMS42NS0xLjM1LTMtMy0zem0wIDJjLS41NSAwLTEgLjQ1LTEgMXMuNDUgMSAxIDEgMS0uNDUgMS0xLS40NS0xLTEtMXoiIGZpbGw9IiNmZmYiIC8+Cjwvc3ZnPg==');
 }
+
+.review-list-relations {
+  & > li {
+    margin-bottom: 30px;
+  }
+
+  .reference-lines {
+    margin-left: 60px;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+
+  .reference-lines p {
+    padding-left: 0;
+  }
+}
+
+mark.known {
+  background-color: #E3EFFC;
+}
