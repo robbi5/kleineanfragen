@@ -13,6 +13,7 @@ class BodyController < ApplicationController
               .order(published_at: :desc, reference: :desc)
               .page params[:page]
     fresh_when last_modified: @papers.maximum(:updated_at), public: true
+    respond_to :atom # the only supported format
   end
 
   def subscribe
