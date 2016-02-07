@@ -78,7 +78,7 @@ class ExtractTextFromPaperJob < PaperJob
   def extract_ocrspace(paper)
     url = paper.public_url(true)
     fail "No copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] in s3 found" if url.nil?
-    response = Excon.post('https://ocr.space/api/Parse/Image',
+    response = Excon.post('https://api.ocr.space/parse/image',
                           body: URI.encode_www_form(apikey: 'helloworld', url: url, language: 'ger'),
                           headers: { 'Content-Type' => 'application/x-www-form-urlencoded', 'Accept' => 'application/json' })
     fail 'Couldn\'t get response' if response.status != 200
