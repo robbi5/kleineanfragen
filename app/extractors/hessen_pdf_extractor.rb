@@ -45,10 +45,11 @@ class HessenPDFExtractor
     { ministries: ministries }
   end
 
-  ANSWER_TAG = /und\s+Antwort/m
+  MINOR_ANSWER_TAG = /und\s+Antwort/m
+  MAJOR_ANSWER_TAG = /Antwort\s+der\s+Landesregierung/m
 
   def is_answer?
     return nil if @contents.blank?
-    @contents.scan(ANSWER_TAG).present?
+    @contents.scan(MINOR_ANSWER_TAG).present? || @contents.scan(MAJOR_ANSWER_TAG).present?
   end
 end
