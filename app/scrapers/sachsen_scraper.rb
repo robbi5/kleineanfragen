@@ -120,7 +120,7 @@ module SachsenScraper
           # the first button is for the question, the second one for the answer
           if buttons.size > 1
             paper[:is_answer] = true
-            top = m.get(self.class.extract_viewer_url(buttons.last))
+            top = m.get(self.class.extract_viewer_url(buttons.second))
             pdf_url = self.class.extract_pdf_url(top)
             paper[:url] = pdf_url
           end
