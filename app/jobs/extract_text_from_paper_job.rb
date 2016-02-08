@@ -51,14 +51,14 @@ class ExtractTextFromPaperJob < PaperJob
     fail "No copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] in s3 found" if url.nil?
     pdf = Excon.get(url, read_timeout: 120, connect_timeout: 90)
     fail 'Couldn\'t download PDF' if pdf.status != 200
-    text = Excon.put(tika_endpoint,
+    response = Excon.put(tika_endpoint,
                      body: pdf.body,
                      headers: { 'Content-Type' => 'application/pdf', 'Accept' => 'text/plain' })
-    fail 'Couldn\'t get text' if text.status != 200
+    fail "Couldn't get response, status: #{response.status}" if response.status != 200
     # reason for force_encoding: https://github.com/excon/excon/issues/189
-    t = text.body.force_encoding('utf-8').strip
+    text = response.body.force_encoding('utf-8').strip
     # remove weird pdf control things
-    t.gsub(/\n\n<<\n.+\n>> (?:setdistillerparams|setpagedevice)/m, '')
+    text.gsub(/\n\n<<\n.+\n>> (?:setdistillerparams|setpagedevice)/m, '')
   end
 
   def extract_abbyy(paper)
@@ -70,9 +70,9 @@ class ExtractTextFromPaperJob < PaperJob
       client.get_task_status
     end
     fail "Task failed: #{client.task.inspect}" if client.task[:status] != 'Completed'
-    text = client.get
-    fail 'Couldn\'t get text' if text.code != 200
-    text.body.force_encoding('utf-8').strip
+    response = client.get
+    fail "Couldn't get response, status: #{response.status}" if response.code != 200
+    response.body.force_encoding('utf-8').strip
   end
 
   def extract_ocrspace(paper)
@@ -81,7 +81,7 @@ class ExtractTextFromPaperJob < PaperJob
     response = Excon.post('https://api.ocr.space/parse/image',
                           body: URI.encode_www_form(apikey: 'helloworld', url: url, language: 'ger'),
                           headers: { 'Content-Type' => 'application/x-www-form-urlencoded', 'Accept' => 'application/json' })
-    fail 'Couldn\'t get response' if response.status != 200
+    fail "Couldn't get response, status: #{response.status}" if response.status != 200
     data = JSON.parse response.body
     fail "Error from ocr.space: #{data['ErrorMessage']}, #{data['ErrorDetails']}" if data['OCRExitCode'] > 1 || data['IsErroredOnProcessing'] != false
     text = []
