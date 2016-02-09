@@ -57,6 +57,14 @@ class BayernPDFExtractorAnswerersTest < ActiveSupport::TestCase
     assert_equal 'Staatsministerium des Innern, für Bau und Verkehr', answerers[:ministries].first
   end
 
+  test 'Staatsministeriums Staatsministerium für Gesundheit und Pflege' do
+    paper = paper_with_answerer("des Staatsministeriums Staatsministerium für Gesundheit\n und Pflege")
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Staatsministerium für Gesundheit und Pflege', answerers[:ministries].first
+  end
+
   test 'Bayerischen Staatskanzlei' do
     paper = paper_with_answerer('der Bayerischen Staatskanzlei')
     answerers = BayernPDFExtractor.new(paper).extract_answerers

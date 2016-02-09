@@ -68,6 +68,7 @@ class BayernPDFExtractor
                  .gsub(/(\p{L}+)\-\p{Zs}*\n(\p{L}+)/m, '\1\2')
                  .gsub(/\n/, ' ')
                  .gsub(/\s+/, ' ')
+                 .gsub(/Staatsministeriums?\s+(Staatsministerium.+)/, '\1') # dup
                  .strip
       ministry.gsub!(/^St?aatsministeriums/, 'Staatsministerium') # remove typo, Genitiv
       ministries << ministry
