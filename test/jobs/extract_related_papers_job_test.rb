@@ -259,6 +259,60 @@ class ExtractRelatedPapersJobTest < ActiveSupport::TestCase
     assert_equal ['17/13120'], references
   end
 
+  test 'In Landtags-Drucksache 16/3181' do
+    text = 'In Landtags-Drucksache 16/3181 vom 4. Juni 2013 hatte'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['16/3181'], references
+  end
+
+  test 'die Kleine Anfrage (Drs.-Nr. 16/1328 „...“' do
+    text = 'auf die Kleine Anfrage (Drs.-Nr. 16/1328 „Welche Zukunft hat das Projekt „Jedem Kind ein Instrument“) erläutert'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['16/1328'], references
+  end
+
+  test 'die Anfrage „...“ (LT-DS 16/3308)' do
+    text = 'die Anfrage „Häufige Kostenexplosion bei...plant?“ (LT-DS 16/3308)'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['16/3308'], references
+  end
+
+  test 'Antwort (Drucksache 16/3052)' do
+    text = 'Die Landesregierung teilte in ihrer Antwort (Drucksache 16/3052) mit, dass die Rücklagen'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['16/3052'], references
+  end
+
+  test 'in der Kleinen Anfrage 3837 (Drs. 14/10833 vom 18. März 2010)' do
+    text = 'in der Kleinen Anfrage 3837 (Drs. 14/10833 vom 18. März 2010) nach'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['14/10833'], references
+  end
+
+  test 'den Schriftlichen Kleinen Anfragen 21/84' do
+    text = 'sowie den Schriftlichen Kleinen Anfragen 21/84 (Vorbereitung auf'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['21/84'], references
+  end
+
+  test 'die Drs. 21/2057' do
+    text = 'Dies betraf die Drs. 21/2057 (Sanierung'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['21/2057'], references
+  end
+
+  test 'der Drs. 21/1464' do
+    text = 'im Falle der Drs. 21/1464 ergänzend'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['21/1464'], references
+  end
+
+  test 'in den Drucksachen 15/5899' do
+    text = 'Wie bereits in den Drucksachen 15/5899 vom'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['15/5899'], references
+  end
+
   #
   # major interpellations
   #

@@ -35,6 +35,9 @@ class ExtractRelatedPapersJob < PaperJob
         legislative_term = paper.legislative_term
       end
 
+      # old papers can't link newer ones, that looks like an extraction error
+      next if legislative_term.to_i > paper.legislative_term.to_i || reference.to_i > paper.reference.to_i
+
       p = Paper.where(body: paper.body, legislative_term: legislative_term, reference: reference).first
       other_papers << p unless p.nil?
     end
@@ -70,24 +73,26 @@ class ExtractRelatedPapersJob < PaperJob
   def self.extract_contents(contents)
     references = []
     # NRW uses different numbers for the interpellation and the paper reference
-    references.concat contents.scan(/(?:der|die) [Kk]leinen? Anfrage \d+ \((?:Drucksachen?|LT-Drs.) (\d+\/[\d\s]+)(?:(?:\sund|,)\s(\d+\/[\d\s]+))*\)/).flatten
+    references.concat contents.scan(/(?:der|die) [Kk]leinen? Anfrage \d+ \((?:Drucksachen?|LT-Drs\.|Drs\.)\s+(\d+\/[\d\s]+)(?:(?:\sund|,)\s(\d+\/[\d\s]+))*(?:vom .+)?\)/).flatten
     references.concat contents.scan(/(?:der|die) [Kk]leinen? Anfrage \d+(?:,\s+|\s+unter\s+der\s+)(?:Drucksachen?|LT-Drs.|Landtags-Drucksachen?) (\d+\/[\d\s]+)(?:(?:\sund|,)\s(\d+\/[\d\s]+))*/).flatten
-    references.concat contents.scan(/(?:der|die) [Kk]leinen? Anfrage(?:\/Drucksache)? (?:\([^\)]+?\)\s+)?(\d*\/?[\d\s]+)/).map(&:first) if references.blank?
+    references.concat contents.scan(/(?:der|die|[Ss]chriftlichen) [Kk]leinen? Anfragen?(?:\/Drucksache)? (?:\([^\)]+?\)\s+)?(\d*\/?[\d\s]+)/).map(&:first) if references.blank?
 
     # Note: \p{Initial/Final_Punctuation} is not working for „“
-    references.concat contents.scan(/[Ii]n der [Kk]leinen Anfrage\:? (?:["'„][^"'“]+?["'“]\s+|zur schriftlichen Beantwortung\s+)?(?:vom \d+\..+?\d+?\s+)?\((?:Drucksache|Drs\.:?|DS|LT-DRS) (\d*\/?[\d\s]+)\)/).map(&:first)
+    references.concat contents.scan(/(?:[Ii]n der|auf die|die)(?:\s+[Kk]leinen?)? Anfrage\:? (?:["'„][^"'“]+?["'“]\s+|zur schriftlichen Beantwortung\s+)?(?:vom \d+\..+?\d+?\s+)?\((?:Drucksache|Drs\.:?|Drs\.-Nr\.|DS|LT-DR?S) (\d*\/?[\d\s]+)/).map(&:first)
     references.concat contents.scan(/[Ii]n der [Kk]leinen Anfrage vom \d+\..+?\d+,? \(?(?:Drucksache|Drs\.:?|DS|LT-DRS) (\d*\/?[\d\s]+)\)?/).map(&:first)
     references.concat contents.scan(/[Ii]n der [Kk]leinen Anfrage de[rs] Abgeordneten? .+? Drucksache (\d*\/?[\d\s]+)/).map(&:first)
     references.concat contents.scan(/[Ii]n der [Kk]leinen Anfrage mit der Drucksachen-\s*Nr.?:\s*(\d*\/?[\d\s]+)/).map(&:first)
-    references.concat contents.scan(/[Kk]leinen? Anfrage(?:\s*,? ?Drs\.?:?|\s+Drs.-?Nr.:?|\s+Nr.|\s*,?\s*Drucksache)\s+(\d*\/?[\d\s]+)/).map(&:first)
+    references.concat contents.scan(/[Kk]leinen? Anfrage(?:\s*,? ?Drs\.?:?|\s+Drs\.-?Nr\.:?|\s+Nr.|\s*,?\s*Drucksache)\s+(\d*\/?[\d\s]+)/).map(&:first)
     references.concat contents.scan(/bezieht sich auf Drucksache\s+(\d*\/?[\d\s]+)/).map(&:first)
     references.concat contents.scan(/Antwort zu (?:\d+\.\/?)* in (\d*\/?[\d\s]+)/).map(&:first)
 
-    ind = contents.scan(/(?:in|in\s+der|auf)\s+Drucksache\s+(\d\/[\d\s]+)((?:(?:\s*und|,)\s+\d\/[\d\s]+)*)/)
+    ind = contents.scan(/(?:[Ii]n|[Ii]n\s+de[rn]|auf|der|die)\s+(?:Landtags-)?(?:Drucksachen?|Drs\.)\s+(\d+\/[\d\s]+)((?:(?:\s*und|,)\s+\d+\/[\d\s]+)*)/)
     if ind
       references.concat ind.map(&:first)
       references.concat ind.map(&:second).map { |m| m.strip.gsub(/\s*und\s+/, ',').split(',') }.flatten
     end
+
+    references.concat contents.scan(/Antwort \((?:Drucksache|Drs\.:?|Drs\.-Nr\.|DS|LT-DR?S)\s+(\d*\/?[\d\s]+)/).map(&:first)
 
     references.concat contents.scan(/[Ii]n der [Gg]roßen Anfrage \d+ der Fraktion.*? Drucksache (\d*\/?[\d\s]+)/).map(&:first)
 
