@@ -57,7 +57,7 @@ class ReviewController < ApplicationController
     @papers.each do |paper|
       id = paper.id
       known_references = paper.related_papers.map(&:full_reference)
-      lines = paper.contents.scan(/\D{1,30}\d{1,2}\/[\d\s]+\D{1,30}/)
+      lines = paper.contents.scan(/.{1,55}\D{5}\d{1,2}\/[\d\s]+.{1,60}/)
               .reject { |l| l.include? paper.full_reference }
               .map do |l|
                 m = l.strip.match(/(\d{1,2}\/[\d\s]+)/)
