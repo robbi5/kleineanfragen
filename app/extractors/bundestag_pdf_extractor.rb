@@ -6,13 +6,17 @@ class BundestagPDFExtractor
   ORIGINATORS = /der Abgeordneten (.+?)(?:,\s+weiterer\s+Abgeordneter)?\s+und\s+der\s+Fraktion\s+(?:der\s+)?(.{0,30}?)\.?\n/m
   ORIGINATORS_GROUPS = /der Fraktionen\s+(?:der\s+)?([^\n]+)\n/m
 
+  DIVIDER = /V\s*o\s*r\s*b\s*e\s*m\s*e\s*r\s*k\s*u\s*n\s*g/
+
   def extract_originators
     return nil if @contents.nil?
     people = []
     parties = []
     blacklist = ['weiterer Abgeordneter', 'weitrerer Abgeordneter']
 
-    @contents.scan(ORIGINATORS).each do |m|
+    contents = @contents.split(DIVIDER, 2).try(:first)
+    contents = @contents if contents.nil?
+    contents.scan(ORIGINATORS).each do |m|
       m[0].split(',').each do |person|
         person = person.gsub(/\p{Z}/, ' ')
                  .gsub("\n", ' ')

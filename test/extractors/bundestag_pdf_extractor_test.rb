@@ -261,4 +261,32 @@ class BundestagPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 1, originators[:parties].size
     assert_equal 'DIE LINKE', originators[:parties].first
   end
+
+  # Antwort
+  # der Bundesregierung
+  #
+  # auf die Kleine Anfrage der Abgeordneten Volker Beck (Köln),
+  # Dr. Konstantin von Notz, Dieter Janecek, weiterer Abgeordneter und
+  # der Fraktion BÜNDNIS 90/DIE GRÜNEN
+  # – Drucksache...
+  #
+  # V o r b e m e r k u n g  d e r  F r a g e s t e l l e r
+  #
+  # Antwort auf Kleine Anfrage
+  # der Abgeordneten Sevim Dagdelen u. a. und der Fraktion DIE LINKE.
+  # zu Visaerteilungen
+  test 'multiple matches' do
+    paper = Struct.new(:contents).new("Antwort\nder Bundesregierung\n\n" +
+      "auf die Kleine Anfrage der Abgeordneten Volker Beck (Köln),\n" +
+      "Dr. Konstantin von Notz, Dieter Janecek, weiterer Abgeordneter und\n" +
+      "der Fraktion BÜNDNIS 90/DIE GRÜNEN\n– Drucksache\n\n" +
+      "V o r b e m e r k u n g  d e r  F r a g e s t e l l e r\n\n" + 
+      "Antwort auf Kleine Anfrage\n" +
+      "der Abgeordneten Sevim Dagdelen u. a. und der Fraktion DIE LINKE. \n" +
+      "zu Visaerteilungen")
+
+    originators = BundestagPDFExtractor.new(paper).extract_originators
+    assert_equal 1, originators[:parties].size
+    assert_equal 'BÜNDNIS 90/DIE GRÜNEN', originators[:parties].first
+  end
 end
