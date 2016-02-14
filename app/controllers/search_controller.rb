@@ -63,7 +63,7 @@ class SearchController < ApplicationController
     options =
       {
         where: conditions,
-        fields: ['title^10', :contents],
+        fields: ['title^10', :contents, :people],
         highlight: { tag: '<mark>' },
         facets: [:contains_table, :body, :doctype, :faction, :pages, :published_at],
         smart_facets: true,
@@ -101,7 +101,7 @@ class SearchController < ApplicationController
           queries: [
             {
               simple_query_string: {
-                fields: ['title.analyzed^10', 'contents.analyzed'],
+                fields: ['title.analyzed^10', 'contents.analyzed', 'people.analyzed'],
                 query: term,
                 flags: 'AND|OR|NOT|PHRASE|WHITESPACE',
                 default_operator: 'AND',
@@ -110,7 +110,7 @@ class SearchController < ApplicationController
             },
             {
               simple_query_string: {
-                fields: ['title.analyzed^10', 'contents.analyzed'],
+                fields: ['title.analyzed^10', 'contents.analyzed', 'people.analyzed'],
                 query: term,
                 flags: 'AND|OR|NOT|PHRASE|WHITESPACE',
                 default_operator: 'AND',

@@ -42,7 +42,7 @@ class Paper < ActiveRecord::Base
   has_many :reverse_paper_relations, class_name: :PaperRelation, foreign_key: :other_paper_id, dependent: :destroy
   has_many :related_papers, through: :paper_relations, source: :other_paper
 
-  scope :search_import, -> { includes(:body) }
+  scope :search_import, -> { includes(:body, :paper_originators, :originator_people, :originator_organizations) }
 
   # ATTENTION: use .unscoped if you want to access "raw" papers
   scope :answers, -> { where(is_answer: true) }
@@ -96,6 +96,7 @@ class Paper < ActiveRecord::Base
       doctype: doctype,
       published_at: published_at,
       created_at: created_at,
+      people: originator_people.map(&:name),
       faction: originator_organizations.map(&:slug)
     }
   end
