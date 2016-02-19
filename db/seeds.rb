@@ -9,10 +9,10 @@
 Body.create([
   { name: 'Baden-Württemberg',      state: 'BW', website: 'https://www.statistik-bw.de/OPAL' },
   { name: 'Bayern',                 state: 'BY', website: 'https://www1.bayern.landtag.de/webangebot1/dokumente.suche.maske.jsp' },
-  { name: 'Berlin',                 state: 'BE', website: 'https://pardok.parlament-berlin.de' },
+  { name: 'Berlin',                 state: 'BE', website: 'http://pardok.parlament-berlin.de' },
   { name: 'Brandenburg',            state: 'BB', website: 'https://www.parlamentsdokumentation.brandenburg.de' },
   { name: 'Bundestag',              state: 'BT', website: 'http://dipbt.bundestag.de/dip21.web' },
-  { name: 'Bremen',                 state: 'HB', website: 'https://www.bremische-buergerschaft.de' },
+  { name: 'Bremen',                 state: 'HB', website: 'https://paris.bremische-buergerschaft.de' },
   { name: 'Hamburg',                state: 'HH', website: 'https://www.buergerschaft-hh.de/Parldok' },
   { name: 'Hessen',                 state: 'HE', website: 'http://starweb.hessen.de/starweb/LIS/Pd_Eingang.htm' },
   { name: 'Mecklenburg-Vorpommern', state: 'MV', website: 'http://www.dokumentation.landtag-mv.de' },
