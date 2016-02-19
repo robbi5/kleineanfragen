@@ -87,16 +87,13 @@
 </div>
 <% end %>
 
-<%
-  if @paper.part_of_series?
-    series_title = @paper.title.gsub('"', '').gsub(/(\s+\([^)]+\))\z/, '')
-%>
+<% if @paper.part_of_series? %>
 <div class="row">
   <div class="col-md-9">
     <p>
       Diese Anfrage scheint Teil einer Serie zu sein.
       <%= link_to 'Nach weiteren Anfragen in dieser Serie suchen.', search_path({
-          q: "\"#{series_title}\" body:#{@body.state}",
+          q: "\"#{@paper.series_title}\" body:#{@body.state}",
           sort: 'published_at:desc'
         })%>
     </p>

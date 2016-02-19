@@ -175,7 +175,11 @@ class Paper < ActiveRecord::Base
   end
 
   def part_of_series?
-    title.strip.match(/.+\s+\([MDCLXVI\.]+\)\z/)
+    series_match.present?
+  end
+
+  def series_title
+    series_match[1].gsub('"', '')
   end
 
   def description
@@ -257,6 +261,10 @@ class Paper < ActiveRecord::Base
   end
 
   protected
+
+  def series_match
+    title.strip.match(/(?:\A(.+)\s+\([MDCLXVI\.]+\):|(.+)\s+\([MDCLXVI\.]+\)\z)/)
+  end
 
   def empty_originator_people_allowed?
     doctype == DOCTYPE_MAJOR_INTERPELLATION ||
