@@ -87,4 +87,18 @@
 </div>
 <% end %>
 
+<%
+  if @paper.related_papers.size > 0
+    related = @paper.related_papers.uniq
+%>
+<div class="row">
+  <div class="col-md-9">
+    <h3><%= t :related_papers, count: related.size %>:</h3>
+    <ul class="paper-list paper-list--with-body">
+      <%= render partial: 'paper/paper', collection: related, locals: { show_body: true }  %>
+    </ul>
+  </div>
+</div>
+<% end %>
+
 <!-- Paper/<%= @paper.id %> -->
