@@ -87,6 +87,7 @@ class Paper < ActiveRecord::Base
   def search_data
     {
       body: body.state,
+      full_reference: full_reference,
       legislative_term: legislative_term,
       reference: reference,
       title: title,
