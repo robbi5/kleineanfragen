@@ -175,11 +175,13 @@ class Paper < ActiveRecord::Base
   end
 
   def part_of_series?
-    series_match.present?
+    m = series_match
+    m.present?
   end
 
   def series_title
-    series_match[1].gsub('"', '')
+    return nil unless part_of_series?
+    series_match.gsub('"', '')
   end
 
   def description
@@ -263,7 +265,10 @@ class Paper < ActiveRecord::Base
   protected
 
   def series_match
-    title.strip.match(/(?:\A(.+)\s+\([MDCLXVI\.]+\):|(.+)\s+\([MDCLXVI\.]+\)\z)/)
+    m = title.strip.match(/(?:\A(.+)\s+\([MDCLXVI\.]+\):|(.+)\s+\([MDCLXVI\.]+\)\z)/)
+    if m
+      m[1] || m[2]
+    end
   end
 
   def empty_originator_people_allowed?

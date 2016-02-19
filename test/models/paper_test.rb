@@ -14,12 +14,14 @@ class PaperTest < ActiveSupport::TestCase
     paper = Paper.new
     paper.title = 'Teil einer Serie (III)'
     assert paper.part_of_series?
+    assert_equal 'Teil einer Serie', paper.series_title
   end
 
   test 'it recognizes papers part of a series, other format' do
     paper = Paper.new
     paper.title = 'BER-Debakel (XXIV): Wie geht der "Reset" am BER vonstatten?'
     assert paper.part_of_series?
+    assert_equal 'BER-Debakel', paper.series_title
   end
 
   test 'it recognizes papers that are not part of a series' do
