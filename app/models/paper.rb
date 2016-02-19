@@ -174,6 +174,10 @@ class Paper < ActiveRecord::Base
     doctype == DOCTYPE_MAJOR_INTERPELLATION
   end
 
+  def part_of_series?
+    title.strip.match(/.+\s+\([MDCLXVI\.]+\)\z/)
+  end
+
   def description
     desc = []
     desc << "#{doctype_human.titleize} #{full_reference} aus #{ApplicationController.helpers.body_with_prefix(body)}."

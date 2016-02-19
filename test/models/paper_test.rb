@@ -9,4 +9,16 @@ class PaperTest < ActiveSupport::TestCase
       assert_equal Date.parse('2015-10-10'), paper.published_at
     end
   end
+
+  test 'it recognizes papers part of a series' do
+    paper = Paper.new
+    paper.title = 'Teil einer Serie (III)'
+    assert paper.part_of_series?
+  end
+
+  test 'it recognizes papers that are not part of a series' do
+    paper = Paper.new
+    paper.title = 'Teil einer Serie (abc)'
+    assert_not paper.part_of_series?
+  end
 end
