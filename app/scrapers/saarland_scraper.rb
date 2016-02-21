@@ -15,7 +15,7 @@ module SaarlandScraper
   end
 
   class Overview < Scraper
-    SEARCH_URL = BASE_URL + '/Dokumente/Seiten/Drucksachen.aspx?FilterField1=Wahlperiode&FilterValue1='
+    SEARCH_URL = BASE_URL + '/dokumente/drucksachen?FilterName=LinkFilenameNoMenu&FilterMultiValue=Aw*&SortField=DokumentDatum&SortDir=Desc&FilterField1=Wahlperiode&FilterValue1='
 
     def supports_streaming?
       true
@@ -26,11 +26,11 @@ module SaarlandScraper
       page = 1
       papers = []
       block = -> (paper) { papers << paper } unless block_given?
-      mp = @m.get SEARCH_URL + "#{@legislative_term}%2E%20WP" if mp.nil?
+      mp = @m.get SEARCH_URL + "#{@legislative_term}" if mp.nil?
       loop do
         logger.debug "[scrape] page: #{page}"
         scrape_page(mp, &block)
-        next_page_img = mp.search('//td[@id="bottomPagingCellWPQ2"]//img[contains(@src, "next.gif")]')[0]
+        next_page_img = mp.search('//td[@id="bottomPagingCellWPQ1"]//img[contains(@src, "next.gif")]')[0]
         break if next_page_img.nil?
         page += 1
         link_el = next_page_img.parent
