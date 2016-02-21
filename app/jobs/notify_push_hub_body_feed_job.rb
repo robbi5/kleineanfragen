@@ -1,5 +1,10 @@
 class NotifyPuSHHubBodyFeedJob < ActiveJob::Base
+  include ActiveJob::Retry
+
   queue_as :subscription
+
+  variable_retry delays: [5, 15, 30, 90],
+                 retryable_exceptions: [Excon::Errors::Timeout]
 
   def perform(body)
     return if Rails.configuration.x.push_hub.blank?
