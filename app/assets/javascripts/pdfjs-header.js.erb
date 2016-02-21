@@ -6,3 +6,4 @@ if (typeof PDFJS === 'undefined') {
 // Set worker path
 PDFJS.workerSrc = "<%= asset_path('pdfjs/pdf.worker.js') %>";
 PDFJS.imageResourcesPath = '../';
+PDFJS.externalLinkTarget = 2; // == PDFJS.LinkTarget.BLANK
