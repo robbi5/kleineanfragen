@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   get 'info/kontakt'
   get 'info/datenschutz'
   get 'info/mitmachen'
+  get 'info/spenden'
 
   get 'static/kleineanfragen.svg', to: redirect { ActionController::Base.helpers.asset_path('kleineanfragen.svg') }
 

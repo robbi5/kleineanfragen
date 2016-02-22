@@ -11,6 +11,9 @@ class InfoController < ApplicationController
   def datenschutz
   end
 
+  def spenden
+  end
+
   def index
   end
 end
