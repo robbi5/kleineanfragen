@@ -106,6 +106,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     link = @scraper.get_detail_link(@detail_page)
     actual = @scraper.extract_meta(link.text)
     expected = {
+      full_reference: '15/6432',
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       published_at: Date.parse('2015-01-29'),
       originators: { people: ['Peter Hofelich'], parties: ['SPD'] },
@@ -118,6 +119,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     text = 'KlAnfr Arnulf Freiherr von Eyb u.a. CDU, Rainer Hinderer u.a. SPD und Dr. Friedrich Bullinger FDP/DVP 07.05.2013 und Antw MVI Drs 15/3466'
     actual = @scraper.extract_meta(text)
     expected = {
+      full_reference: '15/3466',
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       published_at: Date.parse('2013-05-07'),
       originators: { people: ['Arnulf Freiherr von Eyb', 'Rainer Hinderer', 'Dr. Friedrich Bullinger'], parties: ['CDU', 'SPD', 'FDP/DVP'] },
@@ -130,6 +132,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     text = "\r\n  KlAnfr Dr. Friedrich Bullinger FDP/DVP, Helmut Walter Rüeck CDU und\n  Nikolaos Sakkelariou SPD 24.07.2014 und Antw MLR Drs 15/5544"
     actual = @scraper.extract_meta(text)
     expected = {
+      full_reference: '15/5544',
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       published_at: Date.parse('2014-07-24'),
       originators: { people: ['Dr. Friedrich Bullinger', 'Helmut Walter Rüeck', 'Nikolaos Sakkelariou'], parties: ['FDP/DVP', 'CDU', 'SPD'] },
@@ -142,6 +145,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     text = 'KlAnfr Katrin Schütz CDU 26.08.2014 26.08.2014 und Antw IM Drs 15/5659'
     actual = @scraper.extract_meta(text)
     expected = {
+      full_reference: '15/5659',
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       published_at: Date.parse('2014-08-26'),
       originators: { people: ['Katrin Schütz'], parties: ['CDU'] },
@@ -154,6 +158,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     text = 'KlAnfr Rainer Hinderer SPD 01.01.2015 und Antw MVI, ABC und DEF Drs 01/1234'
     actual = @scraper.extract_meta(text)
     expected = {
+      full_reference: '01/1234',
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       published_at: Date.parse('2015-01-01'),
       originators: { people: ['Rainer Hinderer'], parties: ['SPD'] },
@@ -166,6 +171,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     text = 'KlAnfr Rainer Hinderer SPD 01.01.2015 und Antw Drs 01/1234'
     actual = @scraper.extract_meta(text)
     expected = {
+      full_reference: '01/1234',
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       published_at: Date.parse('2015-01-01'),
       originators: { people: ['Rainer Hinderer'], parties: ['SPD'] },
@@ -178,6 +184,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     text = 'KlAnfr Dr. Friedrich Bullinger FDP/DVP und Antw IM 20.06.2014 Drs 15/5345'
     actual = @scraper.extract_meta(text)
     expected = {
+      full_reference: '15/5345',
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       published_at: Date.parse('2014-06-20'),
       originators: { people: ['Dr. Friedrich Bullinger'], parties: ['FDP/DVP'] },
@@ -190,6 +197,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     text = 'KlAnf Dr. Hans-Ulrich Rülke FDP/DVP 01.07.2013 und Antw MVI Drs 15/3704'
     actual = @scraper.extract_meta(text)
     expected = {
+      full_reference: '15/3704',
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       published_at: Date.parse('2013-07-01'),
       originators: { people: ['Dr. Hans-Ulrich Rülke'], parties: ['FDP/DVP'] },
@@ -202,6 +210,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     text = 'GrAnfr CDU, GRÜNE, SPD und FDP/DVP 13.02.2013 und Antw LReg Drs 15/3038 (40 S.)'
     actual = @scraper.extract_meta(text)
     expected = {
+      full_reference: '15/3038',
       doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
       published_at: Date.parse('2013-02-13'),
       originators: { people: [], parties: ['CDU','GRÜNE','SPD','FDP/DVP'] },
@@ -215,6 +224,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     link = @scraper.get_detail_link(detail_page)
     actual = @scraper.extract_meta(link.text)
     expected = {
+      full_reference: '15/1608',
       doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
       published_at: Date.parse('2012-04-25'),
       originators: { people: [], parties: ['FDP/DVP'] },
@@ -229,19 +239,21 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
-  # test 'extract complete paper from page' do
-  #   div = @scraper.extract_result_blocks(@result_page)[0]
-  #   actual = @scraper.extract_paper(div).first
-  #   expected = {
-  #     full_reference: '15/6432',
-  #     legislative_term: '15',
-  #     reference: '6432',
-  #     doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-  #     title: 'Barrierefreier Ausbau der Bahnhöfe auf der Hauptstrecke Stuttgart-Ulm im Landkreis Göppingen zwischen Reichenbach/Fils und Eislingen/Fils',
-  #     url: 'http://www.landtag-bw.de/scr/initiativen/ini_check.asp?wp=15&drs=6432',
-  #     originators: { people: ['Peter Hofelich'], parties: ['SPD'] },
-  #     answerers: { ministries: 'MVI' }
-  #   }
-  #   assert_equal(expected, actual)
-  # end
+  test 'extract complete paper from detail page' do
+    actual = @scraper.extract_detail_paper(@detail_page)
+    expected = {
+      full_reference: '15/6432',
+      legislative_term: '15',
+      reference: '6432',
+      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+      title: 'Barrierefreier Ausbau der Bahnhöfe auf der Hauptstrecke Stuttgart-Ulm im LKreis Göppingen zwischen Reichenbach/Fils und Eislingen/Fils',
+      url: 'http://www.landtag-bw.de/scr/initiativen/ini_check.asp?wp=15&drs=6432',
+      published_at: Date.parse('2015-01-29'),
+      is_answer: true,
+      originators: { people: ['Peter Hofelich'], parties: ['SPD'] },
+      answerers: { ministries: ['MVI'] },
+      source_url: "http://www.statistik-bw.de/OPAL/Ergebnis.asp?WP=15&DRSNR=6432"
+    }
+    assert_equal(expected, actual)
+  end
 end

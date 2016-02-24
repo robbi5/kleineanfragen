@@ -68,7 +68,7 @@ module BadenWuerttembergLandtagScraper
   end
 
   def self.extract_meta(meta_text)
-    match_results = meta_text.lstrip.match(/(KlAnfr?|GrAnfr?)\s+(.+?)\s*([\d\.\s]+)?\s+und\s+Antw\s+(?:(.+?)\s*([\d\.]+)?\s+)?Drs/m)
+    match_results = meta_text.lstrip.match(/(KlAnfr?|GrAnfr?)\s+(.+?)\s*([\d\.\s]+)?\s+und\s+Antw\s+(?:(.+?)\s*([\d\.]+)?\s+)?Drs\s*(\d+\/\d+)/m)
     return nil if match_results.nil?
     doctype = extract_doctype(match_results[1])
     # when multiple originators exist, remove "and others" - we extract the other names later
@@ -84,6 +84,7 @@ module BadenWuerttembergLandtagScraper
     ministries = clean_ministries(match_results[4]) unless match_results[4].blank?
 
     {
+      full_reference: match_results[6],
       doctype: doctype,
       published_at: Date.parse(match_results[3] || match_results[5]),
       originators: originators,
@@ -116,17 +117,20 @@ module BadenWuerttembergLandtagScraper
       # originator: people is set in detail scraper
       originators: { people: [], parties: [meta[:originator_party]] },
       # answerers is set in detail scraper
-      is_answer: true
+      is_answer: true,
+      source_url: build_detail_url(legislative_term, reference)
     }
   end
 
-  def self.extract_detail_paper(page, detail_link, full_reference)
-    legislative_term, reference = extract_reference(full_reference)
+  def self.extract_detail_paper(page)
+    link = get_detail_link(page)
     title = extract_detail_title(page)
-    url = detail_link.attributes['href'].value
-    meta = extract_meta(detail_link.text)
+    url = link.attributes['href'].value
+    meta = extract_meta(link.text)
+    full_reference = meta[:full_reference]
+    legislative_term, reference = extract_reference(full_reference)
 
-    fail "Can't extract detail meta data from Paper [BW #{full_reference}]" if meta.nil?
+    fail "Can't extract detail meta data from Paper [BW ?] text: #{link.text}" if meta.nil?
 
     {
       full_reference: full_reference,
@@ -138,7 +142,8 @@ module BadenWuerttembergLandtagScraper
       published_at: meta[:published_at],
       is_answer: true,
       originators: meta[:originators],
-      answerers: meta[:answerers]
+      answerers: meta[:answerers],
+      source_url: build_detail_url(legislative_term, reference)
     }
   end
 
@@ -230,9 +235,7 @@ module BadenWuerttembergLandtagScraper
     def scrape
       m = mechanize
       page = m.get BadenWuerttembergLandtagScraper.build_detail_url(@legislative_term, @reference)
-      detail_link = BadenWuerttembergLandtagScraper.get_detail_link(page)
-
-      BadenWuerttembergLandtagScraper.extract_detail_paper(page, detail_link, full_reference)
+      BadenWuerttembergLandtagScraper.extract_detail_paper(page)
     end
   end
 end
