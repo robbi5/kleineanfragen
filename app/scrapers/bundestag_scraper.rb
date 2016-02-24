@@ -26,7 +26,9 @@ module BundestagScraper
         next unless TYPES.include?(type)
 
         begin
-          paper = BundestagScraper.scrape_vorgang(m, "#{OVERVIEW_URL}/WP#{@legislative_term}/#{detail_url}")
+          detail_url = "#{OVERVIEW_URL}/WP#{@legislative_term}/#{detail_url}"
+          detail_page = m.get detail_url
+          paper = BundestagScraper.scrape_vorgang(detail_page, detail_url)
         rescue => e
           logger.warn e
           next
@@ -67,13 +69,19 @@ module BundestagScraper
       _, id = id.match(/\d+-(\d+)/).to_a
       folder = id[0...-2]
 
-      BundestagScraper.scrape_vorgang(m, "#{OVERVIEW_URL}/WP#{@legislative_term}/#{folder}/#{id}.html")
+      detail_url = "#{OVERVIEW_URL}/WP#{@legislative_term}/#{folder}/#{id}.html"
+      detail_page = m.get detail_url
+
+      BundestagScraper.scrape_vorgang(detail_page, detail_url)
     end
   end
 
-  def self.scrape_vorgang(mechanize, detail_url)
-    page = mechanize.get detail_url
+  def self.scrape_vorgang(page, detail_url)
     content = page.content
+    scrape_content(content, detail_url)
+  end
+
+  def self.scrape_content(content, detail_url)
     doc = extract_doc(content)
 
     doctype = extract_doctype(doc)
@@ -112,7 +120,8 @@ module BundestagScraper
       published_at: published_at,
       originators: ado[:originators],
       is_answer: true,
-      answerers: ado[:answerers]
+      answerers: ado[:answerers],
+      source_url: detail_url
     }
   end
 
