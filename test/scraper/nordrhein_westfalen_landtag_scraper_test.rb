@@ -21,7 +21,10 @@ class NordrheinWestfalenLandtagScraperTest < ActiveSupport::TestCase
         published_at: Date.parse('2015-04-24'),
         originators: nil,
         is_answer: true,
-        answerers: { ministries: ['MGEPA'] }
+        answerers: { ministries: ['MGEPA'] },
+        source_url: 'https://www.landtag.nrw.de/portal/WWW/Webmaster/GB_II/II.2/Suche/Landtagsdokumentation_ALWP/Suchergebnisse_Ladok.jsp?' +
+          'order=native%28%27DOKDATUM%281%29%2FDescend+%2C+VA%281%29%2FDescend+%27%29&fm=&wp=16' +
+          '&w=native%28%27%28NUMMER+phrase+like+%27%278512%27%27%29+and+%28DOKUMENTART+phrase+like+%27%27DRUCKSACHE%27%27%29+and+%28DOKUMENTTYP+phrase+like+%27%27ANTWORT%27%27%29%27%29'
       }, paper)
   end
 
@@ -41,7 +44,10 @@ class NordrheinWestfalenLandtagScraperTest < ActiveSupport::TestCase
         published_at: Date.parse('2015-05-27'),
         originators: nil,
         is_answer: true,
-        answerers: { ministries: ['MSW'] }
+        answerers: { ministries: ['MSW'] },
+        source_url: 'https://www.landtag.nrw.de/portal/WWW/Webmaster/GB_II/II.2/Suche/Landtagsdokumentation_ALWP/Suchergebnisse_Ladok.jsp?' +
+          'order=native%28%27DOKDATUM%281%29%2FDescend+%2C+VA%281%29%2FDescend+%27%29&fm=&wp=16' +
+          '&w=native%28%27%28NUMMER+phrase+like+%27%278774%27%27%29+and+%28DOKUMENTART+phrase+like+%27%27DRUCKSACHE%27%27%29+and+%28DOKUMENTTYP+phrase+like+%27%27ANTWORT%27%27%29%27%29'
       }, paper)
   end
 

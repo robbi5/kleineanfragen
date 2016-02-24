@@ -63,7 +63,8 @@ module NordrheinWestfalenLandtagScraper
       # more originators are handled in detail scraper
       originators: meta[:originators],
       is_answer: true,
-      answerers: { ministries: [meta[:answerer]] }
+      answerers: { ministries: [meta[:answerer]] },
+      source_url: Detail.build_search_url(legislative_term, reference)
     }
   end
 
@@ -129,11 +130,8 @@ module NordrheinWestfalenLandtagScraper
                  'order=native%28%27DOKDATUM%281%29%2FDescend+%2C+VA%281%29%2FDescend+%27%29&fm='
 
     def scrape
-      url = SEARCH_URL + "&wp=#{@legislative_term}&w=" +
-            CGI.escape("native('(NUMMER phrase like ''#{@reference}'') " +
-            "and (DOKUMENTART phrase like ''DRUCKSACHE'') and (DOKUMENTTYP phrase like ''ANTWORT'')')")
       m = mechanize
-      mp = m.get url
+      mp = m.get self.class.build_search_url(@legislative_term, @reference)
 
       blocks = NordrheinWestfalenLandtagScraper.extract_blocks(mp)
       item = nil
@@ -156,6 +154,12 @@ module NordrheinWestfalenLandtagScraper
       end
 
       paper
+    end
+
+    def self.build_search_url(legislative_term, reference)
+       SEARCH_URL + "&wp=#{legislative_term}&w=" +
+            CGI.escape("native('(NUMMER phrase like ''#{reference}'') " +
+            "and (DOKUMENTART phrase like ''DRUCKSACHE'') and (DOKUMENTTYP phrase like ''ANTWORT'')')")
     end
   end
 end
