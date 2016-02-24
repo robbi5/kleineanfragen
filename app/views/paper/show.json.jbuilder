@@ -37,6 +37,8 @@ end
 json.contents_url paper_url(@body, @legislative_term, @paper, format: :txt)
 json.download_url paper_url(@body, @legislative_term, @paper, format: :pdf)
 
+json.source_url @paper.source_url
+
 json.related do
   json.array! @paper.paper_relations do |pr|
     json.paper do

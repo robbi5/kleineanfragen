@@ -22,7 +22,8 @@ class BayernLandtagScraperDetailTest < ActiveSupport::TestCase
         originators: {
           parties: ['BÜNDNIS 90/DIE GRÜNEN']
         },
-        is_answer: true
+        is_answer: true,
+        source_url: 'http://www1.bayern.landtag.de/webangebot1/dokumente.suche.maske.jsp?STATE=SHOW_MASK&BUTTONSCHLAGWORT=Suche+starten&DOKUMENT_DOKUMENTNR=17%2F4838'
       }, paper)
   end
 

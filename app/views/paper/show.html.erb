@@ -60,6 +60,9 @@
       <% if @body.use_mirror_for_download? %>
       <small>&mdash; <%= link_to 'Gespiegelte Version', info_path %></small>
       <% end %>
+      <% unless @paper.source_url.blank? %>
+      <small>&mdash; <%= link_to "Quelle", @paper.source_url %></small>
+      <% end %>
     </p>
     <p>
       <label for="shorturl" class="shorturl-label">Kurz-URL:</label>

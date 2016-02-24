@@ -147,7 +147,8 @@ module BerlinAghScraper
       published_at: published_at,
       originators: originators,
       is_answer: true,
-      answerers: { ministries: ministries }
+      answerers: { ministries: ministries },
+      source_url: Detail.build_search_url(legislative_term, reference)
     }
   end
 
@@ -220,10 +221,14 @@ module BerlinAghScraper
       m = mechanize
       # increase read timeout for berlin
       m.read_timeout = 120
-      mp = m.get SEARCH_URL + CGI.escape('WP=' + @legislative_term.to_s + ' AND DNR=' + @reference.to_s)
+      mp = m.get self.class.build_search_url(@legislative_term, @reference)
       body = BerlinAghScraper.extract_body(mp)
       seperator = BerlinAghScraper.extract_seperators(body).first
       BerlinAghScraper.extract_paper(seperator)
+    end
+
+    def self.build_search_url(legislative_term, reference)
+      SEARCH_URL + CGI.escape("WP=#{legislative_term} AND DNR=#{reference}")
     end
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160102161745) do
+ActiveRecord::Schema.define(version: 20160224172917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -139,6 +139,7 @@ ActiveRecord::Schema.define(version: 20160102161745) do
     t.string   "doctype"
     t.boolean  "is_answer"
     t.datetime "frozen_at"
+    t.string   "source_url"
   end
 
   add_index "papers", ["body_id", "legislative_term", "reference"], name: "index_papers_on_body_id_and_legislative_term_and_reference", unique: true, using: :btree

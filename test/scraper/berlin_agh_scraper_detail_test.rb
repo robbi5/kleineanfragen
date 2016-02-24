@@ -22,7 +22,8 @@ class BerlinAghScraperDetailTest < ActiveSupport::TestCase
         published_at: Date.parse('14.07.2014'),
         originators: { people: ['Susanne Graf'], parties: ['Piraten'] },
         is_answer: true,
-        answerers: { ministries: ['SenBildJugWiss'] }
+        answerers: { ministries: ['SenBildJugWiss'] },
+        source_url: 'http://pardok.parlament-berlin.de/starweb/AHAB/servlet.starweb?path=AHAB/lisshfl.web&id=ahabfastlink&format=WEBVORGLFL&search=WP%3D17+AND+DNR%3D14146'
       }, paper)
   end
 
@@ -43,7 +44,8 @@ class BerlinAghScraperDetailTest < ActiveSupport::TestCase
         published_at: Date.parse('10.03.2014'),
         originators: { people: ['Elke Breitenbach'], parties: ['Die Linke'] },
         is_answer: true,
-        answerers: { ministries: ['SenBildJugWiss'] }
+        answerers: { ministries: ['SenBildJugWiss'] },
+        source_url: 'http://pardok.parlament-berlin.de/starweb/AHAB/servlet.starweb?path=AHAB/lisshfl.web&id=ahabfastlink&format=WEBVORGLFL&search=WP%3D17+AND+DNR%3D13104'
       }, paper)
   end
 end

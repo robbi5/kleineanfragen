@@ -52,7 +52,8 @@ class BayernLandtagScraperOverviewTest < ActiveSupport::TestCase
         title: 'Einkleidung in den Erstaufnahmeeinrichtungen',
         url: 'http://www1.bayern.landtag.de/ElanTextAblage_WP17/Drucksachen/Schriftliche%20Anfragen/17_0004828.pdf',
         published_at: Date.parse('09.02.2015'),
-        is_answer: true
+        is_answer: true,
+        source_url: 'http://www1.bayern.landtag.de/webangebot1/dokumente.suche.maske.jsp?STATE=SHOW_MASK&BUTTONSCHLAGWORT=Suche+starten&DOKUMENT_DOKUMENTNR=17%2F4828'
       }, paper)
   end
 
@@ -69,7 +70,8 @@ class BayernLandtagScraperOverviewTest < ActiveSupport::TestCase
         title: 'Verkauf der ehemaligen Haftanstalt "Am Neudeck"',
         url: 'http://www1.bayern.landtag.de/ElanTextAblage_WP17/Drucksachen/Schriftliche%20Anfragen/17_0004711.pdf',
         published_at: Date.parse('29.01.2015'),
-        is_answer: true
+        is_answer: true,
+        source_url: 'http://www1.bayern.landtag.de/webangebot1/dokumente.suche.maske.jsp?STATE=SHOW_MASK&BUTTONSCHLAGWORT=Suche+starten&DOKUMENT_DOKUMENTNR=17%2F4711'
       }, paper)
   end
 end

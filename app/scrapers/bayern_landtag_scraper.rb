@@ -73,10 +73,14 @@ module BayernLandtagScraper
     SEARCH_URL = BASE_URL + '/webangebot1/dokumente.suche.maske.jsp?STATE=SHOW_MASK&BUTTONSCHLAGWORT=Suche+starten&DOKUMENT_DOKUMENTNR='
 
     def scrape
-      mp = mechanize.get SEARCH_URL + CGI.escape(full_reference)
+      mp = mechanize.get self.class.build_search_url(full_reference)
       mp = mp.link_with(href: /\#LASTFOLDER$/).click
       first_row = BayernLandtagScraper.extract_first_rows(mp).first
       BayernLandtagScraper.extract_paper(first_row)
+    end
+
+    def self.build_search_url(full_reference)
+      SEARCH_URL + CGI.escape(full_reference)
     end
   end
 
@@ -159,9 +163,10 @@ module BayernLandtagScraper
       title: title,
       url: url,
       published_at: published_at,
-      is_answer: true
+      is_answer: true,
       # originators only on detail page
       # answerers not available
+      source_url: Detail.build_search_url(full_reference)
     }
     paper[:originators] = { parties: [party] } if detail
     paper
