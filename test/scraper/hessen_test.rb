@@ -134,7 +134,8 @@ class HessenTest < ActiveSupport::TestCase
           people: ['Christoph Degen', 'Kerstin Geis', 'Karin Hartmann', 'Brigitte Hofmeyer', 'Gerhard Merz', 'Lothar Quanz', 'Turgut Yüksel'],
           parties: ['SPD']
         },
-        is_answer: nil
+        is_answer: nil,
+        source_url: 'http://starweb.hessen.de/starweb/LIS/servlet.starweb?path=LIS/PdPi_FLMore19.web&search=WP%3D19+and+DRSNRU%2CANTW%3D%2219%2F1829%22'
       }, paper)
   end
 

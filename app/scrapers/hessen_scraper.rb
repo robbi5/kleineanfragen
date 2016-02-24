@@ -41,7 +41,8 @@ module HessenScraper
       reference: ref,
       doctype: extract_interpellation_type(block),
       title: extract_title(block),
-      # is_answer: true # -> detail scraper
+      # is_answer: true # -> detail scraper,
+      source_url: Detail.build_search_url(leg, ref)
     }
   end
 
@@ -65,7 +66,8 @@ module HessenScraper
       originators: extract_originators(extract_originator_text(block)),
       # unanswered papers often have a future publishing date
       # if its really an answer gets checked in DeterminePaperTypeJob
-      is_answer: (date <= Date.today ? nil : false)
+      is_answer: (date <= Date.today ? nil : false),
+      source_url: Detail.build_search_url(leg, ref)
     }
   end
 
@@ -173,7 +175,7 @@ module HessenScraper
 
     def scrape
       m = mechanize
-      mp = m.get SEARCH_URL + CGI.escape("WP=#{@legislative_term} and DRSNRU,ANTW=\"#{full_reference}\"")
+      mp = m.get self.class.build_search_url(@legislative_term, @reference)
 
       detail_block = HessenScraper.extract_detail_block(mp.root)
       paper = HessenScraper.extract_detail_paper(detail_block)
@@ -188,6 +190,11 @@ module HessenScraper
       paper[:url] = Addressable::URI.parse(BASE_URL).join(pdf_path).normalize.to_s
 
       paper
+    end
+
+    def self.build_search_url(legislative_term, reference)
+      # NOTE: it's using reference as argument, not full_reference
+      SEARCH_URL + CGI.escape("WP=#{legislative_term} and DRSNRU,ANTW=\"#{legislative_term}/#{reference}\"")
     end
   end
 end
