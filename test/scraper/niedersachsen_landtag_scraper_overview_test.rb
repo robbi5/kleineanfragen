@@ -117,7 +117,8 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
         is_answer: true,
         answerers: {
           ministries: ['Niedersächsisches Ministerium für Inneres und Sport']
-        }
+        },
+        source_url: 'http://www.nilas.niedersachsen.de/starweb/NILAS/servlet.starweb?path=NILAS/lisshfl.web&id=NILASWEBDOKFL&format=WEBDOKFL&search=%28DART%3DD+AND+WP%3D17+AND+DNR%2CKORD%3D1928%29'
       }, paper)
   end
 
@@ -153,7 +154,8 @@ class NiedersachsenLandtagScraperOverviewTest < ActiveSupport::TestCase
         is_answer: true,
         answerers: {
           ministries: ['Niedersächsisches Ministerium für Ernährung, Landwirtschaft und Verbraucherschutz']
-        }
+        },
+        source_url: 'http://www.nilas.niedersachsen.de/starweb/NILAS/servlet.starweb?path=NILAS/lisshfl.web&id=NILASWEBDOKFL&format=WEBDOKFL&search=%28DART%3DD+AND+WP%3D17+AND+DNR%2CKORD%3D2430%29'
       }, paper)
   end
 end

@@ -118,7 +118,8 @@ module NiedersachsenLandtagScraper
       published_at: published_at,
       originators: originators,
       is_answer: is_answer,
-      answerers: { ministries: ministries }
+      answerers: { ministries: ministries },
+      source_url: Detail.build_search_url(legislative_term, reference)
     }
   end
 
@@ -182,9 +183,13 @@ module NiedersachsenLandtagScraper
     SEARCH_URL = BASE_URL + '/starweb/NILAS/servlet.starweb?path=NILAS/lisshfl.web&id=NILASWEBDOKFL&format=WEBDOKFL&search='
 
     def scrape
-      mp = mechanize.get SEARCH_URL + CGI.escape("(DART=D AND WP=#{@legislative_term} AND DNR,KORD=#{@reference})")
+      mp = mechanize.get self.class.build_search_url(legislative_term, reference)
       item = NiedersachsenLandtagScraper.extract_detail_block(mp)
       NiedersachsenLandtagScraper.extract_paper(item)
+    end
+
+    def self.build_search_url(legislative_term, reference)
+      SEARCH_URL + CGI.escape("(DART=D AND WP=#{legislative_term} AND DNR,KORD=#{reference})")
     end
   end
 end
