@@ -56,7 +56,8 @@ class BrandenburgScraperTest < ActiveSupport::TestCase
         url: 'https://www.parlamentsdokumentation.brandenburg.de/parladoku/w6/drs/ab_3200/3264.pdf',
         published_at: Date.parse('2015-12-30'),
         is_answer: true,
-        originators: { people: ['Thomas Jung', 'Andreas Kalbitz'], parties: ['AfD'] }
+        originators: { people: ['Thomas Jung', 'Andreas Kalbitz'], parties: ['AfD'] },
+        source_url: 'https://www.parlamentsdokumentation.brandenburg.de/starweb/LBB/ELVIS/servlet.starweb?path=LBB/ELVIS/LISSH.web&Standardsuche=yes&search=WP%3D6+AND+DNR%3D3264'
       }, paper)
   end
 
@@ -78,7 +79,8 @@ class BrandenburgScraperTest < ActiveSupport::TestCase
           people: ['Raik Nowka', 'Steeven Bretz'],
           parties: ['CDU']
         },
-        is_answer: true
+        is_answer: true,
+        source_url: 'https://www.parlamentsdokumentation.brandenburg.de/starweb/LBB/ELVIS/servlet.starweb?path=LBB/ELVIS/LISSH.web&Standardsuche=yes&search=WP%3D6+AND+DNR%3D3233'
       }, paper)
   end
 
@@ -101,7 +103,8 @@ class BrandenburgScraperTest < ActiveSupport::TestCase
           people: [],
           parties: ['CDU']
         },
-        is_answer: true
+        is_answer: true,
+        source_url: 'https://www.parlamentsdokumentation.brandenburg.de/starweb/LBB/ELVIS/servlet.starweb?path=LBB/ELVIS/LISSH.web&Standardsuche=yes&search=WP%3D6+AND+DNR%3D2926'
       }, paper)
   end
 

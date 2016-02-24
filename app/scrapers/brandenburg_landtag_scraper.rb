@@ -103,17 +103,19 @@ module BrandenburgLandtagScraper
       originators = NamePartyExtractor.new(o, NamePartyExtractor::FRACTION).extract
     end
 
+    legislative_term, reference = full_reference.split('/')
     {
-      legislative_term: full_reference.split('/').first,
+      legislative_term: legislative_term,
       full_reference: full_reference,
-      reference: full_reference.split('/').last,
+      reference: reference,
       doctype: doctype,
       title: extract_title(originator_row),
       url: url,
       published_at: ad[:published_at],
       originators: originators,
       # answerers in pdf
-      is_answer: true
+      is_answer: true,
+      source_url: Detail.build_search_url(legislative_term, reference)
     }
   end
 
@@ -208,7 +210,7 @@ module BrandenburgLandtagScraper
       # initialize session
       m.get START_URL
       # get paper
-      mp = m.get SEARCH_URL + CGI.escape("WP=#{@legislative_term} AND DNR=#{@reference}")
+      mp = m.get self.class.build_search_url(@legislative_term, @reference)
       form = mp.form('__form')
       form.field_with(name: '__action').value = 51
       mp = m.submit form
@@ -219,6 +221,10 @@ module BrandenburgLandtagScraper
       fail 'Cannot get detail item' if item.nil?
 
       BrandenburgLandtagScraper.extract_paper(item)
+    end
+
+    def self.build_search_url(legislative_term, reference)
+      SEARCH_URL + CGI.escape("WP=#{legislative_term} AND DNR=#{reference}")
     end
   end
 end
