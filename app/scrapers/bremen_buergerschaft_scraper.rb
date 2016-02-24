@@ -110,7 +110,8 @@ module BremenBuergerschaftScraper
       is_answer: true,
       originators: originators,
       answerers: { ministries: ['Senat'] },
-      published_at: published_at
+      published_at: published_at,
+      source_url: Detail.build_search_url(legislative_term, reference)
     }
   end
 
@@ -173,31 +174,17 @@ module BremenBuergerschaftScraper
   class Detail < DetailScraper
     def scrape
       m = mechanize
-      # get a session
-      m.get BASE_URL
-      mp = m.get SEARCH_URL
-      search_form = mp.form '__form'
-      fail "HB [#{full_reference}]: search form missing" if search_form.nil?
-
-      # fill search form
-      search_form.field_with(name: '__action').value = 20
-      search_form.field_with(name: '12_LISSH_WP').value = @legislative_term
-      search_form.field_with(name: '05_LISSH_DNR').value = @reference
-      # only search in landtag
-      search_form.field_with(name: '11_LISSH_PARL').value = 'L'
-      mp = m.submit(search_form)
+      mp = m.get(self.class.build_search_url(@legislative_term, @reference) + "&format=LISSH_Vorgaenge_Report")
 
       # Fail if no hits
       fail "HB [#{full_reference}]: search returns no results" if mp.search('//div[@name="NoReportGenerated"]/*').size > 0
 
-      # switch to full view
-      search_form = mp.form '__form'
-      search_form.field_with(name: '__action').value = 50
-      search_form.field_with(name: 'LISSH_Browse_ReportFormatList').value = 'LISSH_Vorgaenge_Report'
-      mp = m.submit(search_form)
-
       items = BremenBuergerschaftScraper.extract_records(mp)
       BremenBuergerschaftScraper.extract_paper(items.first)
+    end
+
+    def self.build_search_url(legislative_term, reference)
+      BASE_URL + "/starweb/paris/servlet.starweb?path=paris/LISSHDOKFL.web&01_LISSHD_WP=#{legislative_term}&02_LISSHD_DNR=#{reference}"
     end
   end
 end

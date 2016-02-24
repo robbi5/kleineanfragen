@@ -25,7 +25,8 @@ class BremenBuergerschaftScraperDetailTest < ActiveSupport::TestCase
         answerers: {
           ministries: ['Senat']
         },
-        is_answer: true
+        is_answer: true,
+        source_url: 'https://paris.bremische-buergerschaft.de/starweb/paris/servlet.starweb?path=paris/LISSHDOKFL.web&01_LISSHD_WP=19&02_LISSHD_DNR=96'
       }, paper)
   end
 end
