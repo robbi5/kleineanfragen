@@ -265,9 +265,33 @@ class Paper < ActiveRecord::Base
   protected
 
   def series_match
-    m = title.strip.match(/(?:\A(.+)\s+\([MDCLXVI\.]+\):|(.+)\s+\([MDCLXVI\.]+\)\z)/)
+    # roman numerals regex from http://stackoverflow.com/a/10441405/1453095
+    m = title.strip.match(/
+      \A      # start of string
+      (.+?)   # get everything, until
+      \s+     # whitespace
+      \(?     # maybe an open bracket
+      (?:     # roman numberals, four times, so it does not match nothing
+        M{1,4}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})
+        |
+        M{0,4}(?:CM|C?D|D?C{1,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})
+        |
+        M{0,4}(?:CM|CD|D?C{0,3})(?:XC|X?L|L?X{1,3})(?:IX|IV|V?I{0,3})
+        |
+        M{0,4}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|I?V|V?I{1,3})
+      )
+      \.?     # maybe an dot
+      \)?     # maybe an closing bracket
+      \s*     # maybe some whitespace
+      (?:
+        \p{Dash_Punctuation}
+        |
+        \:
+      )
+      /x)
+    m = title.strip.match(/(.+)\s+\([MDCLXVI\.]+\)\z/) if m.nil?
     if m
-      m[1] || m[2]
+      m[1]
     end
   end
 
