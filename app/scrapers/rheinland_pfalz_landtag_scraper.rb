@@ -126,7 +126,8 @@ module RheinlandPfalzLandtagScraper
       published_at: published_at,
       originators: originators,
       is_answer: true,
-      answerers: { ministries: ministries }
+      answerers: { ministries: ministries },
+      source_url: Detail.build_search_url(legislative_term, reference)
     }
   end
 
@@ -192,9 +193,13 @@ module RheinlandPfalzLandtagScraper
     SEARCH_URL = BASE_URL + '/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL&format=LISSH_MoreDokument_Report&search='
 
     def scrape
-      mp = mechanize.get SEARCH_URL + CGI.escape("(DART=D AND WP=#{@legislative_term} AND DNR,KORD=#{@reference})")
+      mp = mechanize.get self.class.build_search_url(@legislative_term, @reference)
       item = RheinlandPfalzLandtagScraper.extract_records(mp).first
       RheinlandPfalzLandtagScraper.extract_paper(item)
+    end
+
+    def self.build_search_url(legislative_term, reference)
+      SEARCH_URL + CGI.escape("(DART=D AND WP=#{legislative_term} AND DNR,KORD=#{reference})")
     end
   end
 end

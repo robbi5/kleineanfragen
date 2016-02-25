@@ -21,7 +21,9 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         published_at: Date.parse('13.02.2015'),
         originators: { people: ['Dorothea Schäfer'], parties: ['CDU'] },
         is_answer: true,
-        answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] }
+        answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] },
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
+          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D4608%29'
       }, paper)
   end
 
@@ -41,7 +43,9 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         published_at: Date.parse('14.10.2014'),
         originators: { people: ['Alexander Licht'], parties: ['CDU'] },
         is_answer: true,
-        answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] }
+        answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] },
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
+          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D4097%29'
       }, paper)
   end
 
@@ -64,7 +68,9 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         answerers: { ministries: [
           'Ministerium für Wirtschaft, Klimaschutz, Energie und Landesplanung',
           'Ministerium für Soziales, Arbeit, Gesundheit und Demografie'
-        ] }
+        ] },
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
+          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D3813%29'
       }, paper)
   end
 
@@ -86,7 +92,9 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         is_answer: true,
         answerers: { ministries: [
           'Ministerium für Wirtschaft, Klimaschutz, Energie und Landesplanung'
-        ] }
+        ] },
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
+          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D863%29'
       }, paper)
   end
 
@@ -108,7 +116,9 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         is_answer: true,
         answerers: { ministries: [
           'Ministerium des Innern, für Sport und Infrastruktur'
-        ] }
+        ] },
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
+          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D1734%29'
       }, paper)
   end
 
@@ -130,7 +140,9 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         is_answer: true,
         answerers: { ministries: [
           'Staatskanzlei'
-        ] }
+        ] },
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
+          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D4965%29'
       }, paper)
   end
 
@@ -150,7 +162,9 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         published_at: Date.parse('20.03.2015'),
         originators: { people: [], parties: ['CDU'] },
         is_answer: true,
-        answerers: { ministries: ['Ministerium für Integration, Familie, Kinder, Jugend und Frauen'] }
+        answerers: { ministries: ['Ministerium für Integration, Familie, Kinder, Jugend und Frauen'] },
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
+          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D4788%29'
       }, paper)
   end
 
@@ -170,7 +184,9 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         published_at: Date.parse('21.01.2015'),
         originators: { people: [], parties: ['CDU'] },
         is_answer: true,
-        answerers: { ministries: ['Ministerium für Soziales, Arbeit, Gesundheit und Demografie'] }
+        answerers: { ministries: ['Ministerium für Soziales, Arbeit, Gesundheit und Demografie'] },
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
+          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D4503%29'
       }, paper)
   end
 
@@ -190,7 +206,9 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         published_at: Date.parse('16.11.2011'),
         originators: { people: [], parties: ['CDU'] },
         is_answer: true,
-        answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] }
+        answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] },
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
+          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D579%29'
       }, paper)
   end
 
@@ -210,7 +228,9 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         published_at: Date.parse('15.10.2013'),
         originators: { people: [], parties: ['SPD', 'BÜNDNIS 90/DIE GRÜNEN'] },
         is_answer: true,
-        answerers: { ministries: ['Ministerium für Bildung, Wissenschaft, Weiterbildung und Kultur'] }
+        answerers: { ministries: ['Ministerium für Bildung, Wissenschaft, Weiterbildung und Kultur'] },
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
+          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D2887%29'
       }, paper)
   end
 end
