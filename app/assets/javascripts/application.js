@@ -10,4 +10,3 @@
 //= require search
 //= require paper
 //= require tracking
-//= require banner
