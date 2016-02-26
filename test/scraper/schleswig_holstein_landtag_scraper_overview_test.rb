@@ -76,7 +76,8 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
         url: 'http://www.landtag.ltsh.de/infothek/wahl17/drucks/2200/drucksache-17-2295.pdf',
         published_at: Date.parse('15.02.2012'),
         is_answer: true,
-        answerers: { ministries: ['Landesregierung'] }
+        answerers: { ministries: ['Landesregierung'] },
+        source_url: 'http://lissh.lvn.parlanet.de/cgi-bin/starfinder/0?path=lisshfl.txt&id=FASTLINK&pass=&search=(WP%3D17+AND+DART%3DD+AND+DNR%3D2295)'
       }, paper)
   end
 
@@ -115,7 +116,8 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
         url: 'http://www.landtag.ltsh.de/infothek/wahl18/drucks/2500/drucksache-18-2537.pdf',
         originators: { people: ['Hans-Jörn Arp', 'Johannes Callsen'], parties: ['CDU'] },
         is_answer: true,
-        answerers: { ministries: ['Minister/in für Wirtschaft, Arbeit, Verkehr und Technologie'] }
+        answerers: { ministries: ['Minister/in für Wirtschaft, Arbeit, Verkehr und Technologie'] },
+        source_url: 'http://lissh.lvn.parlanet.de/cgi-bin/starfinder/0?path=lisshfl.txt&id=FASTLINK&pass=&search=(WP%3D18+AND+DART%3DD+AND+DNR%3D2537)'
       }, @scraper.extract_minor_paper(@blocks[15], check_pdf: false))
   end
 
@@ -131,7 +133,8 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
         url: 'http://www.landtag.ltsh.de/infothek/wahl18/drucks/2300/drucksache-18-2380.pdf',
         originators: { people: ['Uli König'], parties: ['PIRATEN'] },
         is_answer: true,
-        answerers: { ministries: [] }
+        answerers: { ministries: [] },
+        source_url: 'http://lissh.lvn.parlanet.de/cgi-bin/starfinder/0?path=lisshfl.txt&id=FASTLINK&pass=&search=(WP%3D18+AND+DART%3DD+AND+DNR%3D2380)'
       }, @scraper.extract_minor_paper(@blocks[294], check_pdf: false))
   end
 end

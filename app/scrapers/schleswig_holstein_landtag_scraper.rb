@@ -84,7 +84,8 @@ module SchleswigHolsteinLandtagScraper
       url: url,
       published_at: published_at,
       is_answer: true,
-      answerers: { ministries: ['Landesregierung'] }
+      answerers: { ministries: ['Landesregierung'] },
+      source_url: Detail.build_search_url(legislative_term, reference)
     }
   end
 
@@ -109,7 +110,8 @@ module SchleswigHolsteinLandtagScraper
       url: url,
       originators: meta[:originators],
       is_answer: true,
-      answerers: { ministries: meta[:ministries] }
+      answerers: { ministries: meta[:ministries] },
+      source_url: Detail.build_search_url(legislative_term, reference)
     }
   end
 
@@ -211,7 +213,7 @@ module SchleswigHolsteinLandtagScraper
     SEARCH_URL = BASE_URL + '/cgi-bin/starfinder/0?path=lisshfl.txt&id=FASTLINK&pass=&search='
 
     def scrape
-      search_url = SEARCH_URL + '(' + CGI.escape('WP=' + @legislative_term.to_s + ' AND DART=D AND DNR=' + @reference.to_s) + ')'
+      search_url = self.class.build_search_url(@legislative_term, @reference)
       m = mechanize
       mp = m.get search_url
       table = SchleswigHolsteinLandtagScraper.extract_table(mp)
@@ -227,6 +229,10 @@ module SchleswigHolsteinLandtagScraper
       end
       paper = SchleswigHolsteinLandtagScraper.extract_minor_paper(block)
       SchleswigHolsteinLandtagScraper.update_minor_details(paper, mp)
+    end
+
+    def self.build_search_url(legislative_term, reference)
+      SEARCH_URL + '(' + CGI.escape("WP=#{legislative_term} AND DART=D AND DNR=#{reference}") + ')'
     end
   end
 end
