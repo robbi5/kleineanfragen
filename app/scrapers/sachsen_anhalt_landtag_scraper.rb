@@ -55,20 +55,20 @@ module SachsenAnhaltLandtagScraper
 
   def self.extract_paper(item)
     title = item.at_css('h1').try(:text)
-    fail 'NI [?]: no title element found' if title.nil?
+    fail 'ST [?]: no title element found' if title.nil?
 
     meta_line = item.at_css('.info').try(:text)
-    fail "NI [?]: no meta line found Paper title: #{title}" if meta_line.nil?
+    fail "ST [?]: no meta line found Paper title: #{title}" if meta_line.nil?
 
     return nil if meta_line.include?('Bezug: Plenarprotokoll')
 
     link = item.at_css('a.download')
-    fail "NI [?]: no link element found. Paper title: #{title}" if link.nil?
+    fail "ST [?]: no link element found. Paper title: #{title}" if link.nil?
 
     url = link.attributes['href'].value
 
     meta = extract_meta(meta_line)
-    fail "NI [?]: no matching meta line found. Paper title: #{title}" if meta.nil?
+    fail "ST [?]: no matching meta line found. Paper title: #{title}" if meta.nil?
 
     doctype = meta[:doctype]
     full_reference = meta[:full_reference]
@@ -91,7 +91,8 @@ module SachsenAnhaltLandtagScraper
       published_at: published_at,
       originators: originators,
       is_answer: true,
-      answerers: { ministries: ministries }
+      answerers: { ministries: ministries },
+      source_url: Detail.build_search_url(legislative_term, reference)
     }
   end
 
@@ -145,10 +146,10 @@ module SachsenAnhaltLandtagScraper
 
   def self.extract_detail_paper(item)
     title = item.at_css('h1').try(:text)
-    fail 'NI [?]: no title element found' if title.nil?
+    fail 'ST [?]: no title element found' if title.nil?
 
     meta_lines = item.css('.report-list--wrapper')
-    fail 'NI [?]: no meta lines found Paper title: #{title}' if meta_lines.nil?
+    fail 'ST [?]: no meta lines found Paper title: #{title}' if meta_lines.nil?
 
     link, meta, last_meta = nil, nil, nil
     meta_lines.each do |line|
@@ -162,8 +163,8 @@ module SachsenAnhaltLandtagScraper
       last_meta = line_meta
     end
 
-    fail "NI [?]: no matching meta line found Paper title: #{title}" if meta.nil?
-    fail "NI [?]: no link element found. Paper title: #{title}" if link.nil?
+    fail "ST [?]: no matching meta line found Paper title: #{title}" if meta.nil?
+    fail "ST [?]: no link element found. Paper title: #{title}" if link.nil?
 
     url = link.attributes['href'].value
     doctype = meta[:doctype]
@@ -180,7 +181,7 @@ module SachsenAnhaltLandtagScraper
 
     published_at = Date.parse(meta[:published_at])
 
-    logger.warn "NO originators: #{full_reference}" if originators.nil?
+    logger.warn "ST [#{full_reference}] no originators" if originators.nil?
 
     {
       legislative_term: legislative_term,
@@ -192,21 +193,23 @@ module SachsenAnhaltLandtagScraper
       published_at: published_at,
       originators: originators,
       is_answer: true,
-      answerers: { ministries: ministries }
+      answerers: { ministries: ministries },
+      source_url: Detail.build_search_url(legislative_term, reference)
     }
   end
 
   class Detail < DetailScraper
     def scrape
       m = mechanize
-      mp = m.get SEARCH_URL
-      search_form = mp.form '__form'
+      mp = m.get(self.class.build_search_url(@legislative_term, @reference))
 
-      # fill search form
-      search_form.field_with(name: '__action').value = 23
-      search_form.field_with(name: '02_LISSH_WP').value = @legislative_term
-      search_form.field_with(name: '04_LISSH_DNR').value = @reference
+      # submit hidden redirection form
+      search_form = mp.form '__form'
+      search_form.field_with(name: '__action').value = 34
       mp = m.submit(search_form)
+
+      # Fail if no hits
+      fail "ST [#{full_reference}]: search returns no results" if mp.search('//div[@name="NoReportGenerated"]/*').size > 0
 
       # switch to full view
       search_form = mp.form '__form'
@@ -216,6 +219,11 @@ module SachsenAnhaltLandtagScraper
 
       item = SachsenAnhaltLandtagScraper.extract_detail_block(mp)
       SachsenAnhaltLandtagScraper.extract_detail_paper(item)
+    end
+
+    def self.build_search_url(legislative_term, reference)
+      BASE_URL + '/starweb/PADOKA/servlet.starweb?path=PADOKA/LISSH.web&DokumentSuche=yes' +
+        "&01_LISSH_DOK_DART=(D\\KA)&02_LISSH_DOK_WP=#{legislative_term}&03_LISSH_DOK_DNR=#{reference}"
     end
   end
 end

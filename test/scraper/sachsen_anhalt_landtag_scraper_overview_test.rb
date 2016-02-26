@@ -80,7 +80,9 @@ class SachsenAnhaltLandtagScraperOverviewTest < ActiveSupport::TestCase
         is_answer: true,
         answerers: {
           ministries: ['Ministerium für Inneres und Sport']
-        }
+        },
+        source_url: 'http://padoka.landtag.sachsen-anhalt.de/starweb/PADOKA/servlet.starweb?path=PADOKA/LISSH.web' +
+          '&DokumentSuche=yes&01_LISSH_DOK_DART=(D\KA)&02_LISSH_DOK_WP=6&03_LISSH_DOK_DNR=4015'
       }, paper)
   end
 end
