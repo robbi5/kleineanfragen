@@ -56,13 +56,17 @@
     <% end %>
     <p>
       <%= link_to 'PDF herunterladen', paper_path(@body, @legislative_term, @paper, {format: :pdf}), {class: 'btn btn-primary', target: '_blank'} %>
-      <br/><small>(<%= @paper.page_count || '?' %> <%= t :pages, count: @paper.page_count || 0 %>)</small>
-      <% if @body.use_mirror_for_download? %>
-      <small>&mdash; <%= link_to 'Gespiegelte Version', info_path %></small>
-      <% end %>
-      <% unless @paper.source_url.blank? %>
-      <small>&mdash; <%= link_to "Quelle", @paper.source_url %></small>
-      <% end %>
+      <br/>
+      <small>
+        <%= @paper.page_count || '?' %> <%= t :pages, count: @paper.page_count || 0 %>
+        <% if @body.use_mirror_for_download? %>
+          &mdash; Gespiegelte Version <%= link_to '(?)', info_path %>
+        <% end %>
+        &mdash; <%= link_to "als Text", paper_path(@body, @legislative_term, @paper, {format: :txt}), {target: '_blank'} %>
+        <% unless @paper.source_url.blank? %>
+          &mdash; <%= link_to "Quelle", @paper.source_url %>
+        <% end %>
+      </small>
     </p>
     <p>
       <label for="shorturl" class="shorturl-label">Kurz-URL:</label>
