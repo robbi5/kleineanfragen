@@ -8,7 +8,7 @@ class SearchController < ApplicationController
     redirect_to(root_url) && return if @query.blank?
 
     if params.any? { |param, _v| PARAMS_TO_CONVERT.include? param }
-      query = params_to_nice_query
+      query = self.class.params_to_nice_query(params)
       clean_params = search_params.to_h.except(*PARAMS_TO_CONVERT).except(*ActionController::Parameters.always_permitted_parameters)
       redirect_to search_path(params: clean_params.symbolize_keys.merge!({ q: query }))
       return
@@ -41,10 +41,12 @@ class SearchController < ApplicationController
     conditions = {}
     conditions[:contains_table] = true if terms['table']
     if terms['body']
-      conditions[:body] = Body.all.select { |body| terms.body.include? body.state }.map(&:state)
+      bodyterms = Array.wrap(terms.body).reject(&:blank?).map(&:downcase)
+      conditions[:body] = Body.all.select { |body| bodyterms.include? body.state.downcase }.map(&:state)
     end
     if terms['faction']
-      conditions[:faction] = Organization.all.select { |org| [terms.faction].flatten.include? org.slug }.map(&:slug)
+      factionterms = Array.wrap(terms.faction).reject(&:blank?).map(&:downcase)
+      conditions[:faction] = Organization.all.select { |org| factionterms.include? org.slug.downcase }.map(&:slug)
     end
     if terms['doctype']
       conditions[:doctype] = Paper::DOCTYPES.select { |doctype| terms.doctype.include? doctype }
@@ -152,14 +154,13 @@ class SearchController < ApplicationController
     response.headers['Content-Type'] = 'application/opensearchdescription+xml; charset=utf-8'
   end
 
-  private
-
-  def params_to_nice_query
+  def self.params_to_nice_query(params)
     q = []
     q << params[:q] if params[:q].present?
     q << 'table:true' if params[:table].present?
-    if params[:body].present? && !params[:body].include?('')
-      states = Body.all.map(&:state).select { |state| params[:body].include? state }
+    if params[:body].present?
+      bodyparams = Array.wrap(params[:body]).reject(&:blank?).map(&:downcase)
+      states = Body.all.map(&:state).select { |state| bodyparams.include? state.downcase }
       q << 'body:' + states.join(',')
     end
     if params[:doctype].present?
@@ -167,7 +168,8 @@ class SearchController < ApplicationController
       q << 'doctype:' + doctypes.join(',')
     end
     if params[:faction].present?
-      factions = Organization.all.map(&:slug).select { |faction| params[:faction].include? faction }
+      factionparams = Array.wrap(params[:faction]).reject(&:blank?).map(&:downcase)
+      factions = Organization.all.map(&:slug).select { |faction| factionparams.include? faction.downcase }
       q << 'faction:' + factions.join(',')
     end
     if params[:pages].present?
@@ -175,6 +177,8 @@ class SearchController < ApplicationController
     end
     q.join ' '
   end
+
+  private
 
   def term_and_advanced_conditions(term, raw_terms)
     terms = []
