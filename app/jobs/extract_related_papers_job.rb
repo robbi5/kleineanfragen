@@ -82,8 +82,9 @@ class ExtractRelatedPapersJob < PaperJob
     references.concat contents.scan(/[Ii]n der [Kk]leinen Anfrage vom \d+\..+?\d+,? \(?(?:Drucksache|Drs\.:?|DS|LT-DRS) (\d*\/?[\d\s]+)\)?/).map(&:first)
     references.concat contents.scan(/[Ii]n der [Kk]leinen Anfrage de[rs] Abgeordneten? .+? Drucksache (\d*\/?[\d\s]+)/).map(&:first)
     references.concat contents.scan(/[Ii]n der [Kk]leinen Anfrage mit der Drucksachen-\s*Nr.?:\s*(\d*\/?[\d\s]+)/).map(&:first)
-    references.concat contents.scan(/[Kk]leinen? Anfrage(?:\s*,? ?Drs\.?:?|\s+Drs\.-?Nr\.:?|\s+Nr.|\s*,?\s*Drucksache)\s+(\d*\/?[\d\s]+)/).map(&:first)
+    references.concat contents.scan(/[Kk]leinen?\s+Anfrage(?:\s*,? ?Drs\.?:?|\s+Drs\.-?Nr\.:?|\s+Nr.|\s+LT-Nr.|\s*,?\s*Drucksache)\s+(?:KA\s+)?(\d*\/?[\d\s]+)/).map(&:first)
     references.concat contents.scan(/bezieht sich auf Drucksache\s+(\d*\/?[\d\s]+)/).map(&:first)
+    references.concat contents.scan(/Beantwortung\s+der\s+(?:KA\s+)?(\d*\/?[\d\s]+)/).map(&:first)
     references.concat contents.scan(/Antwort zu (?:\d+\.\/?)* in (\d*\/?[\d\s]+)/).map(&:first)
 
     ind = contents.scan(/(?:[Ii]n|[Ii]n\s+de[rn]|auf|der|die)\s+(?:Landtags-)?(?:Drucksachen?|Drs\.)\s+(\d+\/[\d\s]+)((?:(?:\s*und|,)\s+\d+\/[\d\s]+)*)/)

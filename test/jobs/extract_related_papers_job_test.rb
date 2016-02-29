@@ -313,6 +313,18 @@ class ExtractRelatedPapersJobTest < ActiveSupport::TestCase
     assert_equal ['15/5899'], references
   end
 
+  test 'auf die Beantwortung der Kleinen Anfrage LT-Nr. KA 6/8670' do
+    text = 'auf die Beantwortung der Kleinen Anfrage LT-Nr. KA 6/8670,'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['6/8670'], references
+  end
+
+  test 'in der Beantwortung der KA 6/8670' do
+    text = 'In der Beantwortung der KA 6/8670 fiel'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['6/8670'], references
+  end
+
   #
   # major interpellations
   #
