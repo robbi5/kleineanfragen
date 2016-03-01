@@ -24,7 +24,11 @@
         </tr>
         <tr>
           <td class="container-padding footer" align="center">
-            <%= yield :footer %>
+            <p>
+              kleineAnfragen &bull;
+              <%= link_to 'Datenschutz', info_datenschutz_url %>
+              <%= yield :footer %>
+            </p>
           </td>
         </tr>
       </table>

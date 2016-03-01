@@ -15,7 +15,5 @@
 &mdash; kleineAnfragen
 </p>
 
-<% content_for :footer do %>
-<p>Solltest du keine Benachrichtigungen bei kleineAnfragen angefordert haben,
-<%= link_to 'melde uns dies bitte', opt_in_report_url(@subscription, @opt_in) %>.</p>
-<% end %>
+<p><small>Solltest du keine Benachrichtigungen bei kleineAnfragen angefordert haben,
+<%= link_to 'melde uns dies bitte', opt_in_report_url(@subscription, @opt_in) %>.</small></p>

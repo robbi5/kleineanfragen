@@ -17,5 +17,5 @@ Veröffentlicht am <%= l paper.published_at %> <%- unless paper.page_count.nil? 
 </ul>
 
 <% content_for :footer do %>
-<p>kleineAnfragen &bull; Diese Benachrichtigung nicht mehr erhalten? <%= link_to 'Abbestellen', unsubscribe_url(@subscription) %></p>
+&bull; Diese Benachrichtigung nicht mehr erhalten? <%= link_to 'Abbestellen', unsubscribe_url(@subscription) %>
 <% end %>
