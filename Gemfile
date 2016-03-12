@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby '2.2.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.5.1'
+gem 'rails', '4.2.6'
 # Use postgresql as the database for Active Record
 gem 'pg'
 # Use SCSS for stylesheets
@@ -39,11 +39,12 @@ gem 'foreman', '~> 0.76.0', group: :development
 gem 'dotenv-rails', '~> 1.0.2'
 gem 'sentry-raven'
 
+# Access an IRB console on exception pages or by using <%%= console %> in views
+gem 'web-console', '~> 2.0', group: :development
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
-  # Access an IRB console on exception pages or by using <%%= console %> in views
-  gem 'web-console', '~> 2.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   ## removed, because its not useful in a docker container
   # gem 'spring'
@@ -76,7 +77,7 @@ gem 'docsplit', '~> 0.7.6'
 gem 'abbyy', '~> 0.2.1'
 
 # pdf thumbnailing
-gem 'image_optim', '~> 0.21.0'
+gem 'image_optim', '~> 0.22.0'
 
 # search!
 gem 'searchkick', '~> 0.9.1'
