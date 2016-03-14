@@ -42,10 +42,14 @@ class ContainsTableJob < PaperJob
       probability += 1
     end
 
-    # Hint 6: \d\n\d\n\d\n...
-    m = contents.scan(/(\d[\p{Zs}\d]+\n[\d][\p{Zs}\d]+)+/m)
-    if m
-      probability += 0.5 * m.size
+    # thats very expensive. let's skip large papers
+    unless contents.size > 25000
+      # Hint 6: \d\n\d\n\d\n...
+      #m = contents.scan(/\p{Zs}(\d[\p{Zs}\d]+\n\d[\p{Zs}\d]+)+/m)
+      m = contents.scan(/(\d[\p{Zs}\d]+\n[\d][\p{Zs}\d]+)+/m)
+      if m
+        probability += 0.5 * m.size
+      end
     end
 
     # Hint 7: Anlage 3 Tabelle 1, Anlage / Tabelle 1

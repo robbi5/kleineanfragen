@@ -20,7 +20,7 @@ class ContainsTableJobTest < ActiveSupport::TestCase
   end
 
   test 'some numbers' do
-    text = "30\n50\n20\n15\n23\n42"
+    text = "30\n50\n20\n15\n23\n42\n\n"
     probability = ContainsTableJob.recognize(text)
     assert_operator probability, :>=, 1
   end
@@ -60,7 +60,7 @@ class ContainsTableJobTest < ActiveSupport::TestCase
 
   test 'no table: some text with a date' do
     text = "Antwort des Niedersächsischen Ministeriums für Inneres und Sport namens der Landesregierung\n" +
-           " vom 09.12.2015,  \n\n"+
+           " vom 09.12.2015,  \n\n" +
            'gezeichnet '
     probability = ContainsTableJob.recognize(text)
     assert_equal 0, probability
