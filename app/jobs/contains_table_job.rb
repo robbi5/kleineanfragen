@@ -43,7 +43,7 @@ class ContainsTableJob < PaperJob
     end
 
     # thats very expensive. let's skip large papers
-    unless contents.size > 25000
+    if contents.size < 25000
       # Hint 6: \d\n\d\n\d\n...
       #m = contents.scan(/\p{Zs}(\d[\p{Zs}\d]+\n\d[\p{Zs}\d]+)+/m)
       m = contents.scan(/(\d[\p{Zs}\d]+\n[\d][\p{Zs}\d]+)+/m)
@@ -57,11 +57,14 @@ class ContainsTableJob < PaperJob
       probability += 1
     end
 
-    # Hint 8: "\nAAA 10,1 10,2 10,3\nBBB 20 21,1 -1.022,2"
-    m = contents.scan(/\n(\p{Zs}*\S+\p{Zs}+(\-?(?:\d*\.?\d+|\d{1,3}(?:\.\d{3})*(?:\,\d+)?)\p{Zs}*)+)\n/m)
-    if m
-      m.each do |match|
-        probability += 0.5 unless match.first.start_with?('vom ')
+    # this one is also very expensive. sorry.
+    if contents.size < 25000
+      # Hint 8: "\nAAA 10,1 10,2 10,3\nBBB 20 21,1 -1.022,2"
+      m = contents.scan(/\n(\p{Zs}*\S+\p{Zs}+(\-?(?:\d*\.?\d+|\d{1,3}(?:\.\d{3})*(?:\,\d+)?)\p{Zs}*)+)\n/m)
+      if m
+        m.each do |match|
+          probability += 0.5 unless match.first.start_with?('vom ')
+        end
       end
     end
 
