@@ -373,4 +373,10 @@ class ExtractRelatedPapersJobTest < ActiveSupport::TestCase
     assert_equal ['19/1767'], references
   end
 
+  test 'Nachfrage zu Drs. 6/4698' do
+    title = 'Befreiung von den Kostenbeiträgen im Rahmen der Kinderbetreuung - Nachfrage zu Drs. 6/4698'
+    references = ExtractRelatedPapersJob.extract_title(title)
+    assert_equal ['6/4698'], references
+  end
+
 end

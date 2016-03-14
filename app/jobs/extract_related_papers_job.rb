@@ -52,7 +52,7 @@ class ExtractRelatedPapersJob < PaperJob
   def self.extract_title(title)
     references = []
 
-    references.concat title.scan(/Nachfrage zur Schriftlichen Anfrage (\d+\/[\d]+)/).map(&:first)
+    references.concat title.scan(/Nachfrage\s+zur?\s+(?:Schriftlichen Anfrage|Drs\.)\s+(\d+\/[\d]+)/).map(&:first)
 
     ind = title.scan(/Drucksache\s+(\d\/[\d\s]+)((?:(?:\s*und|,)\s+\d\/[\d\s]+)*)/)
     if ind
