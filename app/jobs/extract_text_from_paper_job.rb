@@ -2,17 +2,20 @@ class ExtractTextFromPaperJob < PaperJob
   queue_as :meta
 
   def perform(paper, options = {})
-    options.reverse_merge!(method: :tika)
+    options.reverse_merge!(method: :all)
     logger.info "Extracting Text of the Paper [#{paper.body.state} #{paper.full_reference}]"
+    text = nil
 
-    if !Rails.configuration.x.tika_server.blank? && options[:method] == :tika
-      text = extract_tika(paper)
-    elsif !Abbyy.application_id.blank? && options[:method] == :abbyy
-      text = extract_abbyy(paper)
-    elsif options[:method] == :ocrspace
-      text = extract_ocrspace(paper)
-    else
-      text = extract_local(paper)
+    methods = [:tika, :ocrspace, :local]
+    methods = [options[:method]] unless options[:method] == :all
+
+    methods.each do |method|
+      begin
+        text = extract(method, paper)
+        break unless text.blank?
+      rescue => e
+        logger.warn e
+      end
     end
 
     fail "Can't extract text from Paper [#{paper.body.state} #{paper.full_reference}]" if text.blank?
@@ -27,6 +30,19 @@ class ExtractTextFromPaperJob < PaperJob
     ExtractAnswerersJob.perform_later(paper)
     DeterminePaperTypeJob.perform_later(paper)
     ExtractRelatedPapersJob.perform_later(paper)
+  end
+
+  def extract(method, paper)
+    case method
+    when :tika
+      extract_tika(paper) unless Rails.configuration.x.tika_server.blank?
+    when :abbyy
+      extract_abbyy(paper) unless Abbyy.application_id.blank?
+    when :ocrspace
+      extract_ocrspace(paper)
+    when :local
+      extract_local(paper)
+    end
   end
 
   def extract_local(paper)
@@ -47,6 +63,7 @@ class ExtractTextFromPaperJob < PaperJob
   end
 
   def extract_tika(paper)
+    fail 'Missing configuration for tika' if Rails.configuration.x.tika_server.blank?
     url = paper.public_url(true)
     fail "No copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] in s3 found" if url.nil?
     pdf = Excon.get(url, read_timeout: 120, connect_timeout: 90)
@@ -62,6 +79,7 @@ class ExtractTextFromPaperJob < PaperJob
   end
 
   def extract_abbyy(paper)
+    fail 'Missing configuration for abbyy' if Abbyy.application_id.blank?
     fail "No local copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] found" unless File.exist?(paper.local_path)
     client = Abbyy::Client.new
     client.process_image paper.local_path, profile: 'documentArchiving', exportFormat: 'txtUnstructured', language: 'German'
