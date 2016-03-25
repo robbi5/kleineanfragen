@@ -6,6 +6,8 @@ ruby '2.2.2'
 gem 'rails', '4.2.6'
 # Use postgresql as the database for Active Record
 gem 'pg'
+# Use Puma as the app server
+gem 'puma'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -28,9 +30,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
-# Use unicorn as the app server
-gem 'unicorn', '~> 4.8.3', group: :production
 
 # Use newrelic
 gem 'newrelic_rpm', group: :production
