@@ -47,4 +47,24 @@ class EsQueryParserTest < ActiveSupport::TestCase
     assert_equal ({ gte: 1, lte: 2 }), EsQueryParser.return_range(type: :range, range: :inclusive, value: [1, 2])
     assert_equal ({ gt: 1, lt: 2 }), EsQueryParser.return_range(type: :range, range: :exclusive, value: [1, 2])
   end
+
+  test 'map sqs: replace OR in term' do
+    assert_equal 'hello | world', EsQueryParser.map_simple_query_string_word('hello OR world', { 'OR' => '|' })
+  end
+
+  test 'map sqs: replace case-insensitive OR in term' do
+    assert_equal 'hello | world', EsQueryParser.map_simple_query_string_word('hello oR world', { 'OR' => '|' })
+  end
+
+  test 'map sqs: don\'t replace OR in quoted term' do
+    assert_equal '"hello OR world"', EsQueryParser.map_simple_query_string_word('"hello OR world"', { 'OR' => '|' })
+  end
+
+  test 'map sqs: replace ODER and OR in term' do
+    assert_equal 'hello | world | thing',
+      EsQueryParser.map_simple_query_string_word(
+        'hello OR world ODER thing',
+        { 'OR' => '|', 'ODER' => '|' }
+      )
+  end
 end

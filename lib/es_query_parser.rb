@@ -75,4 +75,12 @@ class EsQueryParser
       { type: :equals, value: text }
     end
   end
+
+  def self.map_simple_query_string_word(term, map = nil)
+    map = { 'oder' => '|', 'or' => '|' } if map.nil?
+    map.each do |word, replacement|
+      term.gsub!(/\s+#{word}\s+(?=(?:[^"\\]*(?:\\.|"(?:[^"\\]*\\.)*[^"\\]*"))*[^"]*$)/i, " #{replacement} ")
+    end
+    term
+  end
 end
