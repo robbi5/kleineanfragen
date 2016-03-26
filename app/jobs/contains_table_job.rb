@@ -1,3 +1,5 @@
+require 'timeout'
+
 class ContainsTableJob < PaperJob
   queue_as :meta
 
@@ -42,14 +44,17 @@ class ContainsTableJob < PaperJob
       probability += 1
     end
 
-    # thats very expensive. let's skip large papers
-    if contents.size < 25000
-      # Hint 6: \d\n\d\n\d\n...
-      #m = contents.scan(/\p{Zs}(\d[\p{Zs}\d]+\n\d[\p{Zs}\d]+)+/m)
-      m = contents.scan(/(\d[\p{Zs}\d]+\n[\d][\p{Zs}\d]+)+/m)
-      if m
-        probability += 0.5 * m.size
+    begin
+      Timeout::timeout(5) do
+        # Hint 6: \d\n\d\n\d\n...
+        #m = contents.scan(/\p{Zs}(\d[\p{Zs}\d]+\n\d[\p{Zs}\d]+)+/m)
+        m = contents.scan(/(\d[\p{Zs}\d]+\n[\d][\p{Zs}\d]+)+/m)
+        if m
+          probability += 0.5 * m.size
+        end
       end
+    rescue => e
+      # ignore failure
     end
 
     # Hint 7: Anlage 3 Tabelle 1, Anlage / Tabelle 1
@@ -57,15 +62,18 @@ class ContainsTableJob < PaperJob
       probability += 1
     end
 
-    # this one is also very expensive. sorry.
-    if contents.size < 25000
-      # Hint 8: "\nAAA 10,1 10,2 10,3\nBBB 20 21,1 -1.022,2"
-      m = contents.scan(/\n([\p{Zs}\S]+?\p{Zs}+(\-?(?>(?:\d{1,3}(?>(?:\.\d{3}))*(?>(?:,\d+)?|\d*\.?\d+))\p{Zs}*)+))\n/m)
-      if m
-        m.each do |match|
-          probability += 0.5 unless match.first.strip == match.second.strip || match.first.strip.start_with?('vom') || match.first.match('\d{2}\.\d{2}\.\d{4}')
+    begin
+      Timeout::timeout(5) do
+        # Hint 8: "\nAAA 10,1 10,2 10,3\nBBB 20 21,1 -1.022,2"
+        m = contents.scan(/\n([\p{Zs}\S]+?\p{Zs}+(\-?(?>(?:\d{1,3}(?>(?:\.\d{3}))*(?>(?:,\d+)?|\d*\.?\d+))\p{Zs}*)+))\n/m)
+        if m
+          m.each do |match|
+            probability += 0.5 unless match.first.strip == match.second.strip || match.first.strip.start_with?('vom') || match.first.match('\d{2}\.\d{2}\.\d{4}')
+          end
         end
       end
+    rescue => e
+      # ignore failure
     end
 
     probability
