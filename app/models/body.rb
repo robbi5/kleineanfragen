@@ -17,6 +17,10 @@ class Body < ActiveRecord::Base
     name_changed? || super
   end
 
+  def twitter_handle
+    "anfragen_#{state.downcase}"
+  end
+
   def scraper
     case state
     when 'BB' then BrandenburgLandtagScraper
