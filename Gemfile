@@ -34,12 +34,12 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use newrelic
 gem 'newrelic_rpm', group: :production
 
-gem 'foreman', '~> 0.76.0', group: :development
+gem 'foreman', '~> 0.78.0', group: :development
 gem 'dotenv-rails', '~> 1.0.2'
 gem 'sentry-raven'
 
 # Access an IRB console on exception pages or by using <%%= console %> in views
-gem 'web-console', '~> 2.0', group: :development
+gem 'web-console', '~> 3.0', group: :development
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -63,7 +63,7 @@ gem 'mechanize', '~> 2.7.3'
 gem 'friendly_id', '~> 5.1.0'
 
 # fix urls while scraping
-gem 'addressable', '~> 2.3.6', require: 'addressable/uri'
+gem 'addressable', '~> 2.4.0', require: 'addressable/uri'
 
 # styling
 gem 'bootstrap-sass', '~> 3.3.4'
@@ -80,7 +80,7 @@ gem 'image_optim', '~> 0.22.0'
 
 # search!
 gem 'searchkick', '~> 0.9.1'
-gem 'patron', '~> 0.4.18'
+gem 'patron', '~> 0.5.1'
 
 # storage
 # gem 'fog', '~> 1.29.0'
@@ -89,8 +89,8 @@ gem 'fog-aws', '~> 0.7.6'
 gem 'fog-local', '~> 0.2.1'
 
 # jobs
-gem 'resque', '~> 1.25.2'
-gem 'resque-scheduler', '~> 4.0.0'
+gem 'resque', '~> 1.26.0'
+gem 'resque-scheduler', '~> 4.1.0'
 gem 'activejob-retry', '~> 0.5.0'
 gem 'resque-sentry', '~> 1.2.0'
 
@@ -108,7 +108,7 @@ gem 'hashids', '~> 1.0.2'
 
 # inline css for emails
 gem 'nokogiri'
-gem 'premailer-rails', '~> 1.8.2'
+gem 'premailer-rails', '~> 1.9.1'
 
 # simplify posting to slack channels
-gem 'slack-notifier', '~> 1.3.1'
+gem 'slack-notifier', '~> 1.5.1'
