@@ -1,6 +1,12 @@
 url = paper_url(body: paper.body, legislative_term: paper.legislative_term, paper: paper)
 feed.entry paper, published: paper.published_at, updated: paper.updated_at, url: url do |entry|
-  entry.title paper.title
+  title = paper.title
+
+  if params[:feedformat] == 'twitter'
+    title += " (#{paper.originators.map(&:name).join(', ')})" if title.size < 120
+  end
+
+  entry.title title
   paper.originators.each do |originator|
     entry.author do |author|
       author.name originator.name
