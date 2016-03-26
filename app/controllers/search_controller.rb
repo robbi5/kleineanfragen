@@ -58,12 +58,12 @@ class SearchController < ApplicationController
       conditions[:published_at] = EsQueryParser.convert_date_range(terms.published_at)
     end
 
-    term = EsQueryParser.map_simple_query_string_word(q[:term])
-
-    OpenStruct.new(term: term, conditions: conditions, raw_terms: terms)
+    OpenStruct.new(term: q[:term], conditions: conditions, raw_terms: terms)
   end
 
   def self.search_papers(term, conditions, options = {})
+    term = EsQueryParser.map_simple_query_string_word(term)
+
     options =
       {
         where: conditions,
