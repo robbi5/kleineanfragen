@@ -60,10 +60,10 @@ class ContainsTableJob < PaperJob
     # this one is also very expensive. sorry.
     if contents.size < 25000
       # Hint 8: "\nAAA 10,1 10,2 10,3\nBBB 20 21,1 -1.022,2"
-      m = contents.scan(/\n(\p{Zs}*\S+\p{Zs}+(\-?(?:\d*\.?\d+|\d{1,3}(?:\.\d{3})*(?:\,\d+)?)\p{Zs}*)+)\n/m)
+      m = contents.scan(/\n([\p{Zs}\S]+?\p{Zs}+(\-?(?>(?:\d{1,3}(?>(?:\.\d{3}))*(?>(?:,\d+)?|\d*\.?\d+))\p{Zs}*)+))\n/m)
       if m
         m.each do |match|
-          probability += 0.5 unless match.first.start_with?('vom ')
+          probability += 0.5 unless match.first.strip == match.second.strip || match.first.strip.start_with?('vom') || match.first.match('\d{2}\.\d{2}\.\d{4}')
         end
       end
     end

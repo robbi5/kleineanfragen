@@ -58,6 +58,19 @@ class ContainsTableJobTest < ActiveSupport::TestCase
     assert_operator probability, :>=, 1
   end
 
+  test 'table from ST 6/4864' do
+    text = "\n\n" +
+           "Zens Schweinemast 2.496 3.768\n" +
+           "Zeppernick Hähnchenmastanlage 75.000\n" +
+           "Zeppernick Hähnchenmastanlage 100.000\n" +
+           "Moritz Rinderanlage 520\n" +
+           "Zernitz Milchviehanlage 650\n" +
+           "Hohenlepte Elterntierhaltung 19.500\n" +
+           "Deetz Milchviehanlage 360 60\n\n"
+    probability = ContainsTableJob.recognize(text)
+    assert_operator probability, :>=, 1
+  end
+
   test 'no table: some text with a date' do
     text = "Antwort des Niedersächsischen Ministeriums für Inneres und Sport namens der Landesregierung\n" +
            " vom 09.12.2015,  \n\n" +
