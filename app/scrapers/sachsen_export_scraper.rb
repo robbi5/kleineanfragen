@@ -4,12 +4,12 @@ module SachsenExportScraper
   EXPORT_BASE = 'http://edas.landtag.sachsen.de/KlAnfrDe/'
 
   def self.create_export_url(date = nil)
-    date = Date.today - 1 if date.nil? # yesterday
+    date = Date.current - 1 if date.nil? # yesterday
     EXPORT_BASE + export_filename(date) + ".zip"
   end
 
   def self.export_filename(date = nil)
-    date = Date.today - 1 if date.nil? # yesterday
+    date = Date.current - 1 if date.nil? # yesterday
     "KlAnfrDe_#{date.iso8601}"
   end
 
