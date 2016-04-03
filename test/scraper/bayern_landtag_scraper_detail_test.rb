@@ -17,13 +17,13 @@ class BayernLandtagScraperDetailTest < ActiveSupport::TestCase
         reference: '4838',
         doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
         title: 'Finanz- und Heimatempfänge',
-        url: 'http://www1.bayern.landtag.de/ElanTextAblage_WP17/Drucksachen/Schriftliche%20Anfragen/17_0004838.pdf',
+        url: 'https://www1.bayern.landtag.de/ElanTextAblage_WP17/Drucksachen/Schriftliche%20Anfragen/17_0004838.pdf',
         published_at: Date.parse('09.02.2015'),
         originators: {
           parties: ['BÜNDNIS 90/DIE GRÜNEN']
         },
         is_answer: true,
-        source_url: 'http://www1.bayern.landtag.de/webangebot1/dokumente.suche.maske.jsp?STATE=SHOW_MASK&BUTTONSCHLAGWORT=Suche+starten&DOKUMENT_DOKUMENTNR=17%2F4838'
+        source_url: 'https://www1.bayern.landtag.de/webangebot1/dokumente.suche.maske.jsp?STATE=SHOW_MASK&BUTTONSCHLAGWORT=Suche+starten&DOKUMENT_DOKUMENTNR=17%2F4838'
       }, paper)
   end
 
