@@ -1,7 +1,7 @@
 require 'date'
 
 module BayernLandtagScraper
-  BASE_URL = 'http://www1.bayern.landtag.de'
+  BASE_URL = 'https://www1.bayern.landtag.de'
 
   class Overview < Scraper
     SEARCH_URL = BASE_URL + '/webangebot1/dokumente.suche.maske.jsp?DOKUMENT_TYPE=EXTENDED&STATE=SHOW_MASK'
