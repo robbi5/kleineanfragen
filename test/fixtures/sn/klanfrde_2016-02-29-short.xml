@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Export bundesland="Freistaat Sachsen">
+  <Vorgang>
+    <VWp>6</VWp>
+    <VNr>758</VNr>
+    <VTyp>KlAnfr</VTyp>
+    <Dokument>
+      <DokWp>6</DokWp>
+      <DokNr>758</DokNr>
+      <ReihNr>1</ReihNr>
+      <DokArt>Drs</DokArt>
+      <DokTyp>KlAnfr</DokTyp>
+      <DokDat>20.01.2015</DokDat>
+      <AusgDat>03.03.2015</AusgDat>
+      <Titel>Treffen Asylpolitik B&#252;rgermeisterinnen und B&#252;rgermeister</Titel>
+      <FundSt>KlAnfr Petra Zais GR&#220;NE 20.01.2015 Drs 6/758</FundSt>
+      <Url>http://edas.landtag.sachsen.de/viewer.aspx?dok_art=Drs&#038;dok_nr=758&#038;leg_per=6&#038;pos_dok=0</Url>
+      <urheber istPerson="1">
+        <name>Zais</name>
+        <vorname>Petra</vorname>
+        <nam_zus/>
+        <fraktion>GR&#220;NE</fraktion>
+      </urheber>
+    </Dokument>
+    <Dokument>
+      <DokWp>6</DokWp>
+      <DokNr>758</DokNr>
+      <ReihNr>2</ReihNr>
+      <DokArt>Drs</DokArt>
+      <DokTyp>Antw</DokTyp>
+      <DokDat>27.02.2015</DokDat>
+      <AusgDat/>
+      <Titel/>
+      <FundSt>Antw SK 27.02.2015 Drs 6/758</FundSt>
+      <Url>http://edas.landtag.sachsen.de/viewer.aspx?dok_art=Drs&#038;dok_nr=758&#038;leg_per=6&#038;pos_dok=1</Url>
+      <urheber istPerson="0">
+        <name>SK</name>
+        <vorname>Staatskanzlei</vorname>
+        <nam_zus/>
+        <fraktion/>
+      </urheber>
+    </Dokument>
+  </Vorgang>
+  <Vorgang>
+    <VWp>6</VWp>
+    <VNr>762</VNr>
+    <VTyp>GrAnfr</VTyp>
+    <Dokument>
+      <DokWp>6</DokWp>
+      <DokNr>762</DokNr>
+      <ReihNr>1</ReihNr>
+      <DokArt>Drs</DokArt>
+      <DokTyp>GrAnfr</DokTyp>
+      <DokDat>21.01.2015</DokDat>
+      <AusgDat>30.03.2015</AusgDat>
+      <Titel>&#034;So geht s&#228;chsisch.&#034; - Standortkampagne f&#252;r den Freistaat Sachsen</Titel>
+      <FundSt>GrAnfr DIE LINKE 21.01.2015 Drs 6/762</FundSt>
+      <Url>http://edas.landtag.sachsen.de/viewer.aspx?dok_art=Drs&#038;dok_nr=762&#038;leg_per=6&#038;pos_dok=0</Url>
+      <urheber istPerson="0">
+        <name>DIE LINKE</name>
+        <vorname>Fraktion DIE LINKE</vorname>
+        <nam_zus/>
+        <fraktion/>
+      </urheber>
+    </Dokument>
+    <Dokument>
+      <DokWp>6</DokWp>
+      <DokNr>762</DokNr>
+      <ReihNr>2</ReihNr>
+      <DokArt>Drs</DokArt>
+      <DokTyp>Antw</DokTyp>
+      <DokDat>25.03.2015</DokDat>
+      <AusgDat/>
+      <Titel/>
+      <FundSt>Antw SK 25.03.2015 Drs 6/762</FundSt>
+      <Url>http://edas.landtag.sachsen.de/viewer.aspx?dok_art=Drs&#038;dok_nr=762&#038;leg_per=6&#038;pos_dok=1</Url>
+      <urheber istPerson="0">
+        <name>SK</name>
+        <vorname>Staatskanzlei</vorname>
+        <nam_zus/>
+        <fraktion/>
+      </urheber>
+    </Dokument>
+    <Dokument>
+      <DokWp>6</DokWp>
+      <DokNr>1586</DokNr>
+      <ReihNr>3</ReihNr>
+      <DokArt>Drs</DokArt>
+      <DokTyp>EntschlAntr</DokTyp>
+      <DokDat>30.04.2015</DokDat>
+      <AusgDat>30.04.2015</AusgDat>
+      <Titel>zu Drs 6/762
+&#034;So geht s&#228;chsisch.&#034; - Standortkampagne f&#252;r den Freistaat Sachsen</Titel>
+      <FundSt>EntschlAntr DIE LINKE 30.04.2015 Drs 6/1586 - Drs abgelehnt -</FundSt>
+      <Url>http://edas.landtag.sachsen.de/viewer.aspx?dok_art=Drs&#038;dok_nr=1586&#038;leg_per=6&#038;pos_dok=0</Url>
+      <urheber istPerson="0">
+        <name>DIE LINKE</name>
+        <vorname>Fraktion DIE LINKE</vorname>
+        <nam_zus/>
+        <fraktion/>
+      </urheber>
+    </Dokument>
+    <Dokument>
+      <DokWp>6</DokWp>
+      <DokNr>13</DokNr>
+      <ReihNr>4</ReihNr>
+      <DokArt>PlPr</DokArt>
+      <DokTyp>PlPr</DokTyp>
+      <DokDat>30.04.2015</DokDat>
+      <AusgDat/>
+      <Titel>zu Drs 6/762
+&#034;So geht s&#228;chsisch.&#034; - Standortkampagne f&#252;r den Freistaat Sachsen</Titel>
+      <FundSt>PlPr 6/13 30.04.2015 S.959</FundSt>
+      <Url>http://edas.landtag.sachsen.de/viewer.aspx?dok_art=Drs&#038;dok_nr=13&#038;leg_per=6&#038;pos_dok=11</Url>
+    </Dokument>
+  </Vorgang>
+  <Vorgang>
+    <VWp>6</VWp>
+    <VNr>180</VNr>
+    <VTyp>KlAnfr</VTyp>
+    <Dokument>
+      <DokWp>6</DokWp>
+      <DokNr>180</DokNr>
+      <ReihNr>1</ReihNr>
+      <DokArt>Drs</DokArt>
+      <DokTyp>KlAnfr</DokTyp>
+      <DokDat>04.11.2014</DokDat>
+      <AusgDat>24.11.2014</AusgDat>
+      <Titel>Genehmigungsverfahren der Natur- und Umweltschule (NUS) Dresden</Titel>
+      <FundSt>KlAnfr Petra Zais GR&#220;NE 04.11.2014 Drs 6/180 - Drs zur&#252;ckgezogen -</FundSt>
+      <Url>http://edas.landtag.sachsen.de/viewer.aspx?dok_art=Drs&#038;dok_nr=180&#038;leg_per=6&#038;pos_dok=0</Url>
+      <urheber istPerson="1">
+        <name>Zais</name>
+        <vorname>Petra</vorname>
+        <nam_zus/>
+        <fraktion>GR&#220;NE</fraktion>
+      </urheber>
+    </Dokument>
+  </Vorgang>
+  <Vorgang>
+    <VWp>6</VWp>
+    <VNr>4388</VNr>
+    <VTyp>KlAnfr</VTyp>
+    <Dokument>
+      <DokWp>6</DokWp>
+      <DokNr>4388</DokNr>
+      <ReihNr>1</ReihNr>
+      <DokArt>Drs</DokArt>
+      <DokTyp>KlAnfr</DokTyp>
+      <DokDat>26.02.2016</DokDat>
+      <AusgDat/>
+      <Titel>Personalausstattung der s&#228;chsischen Arbeitsschutzverwaltung</Titel>
+      <FundSt>KlAnfr Nico Br&#252;nler DIE LINKE 26.02.2016 Drs 6/4388</FundSt>
+      <Url>http://edas.landtag.sachsen.de/viewer.aspx?dok_art=Drs&#038;dok_nr=4388&#038;leg_per=6&#038;pos_dok=0</Url>
+      <urheber istPerson="1">
+        <name>Br&#252;nler</name>
+        <vorname>Nico</vorname>
+        <nam_zus/>
+        <fraktion>DIE LINKE</fraktion>
+      </urheber>
+    </Dokument>
+  </Vorgang>
+</Export>

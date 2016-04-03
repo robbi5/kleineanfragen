@@ -77,6 +77,7 @@ module SachsenScraper
 
   def self.extract_detail_paper(item)
     meta_text = extract_meta_text(item)
+    return nil if meta_text.include?('Drs zurückgezogen')
     type = extract_type(meta_text)
     extract_overview_paper(item, type)
   end
@@ -110,6 +111,7 @@ module SachsenScraper
       paper = nil
       SachsenScraper.extract_overview_items(content).each do |item|
         paper = SachsenScraper.extract_detail_paper(item)
+        next if paper.nil?
         # get detail page
         content = m.click(item.search('//a').first)
         answered_at = self.class.extract_answered_at(content)
@@ -175,7 +177,10 @@ module SachsenScraper
     end
   end
 
-  class Overview < Scraper
+  # use SachsenExportScraper for the Overview
+  Overview = SachsenExportScraper::Overview
+
+  class PageOverview < Scraper
     SEARCH_URL = BASE_URL + '/parlamentsdokumentation/parlamentsarchiv/dokumententyp.aspx'
 
     def initialize(*)
