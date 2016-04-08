@@ -83,6 +83,7 @@ gem 'image_optim', '~> 0.22.0'
 # search!
 gem 'searchkick', '~> 0.9.1'
 gem 'patron', '~> 0.5.1'
+gem 'typhoeus', '~> 1.0.1'
 
 # storage
 # gem 'fog', '~> 1.29.0'
