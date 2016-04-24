@@ -15,6 +15,7 @@ class ExtractTextFromPaperJob < PaperJob
         break unless text.blank?
       rescue => e
         logger.warn e
+        puts e.inspect
       end
     end
 
@@ -94,10 +95,11 @@ class ExtractTextFromPaperJob < PaperJob
   end
 
   def extract_ocrspace(paper)
+    key = Rails.configuration.x.ocrspace_api_key || 'helloworld'
     url = paper.public_url(true)
     fail "No copy of the PDF of Paper [#{paper.body.state} #{paper.full_reference}] in s3 found" if url.nil?
     response = Excon.post('https://api.ocr.space/parse/image',
-                          body: URI.encode_www_form(apikey: 'helloworld', url: url, language: 'ger'),
+                          body: URI.encode_www_form(apikey: key, url: url, language: 'ger'),
                           headers: { 'Content-Type' => 'application/x-www-form-urlencoded', 'Accept' => 'application/json' })
     fail "Couldn't get response, status: #{response.status}" if response.status != 200
     data = JSON.parse response.body

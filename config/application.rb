@@ -50,6 +50,8 @@ module Kleineanfragen
     config.x.tika_server = ENV['TIKA_SERVER_URL'] || false
     # Nomenklatura API Key
     config.x.nomenklatura_api_key = ENV['NOMENKLATURA_APIKEY'] || false
+    # OCR.Space API Key
+    config.x.ocrspace_api_key = ENV['OCRSPACE_APIKEY'] || false
     # used email addresses
     config.x.email_from = 'kleineAnfragen <noreply@kleineanfragen.de>'
     config.x.email_support = 'kleineAnfragen support <hallo@kleineanfragen.de>'
