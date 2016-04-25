@@ -19,7 +19,7 @@ class SearchController < ApplicationController
     @display_term = term_and_advanced_conditions(search.term, search.raw_terms)
     @conditions = search.conditions
 
-    @bodies = Body.all.order(state: :asc).map { |body| OpenStruct.new(name: body.name, state: body.state) }
+    @bodies = Body.all.order(name: :asc).map { |body| OpenStruct.new(name: body.name, state: body.state) }
     @factions = Organization.all.order(slug: :asc).map { |faction| OpenStruct.new(name: faction.name, slug: faction.slug) }
     @doctypes = Paper::DOCTYPES.map { |doctype| OpenStruct.new(key: doctype, name: t(doctype, scope: [:paper, :doctype]).to_s) }
 
