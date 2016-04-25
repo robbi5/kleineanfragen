@@ -1,8 +1,9 @@
 class PaperController < ApplicationController
-  before_filter :find_body, only: [:show, :viewer, :report, :send_report]
-  before_filter :find_legislative_term, only: [:show, :viewer, :report, :send_report]
-  before_filter :find_paper, only: [:show, :viewer, :report, :send_report]
+  before_filter :find_body, only: [:show, :viewer, :report, :send_report, :update]
+  before_filter :find_legislative_term, only: [:show, :viewer, :report, :send_report, :update]
+  before_filter :find_paper, only: [:show, :viewer, :report, :send_report, :update]
   before_filter :redirect_old_slugs, only: [:show]
+  before_action :check_active_push_ocr_token, only: [:update]
 
   def show
     if stale?(@paper, public: true)
@@ -56,6 +57,17 @@ class PaperController < ApplicationController
     render :report_thanks
   end
 
+  def update
+    if request.body.blank? || request.body.size < 1
+      head(400)
+      return
+    end
+
+    @paper.contents = request.body.read.force_encoding('utf-8').strip
+    @paper.save
+    redirect_to paper_path(@body, @paper.legislative_term, @paper, format: :txt)
+  end
+
   private
 
   def find_body
@@ -90,6 +102,17 @@ class PaperController < ApplicationController
     canonical_path = paper_path(@body, @legislative_term, @paper, format: mime_extension(request.format))
     if request.path != canonical_path
       return redirect_to canonical_path, status: :moved_permanently
+    end
+  end
+
+  def check_active_push_ocr_token
+    if Rails.configuration.x.push_ocr_token.blank?
+      render status: :unauthorized
+      return
+    end
+
+    authenticate_or_request_with_http_token do |token, options|
+      ActiveSupport::SecurityUtils.variable_size_secure_compare(Rails.configuration.x.push_ocr_token, token)
     end
   end
 end

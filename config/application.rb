@@ -61,5 +61,7 @@ module Kleineanfragen
     config.x.report_slack_webhook = ENV['REPORT_SLACK_WEBHOOK']
     # pubsubhubbub hub url
     config.x.push_hub = ENV['PUSH_HUB']
+    # Push OCR token to update paper contents from remote
+    config.x.push_ocr_token = ENV['PUSH_OCR_TOKEN']
   end
 end
