@@ -36,6 +36,7 @@ class ImportNewPapersJob < ActiveJob::Base
       @result.new_papers = @new_papers
       @result.old_papers = @old_papers
     end
+    @result.scraper_class = @scraper.class.name if !@scraper.nil?
     @result.save
     fail failure unless failure.nil?
   end
@@ -45,9 +46,9 @@ class ImportNewPapersJob < ActiveJob::Base
     @body = body
     @legislative_term = legislative_term
     @scraper = @body.scraper::Overview.new(legislative_term)
+    @importer = PaperImporter.new(@body)
     logger.progname = "ImportNewPapersJob #{@body.state}"
-    @scraper.logger = logger
-    @load_details = @body.scraper.const_defined?(:Detail)
+    @scraper.logger = @importer.logger = logger
     @new_papers = 0
     @old_papers = 0
     if @scraper.supports_typed_pagination?
@@ -67,12 +68,7 @@ class ImportNewPapersJob < ActiveJob::Base
       logger.info "Importing #{@body.state} - Page #{page}"
       found_new_paper = false
       @scraper.scrape_paginated(page) do |item|
-        if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference], is_answer: true).exists?
-          @old_papers += 1
-          next
-        end
-        on_item(item)
-        found_new_paper = true
+        found_new_paper ||= import(item)
       end
       page += 1
       break unless found_new_paper
@@ -89,12 +85,7 @@ class ImportNewPapersJob < ActiveJob::Base
         found_papers = 0
         has_next_page = @scraper.scrape_paginated_type(type, page) do |item|
           found_papers += 1
-          if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference], is_answer: true).exists?
-            @old_papers += 1
-            next
-          end
-          on_item(item)
-          found_new_paper = true
+          found_new_paper ||= import(item)
         end
         page += 1
         break if !has_next_page || (!found_new_paper && found_papers > 0)
@@ -105,11 +96,7 @@ class ImportNewPapersJob < ActiveJob::Base
   def scrape_single_page
     logger.info "Importing #{@body.state} - Single Page"
     block = lambda do |item|
-      if Paper.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference], is_answer: true).exists?
-        @old_papers += 1
-        return
-      end
-      on_item(item)
+      import(item)
     end
     if @scraper.supports_streaming?
       @scraper.scrape(&block)
@@ -118,57 +105,13 @@ class ImportNewPapersJob < ActiveJob::Base
     end
   end
 
-  def on_item(item)
-    new_paper = false
-    if Paper.unscoped.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).exists?
-      paper = Paper.unscoped.where(body: @body, legislative_term: item[:legislative_term], reference: item[:reference]).first
-      if paper.frozen?
-        logger.info "[#{@body.state}] Skipping Paper [#{item[:full_reference]}] - frozen"
-        return
-      end
-
-      logger.info "[#{@body.state}] Updating Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
-
-      if !paper.is_answer && item[:is_answer] == true
-        # changed state, answer is now available. reset created_at, so subscriptions get triggered
-        paper.created_at = DateTime.now
-        @new_papers += 1
-        new_paper = true
-      else
-        @old_papers += 1
-      end
-
-      if !paper.is_answer && item[:is_answer].nil?
-        # don't know if we have the answer this time, so we have to run the full pipeline
-        new_paper = true
-      end
-
-      paper.assign_attributes(item.except(:full_reference, :body, :legislative_term, :reference))
-      if !paper.valid?
-        logger.warn "[#{@body.state}] Can't save Paper [#{item[:full_reference]}] - #{paper.errors.messages}"
-        return
-      end
-      paper.save!
-    else
-      logger.info "[#{@body.state}] New Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
-      paper = Paper.new(item.except(:full_reference).merge(body: @body))
-      if !paper.valid?
-        logger.warn "[#{@body.state}] Can't save Paper [#{item[:full_reference]}] - #{paper.errors.messages}"
-        return
-      end
-      paper.save!
+  def import(item)
+    is_new_paper = @importer.import(item)
+    if is_new_paper
       @new_papers += 1
-      new_paper = true
+    else
+      @old_papers += 1
     end
-    LoadPaperDetailsJob.perform_later(paper) if item_missing_fields?(item) && @load_details
-    StorePaperPDFJob.perform_later(paper, force: new_paper) unless paper.url.blank?
-  end
-
-  def item_missing_fields?(item)
-    item[:originators].blank? ||
-      item[:answerers].blank? ||
-      item[:published_at].blank? ||
-      item[:title].blank? ||
-      item[:url].blank?
+    is_new_paper
   end
 end

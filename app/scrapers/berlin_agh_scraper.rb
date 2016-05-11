@@ -214,6 +214,49 @@ module BerlinAghScraper
     end
   end
 
+  class Instant < Scraper
+    SEARCH_URL = BASE_URL + '/starweb/AHAB/servlet.starweb?path=AHAB/lisshfl.web&id=ahabflprofi&format=WEBVORGLFL&search='
+
+    def supports_streaming?
+      true
+    end
+
+    def scrape
+      streaming = block_given?
+      m = mechanize
+      # increase read timeout for berlin
+      m.read_timeout = 120
+      mp = m.get self.class.build_search_url(@legislative_term)
+
+      body = BerlinAghScraper.extract_body(mp)
+
+      legterm = body.at_css('th.gross2').text.strip
+      legislative_term = legterm.match(/(\d+).\s+Wahlperiode/)[1]
+      warn_broken(legislative_term.to_i != @legislative_term, 'legislative_term not correct', legislative_term)
+
+      papers = []
+      BerlinAghScraper.extract_seperators(body).each do |seperator|
+        begin
+          paper = BerlinAghScraper.extract_paper(seperator)
+        rescue => e
+          logger.warn e
+          next
+        end
+        if streaming
+          yield paper
+        else
+          papers << paper
+        end
+      end
+
+      papers unless streaming
+    end
+
+    def self.build_search_url(legislative_term)
+      SEARCH_URL + CGI.escape("WP=#{legislative_term} AND upd=x and etyp=schr*")
+    end
+  end
+
   class Detail < DetailScraper
     SEARCH_URL = BASE_URL + '/starweb/AHAB/servlet.starweb?path=AHAB/lisshfl.web&id=ahabfastlink&format=WEBVORGLFL&search='
 
