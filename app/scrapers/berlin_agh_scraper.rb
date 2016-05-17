@@ -230,6 +230,8 @@ module BerlinAghScraper
 
       body = BerlinAghScraper.extract_body(mp)
 
+      return nil if body.search("//div[contains(@name, 'ReportNotGenerated')]").size > 0
+
       legterm = body.at_css('th.gross2').text.strip
       legislative_term = legterm.match(/(\d+).\s+Wahlperiode/)[1]
       warn_broken(legislative_term.to_i != @legislative_term, 'legislative_term not correct', legislative_term)

@@ -49,10 +49,12 @@ class InstantImportNewPapersJob < ActiveJob::Base
     logger.progname = "InstantImportNewPapersJob #{@body.state}"
     @importer.logger = logger
 
+    @new_papers = @old_papers = 0
+
     fail "No instant scraper found for body #{body.state}" if !body.scraper.const_defined?(:Instant)
     @scraper = @body.scraper::Instant.new(legislative_term)
 
-    @scraper.scrape(&import)
+    @scraper.scrape { |item| import(item) }
   end
 
   def import(item)
