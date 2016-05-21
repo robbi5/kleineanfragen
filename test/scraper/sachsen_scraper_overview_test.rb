@@ -104,9 +104,7 @@ class SachsenScraperOverviewTest < ActiveSupport::TestCase
   test 'extract unanswered paper' do
     @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/sn/overview-unanswered.html')))
     item = SachsenScraper.extract_overview_items(@html).first
-    err = assert_raises RuntimeError do
-      @scraper.extract_detail_paper(item)
-    end
-    assert_match /not yet/, err.message
+    paper = @scraper.extract_detail_paper(item)
+    assert_not paper[:is_answer]
   end
 end

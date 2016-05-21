@@ -54,11 +54,13 @@ module SachsenScraper
     fail "SN: cannot extract meta data: #{meta_text}" if meta.nil?
     full_reference = meta[:full_reference]
     legislative_term, reference = full_reference.split('/')
+    is_answer = nil
 
     # check answered?
     answer_soon_text = item.search('.//tr[2]/td[2]').try(:text).try(:strip)
     if !answer_soon_text.nil? && answer_soon_text.include?('Frist SReg')
-      fail "[SN #{full_reference}] not yet - #{answer_soon_text}"
+      # overview says "not yet" - but sometimes the pdf is already available...
+      is_answer = false
     end
 
     {
@@ -71,7 +73,7 @@ module SachsenScraper
       url: nil,
       published_at: meta[:published_at],
       originators: meta[:originators],
-      is_answer: nil
+      is_answer: is_answer
     }
   end
 
