@@ -90,8 +90,8 @@ class RheinlandPfalzLandtagScraperOverviewTest < ActiveSupport::TestCase
         answerers: {
           ministries: ['Ministerium für Umwelt, Landwirtschaft, Ernährung, Weinbau und Forsten']
         },
-        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web' +
-          '&id=LTRPOPALDOKFL&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D4324%29'
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web' +
+          '&id=ltrpopalfastlink&format=PDOKU_Vollanzeige_Report&search=WP%3D16+AND+DART%3DD+AND+DNR%2CKORD%3D4324'
       }, paper)
   end
 
@@ -126,8 +126,8 @@ class RheinlandPfalzLandtagScraperOverviewTest < ActiveSupport::TestCase
         answerers: {
           ministries: ['Ministerium für Integration, Familie, Kinder, Jugend und Frauen']
         },
-        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web' +
-          '&id=LTRPOPALDOKFL&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D4788%29'
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web' +
+          '&id=ltrpopalfastlink&format=PDOKU_Vollanzeige_Report&search=WP%3D16+AND+DART%3DD+AND+DNR%2CKORD%3D4788'
       }, paper)
   end
 end

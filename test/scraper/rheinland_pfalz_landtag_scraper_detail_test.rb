@@ -22,8 +22,8 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         originators: { people: ['Dorothea Schäfer'], parties: ['CDU'] },
         is_answer: true,
         answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] },
-        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
-          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D4608%29'
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web&id=ltrpopalfastlink' +
+          '&format=PDOKU_Vollanzeige_Report&search=WP%3D16+AND+DART%3DD+AND+DNR%2CKORD%3D4608'
       }, paper)
   end
 
@@ -44,8 +44,8 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         originators: { people: ['Alexander Licht'], parties: ['CDU'] },
         is_answer: true,
         answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] },
-        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
-          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D4097%29'
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web&id=ltrpopalfastlink' +
+          '&format=PDOKU_Vollanzeige_Report&search=WP%3D16+AND+DART%3DD+AND+DNR%2CKORD%3D4097'
       }, paper)
   end
 
@@ -69,8 +69,8 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
           'Ministerium für Wirtschaft, Klimaschutz, Energie und Landesplanung',
           'Ministerium für Soziales, Arbeit, Gesundheit und Demografie'
         ] },
-        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
-          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D3813%29'
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web&id=ltrpopalfastlink' +
+          '&format=PDOKU_Vollanzeige_Report&search=WP%3D16+AND+DART%3DD+AND+DNR%2CKORD%3D3813'
       }, paper)
   end
 
@@ -93,8 +93,8 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         answerers: { ministries: [
           'Ministerium für Wirtschaft, Klimaschutz, Energie und Landesplanung'
         ] },
-        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
-          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D863%29'
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web&id=ltrpopalfastlink' +
+          '&format=PDOKU_Vollanzeige_Report&search=WP%3D16+AND+DART%3DD+AND+DNR%2CKORD%3D863'
       }, paper)
   end
 
@@ -117,8 +117,8 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         answerers: { ministries: [
           'Ministerium des Innern, für Sport und Infrastruktur'
         ] },
-        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
-          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D1734%29'
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web&id=ltrpopalfastlink' +
+          '&format=PDOKU_Vollanzeige_Report&search=WP%3D16+AND+DART%3DD+AND+DNR%2CKORD%3D1734'
       }, paper)
   end
 
@@ -141,8 +141,8 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         answerers: { ministries: [
           'Staatskanzlei'
         ] },
-        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
-          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D4965%29'
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web&id=ltrpopalfastlink' +
+          '&format=PDOKU_Vollanzeige_Report&search=WP%3D16+AND+DART%3DD+AND+DNR%2CKORD%3D4965'
       }, paper)
   end
 
@@ -163,8 +163,8 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         originators: { people: [], parties: ['CDU'] },
         is_answer: true,
         answerers: { ministries: ['Ministerium für Integration, Familie, Kinder, Jugend und Frauen'] },
-        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
-          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D4788%29'
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web&id=ltrpopalfastlink' +
+          '&format=PDOKU_Vollanzeige_Report&search=WP%3D16+AND+DART%3DD+AND+DNR%2CKORD%3D4788'
       }, paper)
   end
 
@@ -185,8 +185,8 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         originators: { people: [], parties: ['CDU'] },
         is_answer: true,
         answerers: { ministries: ['Ministerium für Soziales, Arbeit, Gesundheit und Demografie'] },
-        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
-          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D4503%29'
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web&id=ltrpopalfastlink' +
+          '&format=PDOKU_Vollanzeige_Report&search=WP%3D16+AND+DART%3DD+AND+DNR%2CKORD%3D4503'
       }, paper)
   end
 
@@ -207,8 +207,8 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         originators: { people: [], parties: ['CDU'] },
         is_answer: true,
         answerers: { ministries: ['Ministerium des Innern, für Sport und Infrastruktur'] },
-        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
-          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D579%29'
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web&id=ltrpopalfastlink' +
+          '&format=PDOKU_Vollanzeige_Report&search=WP%3D16+AND+DART%3DD+AND+DNR%2CKORD%3D579'
       }, paper)
   end
 
@@ -229,8 +229,8 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
         originators: { people: [], parties: ['SPD', 'BÜNDNIS 90/DIE GRÜNEN'] },
         is_answer: true,
         answerers: { ministries: ['Ministerium für Bildung, Wissenschaft, Weiterbildung und Kultur'] },
-        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL' +
-          '&format=LISSH_MoreDokument_Report&search=%28DART%3DD+AND+WP%3D16+AND+DNR%2CKORD%3D2887%29'
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web&id=ltrpopalfastlink' +
+          '&format=PDOKU_Vollanzeige_Report&search=WP%3D16+AND+DART%3DD+AND+DNR%2CKORD%3D2887'
       }, paper)
   end
 end

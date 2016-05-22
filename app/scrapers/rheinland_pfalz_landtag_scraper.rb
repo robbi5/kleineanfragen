@@ -39,6 +39,7 @@ module RheinlandPfalzLandtagScraper
 
   def self.extract_meta(meta_row)
     differentiation = meta_row.text.match(/(Kleine|Große)\s+Anfrage/m)
+    return false if differentiation.nil?
     if differentiation[1].downcase == 'kleine'
       link = extract_link(meta_row)
       results = meta_row.text.match(/Kleine\s+Anfrage\s+[\d\s]+(.+?)\s+und\s+Antwort\s+(.+?)\s+([\d\.]+)\s+/)
@@ -84,6 +85,10 @@ module RheinlandPfalzLandtagScraper
     fail "RP [?]: no meta information found. Paper title: #{title}" if meta_row.nil?
 
     meta = extract_meta(meta_row)
+    fail "RP [#{full_reference}]: no readable meta information found" if meta.nil?
+
+    return nil if meta == false
+    doctype = meta[:doctype]
 
     fail "RP [?]: no link element found. Paper title: #{title}" if meta[:link].nil?
 
@@ -102,10 +107,6 @@ module RheinlandPfalzLandtagScraper
         fail "RP [#{full_reference}]: url throws 404"
       end
     end
-
-    fail "RP [#{full_reference}]: no readable meta information found" if meta.nil?
-
-    doctype = meta[:doctype]
 
     ministries = []
     if doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
@@ -132,7 +133,7 @@ module RheinlandPfalzLandtagScraper
   end
 
   class Overview < Scraper
-    SEARCH_URL = BASE_URL + '/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSH.web'
+    SEARCH_URL = BASE_URL + '/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKU.web'
     TYPE = 'KLEINE ANFRAGE UND ANTWORT; ANTWORT'
 
     def supports_streaming?
@@ -148,8 +149,9 @@ module RheinlandPfalzLandtagScraper
 
       # fill search form
       search_form.field_with(name: '__action').value = 19
-      search_form.field_with(name: '02_LISSH_WP').value = @legislative_term
-      search_form.field_with(name: '05_LISSH_DTYP').value = TYPE
+      search_form.field_with(name: '02_PDOKU_WP').value = @legislative_term
+      search_form.field_with(name: '03_PDOKU_DART').value = 'D'
+      search_form.field_with(name: '05_PDOKU_DTYP').value = TYPE
       mp = m.submit(search_form)
 
       # retrieve new search form with more options
@@ -190,7 +192,7 @@ module RheinlandPfalzLandtagScraper
   end
 
   class Detail < DetailScraper
-    SEARCH_URL = BASE_URL + '/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/LISSHFLMORE.web&id=LTRPOPALDOKFL&format=LISSH_MoreDokument_Report&search='
+    SEARCH_URL = BASE_URL + '/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web&id=ltrpopalfastlink&format=PDOKU_Vollanzeige_Report&search='
 
     def scrape
       mp = mechanize.get self.class.build_search_url(@legislative_term, @reference)
@@ -199,7 +201,7 @@ module RheinlandPfalzLandtagScraper
     end
 
     def self.build_search_url(legislative_term, reference)
-      SEARCH_URL + CGI.escape("(DART=D AND WP=#{legislative_term} AND DNR,KORD=#{reference})")
+      SEARCH_URL + CGI.escape("WP=#{legislative_term} AND DART=D AND DNR,KORD=#{reference}")
     end
   end
 end
