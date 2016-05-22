@@ -110,6 +110,10 @@ class NamePartyExtractor
   end
 
   def self.clean_party(name)
-    name.gsub(/\p{Z}+/, ' ').strip.sub(/Fraktion\s+(?:der\s+)?/, '').sub(/\A\(?(.+?)\)?\z/, '\1')
+    name.gsub(/\p{Z}+/, ' ')
+        .strip
+        .sub(/Fraktion\s+(?:der\s+)?/, '')
+        .sub(/Fraktion\s+(?:der\s+)?/, '') # dup to remove copy/paste error
+        .sub(/\A\(?(.+?)\)?\z/, '\1')
   end
 end

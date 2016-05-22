@@ -399,6 +399,11 @@ class NamePartyExtractorTest < ActiveSupport::TestCase
     assert_equal({ people: [], parties: ['SPD'] }, pair)
   end
 
+  test 'fraction: dup prefix' do
+    pair = NamePartyExtractor.new('Fraktion der Fraktion der SPD', :fraction).extract
+    assert_equal({ people: [], parties: ['SPD'] }, pair)
+  end
+
   test 'fraction: brackets' do
     pair = NamePartyExtractor.new('(CDU)', :fraction).extract
     assert_equal({ people: [], parties: ['CDU'] }, pair)
