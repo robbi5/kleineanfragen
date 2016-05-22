@@ -116,4 +116,13 @@ SPD-Fraktion\nDrucksache 6/195\nMusikalische Bildung")
     assert_equal 1, answerers[:ministries].size
     assert_equal 'Landesregierung', answerers[:ministries].first
   end
+
+  test 'missing paper type and newline' do
+    paper = Struct.new(:contents).new(PREFIX + "die Ministerin für Wissenschaft, Forschung\n und Kultur wie folgt:")
+    answerers = BrandenburgPDFExtractor.new(paper).extract_answerers
+
+    assert_not_nil answerers
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Ministerium für Wissenschaft, Forschung und Kultur', answerers[:ministries].first
+  end
 end
