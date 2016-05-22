@@ -51,22 +51,28 @@ module HessenScraper
   end
 
   def self.extract_detail_paper(block)
-    response_line = extract_answer_line(block.content)
-    return nil if response_line.nil?
     full_reference = extract_detail_reference(block)
     leg, ref = full_reference.split('/')
-    date = get_date_from_detail_line(response_line)
+    response_line = extract_answer_line(block.content)
+    published_at = nil
+    is_answer = nil
+    if response_line.nil?
+      is_answer = false
+    else
+      published_at = get_date_from_detail_line(response_line)
+      is_answer = (published_at <= Date.today ? nil : false)
+    end
     {
       legislative_term: leg,
       full_reference: full_reference,
       reference: ref,
       doctype: extract_detail_type(block),
       title: extract_detail_title(block),
-      published_at: date,
+      published_at: published_at,
       originators: extract_originators(extract_originator_text(block)),
       # unanswered papers often have a future publishing date
       # if its really an answer gets checked in DeterminePaperTypeJob
-      is_answer: (date <= Date.today ? nil : false),
+      is_answer: is_answer,
       source_url: Detail.build_search_url(leg, ref)
     }
   end

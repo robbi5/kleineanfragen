@@ -152,4 +152,25 @@ class HessenTest < ActiveSupport::TestCase
     paper = @scraper.extract_detail_paper(block)
     assert_equal Date.parse('2015-04-02'), paper[:published_at]
   end
+
+  test 'extract unanswered paper from detail page 19/3272' do
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/he/detail_19_3272.html')))
+    block = @scraper.extract_detail_block(html)
+    paper = @scraper.extract_detail_paper(block)
+    assert_equal(
+      {
+        legislative_term: '19',
+        full_reference: '19/3272',
+        reference: '3272',
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        title: 'Situation von Frauen in hessischen Erstaufnahmeeinrichtungen Teil II',
+        published_at: nil,
+        originators: {
+          people: ['Barbara Cárdenas'],
+          parties: ['DIE LINKE']
+        },
+        is_answer: false,
+        source_url: 'http://starweb.hessen.de/starweb/LIS/servlet.starweb?path=LIS/PdPi_FLMore19.web&search=WP%3D19+and+DRSNRU%2CANTW%3D%2219%2F3272%22'
+     }, paper)
+  end
 end
