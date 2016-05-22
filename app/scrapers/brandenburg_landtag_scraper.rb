@@ -152,7 +152,7 @@ module BrandenburgLandtagScraper
         # navigate to extended search page
         redir_form = mp.form '__form'
         fail 'Cannot get redirection form' if redir_form.nil?
-        redir_form.field_with(name: '__action').value = 39
+        redir_form.field_with(name: '__action').value = 40
         mp = m.submit(redir_form)
 
         search_form = mp.form '__form'
@@ -160,7 +160,7 @@ module BrandenburgLandtagScraper
 
         # fill search form
         search_form.field_with(name: 'LISSH_WP_ADV').value = @legislative_term
-        search_form.field_with(name: '__action').value = 72
+        search_form.field_with(name: '__action').value = 77
         search_form.field_with(name: 'LISSH_DART_ADV').value = 'DRUCKSACHE'
         search_form.field_with(name: 'LISSH_DTYP').value = TYPE
         search_form.field_with(name: 'LISSH_DatumV').value = date.first.strftime('%e.%-m.%Y')
@@ -178,7 +178,7 @@ module BrandenburgLandtagScraper
         end
 
         # get more items
-        search_form.field_with(name: '__action').value = 175
+        search_form.field_with(name: '__action').value = 184
         search_form.field_with(name: 'NumPerSegment').options.find { |opt| opt.text.include? 'alle' }.select
         mp = m.submit(search_form)
 
