@@ -212,7 +212,7 @@ module BrandenburgLandtagScraper
       # get paper
       mp = m.get self.class.build_search_url(@legislative_term, @reference)
       form = mp.form('__form')
-      form.field_with(name: '__action').value = 51
+      form.field_with(name: '__action').value = 52
       mp = m.submit form
 
       body = BrandenburgLandtagScraper.extract_body(mp)
