@@ -22,7 +22,16 @@ einseh- und herunterladbar.</p>
 <p><a href="https://s3.kleine-anfragen.de/ka-dump/index.html" target="_blank">In einem neuen Fenster öffnen</a> <small>(Amazon S3-kompatibles Bucket)</small></p>
 <p>Das Datenbankschema ist <a href="https://github.com/robbi5/kleineanfragen/blob/master/db/schema.rb">auf GitHub (<code>db/schema.rb</code>)</a> zu finden.</p>
 
+<h1>API</h1>
 <p>Wer nicht den kompletten Datenbestand ziehen und analysieren will: Jede Anfragen-Seite gibt es auch im <code>JSON</code>-Format. Dazu einfach <code>.json</code> an die URL anhängen.</p>
+<p>Eine vollständigere API, basierend auf <a href="https://github.com/robbi5/kleineanfragen/issues/106">OParl, kommt bald</a>.</p>
+
+<h1>Feeds</h1>
+<p><%= link_to 'Zuletzt veröffentlichte Anfragen', recent_url(format: :atom) %> (Gesamt), aus den einzelnen Parlamenten und zu Suchbegriffen gibt es auch als Feeds.</p>
+<p>Diese sind auf den jeweiligen Seiten mittels <code>&lt;link rel="alternate" type="application/atom+xml" href="..." /&gt;</code>-Tags hinterlegt.</p>
+<% unless Rails.configuration.x.push_hub.blank? %>
+<p>Die Gesamt- bzw. Parlamentsfeeds sind zudem mit <%= link_to 'einem PubSubHubbub-Server', Rails.configuration.x.push_hub %> verknüpft. Dies ermöglicht eine Benachrichtigung über neue Anfragen, ohne den Feed regelmäßig abfragen zu müssen.</p>
+<% end %>
 
 <h2>Lizenz</h2>
 <p>Die Daten von kleineAnfragen werden unter der <a href="http://opendatacommons.org/licenses/odbl/">Open Database License (ODbL)</a> angeboten. Daher können sie ohne Rückfrage auch für kommerzielle Zwecke genutzt werden. Abgeleitete Datenbanken müssen ebenfalls unter einer offenen Lizenz veröffentlicht werden (Share-Alike).</p>
