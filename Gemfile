@@ -115,3 +115,7 @@ gem 'premailer-rails', '~> 1.9.1'
 
 # simplify posting to slack channels
 gem 'slack-notifier', '~> 1.5.1'
+
+# incoming email
+gem 'griddler', '~> 1.3.1'
+gem 'griddler-sendgrid', '~> 0.0.1'

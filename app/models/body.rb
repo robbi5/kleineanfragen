@@ -43,6 +43,10 @@ class Body < ActiveRecord::Base
     end
   end
 
+  def legislative_terms
+    Paper.where(body: self).group(:legislative_term).count.keys.sort
+  end
+
   def create_nomenklatura_datasets
     return false if Rails.configuration.x.nomenklatura_api_key.blank?
     datasets = []

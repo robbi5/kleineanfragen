@@ -13,6 +13,7 @@ module Kleineanfragen
     # -- all .rb files in that directory are automatically loaded.
 
     config.autoload_paths += %W(#{Rails.root}/lib)
+    config.autoload_paths += %W(#{Rails.root}/lib/constraints)
     config.autoload_paths += %W(#{Rails.root}/app/jobs)
     config.autoload_paths += %W(#{Rails.root}/app/scrapers)
     config.autoload_paths += %W(#{Rails.root}/app/extractors)
@@ -63,5 +64,7 @@ module Kleineanfragen
     config.x.push_hub = ENV['PUSH_HUB']
     # Push OCR token to update paper contents from remote
     config.x.push_ocr_token = ENV['PUSH_OCR_TOKEN']
+    # Email token to enable incoming email parsing
+    config.x.email_token = ENV['EMAIL_TOKEN']
   end
 end
