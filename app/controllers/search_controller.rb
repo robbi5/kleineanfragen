@@ -14,6 +14,8 @@ class SearchController < ApplicationController
       return
     end
 
+    redirect_to(search_path(search_params.except(:sort))) && return if params.key?(:sort) && params[:sort].blank?
+
     search = self.class.parse_query(@query)
     @term = search.term
     @display_term = term_and_advanced_conditions(search.term, search.raw_terms)
