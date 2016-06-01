@@ -25,6 +25,10 @@ class ScraperResult < ActiveRecord::Base
     !new_papers.nil? && new_papers > 0
   end
 
+  def instant?
+    !scraper_class.blank? && scraper_class.include?('Instant')
+  end
+
   def to_param
     self.class.hashids.encode(id)
   end
@@ -40,6 +44,6 @@ class ScraperResult < ActiveRecord::Base
   end
 
   def as_json(*options)
-    super(*options).merge(status: status, running: running?, id: to_param)
+    super(*options).merge(status: status, running: running?, id: to_param, instant: instant?)
   end
 end

@@ -25,11 +25,15 @@
           unless result.started_at.nil?
             info = l(result.started_at, format: :veryshort) + ': ' + distance_of_time_in_min_sec(result.started_at, result.stopped_at) + ' min'
           end
-          if !result.new_papers.nil? && !result.old_papers.nil?
-            info = "#{info}, #{result.new_papers}/#{result.old_papers}"
+          if !result.new_papers.nil?
+            info = "#{info}, #{result.new_papers}"
+            info += "/#{result.old_papers}" if !result.old_papers.nil? && !result.instant?
           end
+          classes = ['circle', "circle--#{result.status}"]
+          classes << 'circle--nothing-new' if !result.got_new_papers?
+          classes << 'circle--type-instant' if result.instant?
       %>
-        <span class="circle circle--<%= result.status %><% if !result.got_new_papers? %> circle--nothing-new<% end %>" title="<%= info %>"><%= result.success %></span>
+        <span class="<%= classes.join(' ') %>" title="<%= info %>"><%= result.success %></span>
       <% end %>
     </td>
     <% end %>
