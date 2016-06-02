@@ -1,5 +1,18 @@
 require 'date'
 
+#
+# Saarland is based on SharePoint. (No idea why anyone thinks thats a sane idea)
+#
+# Get Version: https://www.landtag-saar.de/_vti_pvt/service.cnf
+# # vti_extenderversion:SR|15.0.0.4797
+#
+# An request to https://www.landtag-saar.de/_vti_bin/ brings us the following header:
+# # MicrosoftSharePointTeamServices:15.0.0.4569
+#
+# So it is an SharePoint 2013.
+# But all the interesting endpoints (/_api, /_vti_bin/listdata.svc/) are locked down.
+# Sad :(
+#
 module SaarlandScraper
   BASE_URL = 'http://www.landtag-saar.de'
 
@@ -15,7 +28,7 @@ module SaarlandScraper
   end
 
   class Overview < Scraper
-    SEARCH_URL = BASE_URL + '/dokumente/drucksachen?FilterName=LinkFilenameNoMenu&FilterMultiValue=Aw*&SortField=DokumentDatum&SortDir=Desc&FilterField1=Wahlperiode&FilterValue1='
+    SEARCH_URL = BASE_URL + '/dokumente/drucksachen?FilterName=LinkFilenameNoMenu&FilterMultiValue=Aw*&SortField=DokumentDatum&SortDir=Desc&Filter=1&FilterField1=Wahlperiode&FilterValue1='
 
     def supports_streaming?
       true
