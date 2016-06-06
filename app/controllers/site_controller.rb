@@ -1,6 +1,6 @@
 class SiteController < ApplicationController
   def index
-    @bodies = Body.order(name: :asc).all
+    @bodies = Body.order("state != 'BT', name ASC").all
     @papers = Paper
               .where.not(published_at: nil)
               .limit(10)
