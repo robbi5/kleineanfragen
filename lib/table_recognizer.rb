@@ -50,15 +50,8 @@ class TableRecognizer
     begin
       Timeout::timeout(5) do
         # Hint 8: "\nAAA 10,1 10,2 10,3\nBBB 20 21,1 -1.022,2"
-        m = text.scan(/\n([\p{Zs}\S]+?\p{Zs}+(\-?(?>(?:\d{1,3}(?>(?:\.\d{3}))*(?>(?:,\d+)?|\d*\.?\d+))\p{Zs}*)+))\n/m)
-        if m
-          m.each do |match|
-            unless match.first.strip == match.second.strip || match.first.strip.start_with?('vom') || match.first.match('\d{2}\.\d{2}\.\d{4}')
-              @probability += 0.5
-              @groups << :looks_like_table_values
-              @matches << m if debug?
-            end
-          end
+        match_each(/\n([\p{Zs}\S]+?\p{Zs}+(\-?(?>(?:\d{1,3}(?>(?:\.\d{3}))*(?>(?:,\d+)?|\d*\.?\d+))\p{Zs}*)+))\n/m, :looks_like_table_values, factor: 0.5) do |match|
+          match.first.strip != match.second.strip && !match.first.strip.start_with?('vom') && !match.first.match('\d{2}\.\d{2}\.\d{4}')
         end
       end
     rescue => e
@@ -76,10 +69,22 @@ class TableRecognizer
 
   def match(regex, group, factor: 1)
     m = text.scan(regex)
-    if !m.blank?
-      @probability += factor * m.size
-      @groups << group
-      @matches << m if debug?
+    return if m.blank?
+    @probability += factor * m.size
+    @groups << group
+    @matches << m if debug?
+  end
+
+  def match_each(regex, group, factor: 1, &block)
+    m = text.scan(regex)
+    return if m.blank?
+    m.each do |match|
+      ret = yield match
+      if ret
+        @probability += factor
+        @groups << group
+        @matches << m if debug?
+      end
     end
   end
 end
