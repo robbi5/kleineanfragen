@@ -24,11 +24,11 @@ class Subscription < ActiveRecord::Base
   def subject
     case subtype
     when 'body'
-      Body.find_by_state(query).try(:name) || 'kleine Anfragen'
+      Body.find_by_state(query).try(:name) || 'Anfragen'
     when 'search'
       "die Suche nach \"#{query}\""
     else
-      'kleine Anfragen'
+      'Anfragen'
     end
   end
 

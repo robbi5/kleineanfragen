@@ -6,7 +6,7 @@ class SubscriptionMailer < ApplicationMailer
     @subscription = subscription
     @papers = Paper.where(id: papers)
 
-    subject = 'neue kleine Anfragen'
+    subject = 'neue Anfragen'
 
     if @subscription.subtype == 'body'
       body = Body.find_by_state(@subscription.query)
