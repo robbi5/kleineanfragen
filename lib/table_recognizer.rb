@@ -38,7 +38,7 @@ class TableRecognizer
       Timeout::timeout(5) do
         # Hint 6: \d\n\d\n\d\n...
         #m = text.scan(/\p{Zs}(\d[\p{Zs}\d]+\n\d[\p{Zs}\d]+)+/m)
-        match(/(\d[\p{Zs}\d]+\n[\d][\p{Zs}\d]+)+/m, :looks_like_table_newlines, factor: 0.5)
+        match(/(\d[\p{Zs}\d]+\n\d[\p{Zs}\d]+)+/m, :looks_like_table_newlines, factor: 0.5)
       end
     rescue => e
       # ignore failure
@@ -51,7 +51,13 @@ class TableRecognizer
       Timeout::timeout(5) do
         # Hint 8: "\nAAA 10,1 10,2 10,3\nBBB 20 21,1 -1.022,2"
         match_each(/\n([\p{Zs}\S]+?\p{Zs}+(\-?(?>(?:\d{1,3}(?>(?:\.\d{3}))*(?>(?:,\d+)?|\d*\.?\d+))\p{Zs}*)+))\n/m, :looks_like_table_values, factor: 0.5) do |match|
-          match.first.strip != match.second.strip && !match.first.strip.start_with?('vom') && !match.first.match('\d{2}\.\d{2}\.\d{4}')
+          match.first.strip != match.second.strip &&
+            !match.first.strip.start_with?('vom') &&
+            !match.first.match('\d{2}\.\d{2}\.\d{4}') &&
+            !match.first.match('Seite\s+\d+\s+von\s+\d+') &&
+            !match.first.match('(?:Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s+\d{4}\s*\z') &&
+            !match.first.match('(?:Str\.\s\d+|-Platz\s\d+)') &&
+            !match.first.strip.match('\A(?:[0-9]|[MCDXLVI])+\.\s+[^\n]+\s\d+\s*\z')
         end
       end
     rescue => e
@@ -83,7 +89,7 @@ class TableRecognizer
       if ret
         @probability += factor
         @groups << group
-        @matches << m if debug?
+        @matches << match if debug?
       end
     end
   end
