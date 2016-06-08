@@ -8,8 +8,8 @@ class TableRecognizerTest < ActiveSupport::TestCase
   end
 
   def assert_no_table(text)
-    result = TableRecognizer.new(text).recognize
-    assert_equal 0, result[:probability]
+    result = TableRecognizer.new(text, debug: true).recognize
+    assert_equal 0, result[:probability], "Groups: #{result[:groups]}\nMatches: #{result[:matches]}"
   end
 
   test 'nachstehende Tabelle' do
@@ -18,6 +18,12 @@ class TableRecognizerTest < ActiveSupport::TestCase
 
   test 'Tabelle 2 zeigt' do
     assert_table 'Tabelle 2 zeigt'
+  end
+
+  test 'skip, Tabelle 2 zeigt' do
+    text = 'Tabelle 2 zeigt'
+    result = TableRecognizer.new(text, skip: [:table_shows]).recognize
+    assert_equal 0, result[:probability], "Groups: #{result[:groups]}\nMatches: #{result[:matches]}"
   end
 
   test 'Daten (Tabelle 3)' do

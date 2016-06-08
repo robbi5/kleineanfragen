@@ -1,10 +1,12 @@
 class TableRecognizer
+  attr_accessor :skip
   attr_reader :text
   attr_writer :debug
 
-  def initialize(text, debug: false)
+  def initialize(text, debug: false, skip: nil)
     @text = text
     @debug = debug
+    @skip = skip || []
   end
 
   def debug?
@@ -38,7 +40,7 @@ class TableRecognizer
       Timeout::timeout(5) do
         # Hint 6: \d\n\d\n\d\n...
         #m = text.scan(/\p{Zs}(\d[\p{Zs}\d]+\n\d[\p{Zs}\d]+)+/m)
-        match(/(\d[\p{Zs}\d]+\n\d[\p{Zs}\d]+)+/m, :looks_like_table_newlines, factor: 0.5)
+        match(/(\d[\p{Zs}\d]+\n\d[\p{Zs}\d]+)+/m, :looks_like_table_newlines, factor: 0.5) # TODO: lookahead/lookbehind?
       end
     rescue => e
       # ignore failure
@@ -74,6 +76,7 @@ class TableRecognizer
   private
 
   def match(regex, group, factor: 1)
+    return if @skip.include?(group)
     m = text.scan(regex)
     return if m.blank?
     @probability += factor * m.size
@@ -82,6 +85,7 @@ class TableRecognizer
   end
 
   def match_each(regex, group, factor: 1, &block)
+    return if @skip.include?(group)
     m = text.scan(regex)
     return if m.blank?
     m.each do |match|
