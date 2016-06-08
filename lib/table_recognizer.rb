@@ -58,7 +58,7 @@ class TableRecognizer
             !match.first.match('\d{2}\.\d{2}\.\d{4}') &&
             !match.first.match('Seite\s+\d+\s+von\s+\d+') &&
             !match.first.match('(?:Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s+\d{4}\s*\z') &&
-            !match.first.match('(?:Str\.\s\d+|-Platz\s\d+)') &&
+            !match.first.match('(?:Str\.\s\d+|[Pp]latz\s\d+)') &&
             !match.first.strip.match('\A(?:[0-9]|[MCDXLVI])+\.\s+[^\n]+\s\d+\s*\z')
         end
       end

@@ -8,7 +8,10 @@ class ContainsTableJob < PaperJob
 
     fail "No Text for Paper [#{paper.body.state} #{paper.full_reference}]" if paper.contents.blank?
 
-    result = TableRecognizer.new(paper.contents).recognize
+    options = {}
+    options[:skip] = [:looks_like_table_values] if paper.body.state == 'SN'
+
+    result = TableRecognizer.new(paper.contents, options).recognize
 
     reason = result[:groups].map(&:to_s).join(',')
 
