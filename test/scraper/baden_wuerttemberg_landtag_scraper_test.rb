@@ -247,7 +247,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
       reference: '6432',
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       title: 'Barrierefreier Ausbau der Bahnhöfe auf der Hauptstrecke Stuttgart-Ulm im LKreis Göppingen zwischen Reichenbach/Fils und Eislingen/Fils',
-      url: 'http://www.landtag-bw.de/scr/initiativen/ini_check.asp?wp=15&drs=6432',
+      url: 'http://suche.landtag-bw.de/redirect.itl?WP=15&DRS=6432',
       published_at: Date.parse('2015-01-29'),
       is_answer: true,
       originators: { people: ['Peter Hofelich'], parties: ['SPD'] },

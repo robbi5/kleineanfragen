@@ -39,8 +39,12 @@ module BadenWuerttembergLandtagScraper
   end
 
   def self.get_detail_link(page)
-    table = page.search('//table[@class="OPAL"]/tr')
+    table = page.search('//table/tr/td[2]')
     table.at_css('a')
+  end
+
+  def self.link_is_paper?(link)
+    !link.text.strip.match(/Anfr\s/).nil?
   end
 
   def self.link_is_answer?(link)
@@ -57,7 +61,7 @@ module BadenWuerttembergLandtagScraper
   end
 
   def self.extract_detail_title(page)
-    table = page.search('//table[@class="OPAL"]')
+    table = page.search('//table')
     table_rows = table.css('tr')
     table_rows.each do |row|
       if row.at_css('td').text == 'Betreff:'
@@ -97,14 +101,16 @@ module BadenWuerttembergLandtagScraper
   end
 
   def self.extract_overview_paper(m, block, type)
+    # overview shows only the questions
     meta = extract_overview_meta(block)
     full_reference = meta[:full_reference]
     legislative_term, reference = extract_reference(full_reference)
     title = extract_title(block)
 
+    # get detail page for the answer
     detail_page = m.get build_detail_url(legislative_term, reference)
     detail_link = get_detail_link(detail_page)
-    return nil if detail_link.nil? || !link_is_answer?(detail_link)
+    return nil if detail_link.nil? || !link_is_paper?(detail_link)
 
     {
       full_reference: full_reference,
@@ -117,7 +123,7 @@ module BadenWuerttembergLandtagScraper
       # originator: people is set in detail scraper
       originators: { people: [], parties: [meta[:originator_party]] },
       # answerers is set in detail scraper
-      is_answer: true,
+      is_answer: link_is_answer?(detail_link),
       source_url: build_detail_url(legislative_term, reference)
     }
   end
@@ -140,7 +146,7 @@ module BadenWuerttembergLandtagScraper
       title: title,
       url: url,
       published_at: meta[:published_at],
-      is_answer: true,
+      is_answer: link_is_answer?(link),
       originators: meta[:originators],
       answerers: meta[:answerers],
       source_url: build_detail_url(legislative_term, reference)
