@@ -132,11 +132,12 @@ module BadenWuerttembergLandtagScraper
     link = get_detail_link(page)
     title = extract_detail_title(page)
     url = link.attributes['href'].value
+
     meta = extract_meta(link.text)
+    fail "Can't extract detail meta data from Paper [BW ?] text: #{link.text}" if meta.nil?
+
     full_reference = meta[:full_reference]
     legislative_term, reference = extract_reference(full_reference)
-
-    fail "Can't extract detail meta data from Paper [BW ?] text: #{link.text}" if meta.nil?
 
     {
       full_reference: full_reference,
