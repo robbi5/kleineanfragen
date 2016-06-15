@@ -98,6 +98,21 @@ class BadenWuerttembergPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Ministerium für Arbeit und Sozialordnung, Familie, Frauen und Senioren', answerers[:ministries].second
   end
 
+  test 'get related ministry with suffix' do
+        c = "und\n\nAntwort des Staatsministeriums\n\n" +
+        "Mit Schreiben vom 16. Februar 2016 Nr. 6-6002/514 beantwortet das Ministerium \n" +
+        "für Finanzen und Wirtschaft im Einvernehmen mit dem Ministerium für Wissenschaft \n" +
+        ", Forschung und Kunst für die Landesregierung die Kleine Anfrage wie\nfolgt:"
+    paper = paper(Paper::DOCTYPE_MINOR_INTERPELLATION, c)
+
+    answerers = BadenWuerttembergPDFExtractor.new(paper).extract_answerers
+
+    assert_not_nil answerers
+    assert_equal 2, answerers[:ministries].size
+    assert_equal 'Staatsministerium', answerers[:ministries].first
+    assert_equal 'Ministerium für Wissenschaft , Forschung und Kunst', answerers[:ministries].second
+  end
+
   test 'get multiple related ministries' do
     c = "und\n\nAntwort\n\ndes Staatsministeriums\n\nProjekt Übermorgenmacherinnen und Übermorgenmacher\n\nMit Schreiben vom 6. September 2012 Nr. III/ beantwortet das Staatsministerium\nim Einvernehmen mit dem \n\nMinisterium für Arbeit und Sozialordnung, Familie,\n\nFrauen und Senioren, dem Ministerium für Finanzen und Wirtschaft und dem Ministerium\n\nfür Wissenschaft, Forschung und Kunst die Kleine Anfrage wie"
     paper = paper_with_title(Paper::DOCTYPE_MINOR_INTERPELLATION, c, 'Projekt Übermorgenmacherinnen und Übermorgenmacher')
