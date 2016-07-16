@@ -3,10 +3,32 @@ require 'test_helper'
 class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   def setup
     @scraper = RheinlandPfalzLandtagScraper
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail.html')))
   end
 
-  test 'extract complete paper' do
+  test 'extract complete paper of legislative_term 17' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_17.html')))
+    record = @scraper.extract_records(@html).first
+    paper = @scraper.extract_paper(record, check_pdf: false)
+
+    assert_equal(
+      {
+        legislative_term: '17',
+        full_reference: '17/435',
+        reference: '435',
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        title: 'Einstellungssituation an Gymnasien und Gesamtschulen zum neuen Schuljahr 2016/2017 im Westerwaldkreis',
+        url: 'http://www.landtag.rlp.de/landtag/drucksachen/435-17.pdf',
+        published_at: Date.parse('13.07.2016'),
+        originators: { people: ['Ralf Seekatz', 'Gabriele Wieland'], parties: ['CDU'] },
+        is_answer: true,
+        answerers: { ministries: ['Ministerium für Bildung'] },
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web&id=ltrpopalfastlink' +
+          '&format=PDOKU_Vollanzeige_Report&search=WP%3D17+AND+DART%3DD+AND+DNR%2CKORD%3D435'
+      }, paper)
+  end
+
+  test 'extract complete paper of legislative_term 16' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_16.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -27,8 +49,31 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
       }, paper)
   end
 
+
+  test 'extract paper with different originators in interpellations and answer like in 17/439' do
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_17_439.html')))
+    record = @scraper.extract_records(@html).first
+    paper = @scraper.extract_paper(record, check_pdf: false)
+
+    assert_equal(
+      {
+        legislative_term: '17',
+        full_reference: '17/439',
+        reference: '439',
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        title: 'Einsatz von Streifenbeamten gegen potenzielle Terroristen',
+        url: 'http://www.landtag.rlp.de/landtag/drucksachen/439-17.pdf',
+        published_at: Date.parse('13.07.2016'),
+        originators: { people: ['Matthias Lammert', 'Adolf Kessel'], parties: ['CDU'] },
+        is_answer: true,
+        answerers: { ministries: ['Ministerium des Innern und für Sport'] },
+        source_url: 'http://opal.rlp.de/starweb/OPAL_extern/servlet.starweb?path=OPAL_extern/PDOKUFL.web&id=ltrpopalfastlink' +
+          '&format=PDOKU_Vollanzeige_Report&search=WP%3D17+AND+DART%3DD+AND+DNR%2CKORD%3D439'
+      }, paper)
+  end
+
   test 'extract paper with additional link like in 16/4097' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_4097.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_16_4097.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -50,7 +95,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract paper with multiple ministries like in 16/3813' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_3813.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_16_3813.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -75,7 +120,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract paper without party like 16/863' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_863.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_16_863.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -98,8 +143,9 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
       }, paper)
   end
 
+
   test 'extract paper with two meta_rows like 16/1734' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_1734.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_16_1734.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -123,7 +169,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract paper with ministry staatskanzlei like 16/4965' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_4965.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/detail_16_4965.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -169,7 +215,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract complete paper from Major with more information and links' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/major_detail_4503.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/major_detail_16_4503.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -191,7 +237,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract complete paper from Major with an additional answer' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/major_detail_579.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/major_detail_16_579.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 
@@ -213,7 +259,7 @@ class RheinlandPfalzLandtagScraperDetailTest < ActiveSupport::TestCase
   end
 
   test 'extract complete major paper with multiple originator parties' do
-    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/major_detail_2887.html')))
+    @html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/rp/major_detail_16_2887.html')))
     record = @scraper.extract_records(@html).first
     paper = @scraper.extract_paper(record, check_pdf: false)
 

@@ -6,11 +6,13 @@ module RheinlandPfalzLandtagScraper
   end
 
   def self.extract_detail_block(page)
-    page.search('./tr[@name="Repeat_Fund"]/td[3]').first
+    page.search('./tr[@name="Repeat_Fund"]/td[3]').first ||
+    page.search('./tr[@name="Repeat_D_Fund"]/td[3]').first
   end
 
   def self.extract_title(block)
-    block.search('./tr[@name="Repeat_WHET"]/td[2]').first.text
+    block.search('./tr[@name="Repeat_WHET"]/td[2]').first.try(:text) ||
+    block.search('./tr[@name="Repeat_D_WHET"]/td[2]').first.try(:text)
   end
 
   def self.extract_link(container)
@@ -37,44 +39,90 @@ module RheinlandPfalzLandtagScraper
       .uniq
   end
 
-  def self.extract_meta(meta_row)
-    differentiation = meta_row.text.match(/(Kleine|Große)\s+Anfrage/m)
-    return false if differentiation.nil?
-    if differentiation[1].downcase == 'kleine'
-      link = extract_link(meta_row)
-      results = meta_row.text.match(/Kleine\s+Anfrage\s+[\d\s]+(.+?)\s+und\s+Antwort\s+(.+?)\s+([\d\.]+)\s+/)
-      return nil if results.nil?
-      {
-        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-        originators: results[1].strip,
-        answerers: results[2].strip,
-        published_at: results[3],
-        link: link
-      }
-    else
-      o_results, a_results = [nil, nil]
-      link = nil
-      last_line = nil
-      meta_row.children.each do |line|
-        match = line.text.match(/Große\s+Anfrage\s+(.+)\s+\d+\./)
-        o_results = match if match && !line.text.include?('Antwort')
-        match = line.text.match(/Antwort\s+(.+)\s+([\d\.]+) /m)
-        a_results = match if match && !line.text.include?('Ergänzung')
-        if link.nil?
-          link = line if !last_line.nil? && last_line.text.include?('Antwort')
-          last_line = line
-        end
+  # metadata is one big td, lines are seperated by <br>
+  # split it at the <br>s, so we get an array of lines again
+  def self.extract_meta_rows(element)
+    data = []
+    element.search('br').each do |br|
+      frag = Nokogiri::HTML.fragment('')
+      el = br
+      loop do
+        el = el.next
+        break if el.nil? || el.try(:name) == 'br'
+        frag << el.clone
       end
-      return nil if o_results.nil? || a_results.nil?
-      originators = o_results[1].split(',').map(&:strip)
-      {
-        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
-        originators: originators,
-        answerers: a_results[1].strip,
-        published_at: a_results[2],
-        link: link
-      }
+      data << frag
     end
+    data
+  end
+
+  def self.extract_link(meta_rows)
+    answer_row = meta_rows.find { |row| row.text.include?('Antwort') && !row.text.include?('Ergänzung') }
+    return nil if answer_row.nil?
+    answer_row.search('a').find { |el| el.text.include?('/') }
+  end
+
+  def self.extract_doctype(meta_row)
+    differentiation = meta_row.text.downcase.match(/(kleine|große)\s+anfrage/m)
+    if differentiation[1] == 'kleine'
+      return Paper::DOCTYPE_MINOR_INTERPELLATION
+    elsif differentiation[1] == 'große'
+      return Paper::DOCTYPE_MAJOR_INTERPELLATION
+    else
+      return nil
+    end
+  end
+
+  def self.extract_meta_multiline(meta_rows)
+    o_results = a_results = nil
+    meta_rows.each do |line|
+      # Kleine Anfrage Matthias Lammert (CDU) 14.06.2016 Drucksache 17/106 (1 S.)
+      match = line.text.match(/(?:Kleine|Große)\s+Anfrage\s+(.+?)\s+(?:\d+\.[\d\.]+)/)
+      o_results = match if match && !line.text.include?('Antwort')
+      # Antwort zu Drs 17/106 Matthias Lammert (CDU), Ministerium der Finanzen 04.07.2016 Drucksache 17/324
+      # Antwort  Ministerium für Integration, Familie, Kinder, Jugend und Frauen 20.03.2015 Drucksache   16/4788  (27 S.)
+      match = line.text.match(/Antwort(?:\s+zu\s+Drs\.?\s+[\d\/]+)?\s+(.+?)\s+(\d+\.[\d\.]+)/m)
+      a_results = match if match && !line.text.include?('Ergänzung')
+    end
+    return {} if o_results.nil? || a_results.nil?
+
+    org = o_results[1].split(',').map(&:strip)
+    ans = a_results[1].split(',').map(&:strip)
+
+    answerers = (ans - org).join(', ')
+
+    {
+      originators: o_results[1].strip,
+      answerers: answerers,
+      published_at: a_results[2],
+    }
+  end
+
+  def self.extract_meta(meta_row)
+    doctype = extract_doctype(meta_row)
+    return nil if doctype.nil?
+
+    meta_rows = extract_meta_rows(meta_row)
+    link = extract_link(meta_rows)
+
+    if doctype == Paper::DOCTYPE_MINOR_INTERPELLATION
+      results = meta_row.text.match(/Kleine\s+Anfrage\s+[\d\s]+(.+?)\s+und\s+Antwort\s+(.+?)\s+([\d\.]+)\s+/)
+      if !results.nil?
+        return {
+          doctype: doctype,
+          originators: results[1].strip,
+          answerers: results[2].strip,
+          published_at: results[3],
+          link: link
+        }
+      end
+    end
+
+    meta = extract_meta_multiline(meta_rows)
+    {
+      doctype: doctype,
+      link: link
+    }.merge(meta)
   end
 
   def self.extract_paper(item, check_pdf: true)
@@ -85,13 +133,10 @@ module RheinlandPfalzLandtagScraper
     fail "RP [?]: no meta information found. Paper title: #{title}" if meta_row.nil?
 
     meta = extract_meta(meta_row)
-    fail "RP [#{full_reference}]: no readable meta information found" if meta.nil?
+    fail "RP [?]: no readable meta information found. Paper title: #{title}" if meta.nil?
+    fail "RP [?]: key meta information missing. Paper title: #{title}" if meta[:doctype].nil? || meta[:link].nil? || meta[:published_at].nil?
 
-    return nil if meta == false
     doctype = meta[:doctype]
-
-    fail "RP [?]: no link element found. Paper title: #{title}" if meta[:link].nil?
-
     full_reference = extract_full_reference(meta[:link])
     url = extract_url(meta[:link])
     legislative_term, reference = extract_reference(full_reference)
@@ -110,7 +155,7 @@ module RheinlandPfalzLandtagScraper
 
     ministries = []
     if doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
-      originators = { people: [], parties: meta[:originators] }
+      originators = { people: [], parties: meta[:originators].split(',').map(&:strip) }
     else
       originators = NamePartyExtractor.new(meta[:originators]).extract
     end
@@ -148,7 +193,7 @@ module RheinlandPfalzLandtagScraper
       fail 'search form missing' if search_form.nil?
 
       # fill search form
-      search_form.field_with(name: '__action').value = 19
+      search_form.field_with(name: '__action').value = 20
       search_form.field_with(name: '02_PDOKU_WP').value = @legislative_term
       search_form.field_with(name: '03_PDOKU_DART').value = 'D'
       search_form.field_with(name: '05_PDOKU_DTYP').value = TYPE
@@ -156,13 +201,20 @@ module RheinlandPfalzLandtagScraper
 
       # retrieve new search form with more options
       search_form = mp.form '__form'
-      search_form.field_with(name: '__action').value = 20
+      search_form.field_with(name: '__action').value = 21
       search_form.field_with(name: 'LimitMaximumHitCount').options.find { |opt| opt.text.include? 'alle' }.select
 
       # Fail if no hits
       fail 'search returns no results' if mp.search('//span[@name="HitCountZero"]').size > 0
 
       mp = m.submit(search_form)
+
+      # switch display variant
+      type_form = mp.form '__form'
+      type_form.field_with(name: '__action').value = 52
+      type_form.field_with(name: 'PDOKU_Browse_ReportFormatList').value = 'PDOKU_Vorgaenge_Report'
+
+      mp = m.submit(type_form)
 
       papers = []
       loop do
@@ -184,7 +236,7 @@ module RheinlandPfalzLandtagScraper
         # submit form for next page
         break if mp.search('//a[@name="NextRecords"]').size == 0
         search_form = mp.form '__form'
-        search_form.field_with(name: '__action').value = 48
+        search_form.field_with(name: '__action').value = 49
         mp = m.submit(search_form)
       end
       papers unless streaming
