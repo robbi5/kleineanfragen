@@ -13,9 +13,7 @@ gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer',  platforms: :ruby
+gem 'coffee-rails', '~> 4.2.1'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -27,9 +25,6 @@ gem 'jquery-turbolinks', '~> 2.1.0'
 gem 'jbuilder', '~> 2.3'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
-
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
 
 # Use newrelic
 gem 'newrelic_rpm', group: :production
@@ -50,7 +45,7 @@ group :development, :test do
 end
 
 gem 'sqlite3', group: :test
-gem 'memory_test_fix', group: :test
+gem 'memory_test_fix', '1.3.0', group: :test
 gem 'minitest-stub_any_instance', group: :test
 
 # Get i18n files
@@ -71,7 +66,7 @@ gem 'addressable', '~> 2.4.0', require: 'addressable/uri'
 gem 'bootstrap-sass', '~> 3.3.4'
 
 # pagination
-gem 'kaminari', '~> 0.16.0'
+gem 'kaminari', '~> 0.17.0'
 
 # pdf text extraction
 gem 'docsplit', '~> 0.7.6'
@@ -82,7 +77,7 @@ gem 'image_optim', '~> 0.22.0'
 
 # search!
 gem 'searchkick', '~> 0.9.1'
-gem 'patron', '~> 0.5.1'
+gem 'patron', '~> 0.7.1'
 gem 'typhoeus', '~> 1.0.1'
 
 # storage
@@ -93,7 +88,7 @@ gem 'fog-local', '~> 0.2.1'
 
 # jobs
 gem 'resque', '~> 1.26.0'
-gem 'resque-scheduler', '~> 4.1.0'
+gem 'resque-scheduler', '~> 4.3.0'
 gem 'activejob-retry', '~> 0.5.0'
 gem 'resque-sentry', '~> 1.2.0'
 
@@ -104,7 +99,7 @@ gem 'httparty', '~> 0.13.7'
 gem 'fuzzy_match', '~> 2.1.0'
 
 # simple title and opengraph/twitter cards view helpers
-gem 'tophat', '~>2.2.0'
+gem 'tophat', '~>2.3.0'
 
 # email urls
 gem 'hashids', '~> 1.0.2'
