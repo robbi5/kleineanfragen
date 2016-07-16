@@ -15,4 +15,5 @@ feed.entry paper, published: paper.published_at, updated: paper.updated_at, url:
   end
   entry.category(term: paper.body.state, label: paper.body.name)
   entry.summary paper.description
+  entry.link rel: 'alternate', type: 'text/plain', href: paper_url(body: paper.body, legislative_term: paper.legislative_term, paper: paper, format: :txt)
 end

@@ -15,6 +15,7 @@
 -%>
 <%- content_for :head do %>
 <%= tag 'link', href: paper_path(@body, @legislative_term, @paper, {format: :json}), rel: 'alternate', type: 'application/json' -%>
+<%= tag 'link', href: paper_path(@body, @legislative_term, @paper, {format: :txt}), rel: 'alternate', type: 'text/plain' -%>
 <%- end -%>
 <% content_for :main_fullwidth_prepend do %>
 <div class="breadcrumb-fullwidth">
