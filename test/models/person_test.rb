@@ -22,7 +22,7 @@ class PersonTest < ActiveSupport::TestCase
       p.nomenklatura_sync!
     end
 
-    assert_equal 1, p.papers(true).size
+    assert_equal 1, p.papers.reload.size
     assert_equal 'Normal Person', p.name
   end
 
@@ -35,7 +35,7 @@ class PersonTest < ActiveSupport::TestCase
       p.nomenklatura_sync!
     end
 
-    assert_equal 0, p.papers(true).size
+    assert_equal 0, p.papers.reload.size
     assert p.destroyed?
   end
 
@@ -50,7 +50,7 @@ class PersonTest < ActiveSupport::TestCase
     end
 
     assert_equal 'Typo in Name', p.name
-    assert_equal 1, p.papers(true).size
+    assert_equal 1, p.papers.reload.size
     assert p.persisted?
   end
 
@@ -66,9 +66,9 @@ class PersonTest < ActiveSupport::TestCase
       smnp.nomenklatura_sync!
     end
 
-    assert_equal 0, smnp.papers(true).size
+    assert_equal 0, smnp.papers.reload.size
     assert smnp.destroyed?
-    assert_equal 1, mnp.papers(true).size
+    assert_equal 1, mnp.papers.reload.size
     assert mnp.persisted?
   end
 end

@@ -48,6 +48,7 @@ group :test do
   gem 'sqlite3'
   gem 'memory_test_fix', '~> 1.4.0'
   gem 'minitest-stub_any_instance'
+  gem 'rails-controller-testing', '~> 0.1.1'
 end
 
 # Get i18n files
@@ -93,6 +94,8 @@ gem 'resque', '~> 1.26.0'
 gem 'resque-scheduler', '~> 4.3.0'
 gem 'activejob-retry', '~> 0.6.1'
 gem 'resque-sentry', '~> 1.2.0'
+
+gem 'sinatra', github: 'sinatra/sinatra', ref: 'e7ef8e23', require: nil # needs sinatra 2.0, because rack 2
 
 # for nomenklatura
 gem 'httparty', '~> 0.13.7'
