@@ -1,86 +1,91 @@
-web:
-  build: .
-  command: foreman start
-  ports:
-    - "5000:5000"
-  volumes:
-    - .:/app
-  links:
-    - database
-    - redis
-    - tika
-    - elasticsearch
-#   - nomenklatura
-    - s3
-    - mailcatcher
-#   - sentry
-  environment:
-    RESQUE_SERVER_OPEN: true
-    ELASTICSEARCH_URL: http://elasticsearch:9200/
-    REDIS_URL: redis://redis:6379
-    DATABASE_URL: postgres://kleineanfragen:@database/kleineanfragen
-    TIKA_SERVER_URL: http://tika:9998
-#   NOMENKLATURA_HOST: http://nomenklatura:8080
-#   NOMENKLATURA_APIKEY: change_me
-#   SENTRY_DSN: http://public:secret@sentry:9000/2
+version: '2'
+services:
+  web:
+    build: .
+    command: foreman start
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    links:
+      - database
+      - redis
+      - tika
+      - elasticsearch
+  #   - nomenklatura
+      - s3
+      - mailcatcher
+  #   - sentry
+    depends_on:
+      - database
+      - redis
+    environment:
+      RESQUE_SERVER_OPEN: "true"
+      ELASTICSEARCH_URL: http://elasticsearch:9200/
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgres://kleineanfragen:@database/kleineanfragen
+      TIKA_SERVER_URL: http://tika:9998
+  #   NOMENKLATURA_HOST: http://nomenklatura:8080
+  #   NOMENKLATURA_APIKEY: change_me
+  #   SENTRY_DSN: http://public:secret@sentry:9000/2
 
-database:
-  build: contrib/postgres-ka
-  environment:
-    POSTGRES_USER: kleineanfragen
-# ports:
-#   - "5432:5432"
+  database:
+    build: contrib/postgres-ka
+    environment:
+      POSTGRES_USER: kleineanfragen
+    ports:
+      - "5432:5432"
 
-redis:
-  image: redis
+  redis:
+    image: redis
 
-tika:
-  image: logicalspark/docker-tikaserver
-# ports:
-#   - "9998:9998"
+  tika:
+    image: logicalspark/docker-tikaserver
+  # ports:
+  #   - "9998:9998"
 
-elasticsearch:
-  image: elasticsearch:1.7
-## if you want to use elasticsearch head (standalone):
-#  command: elasticsearch -Des.http.cors.enabled=true
-#  ports:
-#    - "9200:9200"
+  elasticsearch:
+    image: elasticsearch:1.7
+  ## if you want to use elasticsearch head (standalone):
+    command: elasticsearch -Des.http.cors.enabled=true
+    ports:
+      - "9200:9200"
 
-#nomenklatura:
-# image: robbi5/nomenklatura
-# links:
-#   - database
-# environment:
-#   DATABASE_URL: postgres://kleineanfragen:@database/nomenklatura
-#   SECRET_KEY: change_me
-#   GITHUB_CLIENT_ID: change_me
-#   GITHUB_CLIENT_SECRET: change_me
-# ports:
-#   - "8080:8080"
+  #nomenklatura:
+  # image: robbi5/nomenklatura
+  # links:
+  #   - database
+  # environment:
+  #   DATABASE_URL: postgres://kleineanfragen:@database/nomenklatura
+  #   SECRET_KEY: change_me
+  #   GITHUB_CLIENT_ID: change_me
+  #   GITHUB_CLIENT_SECRET: change_me
+  # ports:
+  #   - "8080:8080"
 
-s3:
-  build: contrib/s3ninja
-  volumes:
-    - ./tmp/ka-dev:/data
-  ports:
-    - "9444:9444"
+  s3:
+    build: contrib/s3ninja
+    volumes:
+      - ./tmp/ka-dev:/data
+    ports:
+      - "9444:9444"
 
-mailcatcher:
-  image: schickling/mailcatcher
-  ports:
-    - "1080:1080"
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - "1080:1080"
 
-## local sentry to test exceptions notifications
-#sentry:
-#  image: slafs/sentry:7.4
-#  volumes:
-#    - ./tmp/sentry:/data
-#  ports:
-#    - "9000:9000"
-#  environment:
-#    SECRET_KEY: totallysecretdevkey
-#    SENTRY_URL_PREFIX: http://localhost:9000
-#    SENTRY_INITIAL_TEAM: kleineanfragen
-#    SENTRY_INITIAL_PROJECT: kleineanfragen
-#    SENTRY_INITIAL_PLATFORM: rails4
-#    SENTRY_INITIAL_KEY: public:secret
+  ## local sentry to test exceptions notifications
+  #sentry:
+  #  image: slafs/sentry:7.4
+  #  volumes:
+  #    - ./tmp/sentry:/data
+  #  ports:
+  #    - "9000:9000"
+  #  environment:
+  #    SECRET_KEY: totallysecretdevkey
+  #    SENTRY_URL_PREFIX: http://localhost:9000
+  #    SENTRY_INITIAL_TEAM: kleineanfragen
+  #    SENTRY_INITIAL_PROJECT: kleineanfragen
+  #    SENTRY_INITIAL_PLATFORM: rails4
+  #    SENTRY_INITIAL_KEY: public:secret
