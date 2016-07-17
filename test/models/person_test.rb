@@ -2,6 +2,7 @@ require 'test_helper'
 
 class PersonTest < ActiveSupport::TestCase
   setup do
+    Searchkick.disable_callbacks
     ENV['NOMENKLATURA_HOST'] = 'localhost'
     ENV['NOMENKLATURA_APIKEY'] = 'dummy'
   end
