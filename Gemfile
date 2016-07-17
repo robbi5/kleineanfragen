@@ -3,9 +3,9 @@ source 'https://rubygems.org'
 ruby '2.3.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.6'
+gem 'rails', '5.0.0'
 # Use postgresql as the database for Active Record
-gem 'pg'
+gem 'pg', '~> 0.18'
 # Use Puma as the app server
 gem 'puma'
 # Use SCSS for stylesheets
@@ -18,7 +18,7 @@ gem 'coffee-rails', '~> 4.2.1'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks', '~> 2.5.3'
+gem 'turbolinks', '~> 5.0'
 # Turbolinks <3 jquery
 gem 'jquery-turbolinks', '~> 2.1.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -44,12 +44,14 @@ group :development, :test do
   # gem 'spring'
 end
 
-gem 'sqlite3', group: :test
-gem 'memory_test_fix', '1.3.0', group: :test
-gem 'minitest-stub_any_instance', group: :test
+group :test do
+  gem 'sqlite3'
+  gem 'memory_test_fix', '~> 1.4.0'
+  gem 'minitest-stub_any_instance'
+end
 
 # Get i18n files
-gem 'rails-i18n', '~> 4.0.0'
+gem 'rails-i18n', '~> 5.0.0'
 
 # scraping
 gem 'mechanize', '~> 2.7.3'
@@ -63,7 +65,7 @@ gem 'friendly_id', '~> 5.1.0'
 gem 'addressable', '~> 2.4.0', require: 'addressable/uri'
 
 # styling
-gem 'bootstrap-sass', '~> 3.3.4'
+gem 'bootstrap-sass', '~> 3.3.6'
 
 # pagination
 gem 'kaminari', '~> 0.17.0'
@@ -89,7 +91,7 @@ gem 'fog-local', '~> 0.2.1'
 # jobs
 gem 'resque', '~> 1.26.0'
 gem 'resque-scheduler', '~> 4.3.0'
-gem 'activejob-retry', '~> 0.5.0'
+gem 'activejob-retry', '~> 0.6.1'
 gem 'resque-sentry', '~> 1.2.0'
 
 # for nomenklatura
@@ -99,7 +101,7 @@ gem 'httparty', '~> 0.13.7'
 gem 'fuzzy_match', '~> 2.1.0'
 
 # simple title and opengraph/twitter cards view helpers
-gem 'tophat', '~>2.3.0'
+gem 'tophat', '~> 2.3.0'
 
 # email urls
 gem 'hashids', '~> 1.0.2'
