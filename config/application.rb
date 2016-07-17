@@ -28,9 +28,6 @@ module Kleineanfragen
     config.i18n.available_locales = :de
     config.i18n.default_locale = :de
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
-
     # Disable image optim for assets
     config.assets.image_optim = false
 
