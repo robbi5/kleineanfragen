@@ -1,6 +1,6 @@
 class LegislativeTermController < ApplicationController
-  before_filter :find_body
-  before_filter :find_legislative_term
+  before_action :find_body
+  before_action :find_legislative_term
 
   def show
     redirect_to(body_feed_url(@body, format: :atom), status: :moved_permanently) if params[:format] == 'atom'

@@ -1,6 +1,6 @@
 class OrganizationController < ApplicationController
-  before_filter :find_body
-  before_filter :find_organization
+  before_action :find_body
+  before_action :find_organization
 
   def show
     @papers = @organization.papers

@@ -1,8 +1,8 @@
 class PaperController < ApplicationController
-  before_filter :find_body, only: [:show, :viewer, :report, :send_report, :update]
-  before_filter :find_legislative_term, only: [:show, :viewer, :report, :send_report, :update]
-  before_filter :find_paper, only: [:show, :viewer, :report, :send_report, :update]
-  before_filter :redirect_old_slugs, only: [:show]
+  before_action :find_body, only: [:show, :viewer, :report, :send_report, :update]
+  before_action :find_legislative_term, only: [:show, :viewer, :report, :send_report, :update]
+  before_action :find_paper, only: [:show, :viewer, :report, :send_report, :update]
+  before_action :redirect_old_slugs, only: [:show]
   before_action :check_active_push_ocr_token, only: [:update]
 
   def show

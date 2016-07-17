@@ -1,6 +1,6 @@
 class MinistryController < ApplicationController
-  before_filter :find_body
-  before_filter :find_ministry
+  before_action :find_body
+  before_action :find_ministry
 
   def show
     @papers = @ministry.papers
