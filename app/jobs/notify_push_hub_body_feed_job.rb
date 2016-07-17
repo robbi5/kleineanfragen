@@ -1,5 +1,5 @@
-class NotifyPuSHHubBodyFeedJob < ActiveJob::Base
   include ActiveJob::Retry
+class NotifyPuSHHubBodyFeedJob < ApplicationJob
 
   queue_as :subscription
 

@@ -1,4 +1,4 @@
-class PaperJob < ActiveJob::Base
+class PaperJob < ApplicationJob
   # override define_callbacks from active_job/callbacks.rb to support termination
   define_callbacks :perform, terminator: ->(_target, result) { result == false }
 

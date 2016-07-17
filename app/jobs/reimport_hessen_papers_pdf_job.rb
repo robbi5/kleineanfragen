@@ -1,4 +1,4 @@
-class ReimportHessenPapersPDFJob < ActiveJob::Base
+class ReimportHessenPapersPDFJob < ApplicationJob
   queue_as :meta
 
   DISTANCE = 14.days

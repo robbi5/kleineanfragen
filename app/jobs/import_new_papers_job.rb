@@ -1,4 +1,4 @@
-class ImportNewPapersJob < ActiveJob::Base
+class ImportNewPapersJob < ApplicationJob
   queue_as :import
 
   def self.perform_async(body, legislative_term)

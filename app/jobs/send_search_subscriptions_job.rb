@@ -1,4 +1,4 @@
-class SendSearchSubscriptionsJob < ActiveJob::Base
+class SendSearchSubscriptionsJob < ApplicationJob
   queue_as :subscription
 
   def perform

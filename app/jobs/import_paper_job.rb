@@ -1,4 +1,4 @@
-class ImportPaperJob < ActiveJob::Base
+class ImportPaperJob < ApplicationJob
   queue_as :import
 
   def perform(body, legislative_term, reference)

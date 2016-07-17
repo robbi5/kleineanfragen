@@ -1,4 +1,4 @@
-class SendBodySubscriptionsJob < ActiveJob::Base
+class SendBodySubscriptionsJob < ApplicationJob
   queue_as :subscription
 
   def perform(body)
