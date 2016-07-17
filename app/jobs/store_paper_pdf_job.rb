@@ -1,10 +1,9 @@
 class StorePaperPDFJob < PaperJob
-  include ActiveJob::Retry
+  include ActiveJob::Retry.new(strategy: :variable,
+                               delays: [5, 15, 30, 90],
+                               retryable_exceptions: [Patron::TimeoutError])
 
   queue_as :store
-
-  variable_retry delays: [5, 15, 30, 90],
-                 retryable_exceptions: [Patron::TimeoutError]
 
   def perform(paper, options = {})
     options.reverse_merge!(force: false)
