@@ -5,13 +5,13 @@ class ApplicationController < ActionController::Base
   # FIXME: correct place?
   def mime_extension(mime_type)
     case mime_type
-    when Mime::HTML
+    when Mime[:html]
       ''
-    when Mime::PDF
+    when Mime[:pdf]
       'pdf'
-    when Mime::TXT
+    when Mime[:txt]
       'txt'
-    when Mime::JSON
+    when Mime[:json]
       'json'
     else
       ''

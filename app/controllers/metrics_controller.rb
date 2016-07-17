@@ -21,7 +21,7 @@ class MetricsController < ApplicationController
     metrics << m('people_count', Person.count)
 
     response.headers['Content-Type'] = 'text/plain; version=0.0.4'
-    render text: render_metrics(metrics)
+    render plain: render_metrics(metrics)
   end
 
   private
