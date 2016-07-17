@@ -1,4 +1,4 @@
-class PaperOriginator < ActiveRecord::Base
+class PaperOriginator < ApplicationRecord
   belongs_to :paper
   belongs_to :originator, polymorphic: true
 

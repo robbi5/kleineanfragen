@@ -1,4 +1,4 @@
-class OptIn < ActiveRecord::Base
+class OptIn < ApplicationRecord
   validates :email, presence: true
   before_create :assign_confirmation_token
 

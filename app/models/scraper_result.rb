@@ -1,4 +1,4 @@
-class ScraperResult < ActiveRecord::Base
+class ScraperResult < ApplicationRecord
   belongs_to :body
 
   def status

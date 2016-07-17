@@ -1,4 +1,4 @@
-class EmailBlacklist < ActiveRecord::Base
+class EmailBlacklist < ApplicationRecord
   enum reason: [:report, :support]
 
   def email=(val)

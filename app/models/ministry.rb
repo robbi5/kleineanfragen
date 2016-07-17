@@ -1,4 +1,4 @@
-class Ministry < ActiveRecord::Base
+class Ministry < ApplicationRecord
   extend FriendlyId
   include NkSyncable
 

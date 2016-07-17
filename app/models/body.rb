@@ -1,4 +1,4 @@
-class Body < ActiveRecord::Base
+class Body < ApplicationRecord
   extend FriendlyId
   friendly_id :name, use: :slugged
   has_many :papers, -> { answers }

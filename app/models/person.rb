@@ -1,4 +1,4 @@
-class Person < ActiveRecord::Base
+class Person < ApplicationRecord
   include NkSyncable
 
   has_and_belongs_to_many :organizations

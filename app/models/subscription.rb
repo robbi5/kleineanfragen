@@ -1,4 +1,4 @@
-class Subscription < ActiveRecord::Base
+class Subscription < ApplicationRecord
   enum subtype: [:body, :search] # FIXME: all?
 
   validates :email, presence: true, email: true

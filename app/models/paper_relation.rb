@@ -1,4 +1,4 @@
-class PaperRelation < ActiveRecord::Base
+class PaperRelation < ApplicationRecord
   REASON_REFERENCE_IN_TITLE = 'reference_in_title'
   REASON_REFERENCE_IN_TEXT = 'reference_in_text'
 
