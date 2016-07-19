@@ -1,4 +1,4 @@
-$(function(){
+document.addEventListener("turbolinks:load", function() {
   var papers = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
     queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -21,6 +21,7 @@ $(function(){
       location.href = suggestion.url;
     }
   });
+
   $('.selectpicker').selectpicker({
       iconBase: '',
       tickIcon: 'selected-tick'

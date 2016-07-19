@@ -52,6 +52,10 @@ $brand-primary: #2980b9;
   font-family: $webfont-family-sans-serif;
 }
 
+.turbolinks-progress-bar {
+  background: $brand-primary;
+}
+
 .navbar {
   margin-bottom: 0;
 }
