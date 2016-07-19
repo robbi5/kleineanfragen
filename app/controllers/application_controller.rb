@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   # kleineAnfragen is sessionless. only "risky" form is for email subscription, and thats requiring double-opt-in.
-  protect_from_forgery with: :null_session
+  # So the following line is commented out:
+  # protect_from_forgery with: :null_session
 
   # FIXME: correct place?
   def mime_extension(mime_type)
