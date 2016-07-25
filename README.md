@@ -15,8 +15,8 @@ If you want to look into postgres or elasticsearch, uncomment the `ports` sectio
 
 You may be required to execute database migrations. Try this:
 
-    docker-compose run web rake db:migrate
-    docker-compose run web rake db:seed
+    docker-compose run web rails db:migrate
+    docker-compose run web rails db:seed
 
 To get a rails console, run:
 
@@ -95,14 +95,14 @@ The typical arguments are `[State, LegislativeTerm, Reference]`
 * Import new papers
 
   ```
-  rake 'papers:import_new[BE, 17]'
+  rails 'papers:import_new[BE, 17]'
   ```
 
 
 * Import single paper
 
   ```
-  rake 'papers:import[BE, 17, 1234]'
+  rails 'papers:import[BE, 17, 1234]'
   ```
 
 
@@ -110,7 +110,7 @@ The typical arguments are `[State, LegislativeTerm, Reference]`
 
   The two import tasks should be enough for daily usage, if you need to (re-)upload the papers to s3 again or extract the text / names, you can use these:
 
-      rake 'papers:store[BE, 17, 1234]'
-      rake 'papers:extract_text[BE, 17, 1234]'
-      rake 'papers:extract_originators[BE, 17, 1234]'
-      rake 'papers:extract_answerers[BE, 17, 1234]'
+      rails 'papers:store[BE, 17, 1234]'
+      rails 'papers:extract_text[BE, 17, 1234]'
+      rails 'papers:extract_originators[BE, 17, 1234]'
+      rails 'papers:extract_answerers[BE, 17, 1234]'
