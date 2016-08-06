@@ -1,4 +1,4 @@
-class CreateOrganizationsPeople < ActiveRecord::Migration
+class CreateOrganizationsPeople < ActiveRecord::Migration[4.2]
   def change
     create_table :organizations_people, id: false do |t|
       t.references :organization

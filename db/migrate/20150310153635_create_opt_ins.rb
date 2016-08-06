@@ -1,4 +1,4 @@
-class CreateOptIns < ActiveRecord::Migration
+class CreateOptIns < ActiveRecord::Migration[4.2]
   def change
     create_table :opt_ins do |t|
       t.string :email

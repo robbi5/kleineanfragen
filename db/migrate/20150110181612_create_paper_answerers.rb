@@ -1,4 +1,4 @@
-class CreatePaperAnswerers < ActiveRecord::Migration
+class CreatePaperAnswerers < ActiveRecord::Migration[4.2]
   def change
     create_table :paper_answerers do |t|
       t.references :paper, index: true

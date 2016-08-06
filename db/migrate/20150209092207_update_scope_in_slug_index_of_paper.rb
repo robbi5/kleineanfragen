@@ -1,4 +1,4 @@
-class UpdateScopeInSlugIndexOfPaper < ActiveRecord::Migration
+class UpdateScopeInSlugIndexOfPaper < ActiveRecord::Migration[4.2]
   def up
     remove_index :papers, :slug
     add_index :papers, [:body_id, :legislative_term, :slug], unique: true

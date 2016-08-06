@@ -1,4 +1,4 @@
-class AddSlugToBody < ActiveRecord::Migration
+class AddSlugToBody < ActiveRecord::Migration[4.2]
   def change
     add_column :bodies, :slug, :string
     add_index :bodies, :slug, unique: true

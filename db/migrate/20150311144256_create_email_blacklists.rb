@@ -1,4 +1,4 @@
-class CreateEmailBlacklists < ActiveRecord::Migration
+class CreateEmailBlacklists < ActiveRecord::Migration[4.2]
   def change
     create_table :email_blacklists do |t|
       t.string :email

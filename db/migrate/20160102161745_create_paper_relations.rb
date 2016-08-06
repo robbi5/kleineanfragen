@@ -1,4 +1,4 @@
-class CreatePaperRelations < ActiveRecord::Migration
+class CreatePaperRelations < ActiveRecord::Migration[4.2]
   def change
     create_table :paper_relations do |t|
       t.references :paper, index: true, foreign_key: true, null: false

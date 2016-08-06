@@ -1,4 +1,4 @@
-class CreateScraperResults < ActiveRecord::Migration
+class CreateScraperResults < ActiveRecord::Migration[4.2]
   def change
     create_table :scraper_results do |t|
       t.references :body

@@ -1,4 +1,4 @@
-class UpdateScopeInSlugIndexOfMinistry < ActiveRecord::Migration
+class UpdateScopeInSlugIndexOfMinistry < ActiveRecord::Migration[4.2]
   def up
     remove_index :ministries, :slug
     add_index :ministries, [:body_id, :slug], unique: true
