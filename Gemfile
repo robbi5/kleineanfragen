@@ -80,6 +80,7 @@ gem 'image_optim', '~> 0.22.0'
 
 # search!
 gem 'searchkick', '~> 0.9.1'
+gem 'elasticsearch', '>= 1.0.0', '< 2.0.0'
 gem 'patron', '~> 0.7.1'
 gem 'typhoeus', '~> 1.0.1'
 
