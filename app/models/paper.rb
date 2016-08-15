@@ -2,10 +2,14 @@ class Paper < ApplicationRecord
   extend FriendlyId
   friendly_id :reference_and_title, use: :scoped, scope: [:body, :legislative_term]
 
-  DOCTYPES = ['minor', 'major', 'written']
-  DOCTYPE_MINOR_INTERPELLATION = 'minor'
-  DOCTYPE_MAJOR_INTERPELLATION = 'major'
-  DOCTYPE_WRITTEN_INTERPELLATION = 'written'
+  DOCTYPE_MINOR_INTERPELLATION = 'minor'.freeze
+  DOCTYPE_MAJOR_INTERPELLATION = 'major'.freeze
+  DOCTYPE_WRITTEN_INTERPELLATION = 'written'.freeze
+  DOCTYPES = [
+    DOCTYPE_MINOR_INTERPELLATION,
+    DOCTYPE_MAJOR_INTERPELLATION,
+    DOCTYPE_WRITTEN_INTERPELLATION
+  ]
 
   # enable search
   searchkick language: 'german',
