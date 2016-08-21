@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+bayern_17:
+  body: bayern
+  term: 17
+  starts_at: 2013-10-07
+  ends_at: nil
+
+berlin_17:
+  body: berlin
+  term: 17
+  starts_at: 2011-10-27
+  ends_at: nil

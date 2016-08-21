@@ -26,7 +26,7 @@ Body.create([
   { name: 'Thüringen',              state: 'TH', website: 'http://www.parldok.thueringen.de' }
 ])
 
-berlin = Body.find_by_name('Berlin')
+berlin = Body.find_by_state('BE')
 Ministry.create([
   { body: berlin, short_name: 'SenArbIntFrau',   name: 'Senatsverwaltung für Arbeit, Integration und Frauen' },
   { body: berlin, short_name: 'SenBildJugWiss',  name: 'Senatsverwaltung für Bildung, Jugend und Wissenschaft' },

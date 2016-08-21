@@ -11,7 +11,7 @@ class EmailProcessor
 
     if @email.from[:email].ends_with? '@parlament-berlin.de'
       berlin = Body.find_by_state('BE')
-      InstantImportNewPapersJob.perform_later(berlin, berlin.legislative_terms.first)
+      InstantImportNewPapersJob.perform_later(berlin, berlin.legislative_terms.first.term)
     end
   end
 

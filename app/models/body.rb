@@ -5,6 +5,7 @@ class Body < ApplicationRecord
   has_many :ministries
   has_many :organizations, -> { distinct }, through: :papers, source: :originator_organizations
   has_many :scraper_results
+  has_many :legislative_terms, -> { order(term: :desc) }
 
   validates :name, uniqueness: true
   validates :state, uniqueness: true
@@ -41,10 +42,6 @@ class Body < ApplicationRecord
     when 'ST' then SachsenAnhaltLandtagScraper
     when 'TH' then ThueringenLandtagScraper
     end
-  end
-
-  def legislative_terms
-    Paper.where(body: self).group(:legislative_term).count.keys.sort
   end
 
   def create_nomenklatura_datasets
