@@ -12,12 +12,15 @@ module Kleineanfragen
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
+
     config.autoload_paths += %W(#{Rails.root}/lib)
     config.autoload_paths += %W(#{Rails.root}/lib/constraints)
     config.autoload_paths += %W(#{Rails.root}/app/jobs)
     config.autoload_paths += %W(#{Rails.root}/app/scrapers)
     config.autoload_paths += %W(#{Rails.root}/app/extractors)
     config.autoload_paths += %W(#{Rails.root}/app/validators)
+    config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
 
     config.eager_load_paths += %W(#{Rails.root}/lib)
 
@@ -35,6 +38,17 @@ module Kleineanfragen
 
     # active job
     config.active_job.queue_adapter = :resque
+
+    # enable cors for api
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'
+        resource '*',
+          headers: :any,
+          methods: [:get, :head, :options],
+          if: proc { |env| env['HTTP_HOST'].start_with? 'api.' }
+      end
+    end
 
     # Ohai developers!
     config.action_dispatch.default_headers.merge!('X-Developer' => 'Looking for raw data? Try /data.')

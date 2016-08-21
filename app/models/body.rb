@@ -10,9 +10,11 @@ class Body < ApplicationRecord
   validates :name, uniqueness: true
   validates :state, uniqueness: true
 
-  def folder_name
+  def key
     state.downcase
   end
+
+  alias_method :folder_name, :key
 
   def should_generate_new_friendly_id?
     name_changed? || super

@@ -9,6 +9,10 @@ Rails.application.routes.draw do
     mount Resque::Server.new, at: '/.resque'
   end
 
+  constraints subdomain: 'api' do
+    mount OParl::API, at: '/'
+  end
+
   get 'search' => 'search#search', as: :search
   get 'search/advanced' => 'search#advanced', as: :search_advanced
   get 'search/autocomplete' => 'search#autocomplete'
