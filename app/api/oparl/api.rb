@@ -17,8 +17,23 @@ module OParl
           @xbody = Body.where('lower(state) = ?', params[:body]).try(:first)
         end
 
+        namespace :organization do
+          route_param :organization do
+            before do
+              @org = @xbody.organizations.where(slug: params[:organization]).first
+            end
+
+            get do
+              present @org, with: OParl::Entities::Organization, type: :org_full, body: @xbody
+            end
+          end
+        end
+
         get :organizations do
-          # get /body/:body/organizations
+          orgs = @xbody.organizations.order(id: :asc)
+          present orgs, root: 'data', with: OParl::Entities::Organization, type: :org_full, body: @xbody
+          present :links, []
+          present :pagination, {}, {}
         end
 
         get :people do
