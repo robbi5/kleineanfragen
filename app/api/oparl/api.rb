@@ -10,6 +10,18 @@ module OParl
     format :json
     default_format :json
 
+    namespace :person do
+      route_param :person do
+        before do
+          @xperson = Person.friendly.find(params[:person])
+        end
+
+        get do
+          present @xperson, with: OParl::Entities::Person
+        end
+      end
+    end
+
     namespace :body do
       route_param :body do
         before do
@@ -37,7 +49,10 @@ module OParl
         end
 
         get :people do
-          # get /body/:body/people
+          people = @xbody.people.order(id: :asc)
+          present people, root: 'data', with: OParl::Entities::Person
+          present :links, []
+          present :pagination, {}, {}
         end
 
         get :papers do

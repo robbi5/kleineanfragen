@@ -6,6 +6,7 @@ class Body < ApplicationRecord
   has_many :organizations, -> { distinct }, through: :papers, source: :originator_organizations
   has_many :scraper_results
   has_many :legislative_terms, -> { order(term: :desc) }
+  has_many :people, -> { distinct }, through: :papers, source: :originator_people
 
   validates :name, uniqueness: true
   validates :state, uniqueness: true

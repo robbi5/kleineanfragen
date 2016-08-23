@@ -14,4 +14,8 @@ class Person < ApplicationRecord
   def bodies
     Body.find papers.pluck(:body_id).uniq
   end
+
+  def latest_body
+    Body.find papers.order(created_at: :desc).limit(1).pluck(:body_id).first
+  end
 end
