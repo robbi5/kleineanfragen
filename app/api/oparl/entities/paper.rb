@@ -1,0 +1,26 @@
+module OParl
+  module Entities
+    class Paper < Grape::Entity
+      expose(:id) { |paper| OParl::Routes.oparl_v1_body_term_paper_url(body: paper.body.key, term: paper.legislative_term, paper: paper.reference) }
+      expose(:type) { |_| 'https://schema.oparl.org/1.0/Paper' }
+
+      expose(:body) { |paper| OParl::Routes.oparl_v1_body_url(body: paper.body.key) }
+
+      expose(:name) { |paper| paper.title }
+      expose(:reference) { |paper| paper.full_reference }
+      expose(:date) { |paper| paper.published_at }
+      expose(:paperType) { |paper| paper.is_answer? ? "Antwort auf #{paper.doctype_human}" : paper.doctype_human }
+
+      # FIXME: mainFile
+
+      # FIXME: originatorPerson
+      # FIXME: underDirectionof
+      # FIXME: originatorOrganization
+
+      expose(:web) { |paper| Rails.application.routes.url_helpers.paper_url(paper.body, paper.legislative_term, paper) } # equivalent in html
+
+      expose(:created) { |obj| obj.created_at }
+      expose(:modified) { |obj| obj.updated_at }
+    end
+  end
+end

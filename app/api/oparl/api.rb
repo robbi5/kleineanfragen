@@ -13,6 +13,7 @@ module OParl
     namespace :person do
       route_param :person do
         before do
+          # called @xperson, because @person confuses grape
           @xperson = Person.friendly.find(params[:person])
         end
 
@@ -36,14 +37,14 @@ module OParl
             end
 
             get do
-              present @org, with: OParl::Entities::Organization, type: :org_full, body: @xbody
+              present @org, with: OParl::Entities::Organization, body: @xbody
             end
           end
         end
 
         get :organizations do
           orgs = @xbody.organizations.order(id: :asc)
-          present orgs, root: 'data', with: OParl::Entities::Organization, type: :org_full, body: @xbody
+          present orgs, root: 'data', with: OParl::Entities::Organization, body: @xbody
           present :links, []
           present :pagination, {}, {}
         end
@@ -56,13 +57,29 @@ module OParl
         end
 
         get :papers do
-          # get /body/:body/papers
+          papers = @xbody.papers.order(id: :asc).limit(10) # FIXME
+          present papers, root: 'data', with: OParl::Entities::Paper
+          present :links, []
+          present :pagination, {}, {}
         end
 
         namespace :term do
           route_param :term do
             before do
               @legislative_term = @xbody.legislative_terms.where(term: params[:term]).first
+            end
+
+            namespace :paper do
+              route_param :paper do
+                before do
+                  # called @xpaper, because @paper confuses grape
+                  @xpaper = @xbody.papers.where(legislative_term: params[:term], reference: params[:paper]).first
+                end
+
+                get do
+                  present @xpaper, with: OParl::Entities::Paper
+                end
+              end
             end
 
             get do
@@ -79,7 +96,7 @@ module OParl
         end
 
         get do
-          present @xbody, with: OParl::Entities::Body, type: :body_full
+          present @xbody, with: OParl::Entities::Body
         end
       end
     end

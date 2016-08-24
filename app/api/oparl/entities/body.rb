@@ -3,7 +3,7 @@ module OParl
     class Body < Grape::Entity
       expose(:id) { |body| OParl::Routes.oparl_v1_body_url(body: body.key) }
       expose(:type) { |_| 'https://schema.oparl.org/1.0/Body' }
-      expose(:system, if: { type: :body_full }) { |_| OParl::Routes.oparl_v1_system_url }
+      expose(:system) { |_| OParl::Routes.oparl_v1_system_url }
       expose(:shortName) { |body| body.state }
       expose :name
       expose :website

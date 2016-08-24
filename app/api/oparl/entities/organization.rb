@@ -4,7 +4,7 @@ module OParl
       expose(:id) { |org, options| OParl::Routes.oparl_v1_body_organization_url(body: options[:body].key, organization: org.slug) }
       expose(:type) { |_| 'https://schema.oparl.org/1.0/Organization' }
 
-      expose(:body, if: { type: :org_full }) { |org, options| OParl::Routes.oparl_v1_body_url(body: options[:body].key) }
+      expose(:body) { |org, options| OParl::Routes.oparl_v1_body_url(body: options[:body].key) }
 
       expose :name
       expose(:organizationType) { |_| 'Fraktion' } # TODO: add type to model
