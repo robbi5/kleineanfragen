@@ -11,7 +11,7 @@ module OParl
       expose(:date) { |paper| paper.published_at }
       expose(:paperType) { |paper| paper.is_answer? ? "Antwort auf #{paper.doctype_human}" : paper.doctype_human }
 
-      # FIXME: mainFile
+      expose :mainFile, using: OParl::Entities::File
 
       # FIXME: originatorPerson
       # FIXME: underDirectionof
@@ -21,6 +21,13 @@ module OParl
 
       expose(:created) { |obj| obj.created_at }
       expose(:modified) { |obj| obj.updated_at }
+
+      private
+
+      # file is currently the same paper, until we support multiple files per paper.
+      def mainFile
+        object
+      end
     end
   end
 end
