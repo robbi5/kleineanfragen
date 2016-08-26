@@ -34,11 +34,13 @@ module OParl
       before do
         # called @xbody, because @body confuses grape
         @xbody = Body.where('lower(state) = ?', params[:body]).try(:first)
+        error! :not_found, 404 if @xbody.nil?
       end
 
       namespace_route :organization do
         before do
-          @org = @xbody.organizations.where(slug: params[:organization]).first
+          @org = @xbody.organizations.where(slug: params[:organization]).try(:first)
+          error! :not_found, 404 if @org.nil?
         end
 
         get do
@@ -69,18 +71,21 @@ module OParl
 
       namespace_route :term do
         before do
-          @legislative_term = @xbody.legislative_terms.where(term: params[:term]).first
+          @legislative_term = @xbody.legislative_terms.where(term: params[:term]).try(:first)
+          error! :not_found, 404 if @legislative_term.nil?
         end
 
         namespace_route :paper do
           before do
             # called @xpaper, because @paper confuses grape
-            @xpaper = @xbody.papers.where(legislative_term: params[:term], reference: params[:paper]).first
+            @xpaper = @xbody.papers.where(legislative_term: params[:term], reference: params[:paper]).try(:first)
+            error! :not_found, 404 if @xpaper.nil?
           end
 
           namespace_route :file do
             # file is currently a paper too, until we support multiple files per paper.
             get do
+              error! :not_found, 404 if params[:file] != '1'
               present @xpaper, with: OParl::Entities::File, type: :file_full
             end
           end
