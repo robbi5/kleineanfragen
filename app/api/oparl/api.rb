@@ -12,6 +12,7 @@ module OParl
 
     include OParl::Current
     include OParl::Pagination
+    include OParl::Filter
 
     # combine namespace and route_param to shorten indentation
     def self.namespace_route(key)
@@ -52,21 +53,24 @@ module OParl
       end
 
       paginate
+      filter
       get :organizations do
         orgs = @xbody.organizations.order(id: :asc)
-        present paginate(orgs), root: 'data', with: OParl::Entities::Organization, body: @xbody
+        present paginate(filter(orgs)), root: 'data', with: OParl::Entities::Organization, body: @xbody
       end
 
       paginate
+      filter
       get :people do
         people = @xbody.people.order(id: :asc)
-        present paginate(people), root: 'data', with: OParl::Entities::Person
+        present paginate(filter(people)), root: 'data', with: OParl::Entities::Person
       end
 
       paginate
+      filter
       get :papers do
         papers = @xbody.papers.order(id: :asc)
-        present paginate(papers), root: 'data', with: OParl::Entities::Paper
+        present paginate(filter(papers)), root: 'data', with: OParl::Entities::Paper
       end
 
       namespace_route :term do
@@ -101,9 +105,10 @@ module OParl
       end
 
       paginate
+      filter
       get :terms do
         terms = @xbody.legislative_terms
-        present paginate(terms), root: 'data', with: OParl::Entities::LegislativeTerm, type: :lt_full
+        present paginate(filter(terms)), root: 'data', with: OParl::Entities::LegislativeTerm, type: :lt_full
       end
 
       get do
@@ -112,9 +117,10 @@ module OParl
     end
 
     paginate
+    filter
     get :bodies do
       bodies = Body.order(state: :asc)
-      present paginate(bodies), root: 'data', with: OParl::Entities::Body
+      present paginate(filter(bodies)), root: 'data', with: OParl::Entities::Body
     end
 
     get '/', as: :oparl_v1_system do
