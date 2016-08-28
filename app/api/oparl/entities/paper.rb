@@ -13,9 +13,10 @@ module OParl
 
       expose :mainFile, using: OParl::Entities::File
 
-      # FIXME: originatorPerson
+      expose(:originatorPerson) { |paper| paper.originator_people.map { |person| OParl::Routes.oparl_v1_person_url(person: person.slug) } }
       # FIXME: underDirectionof
-      # FIXME: originatorOrganization
+      expose(:originatorOrganization) { |paper| paper.originator_organizations.map { |org| OParl::Routes.oparl_v1_body_organization_url(body: paper.body.key, organization: org.slug) } }
+
 
       expose(:web) { |paper| Rails.application.routes.url_helpers.paper_url(paper.body, paper.legislative_term, paper) } # equivalent in html
 
