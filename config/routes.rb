@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   end
 
   constraints subdomain: 'api' do
+    get 'status' => 'site#status'
+    get '/', to: redirect(subdomain: false)
     mount OParl::API, at: '/'
   end
 
