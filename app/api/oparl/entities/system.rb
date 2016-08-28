@@ -4,6 +4,7 @@ module OParl
       expose(:id) { |_| OParl::Routes.oparl_v1_system_url }
       expose(:type) { |_| 'https://schema.oparl.org/1.0/System' }
       expose(:oparlVersion) { |_| 'https://schema.oparl.org/1.0/' }
+      expose(:license) { |_| 'http://opendatacommons.org/licenses/odbl/1.0/' }
       expose(:body) { |_| OParl::Routes.oparl_v1_bodies_url }
       expose(:name) { |_| 'kleineAnfragen' }
       expose(:contactEmail) { |sys| sys[:contact].match(/(.+)\s<(.+)>/).to_a[1] }
