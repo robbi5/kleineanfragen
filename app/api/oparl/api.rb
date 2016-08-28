@@ -10,6 +10,9 @@ module OParl
     format :json
     default_format :json
 
+    include OParl::Current
+    include OParl::Pagination
+
     # combine namespace and route_param to shorten indentation
     def self.namespace_route(key)
       namespace key do
@@ -48,25 +51,22 @@ module OParl
         end
       end
 
+      paginate
       get :organizations do
         orgs = @xbody.organizations.order(id: :asc)
-        present orgs, root: 'data', with: OParl::Entities::Organization, body: @xbody
-        present :links, []
-        present :pagination, {}, {}
+        present paginate(orgs), root: 'data', with: OParl::Entities::Organization, body: @xbody
       end
 
+      paginate
       get :people do
         people = @xbody.people.order(id: :asc)
-        present people, root: 'data', with: OParl::Entities::Person
-        present :links, []
-        present :pagination, {}, {}
+        present paginate(people), root: 'data', with: OParl::Entities::Person
       end
 
+      paginate
       get :papers do
-        papers = @xbody.papers.order(id: :asc).limit(10) # FIXME
-        present papers, root: 'data', with: OParl::Entities::Paper
-        present :links, []
-        present :pagination, {}, {}
+        papers = @xbody.papers.order(id: :asc)
+        present paginate(papers), root: 'data', with: OParl::Entities::Paper
       end
 
       namespace_route :term do
@@ -100,11 +100,10 @@ module OParl
         end
       end
 
+      paginate
       get :terms do
         terms = @xbody.legislative_terms
-        present terms, root: 'data', with: OParl::Entities::LegislativeTerm, type: :lt_full
-        present :links, []
-        present :pagination, {}, {}
+        present paginate(terms), root: 'data', with: OParl::Entities::LegislativeTerm, type: :lt_full
       end
 
       get do
@@ -112,11 +111,10 @@ module OParl
       end
     end
 
+    paginate
     get :bodies do
-      bodies = Body.order(state: :asc).all
-      present bodies, root: 'data', with: OParl::Entities::Body
-      present :links, []
-      present :pagination, {}, {}
+      bodies = Body.order(state: :asc)
+      present paginate(bodies), root: 'data', with: OParl::Entities::Body
     end
 
     get '/', as: :oparl_v1_system do
