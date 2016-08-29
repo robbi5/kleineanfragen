@@ -1,8 +1,8 @@
-<% title "#{@body.name}, #{@legislative_term}. Wahlperiode" -%>
+<% title "#{@body.name}, #{@legislative_term.term}. Wahlperiode" -%>
 <%- content_for :head do %><%= auto_discovery_link_tag(:atom, body_feed_url(body: @body, format: :atom)) %><% end -%>
 
 <div class="page-header page-header--has-feed">
-  <h1><%= link_to @body.name, @body %> &mdash; <%= @legislative_term %>. Wahlperiode</h1>
+  <h1><%= link_to @body.name, @body %> &mdash; <%= @legislative_term.term %>. Wahlperiode</h1>
   <%= link_to body_feed_url(body: @body, format: :atom), class: 'feed', title: 'neue Anfragen als Atom-Feed abonnieren' do %>
     <span class="sr-only">neue Anfragen als Atom-Feed abonnieren:</span><%= image_tag('feed-icon.svg', class: 'feed-icon', alt: 'Atom-Feed') %>
   <% end %>

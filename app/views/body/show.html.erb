@@ -11,12 +11,12 @@
 <div class="page-content row">
   <div class="col-md-6">
     <ol class="legislative-terms-overview">
-      <% @terms.each do |term, count| %>
+      <% @terms.each do |term| %>
       <li class="row">
-        <h2 class="col-xs-9 col-sm-10"><%= link_to "#{term.to_s}. Wahlperiode", legislative_term_path(@body, term) %></h2>
+        <h2 class="col-xs-9 col-sm-10"><%= link_to "#{term.term}. Wahlperiode", legislative_term_path(@body, term.term) %></h2>
         <div class="paper-count col-xs-3 col-sm-2">
-          <span><%= number_with_delimiter count %></span><br/>
-          <%= t :anfragen, count: count %>
+          <span><%= number_with_delimiter term.papers.count %></span><br/>
+          <%= t :anfragen, count: term.papers.count %>
         </div>
       </li>
       <% end %>

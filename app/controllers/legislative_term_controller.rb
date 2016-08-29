@@ -5,8 +5,7 @@ class LegislativeTermController < ApplicationController
   def show
     redirect_to(body_feed_url(@body, format: :atom), status: :moved_permanently) if params[:format] == 'atom'
 
-    @papers = @body.papers
-              .where(legislative_term: @legislative_term)
+    @papers = @legislative_term.papers
               .where.not(published_at: nil)
               .includes(:body, :paper_originators)
               .order(published_at: :desc, reference: :desc)
@@ -21,6 +20,6 @@ class LegislativeTermController < ApplicationController
   end
 
   def find_legislative_term
-    @legislative_term = params[:legislative_term].to_i
+    @legislative_term = @body.legislative_terms.find_by_term(params[:legislative_term].to_i)
   end
 end
