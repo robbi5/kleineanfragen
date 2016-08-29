@@ -14,7 +14,7 @@ module OParl
       expose :mainFile, using: OParl::Entities::File
 
       expose(:originatorPerson) { |paper| paper.originator_people.map { |person| OParl::Routes.oparl_v1_person_url(person: person.slug) } }
-      # FIXME: underDirectionof
+      expose(:underDirectionOf) { |paper| paper.answerer_ministries.map { |ministry| OParl::Routes.oparl_v1_body_organization_url(body: paper.body.key, organization: ministry.slug) } }
       expose(:originatorOrganization) { |paper| paper.originator_organizations.map { |org| OParl::Routes.oparl_v1_body_organization_url(body: paper.body.key, organization: org.slug) } }
 
 
