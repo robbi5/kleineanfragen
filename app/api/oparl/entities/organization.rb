@@ -7,9 +7,15 @@ module OParl
       expose(:body) { |org, options| OParl::Routes.oparl_v1_body_url(body: options[:body].key) }
 
       expose :name
-      expose(:organizationType) { |_| 'Fraktion' } # TODO: add type to model
+      expose(:organizationType) { |org| org.is_a?(::Ministry) ? 'Ministerium' : 'Fraktion' } # TODO: add type to model
 
-      expose(:web) { |org, options| Rails.application.routes.url_helpers.organization_url(options[:body], org) } # equivalent in html
+      expose(:web) do |org, options| # equivalent in html
+        if org.is_a?(::Ministry)
+          Rails.application.routes.url_helpers.ministry_url(options[:body], org)
+        else
+          Rails.application.routes.url_helpers.organization_url(options[:body], org)
+        end
+      end
 
       expose(:created) { |obj| obj.created_at }
       expose(:modified) { |obj| obj.updated_at }

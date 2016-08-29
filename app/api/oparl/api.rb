@@ -44,6 +44,7 @@ module OParl
       namespace_route :organization do
         before do
           @org = @xbody.organizations.where(slug: params[:organization]).try(:first)
+          @org = @xbody.ministries.where(slug: params[:organization]).try(:first) if @org.nil?
           error! :not_found, 404 if @org.nil?
         end
 
@@ -56,7 +57,9 @@ module OParl
       filter
       get :organizations do
         orgs = @xbody.organizations.order(id: :asc)
-        present paginate(filter(orgs)), root: 'data', with: OParl::Entities::Organization, body: @xbody
+        ministries = @xbody.ministries.order(id: :asc)
+        result = filter(orgs) + filter(ministries)
+        present paginate(Kaminari.paginate_array(result)), root: 'data', with: OParl::Entities::Organization, body: @xbody
       end
 
       paginate
