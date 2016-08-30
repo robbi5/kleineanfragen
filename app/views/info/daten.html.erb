@@ -16,15 +16,17 @@ enthalten, zögere nicht
 sind als Datensätze auf der <a href="https://nk.kleine-anfragen.de">Nomenklatura-Instanz von kleineAnfragen</a>
 einseh- und herunterladbar.</p>
 
-<h1>Datenexport</h1>
-<p>Für eigene Auswertungen steht die Datenbank hinter kleineAnfragen zum Download bereit:</p>
-<iframe src="https://s3.kleine-anfragen.de/ka-dump/index.html" frameborder="0" class="dump-iframe"></iframe>
-<p><a href="https://s3.kleine-anfragen.de/ka-dump/index.html" target="_blank">In einem neuen Fenster öffnen</a> <small>(Amazon S3-kompatibles Bucket)</small></p>
-<p>Das Datenbankschema ist <a href="https://github.com/robbi5/kleineanfragen/blob/master/db/schema.rb">auf GitHub (<code>db/schema.rb</code>)</a> zu finden.</p>
-
 <h1>API</h1>
-<p>Wer nicht den kompletten Datenbestand ziehen und analysieren will: Jede Anfragen-Seite gibt es auch im <code>JSON</code>-Format. Dazu einfach <code>.json</code> an die URL anhängen.</p>
-<p>Eine vollständigere API, basierend auf <a href="https://github.com/robbi5/kleineanfragen/issues/106">OParl, kommt bald</a>.</p>
+<p>Für den schnellen Zugriff auf Daten einer Anfrage: Jede Anfragen-Seite gibt es auch im <code>JSON</code>-Format. Dazu einfach <code>.json</code> an die URL anhängen.</p>
+
+<h2>OParl</h2>
+<p>kleineAnfragen ist für einen vollständigeren Zugriff auch kompatibel zum <a href="https://oparl.org">OParl-Standard</a> in der Version 1.0.</p>
+<p>OParl ist ein Standard für den Zugriff auf parlamentarische Informationssysteme.</p>
+<p>kleineAnfragen stellt jedoch keine vollständigen Parlamentsdaten bereit, da nur Drucksachen abrufbar sind, die sich mit Anfragen beschäftigen. Zudem sind <a href="https://oparl.org/spezifikation/online-ansicht/#entity-meeting">Meeting</a>s, <a href="https://oparl.org/spezifikation/online-ansicht/#consultation">Consultation</a>s und andere Elemente, die für ein vollständigeres Abbilden eines Parlaments benötigt werden, nicht enthalten.</p>
+<div class="well well-oparl">
+  <code><%= link_to OParl::Routes.oparl_v1_system_url, OParl::Routes.oparl_v1_system_url, class: 'oparl-link' %></code><br/>
+  <small><a href="https://oparl.org/spezifikation/online-ansicht/">Spezifikation OParl 1.0</a></small>
+</div>
 
 <h1>Feeds</h1>
 <p><%= link_to 'Zuletzt veröffentlichte Anfragen', recent_url(format: :atom) %> (Gesamt), aus den einzelnen Parlamenten und zu Suchbegriffen gibt es auch als Feeds.</p>
@@ -33,6 +35,12 @@ einseh- und herunterladbar.</p>
 <p>Die Gesamt- bzw. Parlamentsfeeds sind zudem mit <%= link_to 'einem PubSubHubbub-Server', Rails.configuration.x.push_hub %> verknüpft. Dies ermöglicht eine Benachrichtigung über neue Anfragen, ohne den Feed regelmäßig abfragen zu müssen.</p>
 <% end %>
 
+<h1>Datenexport</h1>
+<p>Für eigene Auswertungen steht die Datenbank hinter kleineAnfragen (inkl. Volltext der Dokumente) zum Download bereit:</p>
+<iframe src="https://s3.kleine-anfragen.de/ka-dump/index.html" frameborder="0" class="dump-iframe"></iframe>
+<p><a href="https://s3.kleine-anfragen.de/ka-dump/index.html" target="_blank">In einem neuen Fenster öffnen</a> <small>(Amazon S3-kompatibles Bucket)</small></p>
+<p>Das Datenbankschema ist <a href="https://github.com/robbi5/kleineanfragen/blob/master/db/schema.rb">auf GitHub (<code>db/schema.rb</code>)</a> zu finden.</p>
+
 <h2>Lizenz</h2>
-<p>Die Daten von kleineAnfragen werden unter der <a href="http://opendatacommons.org/licenses/odbl/">Open Database License (ODbL)</a> angeboten. Daher können sie ohne Rückfrage auch für kommerzielle Zwecke genutzt werden. Abgeleitete Datenbanken müssen ebenfalls unter einer offenen Lizenz veröffentlicht werden (Share-Alike).</p>
+<p>Die Daten von kleineAnfragen werden unter der <a href="http://opendatacommons.org/licenses/odbl/1.0/">Open Database License (ODbL) 1.0</a> angeboten. Daher können sie ohne Rückfrage auch für kommerzielle Zwecke genutzt werden. Abgeleitete Datenbanken müssen ebenfalls unter einer offenen Lizenz veröffentlicht werden (Share-Alike).</p>
 <p>Einige Metadaten und der Inhalt der Anfragen stammen aus den PDFs der jeweiligen Drucksachen, die als amtliche Werke vom Urheberrecht ausgenommen sind (§ 5 UrhG).</p>
