@@ -37,7 +37,7 @@ class PersonTest < ActiveSupport::TestCase
     end
 
     assert_equal 0, p.papers.reload.size
-    assert p.destroyed?
+    assert p.deleted?
   end
 
   test 'nk_sync: person with name is alias of new person, change name' do
@@ -68,7 +68,7 @@ class PersonTest < ActiveSupport::TestCase
     end
 
     assert_equal 0, smnp.papers.reload.size
-    assert smnp.destroyed?
+    assert smnp.deleted?
     assert_equal 1, mnp.papers.reload.size
     assert mnp.persisted?
   end
