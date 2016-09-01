@@ -12,6 +12,12 @@ module OParl
         expose(:date) { |paper| paper.published_at }
         expose(:paperType) { |paper| paper.is_answer? ? "Antwort auf #{paper.doctype_human}" : paper.doctype_human }
 
+        expose(:relatedPaper) do |paper|
+          paper.related_papers.map do |related|
+            OParl::Routes.oparl_v1_body_term_paper_url(body: related.body.key, term: related.legislative_term, paper: related.reference)
+          end
+        end
+
         expose :mainFile, using: OParl::Entities::File
 
         expose(:originatorPerson) { |paper| paper.originator_people.map { |person| OParl::Routes.oparl_v1_person_url(person: person.slug) } }
