@@ -18,6 +18,12 @@ module OParl
         expose(:fileName) { |paper| "#{paper.body.key}-#{paper.legislative_term}-#{paper.reference}.pdf" }
         expose(:mimeType) { |_| 'application/pdf' }
 
+        expose(:derivativeFile) do |paper|
+          [
+            OParl::Routes.oparl_v1_body_term_paper_file_url(body: paper.body.key, term: paper.legislative_term, paper: paper.reference, file: 2)
+          ]
+        end
+
         expose(:accessUrl) { |paper| paper.public_url }
         expose(:downloadUrl) { |paper| paper.download_url }
 

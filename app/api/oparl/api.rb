@@ -92,8 +92,13 @@ module OParl
           namespace_route :file do
             # file is currently a paper too, until we support multiple files per paper.
             get do
-              error! :not_found, 404 if params[:file] != '1'
-              present @xpaper, with: OParl::Entities::File, type: :file_full
+              entity = {
+                1 => OParl::Entities::File,
+                2 => OParl::Entities::TextFile
+              }
+              key = params[:file].to_i
+              error! :not_found, 404 unless entity.keys.include?(key)
+              present @xpaper, with: entity[key], type: :file_full
             end
           end
 
