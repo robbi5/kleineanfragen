@@ -35,6 +35,9 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :test
   config.action_mailer.default_url_options = { host: 'localhost:5000' }
 
+  # add default dummy host for url generation (api)
+  routes.default_url_options = { host: 'localhost:5000' }
+
   # Randomize the order test cases are executed.
   config.active_support.test_order = :random
 
