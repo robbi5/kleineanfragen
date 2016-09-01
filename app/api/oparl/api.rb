@@ -72,7 +72,7 @@ module OParl
       paginate
       filter
       get :papers do
-        papers = Paper.with_deleted.where(body: @xbody).papers.order(id: :asc)
+        papers = Paper.with_deleted.where(body: @xbody).order(id: :asc)
         present paginate(filter(papers)), root: 'data', with: OParl::Entities::Paper
       end
 

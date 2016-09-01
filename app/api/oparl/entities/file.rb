@@ -5,7 +5,7 @@ module OParl
       expose(:id) { |paper| OParl::Routes.oparl_v1_body_term_paper_file_url(body: paper.body.key, term: paper.legislative_term, paper: paper.reference, file: 1) }
       expose(:type) { |_| 'https://schema.oparl.org/1.0/File' }
 
-      with_options(unless: lambda { |obj| obj.deleted? }) do
+      with_options(unless: lambda { |obj, _| obj.deleted? }) do
         expose(:paper, if: { type: :file_full }) do |paper|
           [
             OParl::Routes.oparl_v1_body_term_paper_url(body: paper.body.key, term: paper.legislative_term, paper: paper.reference)

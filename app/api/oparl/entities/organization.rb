@@ -6,7 +6,7 @@ module OParl
 
       expose(:body) { |org, options| OParl::Routes.oparl_v1_body_url(body: options[:body].key) }
 
-      with_options(unless: lambda { |obj| obj.deleted? }) do
+      with_options(unless: lambda { |obj, _| obj.deleted? }) do
         expose :name
         expose(:organizationType) { |org| org.is_a?(::Ministry) ? 'Ministerium' : 'Fraktion' } # TODO: add type to model
 

@@ -6,7 +6,7 @@ module OParl
 
       expose(:body) { |paper| OParl::Routes.oparl_v1_body_url(body: paper.body.key) }
 
-      with_options(unless: lambda { |obj| obj.deleted? }) do
+      with_options(unless: lambda { |obj, _| obj.deleted? }) do
         expose(:name) { |paper| paper.title }
         expose(:reference) { |paper| paper.full_reference }
         expose(:date) { |paper| paper.published_at }

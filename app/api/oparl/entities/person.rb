@@ -6,7 +6,7 @@ module OParl
 
       expose(:body) { |person| OParl::Routes.oparl_v1_body_url(body: person.latest_body.key) }
 
-      with_options(unless: lambda { |obj| obj.deleted? }) do
+      with_options(unless: lambda { |obj, _| obj.deleted? }) do
         expose :name
       end
 
