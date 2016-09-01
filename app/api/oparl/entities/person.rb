@@ -6,12 +6,15 @@ module OParl
 
       expose(:body) { |person| OParl::Routes.oparl_v1_body_url(body: person.latest_body.key) }
 
-      expose :name
+      with_options(unless: lambda { |obj| obj.deleted? }) do
+        expose :name
+      end
 
       # expose(:web) { |person| Rails.application.routes.url_helpers.person_url(person) } # equivalent in html
 
       expose(:created) { |obj| obj.created_at }
-      expose(:modified) { |obj| obj.updated_at }
+      expose(:modified) { |obj| obj.deleted_at || obj.updated_at }
+      expose(:deleted) { |obj| obj.deleted? }
     end
   end
 end

@@ -26,7 +26,7 @@ module OParl
     namespace_route :person do
       before do
         # called @xperson, because @person confuses grape
-        @xperson = Person.friendly.find(params[:person])
+        @xperson = Person.with_deleted.friendly.find(params[:person])
       end
 
       get do
@@ -43,8 +43,8 @@ module OParl
 
       namespace_route :organization do
         before do
-          @org = @xbody.organizations.where(slug: params[:organization]).try(:first)
-          @org = @xbody.ministries.where(slug: params[:organization]).try(:first) if @org.nil?
+          @org = Organization.with_deleted.where(body: @xbody).friendly.find(params[:organization]).try(:first)
+          @org = Ministry.with_deleted.where(body: @xbody).friendly.find(params[:organization]).try(:first) if @org.nil?
           error! :not_found, 404 if @org.nil?
         end
 
@@ -56,8 +56,8 @@ module OParl
       paginate
       filter
       get :organizations do
-        orgs = @xbody.organizations.order(id: :asc)
-        ministries = @xbody.ministries.order(id: :asc)
+        orgs = Organization.with_deleted.where(body: @xbody).order(id: :asc)
+        ministries = Ministry.with_deleted.where(body: @xbody).order(id: :asc)
         result = filter(orgs) + filter(ministries)
         present paginate(Kaminari.paginate_array(result)), root: 'data', with: OParl::Entities::Organization, body: @xbody
       end
@@ -72,7 +72,7 @@ module OParl
       paginate
       filter
       get :papers do
-        papers = @xbody.papers.order(id: :asc)
+        papers = Paper.with_deleted.where(body: @xbody).papers.order(id: :asc)
         present paginate(filter(papers)), root: 'data', with: OParl::Entities::Paper
       end
 
@@ -85,7 +85,7 @@ module OParl
         namespace_route :paper do
           before do
             # called @xpaper, because @paper confuses grape
-            @xpaper = @xbody.papers.where(legislative_term: params[:term], reference: params[:paper]).try(:first)
+            @xpaper = Paper.with_deleted.where(body: @xbody, legislative_term: params[:term], reference: params[:paper]).try(:first)
             error! :not_found, 404 if @xpaper.nil?
           end
 

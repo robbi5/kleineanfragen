@@ -6,22 +6,24 @@ module OParl
 
       expose(:body) { |paper| OParl::Routes.oparl_v1_body_url(body: paper.body.key) }
 
-      expose(:name) { |paper| paper.title }
-      expose(:reference) { |paper| paper.full_reference }
-      expose(:date) { |paper| paper.published_at }
-      expose(:paperType) { |paper| paper.is_answer? ? "Antwort auf #{paper.doctype_human}" : paper.doctype_human }
+      with_options(unless: lambda { |obj| obj.deleted? }) do
+        expose(:name) { |paper| paper.title }
+        expose(:reference) { |paper| paper.full_reference }
+        expose(:date) { |paper| paper.published_at }
+        expose(:paperType) { |paper| paper.is_answer? ? "Antwort auf #{paper.doctype_human}" : paper.doctype_human }
 
-      expose :mainFile, using: OParl::Entities::File
+        expose :mainFile, using: OParl::Entities::File
 
-      expose(:originatorPerson) { |paper| paper.originator_people.map { |person| OParl::Routes.oparl_v1_person_url(person: person.slug) } }
-      expose(:underDirectionOf) { |paper| paper.answerer_ministries.map { |ministry| OParl::Routes.oparl_v1_body_organization_url(body: paper.body.key, organization: ministry.slug) } }
-      expose(:originatorOrganization) { |paper| paper.originator_organizations.map { |org| OParl::Routes.oparl_v1_body_organization_url(body: paper.body.key, organization: org.slug) } }
+        expose(:originatorPerson) { |paper| paper.originator_people.map { |person| OParl::Routes.oparl_v1_person_url(person: person.slug) } }
+        expose(:underDirectionOf) { |paper| paper.answerer_ministries.map { |ministry| OParl::Routes.oparl_v1_body_organization_url(body: paper.body.key, organization: ministry.slug) } }
+        expose(:originatorOrganization) { |paper| paper.originator_organizations.map { |org| OParl::Routes.oparl_v1_body_organization_url(body: paper.body.key, organization: org.slug) } }
 
-
-      expose(:web) { |paper| Rails.application.routes.url_helpers.paper_url(paper.body, paper.legislative_term, paper) } # equivalent in html
+        expose(:web) { |paper| Rails.application.routes.url_helpers.paper_url(paper.body, paper.legislative_term, paper) } # equivalent in html
+      end
 
       expose(:created) { |obj| obj.created_at }
-      expose(:modified) { |obj| obj.updated_at }
+      expose(:modified) { |obj| obj.deleted_at || obj.updated_at }
+      expose(:deleted) { |obj| obj.deleted? }
 
       private
 

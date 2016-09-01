@@ -9,9 +9,8 @@ module OParl
       expose(:end_date) { |lt| lt.ends_at }
       expose(:web) { |lt| Rails.application.routes.url_helpers.legislative_term_url(lt.body, lt.term) }
 
-      # not necessary for subitems?
-      #expose :created
-      #expose :modified
+      expose(:created, if: { type: :lt_full })
+      expose(:modified, if: { type: :lt_full })
     end
   end
 end

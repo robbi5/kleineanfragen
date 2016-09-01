@@ -6,19 +6,22 @@ module OParl
 
       expose(:body) { |org, options| OParl::Routes.oparl_v1_body_url(body: options[:body].key) }
 
-      expose :name
-      expose(:organizationType) { |org| org.is_a?(::Ministry) ? 'Ministerium' : 'Fraktion' } # TODO: add type to model
+      with_options(unless: lambda { |obj| obj.deleted? }) do
+        expose :name
+        expose(:organizationType) { |org| org.is_a?(::Ministry) ? 'Ministerium' : 'Fraktion' } # TODO: add type to model
 
-      expose(:web) do |org, options| # equivalent in html
-        if org.is_a?(::Ministry)
-          Rails.application.routes.url_helpers.ministry_url(options[:body], org)
-        else
-          Rails.application.routes.url_helpers.organization_url(options[:body], org)
+        expose(:web) do |org, options| # equivalent in html
+          if org.is_a?(::Ministry)
+            Rails.application.routes.url_helpers.ministry_url(options[:body], org)
+          else
+            Rails.application.routes.url_helpers.organization_url(options[:body], org)
+          end
         end
       end
 
       expose(:created) { |obj| obj.created_at }
-      expose(:modified) { |obj| obj.updated_at }
+      expose(:modified) { |obj| obj.deleted_at || obj.updated_at }
+      expose(:deleted) { |obj| obj.deleted? }
     end
   end
 end
