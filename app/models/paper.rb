@@ -2,6 +2,8 @@ class Paper < ApplicationRecord
   extend FriendlyId
   friendly_id :reference_and_title, use: :scoped, scope: [:body, :legislative_term]
 
+  acts_as_paranoid
+
   DOCTYPE_MINOR_INTERPELLATION = 'minor'.freeze
   DOCTYPE_MAJOR_INTERPELLATION = 'major'.freeze
   DOCTYPE_WRITTEN_INTERPELLATION = 'written'.freeze

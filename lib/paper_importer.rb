@@ -24,6 +24,11 @@ class PaperImporter
         return false
       end
 
+      if paper.deleted?
+        logger.info "[#{@body.state}] Skipping Paper [#{item[:full_reference]}] - deleted"
+        return false
+      end
+
       logger.info "[#{@body.state}] Updating Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
 
       if !paper.is_answer && item[:is_answer] == true

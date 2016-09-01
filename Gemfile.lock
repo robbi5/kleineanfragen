@@ -226,6 +226,8 @@ GEM
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
     ntlm-http (0.1.1)
+    paranoia (2.2.0.pre)
+      activerecord (>= 4.0, < 5.1)
     patron (0.7.1)
     pg (0.18.4)
     pkg-config (1.1.7)
@@ -398,6 +400,7 @@ DEPENDENCIES
   minitest-stub_any_instance
   newrelic_rpm
   nokogiri
+  paranoia (~> 2.2.0.pre)
   patron (~> 0.7.1)
   pg (~> 0.18)
   premailer-rails (~> 1.9.1)

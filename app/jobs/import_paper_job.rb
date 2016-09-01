@@ -18,6 +18,10 @@ class ImportPaperJob < ApplicationJob
         logger.info "Paper already exists, skipping [#{item[:reference]}] - frozen"
         return
       end
+      if paper.deleted?
+        logger.info "Paper already exists, skipping [#{item[:reference]}] - deleted"
+        return
+      end
 
       logger.info "Paper already exists, updating: [#{item[:reference]}] \"#{item[:title]}\""
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160829063744) do
+ActiveRecord::Schema.define(version: 20160901101842) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,8 +21,8 @@ ActiveRecord::Schema.define(version: 20160829063744) do
     t.text     "website"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "slug"
-    t.boolean  "use_mirror_for_download",           default: false
+    t.string   "slug",                    limit: 255
+    t.boolean  "use_mirror_for_download",             default: false
     t.index ["name"], name: "index_bodies_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_bodies_on_slug", unique: true, using: :btree
     t.index ["state"], name: "index_bodies_on_state", unique: true, using: :btree
@@ -37,10 +37,10 @@ ActiveRecord::Schema.define(version: 20160829063744) do
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
-    t.string   "slug",                      null: false
-    t.integer  "sluggable_id",              null: false
+    t.string   "slug",           limit: 255, null: false
+    t.integer  "sluggable_id",               null: false
     t.string   "sluggable_type", limit: 50
-    t.string   "scope"
+    t.string   "scope",          limit: 255
     t.datetime "created_at"
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true, using: :btree
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
@@ -66,9 +66,11 @@ ActiveRecord::Schema.define(version: 20160829063744) do
     t.datetime "updated_at", null: false
     t.string   "short_name"
     t.string   "slug"
+    t.datetime "deleted_at"
     t.index ["body_id", "name"], name: "index_ministries_on_body_id_and_name", unique: true, using: :btree
     t.index ["body_id", "slug"], name: "index_ministries_on_body_id_and_slug", unique: true, using: :btree
     t.index ["body_id"], name: "index_ministries_on_body_id", using: :btree
+    t.index ["deleted_at"], name: "index_ministries_on_deleted_at", using: :btree
   end
 
   create_table "opt_ins", force: :cascade do |t|
@@ -82,10 +84,12 @@ ActiveRecord::Schema.define(version: 20160829063744) do
   end
 
   create_table "organizations", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "slug"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_organizations_on_deleted_at", using: :btree
     t.index ["name"], name: "index_organizations_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
   end
@@ -107,8 +111,8 @@ ActiveRecord::Schema.define(version: 20160829063744) do
   create_table "paper_originators", force: :cascade do |t|
     t.integer "paper_id"
     t.integer "originator_id"
-    t.string  "originator_type"
-    t.index ["originator_type", "originator_id"], name: "index_paper_originators_on_originator_type_and_originator_id", using: :btree
+    t.string  "originator_type", limit: 255
+    t.index ["originator_id", "originator_type"], name: "index_paper_originators_on_originator_id_and_originator_type", using: :btree
     t.index ["paper_id"], name: "index_paper_originators_on_paper_id", using: :btree
   end
 
@@ -135,16 +139,18 @@ ActiveRecord::Schema.define(version: 20160829063744) do
     t.datetime "downloaded_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "slug"
+    t.string   "slug",              limit: 255
     t.boolean  "contains_table"
     t.datetime "pdf_last_modified"
     t.string   "doctype"
     t.boolean  "is_answer"
     t.datetime "frozen_at"
     t.string   "source_url"
+    t.datetime "deleted_at"
     t.index ["body_id", "legislative_term", "reference"], name: "index_papers_on_body_id_and_legislative_term_and_reference", unique: true, using: :btree
     t.index ["body_id", "legislative_term", "slug"], name: "index_papers_on_body_id_and_legislative_term_and_slug", unique: true, using: :btree
     t.index ["body_id"], name: "index_papers_on_body_id", using: :btree
+    t.index ["deleted_at"], name: "index_papers_on_deleted_at", using: :btree
   end
 
   create_table "people", force: :cascade do |t|
@@ -153,6 +159,8 @@ ActiveRecord::Schema.define(version: 20160829063744) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "slug"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_people_on_deleted_at", using: :btree
     t.index ["name"], name: "index_people_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_people_on_slug", unique: true, using: :btree
   end
@@ -181,8 +189,4 @@ ActiveRecord::Schema.define(version: 20160829063744) do
   end
 
   add_foreign_key "legislative_terms", "bodies"
-  add_foreign_key "ministries", "bodies"
-  add_foreign_key "paper_answerers", "papers"
-  add_foreign_key "paper_relations", "papers"
-  add_foreign_key "paper_relations", "papers", column: "other_paper_id"
 end

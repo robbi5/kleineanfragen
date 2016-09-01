@@ -62,6 +62,9 @@ gem 'saxerator', '~> 0.9.5'
 # slugs
 gem 'friendly_id', '~> 5.1.0'
 
+# don't delete everything
+gem 'paranoia', '~> 2.2.0.pre'
+
 # fix urls while scraping
 gem 'addressable', '~> 2.4.0', require: 'addressable/uri'
 
