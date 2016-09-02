@@ -7,8 +7,8 @@ module OParl
       expose(:license) { |_| 'http://opendatacommons.org/licenses/odbl/1.0/' }
       expose(:body) { |_| OParl::Routes.oparl_v1_bodies_url }
       expose(:name) { |_| 'kleineAnfragen' }
-      expose(:contactEmail) { |sys| sys[:contact].match(/(.+)\s<(.+)>/).to_a[1] }
-      expose(:contactName) { |sys| sys[:contact].match(/(.+)\s<(.+)>/).to_a[2] }
+      expose(:contactName) { |sys| sys[:contact].match(/(.+)\s<(.+)>/).to_a[1] }
+      expose(:contactEmail) { |sys| sys[:contact].match(/(.+)\s<(.+)>/).to_a[2] }
       expose(:website) { |_| Rails.application.routes.url_helpers.root_url }
       expose(:product) { |_| 'https://github.com/robbi5/kleineanfragen' }
 
