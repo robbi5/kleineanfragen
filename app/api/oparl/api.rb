@@ -43,8 +43,15 @@ module OParl
 
       namespace_route :organization do
         before do
-          @org = Organization.with_deleted.where(body: @xbody).friendly.find(params[:organization]).try(:first)
-          @org = Ministry.with_deleted.where(body: @xbody).friendly.find(params[:organization]).try(:first) if @org.nil?
+          @org = nil
+          begin
+            @org = Organization.with_deleted.friendly.find(params[:organization])
+          rescue ActiveRecord::RecordNotFound => _
+            begin
+              @org = @xbody.ministries.with_deleted.friendly.find(params[:organization])
+            rescue ActiveRecord::RecordNotFound => _
+            end
+          end
           error! :not_found, 404 if @org.nil?
         end
 
@@ -56,8 +63,8 @@ module OParl
       paginate
       filter
       get :organizations do
-        orgs = Organization.with_deleted.where(body: @xbody).order(id: :asc)
-        ministries = Ministry.with_deleted.where(body: @xbody).order(id: :asc)
+        orgs = @xbody.organizations.with_deleted.order(id: :asc)
+        ministries = @xbody.ministries.with_deleted.order(id: :asc)
         result = filter(orgs) + filter(ministries)
         present paginate(Kaminari.paginate_array(result)), root: 'data', with: OParl::Entities::Organization, body: @xbody
       end
