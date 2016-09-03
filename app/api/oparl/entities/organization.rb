@@ -19,8 +19,8 @@ module OParl
         end
       end
 
-      expose(:created) { |obj| obj.created_at }
-      expose(:modified) { |obj| obj.deleted_at || obj.updated_at }
+      expose(:created) { |obj| obj.created_at.iso8601 }
+      expose(:modified) { |obj| (obj.deleted_at || obj.updated_at).iso8601 }
       expose(:deleted) { |obj| obj.deleted? }
     end
   end

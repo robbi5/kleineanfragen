@@ -19,8 +19,8 @@ module OParl
 
       expose(:web) { |body| Rails.application.routes.url_helpers.body_url(body) } # equivalent in html
 
-      expose(:created) { |obj| obj.created_at }
-      expose(:modified) { |obj| obj.updated_at }
+      expose(:created) { |obj| obj.created_at.iso8601 }
+      expose(:modified) { |obj| obj.updated_at.iso8601 }
     end
   end
 end

@@ -9,7 +9,7 @@ module OParl
       with_options(unless: lambda { |obj, _| obj.deleted? }) do
         expose(:name) { |paper| paper.title }
         expose(:reference) { |paper| paper.full_reference }
-        expose(:date) { |paper| paper.published_at }
+        expose(:date) { |paper| paper.published_at.iso8601 }
         expose(:paperType) { |paper| paper.is_answer? ? "Antwort auf #{paper.doctype_human}" : paper.doctype_human }
 
         expose(:relatedPaper) do |paper|
@@ -27,8 +27,8 @@ module OParl
         expose(:web) { |paper| Rails.application.routes.url_helpers.paper_url(paper.body, paper.legislative_term, paper) } # equivalent in html
       end
 
-      expose(:created) { |obj| obj.created_at }
-      expose(:modified) { |obj| obj.deleted_at || obj.updated_at }
+      expose(:created) { |obj| obj.created_at.iso8601 }
+      expose(:modified) { |obj| (obj.deleted_at || obj.updated_at).iso8601 }
       expose(:deleted) { |obj| obj.deleted? }
 
       private

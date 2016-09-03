@@ -30,8 +30,8 @@ module OParl
         expose(:web) { |paper| Rails.application.routes.url_helpers.paper_pdf_viewer_url(body: paper.body.key, legislative_term: paper.legislative_term, paper: paper) } # equivalent in html
       end
 
-      expose(:created) { |obj| [obj.created_at, obj.pdf_last_modified].min }
-      expose(:modified) { |obj| obj.deleted_at || obj.pdf_last_modified }
+      expose(:created) { |obj| [obj.created_at, obj.pdf_last_modified].min.iso8601 }
+      expose(:modified) { |obj| (obj.deleted_at || obj.pdf_last_modified).iso8601 }
       expose(:deleted) { |obj| obj.deleted? }
     end
   end
