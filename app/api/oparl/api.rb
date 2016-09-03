@@ -126,6 +126,15 @@ module OParl
         present paginate(filter(terms)), root: 'data', with: OParl::Entities::LegislativeTerm, type: :lt_full
       end
 
+      paginate
+      filter
+      get :meetings do
+        # we don't support meetings, but the OParl spec requires to serve them
+        present [], root: 'data'
+        present :links, {}, with: Grape::Presenters::Presenter
+        present :pagination, {}, with: Grape::Presenters::Presenter
+      end
+
       get do
         present @xbody, with: OParl::Entities::Body
       end

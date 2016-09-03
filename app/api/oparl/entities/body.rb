@@ -11,7 +11,7 @@ module OParl
 
       expose(:organization) { |body| OParl::Routes.oparl_v1_body_organizations_url(body: body.key) }
       expose(:person) { |body| OParl::Routes.oparl_v1_body_people_url(body: body.key) }
-      expose(:meeting) { |_| nil } # sorry, we don't provide meetings
+      expose(:meeting) { |body| OParl::Routes.oparl_v1_body_meetings_url(body: body.key) }
       expose(:paper) { |body| OParl::Routes.oparl_v1_body_papers_url(body: body.key) }
       expose(:legislativeTerm, using: OParl::Entities::LegislativeTerm) { |body| body.legislative_terms }
 
