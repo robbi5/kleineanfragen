@@ -10,3 +10,4 @@
 //= require search
 //= require paper
 //= require tracking
+//= require turbolinks_loaded
