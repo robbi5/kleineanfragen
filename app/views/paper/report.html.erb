@@ -43,6 +43,15 @@
           <%= text_area_tag :message, nil, class: 'form-control', rows: 5, placeholder: 'Beschreibe hier kurz, was an den Daten zur Anfrage nicht stimmt' %>
         </div>
       </div>
+      <%= hidden_field_tag :check, nil, type: 'hidden', class: 'js-report-check' %>
+      <noscript>
+        <div class="row form-group">
+          <label class="col-sm-3 control-label" for="message">Mensch oder Roboter? Ergebnis von 5+5:</label>
+          <div class="col-sm-9">
+            <%= text_field_tag :check, nil, class: 'form-control' %>
+          </div>
+        </div>
+      </noscript>
       <div class="row form-group">
         <div class="col-sm-offset-3 col-sm-9">
           <%= button_tag 'Senden', class: 'btn btn-primary' %>
@@ -51,3 +60,6 @@
     <% end %>
   </div>
 </div>
+<script>
+  document.querySelectorAll('.js-report-check')[0].value = (5+5);
+</script>

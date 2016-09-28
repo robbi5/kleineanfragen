@@ -51,6 +51,11 @@ class PaperController < ApplicationController
 
     msg = params[:message] || '(no message)'
 
+    if params[:check] != '10'
+      redirect_to paper_report_path(@body, @legislative_term, @paper)
+      return
+    end
+
     notifier = Slack::Notifier.new Rails.configuration.x.report_slack_webhook
     notifier.ping "#{notifier.escape msg} - #{view_context.paper_short_url(@paper)} [##{@paper.id}]"
 
