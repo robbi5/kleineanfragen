@@ -5,7 +5,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     @scraper = BadenWuerttembergLandtagScraper
     @search_url = 'http://www.landtag-bw.de/cms/render/live/de/sites/LTBW/home/dokumente/die-initiativen/gesamtverzeichnis/contentBoxes/suche-initiative.html?'
     @legislative_page = Mechanize.new.get('file://' + Rails.root.join('test/fixtures/bw/legislative_term_page.html').to_s)
-    @result_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bw/result_page.html')))
+    @overview_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bw/overview_minor.html')))
     @detail_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bw/detail_page.html')))
   end
 
@@ -16,70 +16,39 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
-  test 'get all months as array' do
-    date1 = Date.parse('2014-01-01')
-    date2 = Date.parse('2015-02-02')
-    expected = [
-      [2014, 1],
-      [2014, 2],
-      [2014, 3],
-      [2014, 4],
-      [2014, 5],
-      [2014, 6],
-      [2014, 7],
-      [2014, 8],
-      [2014, 9],
-      [2014, 10],
-      [2014, 11],
-      [2014, 12],
-      [2015, 1],
-      [2015, 2]
-    ]
-    actual = @scraper::Overview.get_legislative_period(date1, date2)
+  test 'extract links from overview' do
+    actual = @scraper.extract_result_links(@overview_page).size
+    expected = 10
     assert_equal(expected, actual)
   end
 
-  test 'build single urls for legislative period' do
-    type = 'KA'
-    legislative_period = [
-      [2013, 11],
-      [2013, 12],
-      [2014, 1],
-      [2014, 2]
-    ]
-    actual = @scraper::Overview.get_search_urls(@search_url, legislative_period, type)
-    expected = [
-      @search_url + 'searchInitiativeType=KA&searchYear=2014&searchMonth=02',
-      @search_url + 'searchInitiativeType=KA&searchYear=2014&searchMonth=01',
-      @search_url + 'searchInitiativeType=KA&searchYear=2013&searchMonth=12',
-      @search_url + 'searchInitiativeType=KA&searchYear=2013&searchMonth=11'
-    ]
-    assert_equal(expected, actual)
-  end
-
-  test 'extract result div from resultslist' do
-    actual = @scraper.extract_result_blocks(@result_page).size
-    expected = 40
-    assert_equal(expected, actual)
-  end
-
-  test 'extract meta from overview div' do
-    div = @scraper.extract_result_blocks(@result_page)[0]
-    actual = @scraper.extract_overview_meta(div)
+  test 'extract meta from overview' do
+    link = @scraper.extract_result_links(@overview_page)[0]
+    actual = @scraper.extract_overview_meta(link.next_element)
     assert_equal(
       {
-        full_reference: '15/6432',
-        published_at: Date.parse('2015-01-29'),
-        doctype: 'Kleine Anfrage',
-        originator_party: 'SPD'
+        full_reference: '16/718',
+        published_at: Date.parse('2016-11-07'),
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        originator_party: 'FDP/DVP'
       }, actual)
   end
 
-  test 'extract title from result div' do
-    div = @scraper.extract_result_blocks(@result_page)[0]
-    actual = @scraper.extract_title(div)
-    expected = 'Barrierefreier Ausbau der Bahnhöfe auf der Hauptstrecke Stuttgart-Ulm im Landkreis Göppingen zwischen Reichenbach/Fils und Eislingen/Fils'
-    assert_equal(expected, actual)
+  test 'extract paper from overview' do
+    link = @scraper.extract_result_links(@overview_page)[0]
+    actual = @scraper.extract_overview_paper(link)
+    assert_equal(
+      {
+        full_reference: '16/718',
+        legislative_term: '16',
+        reference: '718',
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        title: 'Mögliche Abschaffung des Nachtangelverbots',
+        url: 'http://www.landtag-bw.de/files/live/sites/LTBW/files/dokumente/WP16/Drucksachen/0000/16_0718_D.pdf',
+        published_at: Date.parse('2016-11-07'),
+        originators: { people: [], parties: ['FDP/DVP'] },
+        source_url: 'http://www.statistik-bw.de/OPAL/Ergebnis.asp?WP=16&DRSNR=718'
+      }, actual)
   end
 
   test 'build detail url for answer-chek from full reference' do

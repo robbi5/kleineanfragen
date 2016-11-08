@@ -4,30 +4,19 @@ module BadenWuerttembergLandtagScraper
   BASE_URL = 'http://www.landtag-bw.de'
   DETAIL_URL = 'http://www.statistik-bw.de/OPAL'
 
-  def self.extract_result_blocks(page)
-    if page.search('//p[@class="noResult"]').size > 0
-      # got no results for this page
-      # have to exit here, because there is an <ol> - but that only displays some "older initiatives"
-      return []
-    end
-    list = page.search('//div[@id="result"]//ol').first
-    list.css('.result')
+  def self.extract_result_links(page)
+    page.search('//a[@class="doclist__item-link"]')
   end
 
-  def self.extract_overview_meta(div)
-    text = div.at_css('p').text.strip.gsub(/\p{Z}+/, ' ').gsub(/\n/, ' ').gsub(/\s+/, ' ')
-
-    m = text.match(/([\d\/]+)\s+-\s+Datum:\s+([\d\.]+)\s+-\s+Art:\s+(.+)\s+-\s+Urheber:\s+(.+)/)
+  def self.extract_overview_meta(ol)
+    items = ol.css('li')
+    return nil if items.nil? || items.size < 3
     {
-      full_reference: m[1],
-      published_at: Date.parse(m[2]),
-      doctype: m[3],
-      originator_party: m[4]
+      full_reference: items[0].text.strip,
+      published_at: Date.parse(items[1].text.strip.match(/Datum:\s+([\d\.]+)/)[1]),
+      doctype: extract_doctype(items[2].text.strip.match(/Art:\s+(.+)/)[1]),
+      originator_party: items[3].text.strip.match(/Urheber:\s+(.+)/)[1]
     }
-  end
-
-  def self.extract_title(div)
-    div.at_css('a').text.strip
   end
 
   def self.extract_reference(full_reference)
@@ -43,19 +32,15 @@ module BadenWuerttembergLandtagScraper
     table.at_css('a')
   end
 
-  def self.link_is_paper?(link)
-    !link.text.strip.match(/Anfr\s/).nil?
-  end
-
   def self.link_is_answer?(link)
     !link.text.strip.match(/und\s+Antw/).nil?
   end
 
   def self.extract_doctype(match_result)
     case match_result.downcase
-    when 'klanfr', 'klanf'
+    when 'klanfr', 'klanf', 'kleine anfrage'
       Paper::DOCTYPE_MINOR_INTERPELLATION
-    when 'granfr', 'granf'
+    when 'granfr', 'granf', 'große anfrage'
       Paper::DOCTYPE_MAJOR_INTERPELLATION
     end
   end
@@ -100,30 +85,30 @@ module BadenWuerttembergLandtagScraper
     ministries.gsub("\n", ' ').gsub(' und', ',').split(',').map(&:strip)
   end
 
-  def self.extract_overview_paper(m, block, type)
-    # overview shows only the questions
+  def self.extract_overview_paper(link)
+    block = link.next_element
+    return nil if block.nil?
+
+    title = link.text.strip
     meta = extract_overview_meta(block)
     full_reference = meta[:full_reference]
     legislative_term, reference = extract_reference(full_reference)
-    title = extract_title(block)
 
-    # get detail page for the answer
-    detail_page = m.get build_detail_url(legislative_term, reference)
-    detail_link = get_detail_link(detail_page)
-    return nil if detail_link.nil? || !link_is_paper?(detail_link)
+    url = link.attributes['href'].value
+    url = Addressable::URI.parse(BASE_URL).join(url).normalize.to_s
 
     {
       full_reference: full_reference,
       legislative_term: legislative_term,
       reference: reference,
-      doctype: type,
+      doctype: meta[:doctype],
       title: title,
-      # url is set in detail scraper
+      url: url,
       published_at: meta[:published_at],
       # originator: people is set in detail scraper
       originators: { people: [], parties: [meta[:originator_party]] },
       # answerers is set in detail scraper
-      is_answer: link_is_answer?(detail_link),
+      # is_answer is set in detail scraper
       source_url: build_detail_url(legislative_term, reference)
     }
   end
@@ -155,7 +140,7 @@ module BadenWuerttembergLandtagScraper
   end
 
   class Overview < Scraper
-    SEARCH_URL = BASE_URL + '/cms/render/live/de/sites/LTBW/home/dokumente/die-initiativen/gesamtverzeichnis/contentBoxes/suche-initiative.html?'
+    SEARCH_URL = BASE_URL + '/cms/render/live/de/sites/LTBW/home/dokumente/drucksachen/contentBoxes/drucksachen.xhr?'
     TYPES = {
       Paper::DOCTYPE_MINOR_INTERPELLATION => 'KA',
       Paper::DOCTYPE_MAJOR_INTERPELLATION => 'GA'
@@ -182,45 +167,36 @@ module BadenWuerttembergLandtagScraper
       nil
     end
 
-    def self.get_legislative_period(start_date, end_date)
-      period = []
-      date = start_date
-      until date >= end_date || date > Date.today
-        year = date.year
-        month = date.month
-        period.push([year, month])
-        date = date.next_month
-      end
-      period
-    end
-
-    def self.get_search_urls(search_url, legislative_period, type)
-      urls = []
-      single_url_type = 'searchInitiativeType=' + type + '&'
-      # reversed, so current papers get loaded first
-      legislative_period.reverse_each do |month|
-        single_url_year = 'searchYear=' + month[0].to_s + '&'
-        single_url_month = 'searchMonth=' + format('%02d', month[1])
-        urls << search_url + single_url_type + single_url_year + single_url_month
-      end
-      urls
+    def self.search_url(base, type, legislative_begin, legislative_end, offset)
+      url = base.dup
+      url << 'initiativeType=' + type + '&'
+      url << 'sachstandBegin=' + legislative_begin.strftime('%d.%m.%Y') + '&'
+      url << 'sachstandEnd=' + legislative_end.strftime('%d.%m.%Y') + '&'
+      url << 'offset=' + offset.to_s
+      url
     end
 
     def scrape
       streaming = block_given?
       papers = []
       m = mechanize
-      legislative_dates = get_legislative_dates
-      legislative_period = self.class.get_legislative_period(legislative_dates[0], legislative_dates[1])
+      legislative_begin, legislative_end = get_legislative_dates
 
       TYPES.each do |type, url_type|
-        urls = self.class.get_search_urls(SEARCH_URL, legislative_period, url_type)
-        urls.each do |url|
-          page = m.get url
-          blocks = BadenWuerttembergLandtagScraper.extract_result_blocks(page)
-          blocks.each do |block|
+        offset = 0
+        loop do
+          begin
+            page = m.get self.class.search_url(SEARCH_URL, url_type, legislative_begin, legislative_end, offset)
+          rescue Mechanize::ResponseReadError => e
+            page = e.force_parse
+          end
+
+          links = BadenWuerttembergLandtagScraper.extract_result_links(page)
+          break if links.nil? || links.size == 0
+
+          links.each do |link|
             begin
-              paper = BadenWuerttembergLandtagScraper.extract_overview_paper(m, block, type)
+              paper = BadenWuerttembergLandtagScraper.extract_overview_paper(link)
             rescue => e
               logger.warn e
               next
@@ -232,6 +208,8 @@ module BadenWuerttembergLandtagScraper
               papers << paper
             end
           end
+
+          offset = offset + 10
         end
       end
       papers unless streaming
