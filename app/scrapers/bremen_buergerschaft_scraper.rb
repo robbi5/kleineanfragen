@@ -65,7 +65,7 @@ module BremenBuergerschaftScraper
       rows.each do |line|
         match = line.text.match(/Große\s+Anfrage\s+vom\s+.+,\s+Urheber:\s+(.+)/)
         o_results = match if match && !line.text.include?('Antwort')
-        match = line.text.match(/Mitteilung\s+des\s+Senats\s+.+vom\s+([\d\.]+),/m)
+        match = line.text.match(/Mitteilung\s+des\s+Senats\s+.+vom\s+([\d\.]+)/m)
         a_results = match if match
       end
       return nil if o_results.nil? || a_results.nil?
@@ -78,8 +78,12 @@ module BremenBuergerschaftScraper
   end
 
   def self.extract_link(meta_rows)
-    answer_row = meta_rows.find { |row| row.text.include?('Antwort') }
-    answer_row.search('a').find { |el| el.text.include?('/') }
+    answer_row = meta_rows.select { |row| row.text.include?('Antwort') }
+    answer_row.each do |row|
+      link = row.search('a').find { |el| el.text.include?('/') }
+      return link unless link.nil?
+    end
+    nil
   end
 
   def self.extract_paper(item)
@@ -96,6 +100,7 @@ module BremenBuergerschaftScraper
     legislative_term, reference = extract_reference(full_reference)
 
     meta = extract_meta(meta_rows)
+    fail "HB [#{full_reference}]: meta is nil." if meta.nil?
 
     originators = { people: [], parties: meta[:originators].split(',').map(&:strip) }
     published_at = Date.parse(meta[:published_at])
