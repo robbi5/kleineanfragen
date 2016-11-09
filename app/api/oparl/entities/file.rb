@@ -13,7 +13,7 @@ module OParl
         end
 
         expose(:name) { |paper| paper.title }
-        expose(:date) { |paper| paper.pdf_last_modified.to_date }
+        expose(:date) { |paper| (paper.pdf_last_modified || paper.published_at).to_date }
 
         expose(:fileName) { |paper| "#{paper.body.key}-#{paper.legislative_term}-#{paper.reference}.pdf" }
         expose(:mimeType) { |_| 'application/pdf' }
