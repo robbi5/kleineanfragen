@@ -10,8 +10,8 @@ module OParl
             a = collection.arel_table
             collection = collection.where(a[:created_at].gt(params[:created_since])) unless params[:created_since].nil?
             collection = collection.where(a[:created_at].lt(params[:created_until])) unless params[:created_until].nil?
-            collection = collection.where(a[:updated_at].gt(params[:modified_since])) unless params[:created_since].nil?
-            collection = collection.where(a[:updated_at].lt(params[:modified_until])) unless params[:created_since].nil?
+            collection = collection.where(a[:updated_at].gt(params[:modified_since])) unless params[:modified_since].nil?
+            collection = collection.where(a[:updated_at].lt(params[:modified_until])) unless params[:modified_until].nil?
             collection
           end
         end
