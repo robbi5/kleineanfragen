@@ -29,7 +29,7 @@ module OParl
         path = route.send(method_name, *arguments)
 
         if m[1] == 'url'
-          URI.join(root_url, path).to_s
+          Addressable::URI.parse(root_url).join(path).normalize.to_s
         else
           path
         end
