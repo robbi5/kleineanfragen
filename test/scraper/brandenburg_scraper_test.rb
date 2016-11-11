@@ -132,11 +132,12 @@ class BrandenburgScraperTest < ActiveSupport::TestCase
 
     assert_equal(
       [
-        [Date.parse('2009-10-21'), Date.parse('2010-10-18')],
-        [Date.parse('2010-10-19'), Date.parse('2011-10-16')],
-        [Date.parse('2011-10-17'), Date.parse('2012-10-13')],
-        [Date.parse('2012-10-14'), Date.parse('2013-10-11')],
-        [Date.parse('2013-10-12'), Date.parse('2014-10-08')]
+        [Date.parse('2009-10-21'), Date.parse('2010-10-17')],
+        [Date.parse('2010-10-18'), Date.parse('2011-10-14')],
+        [Date.parse('2011-10-15'), Date.parse('2012-10-10')],
+        [Date.parse('2012-10-11'), Date.parse('2013-10-07')],
+        [Date.parse('2013-10-08'), Date.parse('2014-10-04')],
+        [Date.parse('2014-10-05'), Date.parse('2014-10-08')]
       ], dates)
   end
 
@@ -151,8 +152,7 @@ class BrandenburgScraperTest < ActiveSupport::TestCase
           [Date.parse('2015-01-08'), Date.parse('2015-04-09')],
           [Date.parse('2015-04-10'), Date.parse('2015-07-10')],
           [Date.parse('2015-07-11'), Date.parse('2015-10-10')],
-          [Date.parse('2015-10-11'), Date.parse('2016-01-10')],
-          [Date.parse('2016-01-11'), (Date.today + 1.day)]
+          [Date.parse('2015-10-11'), (Date.today)]
         ], dates)
     end
   end

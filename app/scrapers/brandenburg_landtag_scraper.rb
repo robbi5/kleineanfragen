@@ -38,8 +38,10 @@ module BrandenburgLandtagScraper
       [date.first, date.last]
     end
     # fix the last part
-    parts[-2][1] = parts[-1].first
-    parts.pop
+    if (parts[-1][1] - parts[-1][0]).to_i == 1
+      parts[-2][1] = parts[-1].first
+      parts.pop
+    end
     parts
   end
 
