@@ -34,9 +34,13 @@ module BrandenburgLandtagScraper
     # all dates from starttime to endtime
     dates = start_time.step(end_time).to_a
     # each sliced to approximatly equal length
-    dates.each_slice((dates.size / SEARCH_PARTS.to_f).round).map do |date|
+    parts = dates.each_slice((dates.size / SEARCH_PARTS.to_f).floor).map do |date|
       [date.first, date.last]
     end
+    # fix the last part
+    parts[-2][1] = parts[-1].first
+    parts.pop
+    parts
   end
 
   def self.extract_body(page)
@@ -159,8 +163,8 @@ module BrandenburgLandtagScraper
         fail 'Cannot get search form' if search_form.nil?
 
         # fill search form
-        search_form.field_with(name: 'LISSH_WP_ADV').value = @legislative_term
         search_form.field_with(name: '__action').value = 78
+        search_form.field_with(name: 'LISSH_WP_ADV').value = @legislative_term
         search_form.field_with(name: 'LISSH_DART_ADV').value = 'DRUCKSACHE'
         search_form.field_with(name: 'LISSH_DTYP').value = TYPE
         search_form.field_with(name: 'LISSH_DatumV').value = date.first.strftime('%e.%-m.%Y')
