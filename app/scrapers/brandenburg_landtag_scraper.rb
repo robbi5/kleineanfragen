@@ -150,6 +150,7 @@ module BrandenburgLandtagScraper
       dates = BrandenburgLandtagScraper.get_dates dateranges[@legislative_term]
       fail "BB: Couldn't extract dates for legislative term #{@legislative_term}" if dates.nil?
 
+      failures = 0
       papers = []
       dates.reverse_each do |date|
         mp = m.get SEARCH_URL
@@ -180,7 +181,9 @@ module BrandenburgLandtagScraper
         fail 'Cannot get search form on result page' if search_form.nil?
 
         if mp.search('//div[@id="main"]/div[@class="panelStatus"]').size > 0
-          fail 'Result page showed error'
+          failures += 1
+          logger.warn "Result page showed error for dates #{date.inspect}"
+          next
         end
 
         # get more items
@@ -204,6 +207,9 @@ module BrandenburgLandtagScraper
           end
         end
       end
+
+      fail 'All tries to get papers failed' if dates.size == failures
+
       papers unless streaming
     end
   end
