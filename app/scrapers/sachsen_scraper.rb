@@ -5,7 +5,7 @@ module SachsenScraper
     'ctl00_masterContentCallback_content_suchmaske_tblSearch_tabSuche_panelUmSuchmaskeEinfach_suchmaskeEinfachCallback_sb_Einf'
 
   def self.extract_overview_items(page)
-    page.search('//td[@class="dxdvItem_EDAS"]/table')
+    page.search('//td[contains(@class,"dxdvItem_EDAS")]/table')
   end
 
   def self.extract_title(item)
