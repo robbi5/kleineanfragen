@@ -9,8 +9,8 @@ module OParl
       expose(:endDate, unless: lambda { |lt, _| lt.ends_at.nil? }) { |lt| lt.ends_at }
       expose(:web) { |lt| Rails.application.routes.url_helpers.legislative_term_url(lt.body, lt.term) }
 
-      expose(:created, if: { type: :lt_full })
-      expose(:modified, if: { type: :lt_full })
+      expose(:created, if: { type: :lt_full }) { |lt| lt.created_at.iso8601 }
+      expose(:modified, if: { type: :lt_full }) { |lt| lt.updated_at.iso8601 }
     end
   end
 end
