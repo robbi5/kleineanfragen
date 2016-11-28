@@ -103,7 +103,7 @@ module BadenWuerttembergLandtagScraper
       reference: reference,
       doctype: meta[:doctype],
       title: title,
-      url: url,
+      # url is nil, because it may not be answered yet
       published_at: meta[:published_at],
       # originator: people is set in detail scraper
       originators: { people: [], parties: [meta[:originator_party]] },

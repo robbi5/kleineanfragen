@@ -44,7 +44,6 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
         reference: '718',
         doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
         title: 'Mögliche Abschaffung des Nachtangelverbots',
-        url: 'http://www.landtag-bw.de/files/live/sites/LTBW/files/dokumente/WP16/Drucksachen/0000/16_0718_D.pdf',
         published_at: Date.parse('2016-11-07'),
         originators: { people: [], parties: ['FDP/DVP'] },
         source_url: 'http://www.statistik-bw.de/OPAL/Ergebnis.asp?WP=16&DRSNR=718'
