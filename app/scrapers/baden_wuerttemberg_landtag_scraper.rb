@@ -57,7 +57,7 @@ module BadenWuerttembergLandtagScraper
   end
 
   def self.extract_meta(meta_text)
-    match_results = meta_text.lstrip.match(/(KlAnfr?|GrAnfr?)\s+(.+?)\s*([\d\.\s]+)?\s+und\s+Antw\s+(?:(.+?)\s*([\d\.]+)?\s+)?Drs\s*(\d+\/\d+)/m)
+    match_results = meta_text.lstrip.match(/(KlAnfr?|GrAnfr?)\s+(.+?)\s*([\d\.\s]+)?\s+(?:und\s+Antw\s+(?:(.+?)\s*([\d\.]+)?\s+)?)?Drs\s*(\d+\/\d+)/m)
     return nil if match_results.nil?
     doctype = extract_doctype(match_results[1])
     # when multiple originators exist, remove "and others" - we extract the other names later
@@ -69,15 +69,20 @@ module BadenWuerttembergLandtagScraper
       originators = { people: [], parties: parties }
     end
 
+    full_reference = match_results[6]
+
     ministries = []
     ministries = clean_ministries(match_results[4]) unless match_results[4].blank?
 
+    answerers = nil
+    answerers = { ministries: ministries } unless ministries.blank?
+
     {
-      full_reference: match_results[6],
+      full_reference: full_reference,
       doctype: doctype,
       published_at: Date.parse(match_results[3] || match_results[5]),
       originators: originators,
-      answerers: { ministries: ministries }
+      answerers: answerers
     }
   end
 

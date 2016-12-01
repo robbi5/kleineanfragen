@@ -143,7 +143,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       published_at: Date.parse('2015-01-01'),
       originators: { people: ['Rainer Hinderer'], parties: ['SPD'] },
-      answerers: { ministries: [] }
+      answerers: nil
     }
     assert_equal(expected, actual)
   end
@@ -183,6 +183,19 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
       published_at: Date.parse('2013-02-13'),
       originators: { people: [], parties: ['CDU','GRÜNE','SPD','FDP/DVP'] },
       answerers: { ministries: ['LReg'] }
+    }
+    assert_equal(expected, actual)
+  end
+
+  test 'extract meta information from detail for an unanswered paper' do
+    text = 'KlAnfr Gabi Rolland SPD 09.11.2016 Drs 16/941'
+    actual = @scraper.extract_meta(text)
+    expected = {
+      full_reference: '16/941',
+      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+      published_at: Date.parse('2016-11-09'),
+      originators: { people: ['Gabi Rolland'], parties: ['SPD'] },
+      answerers: nil
     }
     assert_equal(expected, actual)
   end
