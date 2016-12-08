@@ -19,6 +19,8 @@ module OParl
 
       expose(:web) { |body| Rails.application.routes.url_helpers.body_url(body) } # equivalent in html
 
+      expose(:'wikidata:item', unless: lambda { |obj, _| obj.wikidataq.blank? }) { |obj| obj.wikidataq }
+
       expose(:created) { |obj| obj.created_at.iso8601 }
       expose(:modified) { |obj| obj.updated_at.iso8601 }
     end

@@ -9,6 +9,8 @@ module OParl
       expose(:endDate, unless: lambda { |lt, _| lt.ends_at.nil? }) { |lt| lt.ends_at }
       expose(:web) { |lt| Rails.application.routes.url_helpers.legislative_term_url(lt.body, lt.term) }
 
+      expose(:'wikidata:item', unless: lambda { |obj, _| obj.wikidataq.blank? }) { |obj| obj.wikidataq }
+
       expose(:created, if: { type: :lt_full }) { |lt| lt.created_at.iso8601 }
       expose(:modified, if: { type: :lt_full }) { |lt| lt.updated_at.iso8601 }
     end

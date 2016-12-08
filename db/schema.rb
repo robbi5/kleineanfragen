@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160901101842) do
+ActiveRecord::Schema.define(version: 20161208084334) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 20160901101842) do
     t.datetime "updated_at"
     t.string   "slug",                    limit: 255
     t.boolean  "use_mirror_for_download",             default: false
+    t.string   "wikidataq"
     t.index ["name"], name: "index_bodies_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_bodies_on_slug", unique: true, using: :btree
     t.index ["state"], name: "index_bodies_on_state", unique: true, using: :btree
@@ -55,6 +56,7 @@ ActiveRecord::Schema.define(version: 20160901101842) do
     t.date     "ends_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "wikidataq"
     t.index ["body_id", "term"], name: "index_legislative_terms_on_body_id_and_term", unique: true, using: :btree
     t.index ["body_id"], name: "index_legislative_terms_on_body_id", using: :btree
   end
@@ -160,6 +162,7 @@ ActiveRecord::Schema.define(version: 20160901101842) do
     t.datetime "updated_at"
     t.string   "slug"
     t.datetime "deleted_at"
+    t.string   "wikidataq"
     t.index ["deleted_at"], name: "index_people_on_deleted_at", using: :btree
     t.index ["name"], name: "index_people_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_people_on_slug", unique: true, using: :btree
