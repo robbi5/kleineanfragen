@@ -127,3 +127,6 @@ gem 'rack-cors', '~> 0.4.0', require: 'rack/cors'
 gem 'grape', '~> 0.17.0'
 gem 'grape-entity', '~> 0.5.1'
 gem 'grape-route-helpers', '~> 2.0.0'
+
+# wikidata
+gem 'wikidata-client', '~> 0.0.10'
