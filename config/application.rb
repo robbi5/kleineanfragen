@@ -33,9 +33,6 @@ module Kleineanfragen
     config.i18n.available_locales = [:de, :en]
     config.i18n.default_locale = :de
 
-    # Disable image optim for assets
-    config.assets.image_optim = false
-
     # active job
     config.active_job.queue_adapter = :resque
 

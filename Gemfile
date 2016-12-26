@@ -29,7 +29,7 @@ gem 'newrelic_rpm', group: :production
 
 gem 'foreman', '~> 0.78.0', group: :development
 gem 'dotenv-rails', '~> 1.0.2'
-gem 'sentry-raven'
+gem 'sentry-raven', '~> 2.2.0'
 
 # Access an IRB console on exception pages or by using <%%= console %> in views
 gem 'web-console', '~> 3.0', group: :development
@@ -77,7 +77,8 @@ gem 'docsplit', '~> 0.7.6'
 gem 'abbyy', '~> 0.2.1'
 
 # pdf thumbnailing
-gem 'image_optim', '~> 0.22.0'
+gem 'image_optim', '~> 0.24.1'
+gem 'image_optim_pack', '~> 0.3.0.20161206'
 
 # search!
 gem 'searchkick', '~> 0.9.1'
