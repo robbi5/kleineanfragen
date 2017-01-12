@@ -13,48 +13,32 @@ require 'date'
 # But all the interesting endpoints (/_api, /_vti_bin/listdata.svc/) are locked down.
 # Sad :(
 #
+# Update 2017-01-10: They had the clever idea to pack the data as json into one big
+# hidden input field.
+#
 module SaarlandScraper
-  BASE_URL = 'http://www.landtag-saar.de'
+  BASE_URL = 'https://www.landtag-saar.de'
+  OVERVIEW_URL = BASE_URL + '/dokumente/drucksachen'
 
   class Detail < DetailScraper
     def scrape
-      text = SaarlandScraper.build_text_parameter(@legislative_term, @reference)
-      parameters = "#{text}&r=saarlandcontenttype%3D%22drucksache%22%20saarlandwahlperiode%3D%22#{@legislative_term}%22"
-      mp = mechanize.get "#{BASE_URL}/Service/Seiten/Suche.aspx?#{parameters}"
-      entry = SaarlandScraper.extract_search_entry(mp, @legislative_term, @reference)
+      mp = mechanize.get OVERVIEW_URL
+      entry = SaarlandScraper.extract_entries(mp).find { |e| e['Dokumentnummer'].strip == full_reference }
       return nil if entry.nil?
-      SaarlandScraper.extract_paper_from_search_entry(entry, @legislative_term, @reference)
+      SaarlandScraper.extract_paper(entry)
     end
   end
 
   class Overview < Scraper
-    SEARCH_URL = BASE_URL + '/dokumente/drucksachen?FilterName=LinkFilenameNoMenu&FilterMultiValue=Aw*&SortField=DokumentDatum&SortDir=Desc&Filter=1&FilterField1=Wahlperiode&FilterValue1='
-
     def supports_streaming?
       true
     end
 
     def scrape(&block)
       @m ||= mechanize
-      page = 1
       papers = []
-      block = -> (paper) { papers << paper } unless block_given?
-      mp = @m.get SEARCH_URL + "#{@legislative_term}" if mp.nil?
-      loop do
-        logger.debug "[scrape] page: #{page}"
-        scrape_page(mp, &block)
-        next_page_img = mp.search('//td[@id="bottomPagingCellWPQ1"]//img[contains(@src, "next.gif")]')[0]
-        break if next_page_img.nil?
-        page += 1
-        link_el = next_page_img.parent
-        mp = @m.get SaarlandScraper.extract_next_link_url(link_el)
-      end
-      papers unless block_given?
-    end
-
-    def scrape_page(mp, &block)
       streaming = block_given?
-      papers = []
+      mp = @m.get OVERVIEW_URL
       SaarlandScraper.extract_entries(mp).each do |entry|
         begin
           paper = SaarlandScraper.extract_paper(entry)
@@ -73,107 +57,50 @@ module SaarlandScraper
     end
   end
 
-  def self.extract_next_link_url(link_el)
-    onclick = link_el.attributes['onclick'].value
-    return nil if onclick.nil?
-    rel_url = onclick.match(/"(.+)"/)[1].gsub(/\\u0026/, '&')
-    Addressable::URI.parse(BASE_URL).join(rel_url).normalize.to_s
-  end
-
   def self.extract_entries(mp)
-    mp.search('//table[@class="ms-listviewtable"]//tr[(@class!="ms-viewheadertr ms-vhltr")]')
+    v = mp.search('//input[@type="hidden"]')
+      .find { |i| i.attributes['name'].to_s.ends_with? '$documentListInput' }
+      .attributes['value']
+    v = v.to_s.gsub(/\&qu?o?t?quot;/, '"')
+    JSON.parse(v)
   end
 
   def self.extract_doc_link(entry)
-    url = entry.at_css('a').attr('href')
-    Addressable::URI.parse(BASE_URL).join(url).normalize.to_s
-  end
-
-  def self.extract_full_reference_from_href(href)
-    href = href.split('/').last.split('.').first
-    parts = href.split('_')
-    parts[0][2..3] + '/' + parts[1]
+    Addressable::URI.parse(BASE_URL).join(entry['URL']).normalize.to_s
   end
 
   def self.extract_date(entry)
-    Date.parse(entry.search('.//nobr').try(:text))
+    Date.parse(entry['Dokumentdatum'])
   end
 
   def self.extract_title(entry)
-    entry.search('.//td[4]').try(:text)
+    entry['Titel'].strip
   end
 
   def self.extract_paper(entry)
-    href = extract_doc_link(entry)
-    return if !extract_is_answer(href)
-    full_reference = extract_full_reference_from_href(href)
+    return nil if entry.nil? || !extract_is_answer(entry)
+    url = extract_doc_link(entry)
+    full_reference = entry['Dokumentnummer']
     reference = full_reference.split('/').last
     legislative_term = full_reference.split('/').first
     title = extract_title(entry)
     published_at = extract_date(entry)
-    originators = extract_parties(extract_originator_text(entry))
 
     {
       legislative_term: legislative_term,
       full_reference: full_reference,
-      doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
       reference: reference,
-      title: title,
-      url: href,
-      published_at: published_at,
-      originators: originators,
-      is_answer: true,
-      answerers: { ministries: ['Landesregierung'] }
-    }
-  end
-
-  def self.extract_is_answer(href)
-    # check baseurl/path/to/doc/XX11_1234 for XX=Aw
-    href = href.split('/').last.split('.').first
-    'Aw' == (href[0..1])
-  end
-
-  def self.extract_parties(originator_text)
-    { parties: NamePartyExtractor.new(originator_text).extract[:parties] }
-  end
-
-  def self.extract_originator_text(entry)
-    entry.search('.//td[5]').try(:text)
-  end
-
-  # k=Aw14_0072
-  def self.build_text_parameter(term, ref)
-    "k=Aw#{term}_#{ref}"
-  end
-
-  def self.extract_search_entry(mp, term, ref)
-    entry = mp.search('//div[@id="CSR"]//p[contains(@class, "srch-Metadata1")]').find do |item|
-      item.try(:text).include? "Aw#{term}_#{ref}"
-    end
-    return nil if entry.nil?
-    {
-      title: entry.previous_element.previous_element.css('a').attr('title').value,
-      description: entry.previous_element.text.split('…')[0].strip,
-      url: entry.text
-    }
-  end
-
-  def self.extract_paper_from_search_entry(entry, term, ref)
-    description = entry[:description]
-    url = entry[:url]
-    title = entry[:title]
-    published_date = Date.parse(/\d{2}\.\d{2}\.\d{4}/.match(description)[0])
-
-    {
-      legislative_term: term,
-      full_reference: "#{term}/#{ref}",
-      reference: ref,
       doctype: Paper::DOCTYPE_WRITTEN_INTERPELLATION,
       title: title,
       url: url,
-      published_at: published_date,
+      published_at: published_at,
+      # originators unknown in overview
       is_answer: true,
       answerers: { ministries: ['Landesregierung'] }
     }
+  end
+
+  def self.extract_is_answer(entry)
+    entry['Dokumentname'].starts_with? 'Aw'
   end
 end
