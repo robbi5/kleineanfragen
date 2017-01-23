@@ -19,7 +19,7 @@ class LoadPaperDetailsJob < PaperJob
     end
 
     results.each do |key, value|
-      paper.send("#{key}=", value) if paper.send(key).blank? || OVERWRITEABLE.include?(key)
+      paper.send("#{key}=", value) if paper.send(key).blank? || (OVERWRITEABLE.include?(key) && !value.blank?)
     end
 
     if !paper.valid?
