@@ -25,7 +25,7 @@ class StorePaperPDFJob < PaperJob
     ThumbnailFirstPageJob.perform_later(paper, force: options[:force]) if paper.thumbnail_url.blank? || options[:force]
     CountPageNumbersJob.perform_later(paper) if paper.page_count.blank? || options[:force]
     ExtractTextFromPaperJob.perform_later(paper) if paper.contents.blank? || options[:force]
-    ExtractLastModifiedFromPaperJob.perform_later(paper) if paper.pdf_last_modified.blank?
+    ExtractLastModifiedFromPaperJob.perform_later(paper) if paper.pdf_last_modified.blank? || options[:force]
   end
 
   def download_paper(paper)

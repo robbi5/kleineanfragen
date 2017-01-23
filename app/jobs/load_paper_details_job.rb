@@ -1,7 +1,7 @@
 class LoadPaperDetailsJob < PaperJob
   queue_as :meta
 
-  OVERWRITEABLE = [:originators, :answerers, :doctype]
+  OVERWRITEABLE = [:originators, :answerers, :doctype, :url]
 
   def perform(paper)
     return unless paper.body.scraper.const_defined? :Detail
@@ -18,8 +18,6 @@ class LoadPaperDetailsJob < PaperJob
       return
     end
 
-    had_empty_url = paper.url.blank?
-
     results.each do |key, value|
       paper.send("#{key}=", value) if paper.send(key).blank? || OVERWRITEABLE.include?(key)
     end
@@ -28,7 +26,10 @@ class LoadPaperDetailsJob < PaperJob
       logger.warn "[#{paper.body.state}] Can't save Paper [#{paper.full_reference}] - #{paper.errors.messages}"
       return
     end
+
+    url_change = paper.url_changed?
+
     paper.save!
-    StorePaperPDFJob.perform_later(paper) if had_empty_url && !paper.url.blank?
+    StorePaperPDFJob.perform_later(paper, force: true) if url_change && !paper.url.blank?
   end
 end

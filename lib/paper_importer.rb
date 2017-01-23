@@ -47,6 +47,9 @@ class PaperImporter
         logger.warn "[#{@body.state}] Can't save Paper [#{item[:full_reference]}] - #{paper.errors.messages}"
         return false
       end
+
+      new_paper = true if paper.url_changed?
+
       paper.save!
     else
       logger.info "[#{@body.state}] New Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
