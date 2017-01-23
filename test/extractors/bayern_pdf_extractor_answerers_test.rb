@@ -180,4 +180,12 @@ class BayernPDFExtractorAnswerersTest < ActiveSupport::TestCase
     assert_equal 1, answerers[:ministries].size
     assert_equal 'Staatsministerium für Wirtschaft und Medien, Energie und Technologie', answerers[:ministries].first
   end
+
+  test 'Staatsministerium der Finanzen, für Landesentwicklung und Heimat no vom' do
+    paper = paper_with_answerer("Antwort \ndes Staatsministeriums der Finanzen, für Landesentwicklung\n und Heimat\n09.05.2016", wrap: false)
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Staatsministerium der Finanzen, für Landesentwicklung und Heimat', answerers[:ministries].first
+  end
 end
