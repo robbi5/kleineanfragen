@@ -22,7 +22,9 @@ document.addEventListener("turbolinks:load", function() {
     }
   });
 
-  $('.selectpicker').selectpicker({
+  $('select.selectpicker').not(function(idx, el) {
+    return $(el).siblings('.bootstrap-select').size() > 0;
+  }).selectpicker({
       iconBase: '',
       tickIcon: 'selected-tick'
   });
