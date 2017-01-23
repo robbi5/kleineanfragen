@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161208084334) do
+ActiveRecord::Schema.define(version: 20170123110640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,8 +21,8 @@ ActiveRecord::Schema.define(version: 20161208084334) do
     t.text     "website"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "slug",                    limit: 255
-    t.boolean  "use_mirror_for_download",             default: false
+    t.string   "slug"
+    t.boolean  "use_mirror_for_download",           default: false
     t.string   "wikidataq"
     t.index ["name"], name: "index_bodies_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_bodies_on_slug", unique: true, using: :btree
@@ -38,10 +38,10 @@ ActiveRecord::Schema.define(version: 20161208084334) do
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
-    t.string   "slug",           limit: 255, null: false
-    t.integer  "sluggable_id",               null: false
+    t.string   "slug",                      null: false
+    t.integer  "sluggable_id",              null: false
     t.string   "sluggable_type", limit: 50
-    t.string   "scope",          limit: 255
+    t.string   "scope"
     t.datetime "created_at"
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true, using: :btree
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
@@ -86,7 +86,7 @@ ActiveRecord::Schema.define(version: 20161208084334) do
   end
 
   create_table "organizations", force: :cascade do |t|
-    t.string   "name",       limit: 255
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "slug"
@@ -113,8 +113,8 @@ ActiveRecord::Schema.define(version: 20161208084334) do
   create_table "paper_originators", force: :cascade do |t|
     t.integer "paper_id"
     t.integer "originator_id"
-    t.string  "originator_type", limit: 255
-    t.index ["originator_id", "originator_type"], name: "index_paper_originators_on_originator_id_and_originator_type", using: :btree
+    t.string  "originator_type"
+    t.index ["originator_type", "originator_id"], name: "index_paper_originators_on_originator_type_and_originator_id", using: :btree
     t.index ["paper_id"], name: "index_paper_originators_on_paper_id", using: :btree
   end
 
@@ -141,11 +141,11 @@ ActiveRecord::Schema.define(version: 20161208084334) do
     t.datetime "downloaded_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "slug",              limit: 255
+    t.string   "slug"
     t.boolean  "contains_table"
     t.datetime "pdf_last_modified"
     t.string   "doctype"
-    t.boolean  "is_answer"
+    t.boolean  "is_answer",         default: false, null: false
     t.datetime "frozen_at"
     t.string   "source_url"
     t.datetime "deleted_at"
@@ -192,4 +192,8 @@ ActiveRecord::Schema.define(version: 20161208084334) do
   end
 
   add_foreign_key "legislative_terms", "bodies"
+  add_foreign_key "ministries", "bodies"
+  add_foreign_key "paper_answerers", "papers"
+  add_foreign_key "paper_relations", "papers"
+  add_foreign_key "paper_relations", "papers", column: "other_paper_id"
 end
