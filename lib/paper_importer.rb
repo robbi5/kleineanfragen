@@ -53,7 +53,7 @@ class PaperImporter
       paper.save!
     else
       logger.info "[#{@body.state}] New Paper: [#{item[:full_reference]}] \"#{item[:title]}\""
-      paper = Paper.new(item.except(:full_reference).merge(body: @body))
+      paper = Paper.unscoped.new(item.except(:full_reference).merge(body: @body))
       if !paper.valid?
         logger.warn "[#{@body.state}] Can't save Paper [#{item[:full_reference]}] - #{paper.errors.messages}"
         return false
