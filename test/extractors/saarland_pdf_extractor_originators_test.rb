@@ -59,4 +59,24 @@ class SaarlandPDFExtractorOriginatorsTest < ActiveSupport::TestCase
     assert_not_nil originators[:parties]
     assert_equal 'B90/Grüne', originators[:parties].first
   end
+
+  test 'one person, text contains Landtagsfraktion' do
+    paper = Struct.new(:contents).new("Anfrage der Abgeordneten Gisela Kolb (SPD) \n\n...welches die SPD-Landtagsfraktion bereits seit langem fordert\n")
+
+    originators = SaarlandPDFExtractor.new(paper).extract_originators
+    assert_not_nil originators
+    assert_not_nil originators[:people]
+    assert_equal 1, originators[:people].size
+    assert_equal 'Gisela Kolb', originators[:people].first
+    assert_not_nil originators[:parties]
+    assert_equal 1, originators[:parties].size
+    assert_equal 'SPD', originators[:parties].first
+  end
+
+  test 'one person, mention of both in the text' do
+    paper = Struct.new(:contents).new("Auf die ursprüngliche Anfrage der Fragestellerin ... der Auffassung der SPD-Landtagsfraktion an")
+
+    originators = SaarlandPDFExtractor.new(paper).extract_originators
+    assert_nil originators
+  end
 end

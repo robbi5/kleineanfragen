@@ -4,7 +4,7 @@ class SaarlandPDFExtractor
   end
 
   PEOPLE = /Anfrage\s+de[rs]\s+Abgeordneten\s+([^\(]+)\s+\(([^\)]+)\)/m
-  PARTY = /Anfrage\s+der\s+(.*)-Landtagsfraktion/m
+  PARTY = /Anfrage\s+der(?:(?!\s*Abgeordneten|\s*Fragesteller).)(.*)-Landtagsfraktion/m
 
   IS_MAJOR = /W\s?O\s?R\s?T\s+.+?\s+zu\sder\s+[gG]roßen\sAnfrage/m
 
@@ -27,7 +27,8 @@ class SaarlandPDFExtractor
     end
 
     unless match_parties.nil?
-      parties << match_parties[1]
+      party = clean_text(match_parties[1])
+      parties << party
     end
 
     { people: people, parties: parties }
