@@ -67,6 +67,11 @@ class Paper < ApplicationRecord
   validates :reference, presence: true, uniqueness: { scope: [:body_id, :legislative_term] }
 
   before_validation :fix_published_at
+  before_save :default_values
+
+  def default_values
+    self.is_answer = false if self.is_answer.nil?
+  end
 
   # friendly id helpers
 
