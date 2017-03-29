@@ -87,6 +87,7 @@ class ThueringenLandtagScraperTest < ActiveSupport::TestCase
         title: 'Fortsetzung des Seminar-Angebots "Lernort Landtag" durch die Landeszentrale für politische Bildung',
         url: 'http://www.parldok.thueringen.de/ParlDok/dokument/54728/fortsetzung-des-seminar-angebots-lernort-landtag-durch-die-landeszentrale-f%C3%BCr-politische-bildung.pdf',
         published_at: Date.parse('2015-04-21'),
+        is_answer: true,
         answerers: {
           ministries: ['Landesregierung']
         }

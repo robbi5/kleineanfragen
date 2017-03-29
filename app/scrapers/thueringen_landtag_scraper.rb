@@ -96,6 +96,7 @@ module ThueringenLandtagScraper
       title: title_text,
       url: url,
       published_at: date,
+      is_answer: true,
       # originators are coming from detail scraper
       answerers: { ministries: ministries }
     }
