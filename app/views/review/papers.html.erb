@@ -8,21 +8,21 @@
 <h2 id="body-<%= b.state %>"><%= link_to b.name, b %>: <%= @incomplete[b.state].size %></h2>
 <ol class="paper-list">
   <%= render partial: 'paper/paper', collection: @incomplete[b.state], locals: {
-    before_meta: lambda do |paper| -%>
+    before_meta: lambda { |paper| -%>
     <code class="paper-id"><%= paper.try(:id) %></code>
-  <% end,
-    prepend_meta: lambda do |paper| -%>
+  <% },
+    prepend_meta: lambda { |paper| -%>
     <span class="paper-problems">
     <% paper.problems.each do |p| %>
     <span title="<%= p.to_s %>" class="problem problem-<%=p.to_s%>">&bull;</span>
     <% end %>
     </span>
-  <% end,
-     after_meta: lambda do |paper| -%>
+  <% },
+     after_meta: lambda { |paper| -%>
     <p class="meta">
       <span class="paper-problems"></span>
       Beantwortet von: <%= paper.answerers.collect(&:name).join(', ') %>
     </p>
-  <% end } -%>
+  <% } } -%>
 </ol>
 <% end %>

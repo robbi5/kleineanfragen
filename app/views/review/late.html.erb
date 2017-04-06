@@ -1,0 +1,18 @@
+<%- content_for :head do %><%= noindex() %><% end -%>
+<%- title 'Review / Länger Unbeantwortet' -%>
+<div class="page-header">
+  <h1><%= link_to 'Review', review_path %> / Länger Unbeantwortet (<%= @count %>)</h1>
+</div>
+
+<ol class="paper-list paper-list--with-body">
+  <%= render partial: 'paper/paper', collection: @papers, locals: {
+    show_body: true,
+    before_meta: lambda { |paper| -%>
+    <code class="paper-id"><%= paper.try(:id) %></code>
+  <% },
+   after_meta: lambda { |paper| -%>
+    <p class="meta">
+      Zuerst gefunden vor <%= relative_time_dativ paper.created_at %> am <%= time_tag(paper.created_at, l(paper.created_at)) %>
+    </p>
+  <% } } -%>
+</ol>

@@ -39,6 +39,7 @@ Rails.application.routes.draw do
   get 'review' => 'review#index'
   get 'review/papers'
   get 'review/ministries'
+  get 'review/late'
   get 'review/today'
   get 'review/relations'
   get 'review/scraper' => 'scraper_results#index', as: :scraper_results

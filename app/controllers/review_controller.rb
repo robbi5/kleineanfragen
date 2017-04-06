@@ -35,6 +35,11 @@ class ReviewController < ApplicationController
     @ministries = Ministry.where('length(name) > 70 OR length(name) < 12')
   end
 
+  def late
+    @papers = Paper.unscoped.where(is_answer: false).where(['created_at <= ?', Date.today - 4.weeks]).order('created_at ASC')
+    @count = @papers.size
+  end
+
   def today
     @papers = {}
     @ministries = {}

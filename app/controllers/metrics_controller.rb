@@ -20,6 +20,9 @@ class MetricsController < ApplicationController
     # people_count
     metrics << m('people_count', Person.count)
 
+    # papers_late_count
+    metrics << m('papers_late_count', Paper.unscoped.where(is_answer: false).where(['created_at <= ?', Date.today - 4.weeks]).count)
+
     response.headers['Content-Type'] = 'text/plain; version=0.0.4'
     render plain: render_metrics(metrics)
   end
