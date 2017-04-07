@@ -32,3 +32,12 @@ module AppStorage
 end
 
 AppStorage.initialize! unless ENV['RACK_ENV'].nil?
+
+if Rails.env.development?
+  # Patch File, minio doesn't support acl queries
+  Fog::Storage::AWS::File.class_eval do
+    def public?
+      true
+    end
+  end
+end

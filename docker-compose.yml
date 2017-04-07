@@ -3,6 +3,7 @@ services:
   web:
     build: .
     command: foreman start
+    #command: foreman start -m web=1,worker=4
     ports:
       - "5000:5000"
     volumes:
@@ -19,9 +20,11 @@ services:
     depends_on:
       - database
       - redis
+      - s3
     environment:
+      RACK_ENV: development
       RESQUE_SERVER_OPEN: "true"
-      ELASTICSEARCH_URL: http://elasticsearch:9200/
+      ELASTICSEARCH_URL: http://elasticsearch:9200
       REDIS_URL: redis://redis:6379
       DATABASE_URL: postgres://kleineanfragen:@database/kleineanfragen
       TIKA_SERVER_URL: http://tika:9998
@@ -55,6 +58,8 @@ services:
   # image: robbi5/nomenklatura
   # links:
   #   - database
+  # depends_on:
+  #   - database
   # environment:
   #   DATABASE_URL: postgres://kleineanfragen:@database/nomenklatura
   #   SECRET_KEY: change_me
@@ -64,11 +69,16 @@ services:
   #   - "8080:8080"
 
   s3:
-    build: contrib/s3ninja
+    image: minio/minio:RELEASE.2017-01-25T03-14-52Z
+    command: server /data
+    environment:
+      MINIO_ACCESS_KEY: "AKIAIOSFODNN7EXAMPLE"
+      MINIO_SECRET_KEY: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
     volumes:
       - ./tmp/ka-dev:/data
+      - ./tmp/ka-meta:/root/.minio
     ports:
-      - "9444:9444"
+      - "9000:9000"
 
   mailcatcher:
     image: schickling/mailcatcher

@@ -7,12 +7,13 @@ credentials: &credentials
 
 development:
   <<: *credentials
-  endpoint: http://s3:9444
-  region: nil
+  endpoint: http://s3:9000
+  region: us-east-1
   bucket: ka-dev
   # don't panic, these are fake (see s3ninja/app/application.conf)
   aws_access_key_id: AKIAIOSFODNN7EXAMPLE
   aws_secret_access_key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+  aws_signature_version: 4
 
 test:
   provider: Local
