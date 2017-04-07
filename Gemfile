@@ -61,7 +61,7 @@ gem 'saxerator', '~> 0.9.5'
 gem 'friendly_id', '~> 5.1.0'
 
 # don't delete everything
-gem 'paranoia', '~> 2.2.0.pre'
+gem 'paranoia', '~> 2.2.1'
 
 # fix urls while scraping
 gem 'addressable', '~> 2.4.0', require: 'addressable/uri'
@@ -89,7 +89,7 @@ gem 'typhoeus', '~> 1.0.1'
 # storage
 # gem 'fog', '~> 1.29.0'
 #  - fog loads way too many provider gems. load only the ones we need:
-gem 'fog-aws', '~> 0.7.6'
+gem 'fog-aws', '~> 1.3.0'
 gem 'fog-local', '~> 0.2.1'
 
 # jobs
@@ -98,7 +98,7 @@ gem 'resque-scheduler', '~> 4.3.0'
 gem 'activejob-retry', '~> 0.6.1'
 gem 'resque-sentry', '~> 1.2.0'
 
-gem 'sinatra', github: 'sinatra/sinatra', ref: 'e7ef8e23', require: nil # needs sinatra 2.0, because rack 2
+gem 'sinatra', '~> 2.0.0.rc2', require: nil # needs sinatra 2.0, because rack 2
 
 # for nomenklatura
 gem 'httparty', '~> 0.13.7'
@@ -126,7 +126,7 @@ gem 'griddler-sendgrid', '~> 0.0.1'
 # api
 gem 'rack-cors', '~> 0.4.0', require: 'rack/cors'
 gem 'grape', '~> 0.17.0'
-gem 'grape-entity', '~> 0.5.1'
+gem 'grape-entity', '~> 0.6.1'
 gem 'grape-route-helpers', '~> 2.0.0'
 
 # wikidata
