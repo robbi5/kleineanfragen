@@ -667,24 +667,25 @@ html[dir='ltr'] .doorHangerRight:before {
   background-color: rgb(255, 102, 102);
 }
 
+#toolbarViewerMiddle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+html[dir='ltr'] #toolbarViewerLeft,
+html[dir='rtl'] #toolbarViewerRight {
+  float: left;
+}
+html[dir='ltr'] #toolbarViewerRight,
+html[dir='rtl'] #toolbarViewerLeft {
+  float: right;
+}
 html[dir='ltr'] #toolbarViewerLeft {
   margin-left: -1px;
 }
 html[dir='rtl'] #toolbarViewerRight {
   margin-right: -1px;
-}
-
-html[dir='ltr'] #toolbarViewerLeft,
-html[dir='rtl'] #toolbarViewerRight {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-html[dir='ltr'] #toolbarViewerRight,
-html[dir='rtl'] #toolbarViewerLeft {
-  position: absolute;
-  top: 0;
-  right: 0;
 }
 html[dir='ltr'] #toolbarViewerLeft > *,
 html[dir='ltr'] #toolbarViewerMiddle > *,
