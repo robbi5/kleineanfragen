@@ -23,7 +23,8 @@
 
     <nav role="navigation">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="https://twitter.com/kleineanfragen">Twitter</a></li>
+        <li><a href="https://twitter.com/kleineanfragen"><span class="hidden-xs hidden-sm">@kleineanfragen auf </span>Twitter</a></li>
+        <li class="hidden-xs"><%= link_to 'Unterstützen', info_spenden_path, class: 'donate' %></li>
       </ul>
     </nav>
 
@@ -74,8 +75,8 @@
           <li><%= link_to 'Mitmachen', info_mitmachen_path %></li>
           <li><%= link_to 'Datenschutz', info_datenschutz_path, 'data-no-turbolink' => true %></li>
           <li><%= link_to 'Kontakt & Impressum', info_kontakt_path %></li>
-          <li><a href="https://twitter.com/kleineanfragen">@kleineanfragen auf Twitter</a></li>
-          <li><%= link_to 'Spenden', info_spenden_path, class: 'donate' %></li>
+          <li class="visible-xs-block"><a href="https://twitter.com/kleineanfragen">@kleineanfragen auf Twitter</a></li>
+          <li class="visible-xs-block"><%= link_to 'Unterstützen', info_spenden_path, class: 'donate' %></li>
         </ul>
       </nav>
     </div>
