@@ -3,6 +3,10 @@
  *= require pdfjs/viewer
  */
 
+body {
+  background: transparent !important;
+}
+
 #branding {
   text-decoration: none;
   font-family: 'Raleway', sans-serif;
@@ -14,4 +18,41 @@
   background-image: url(<%= asset_path('kleineanfragen-viewer.svg') %>);
   width: 90px;
   cursor: pointer;
+}
+
+html .pdfViewer .page {
+  border: 0;
+  border-image: none;
+  margin: 1px auto 10px auto;
+  box-shadow: 0 0 3px 0px rgba(150, 150, 150, 0.5);
+}
+@media (min-width: 678px) {
+  html .pdfViewer .page {
+    margin: 1px 0 10px 3px;
+  }
+}
+@media (width: 750px) {
+  html .pdfViewer .page {
+    margin: 1px auto 10px auto;
+  }
+}
+
+html #viewerContainer {
+  top: 0px;
+  padding-top: 45px;
+}
+
+html #toolbarContainer {
+  background-color: rgba(95, 95, 95, 0.95);
+  background-image: none;
+  box-shadow: none;
+}
+
+html #loadingBar {
+  border-bottom: 0;
+  background: #eee;
+}
+
+html #loadingBar .progress {
+  background: #5cb85c;
 }

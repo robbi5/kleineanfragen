@@ -17,25 +17,23 @@
 <%= tag 'link', href: paper_path(@body, @legislative_term, @paper, {format: :json}), rel: 'alternate', type: 'application/json' -%>
 <%= tag 'link', href: paper_path(@body, @legislative_term, @paper, {format: :txt}), rel: 'alternate', type: 'text/plain' -%>
 <%- end -%>
+<% content_for :main_class do %>page-paper<% end %>
 <% content_for :main_fullwidth_prepend do %>
-<div class="breadcrumb-fullwidth">
+<div class="page-header page-paper-header">
   <div class="container">
     <ol class="breadcrumb">
       <li><%= link_to @body.name, @body %></li>
       <li><%= link_to "#{@legislative_term.to_s}. Wahlperiode", legislative_term_path(@body, @legislative_term) %></li>
       <li class="active">Drucksache <%= @paper.reference %></li>
     </ol>
+
+    <h1><span class="label label-default label-big paper-reference hidden-xs"><%= @paper.full_reference %></span> <%= @paper.title %></h1>
   </div>
 </div>
 <% end %>
 
-<div class="page-header">
-  <h1><%= @paper.title %></h1>
-</div>
-
 <div class="row">
   <div class="col-md-3 col-md-push-9">
-    <p><span class="label label-default label-big"><%= @paper.full_reference %></span></p>
     <p><%= @paper.doctype_human.titleize %></p>
     <p>
       Eingereicht von:<br class="hidden-xs hidden-sm"/>
@@ -73,8 +71,11 @@
       <label for="shorturl" class="shorturl-label">Kurz-URL:</label>
       <input type="text" name="shorturl" id="shorturl" value="<%= paper_short_url(@paper) %>" readonly="readonly" class="shorturl-input"/>
     </p>
-    <% if @paper.contains_table %>
-    <p>Diese Anfrage enthält eine oder mehrere Tabellen. Um diese einfach exportieren zu können, ist u.a. <a href="http://tabula.technology">Tabula</a> hilfreich.</p>
+    <% if @paper.contains_table? %>
+    <div class="paper-contains-table">
+      <h4>Daten extrahieren</h4>
+      <p>Diese Anfrage enthält eine oder mehrere Tabellen. Um diese einfach exportieren zu können, ist u.a. <a href="http://tabula.technology">Tabula</a> hilfreich.</p>
+    </div>
     <% end %>
   </div>
   <div class="col-md-9 col-md-pull-3 paper-viewer-wrapper">
@@ -83,20 +84,14 @@
       <p><strong>Hinweis:</strong> Diese Anfrage kann Spuren von Rechtsextremismus enthalten.</p>
     </div>
     <% end %>
-    <iframe src="<%= paper_pdf_viewer_path %>" width="100%" height="600px" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+    <iframe src="<%= paper_pdf_viewer_path %>" width="100%" height="600px" frameborder="0" allowfullscreen="allowfullscreen" id="paper-viewer-iframe"></iframe>
   </div>
 </div>
 
-<% if report_enabled? %>
+<% pos = @paper.part_of_series? %>
+<% if pos || report_enabled? %>
 <div class="row">
-  <div class="col-md-3 col-md-push-9">
-    <p class="report"><%= link_to 'Problem melden', paper_report_path(@body, @legislative_term, @paper) %></p>
-  </div>
-</div>
-<% end %>
-
-<% if @paper.part_of_series? %>
-<div class="row">
+  <% if pos %>
   <div class="col-md-9">
     <p>
       Diese Anfrage scheint Teil einer Serie zu sein.
@@ -106,6 +101,12 @@
         })%>
     </p>
   </div>
+  <% end %>
+  <% if report_enabled? %>
+  <div class="col-md-3 <% if !pos %>col-md-push-9<% end %>">
+    <p class="report"><%= link_to 'Problem melden', paper_report_path(@body, @legislative_term, @paper) %></p>
+  </div>
+  <% end %>
 </div>
 <% end %>
 
