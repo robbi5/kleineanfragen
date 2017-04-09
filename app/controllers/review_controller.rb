@@ -36,7 +36,7 @@ class ReviewController < ApplicationController
   end
 
   def late
-    @papers = Paper.unscoped.where(is_answer: false).where(['created_at <= ?', Date.today - 4.weeks]).order('created_at ASC')
+    @papers = Paper.unscoped.where(is_answer: false, deleted_at: nil).where(['created_at <= ?', Date.today - 4.weeks]).order('created_at ASC')
     @count = @papers.size
   end
 
