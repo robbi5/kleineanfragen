@@ -29,4 +29,13 @@ class HamburgPDFHasAnswerTest < ActiveSupport::TestCase
     )
     assert HamburgPDFHasAnswerExtractor.new(paper).is_answer?
   end
+
+  test 'answered, missing dot' do
+    paper = Struct.new(:contents).new(
+      "  und Antwort des Senats  \n" +
+      " \n" +
+      '  Betr:'
+    )
+    assert HamburgPDFHasAnswerExtractor.new(paper).is_answer?
+  end
 end

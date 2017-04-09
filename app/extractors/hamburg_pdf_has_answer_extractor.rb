@@ -3,7 +3,7 @@ class HamburgPDFHasAnswerExtractor
     @contents = paper.contents
   end
 
-  ANSWERED_TAG = /und\s+Antwort\s+des\s+Senats\s+Betr\./i
+  ANSWERED_TAG = /und\s+Antwort\s+des\s+Senats\s+Betr\.?\:?/i
 
   def is_answer?
     return nil if @contents.nil?
