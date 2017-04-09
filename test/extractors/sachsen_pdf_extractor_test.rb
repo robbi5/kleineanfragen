@@ -66,7 +66,11 @@ class SachsenPDFExtractorTest < ActiveSupport::TestCase
     define_method "test_sachsen_pair_#{index}" do
       paper = paper_with_contents(key)
       answerers = SachsenPDFExtractor.new(paper).extract_answerers
-      assert_equal value, answerers[:ministries].try(:first), "Should match \"#{value}\" for \"#{key}\""
+      if value.nil?
+        assert_nil answerers[:ministries].try(:first)
+      else
+        assert_equal value, answerers[:ministries].try(:first), "Should match \"#{value}\" for \"#{key}\""
+      end
     end
   end
 end

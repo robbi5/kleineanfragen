@@ -17,7 +17,11 @@ class EsQueryParserTest < ActiveSupport::TestCase
   CONVERT_RANGE_TEST_CASES.each do |name, (input, output)|
     test "convert range #{name}" do
       range = EsQueryParser.convert_range(input)
-      assert_equal output, range
+      if output.nil?
+        assert_nil range
+      else
+        assert_equal output, range
+      end
     end
   end
 
@@ -39,7 +43,11 @@ class EsQueryParserTest < ActiveSupport::TestCase
   CONVERT_DATE_RANGE_TEST_CASES.each do |name, (input, output)|
     test "convert date #{name}" do
       range = EsQueryParser.convert_date_range(input)
-      assert_equal output, range
+      if output.nil?
+        assert_nil range
+      else
+        assert_equal output, range
+      end
     end
   end
 

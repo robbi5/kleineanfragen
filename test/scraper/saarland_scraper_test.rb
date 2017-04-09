@@ -60,7 +60,7 @@ class SaarlandScraperTest < ActiveSupport::TestCase
       "Dokumentnummer"=>"15/2044"
     }
 
-    assert_equal nil, @scraper.extract_paper(invalid_entry)
+    assert_nil @scraper.extract_paper(invalid_entry)
     assert_not_equal nil, @scraper.extract_paper(entry)
   end
 end
