@@ -61,7 +61,9 @@
         <% if @body.use_mirror_for_download? %>
           &mdash; Gespiegelte Version <%= link_to '(?)', info_path %>
         <% end %>
-        &mdash; <%= link_to "als Text", paper_path(@body, @legislative_term, @paper, {format: :txt}), {target: '_blank'} %>
+        <% if @paper.contents.size > 0 %>
+          &mdash; <%= link_to "als Text", paper_path(@body, @legislative_term, @paper, {format: :txt}), {target: '_blank'} %>
+        <% end %>
         <% unless @paper.source_url.blank? %>
           &mdash; <%= link_to "Quelle", @paper.source_url %>
         <% end %>

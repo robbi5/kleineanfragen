@@ -78,6 +78,16 @@ $brand-primary: #2980b9;
   }
 }
 
+.navbar-nav > li > a {
+  padding-right: 10px;
+  padding-left: 10px;
+
+  @media (min-width: $screen-md-min) {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+}
+
 .app-footer.container {
   margin-top: 25px;
   color: $gray-light;
@@ -738,9 +748,23 @@ span.twitter-typeahead {
 }
 
 #paper-viewer-iframe {
+  background: transparent;
+
   @media (min-width: $screen-md-min) {
     // un-indent to keep left shadow on line
     margin-left: -3px;
+  }
+  @media (min-height: 1050px) {
+    height: 730px;
+  }
+  @media (min-height: 1175px) {
+    height: 850px;
+  }
+  @media (min-height: 1250px) {
+    height: 910px;
+  }
+  @media (min-height: 1300px) {
+    height: 980px;
   }
 }
 
