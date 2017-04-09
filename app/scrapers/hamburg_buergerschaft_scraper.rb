@@ -19,7 +19,7 @@ module HamburgBuergerschaftScraper
       papers = []
       m = mechanize
       # to initialize session
-      m.get BASE_URL
+      m.get BASE_URL + '/'
       # search form
       mp = submit_search(m)
       loop do
@@ -116,7 +116,7 @@ module HamburgBuergerschaftScraper
     def scrape
       m = mechanize
       # get a session
-      m.get BASE_URL
+      m.get BASE_URL + '/'
       mp = m.get SEARCH_URL
       form = mp.forms.last
       form.field_with(name: 'LegislaturPeriodenNummer').value = @legislative_term
