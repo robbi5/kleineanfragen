@@ -65,7 +65,10 @@ module SachsenExportScraper
     end
 
     def self.parser(file)
-      Saxerator.parser(file) { |config| config.put_attributes_in_hash! }
+      Saxerator.parser(file) do |config|
+        config.adapter = :nokogiri
+        config.put_attributes_in_hash!
+      end
     end
 
     def read(&block)
@@ -125,10 +128,10 @@ module SachsenExportScraper
 
           [document['urheber']].flatten.reject(&:nil?).each do |o|
             if o['istPerson'].to_i == 0
-              originators[:parties] << o['name']
+              originators[:parties] << o['name'].to_s
             else
-              originators[:people] << [o['nam_zus'], o['vorname'], o['name']].reject(&:blank?).join(' ')
-              originators[:parties] << o['fraktion']
+              originators[:people] << [o['nam_zus'], o['vorname'], o['name']].map(&:to_s).reject(&:blank?).join(' ')
+              originators[:parties] << o['fraktion'].to_s
             end
           end
         elsif document['DokTyp'] == 'Antw'
@@ -139,7 +142,7 @@ module SachsenExportScraper
 
           [document['urheber']].flatten.reject(&:nil?).each do |o|
             if o['istPerson'].to_i == 0
-              answerers[:ministries] << o['vorname']
+              answerers[:ministries] << o['vorname'].to_s
             end
           end
         end
@@ -149,10 +152,10 @@ module SachsenExportScraper
 
       paper = {
         legislative_term: legislative_term,
-        reference: reference,
-        full_reference: full_reference,
+        reference: reference.to_s,
+        full_reference: full_reference.to_s,
         doctype: doctype,
-        title: title,
+        title: title.to_s,
         # url -> DetailScraper
         published_at: published_at,
         is_answer: is_answer,
