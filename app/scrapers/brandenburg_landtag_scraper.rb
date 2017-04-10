@@ -73,6 +73,7 @@ module BrandenburgLandtagScraper
 
   def self.extract_answer_data(answer_text)
     m = answer_text.strip.match(/Antwort\s+\(.+?\)\s+([\d\.]+)\s+Drucksache\s+(\d+\/\d+)\s+/)
+    return nil if m.nil?
     {
       published_at: Date.parse(m[1]),
       full_reference: m[2]
@@ -81,6 +82,7 @@ module BrandenburgLandtagScraper
 
   def self.extract_originators(originator_text)
     o = originator_text.match(/(.+)\s+([\d\.]+)\s+Drucksache\s+\d+\/\d+\s/)
+    return nil if o.nil?
     o[1].strip
   end
 
@@ -93,6 +95,7 @@ module BrandenburgLandtagScraper
     answer_text = answer_text_el.text.strip
 
     ad = extract_answer_data(answer_text)
+    return nil if ad.nil?
     full_reference = ad[:full_reference]
 
     path = link.attributes['href'].value
@@ -159,14 +162,14 @@ module BrandenburgLandtagScraper
         # navigate to extended search page
         redir_form = mp.form '__form'
         fail 'Cannot get redirection form' if redir_form.nil?
-        redir_form.field_with(name: '__action').value = 41
+        redir_form.field_with(name: '__action').value = 41 # -> a#GoToPage
         mp = m.submit(redir_form)
 
         search_form = mp.form '__form'
         fail 'Cannot get search form' if search_form.nil?
 
         # fill search form
-        search_form.field_with(name: '__action').value = 78
+        search_form.field_with(name: '__action').value = 84 # -> a#SearchAndDisplayAction
         search_form.field_with(name: 'LISSH_WP_ADV').value = @legislative_term
         search_form.field_with(name: 'LISSH_DART_ADV').value = 'DRUCKSACHE'
         search_form.field_with(name: 'LISSH_DTYP').value = TYPE
@@ -187,7 +190,7 @@ module BrandenburgLandtagScraper
         end
 
         # get more items
-        search_form.field_with(name: '__action').value = 185
+        search_form.field_with(name: '__action').value = 197 # -> a#DisplayCurrentPage
         search_form.field_with(name: 'NumPerSegment').options.find { |opt| opt.text.include? 'alle' }.select
         mp = m.submit(search_form)
 
