@@ -26,14 +26,16 @@ module NkSyncable
     elsif entity.name != name
       new_name = entity.name
       if self.class.exists?(name: new_name)
-        # new name and person exists? reassign papers, remove self
+        # new name and object exists? reassign papers, remove self
         other = self.class.find_by_name(new_name)
-        other.papers << papers
+        papers.each do |paper|
+          other.papers << paper unless other.papers.include?(paper)
+        end
         other.save!
         papers.clear
         destroy
       else
-        # new name and person doesn't exist? rename self
+        # new name and object doesn't exist? rename self
         self.name = new_name
         save!
       end
