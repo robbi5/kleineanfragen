@@ -3,7 +3,7 @@ class SiteController < ApplicationController
     @bodies = Body.order("state != 'BT', name ASC").all
     @papers = Paper
               .where.not(published_at: nil)
-              .limit(10)
+              .limit(11)
               .includes(:body, :paper_originators)
               .order(published_at: :desc, reference: :desc)
     @count = Paper.count.round(-1)

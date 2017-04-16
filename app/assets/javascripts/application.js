@@ -7,6 +7,7 @@
 //= require bootstrap/dropdown
 //= require bootstrap-select.min
 //= require search
+//= require site-index
 //= require paper
 //= require tracking
 //= require turbolinks_loaded

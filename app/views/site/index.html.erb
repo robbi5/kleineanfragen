@@ -29,11 +29,18 @@
     <p>So konnte Zeit Online z.B. durch einer Reihe kleiner Anfragen, die die Grünen-Bundestagsfraktion an die Bundesregierung gerichtet hatte, eine <a href="http://www.zeit.de/mobilitaet/2014-09/deutsche-bahn-bruecken-zustand">interaktive Karte über den Zustand von Bahnbrücken</a> erstellen.</p>
 
     <h2>Länder- und Parlamentsübersicht:</h2>
-    <ul class="bodies-list">
-      <% @bodies.each do |body| %>
-      <li><a href="<%= body_path body %>"><%= body.name %></a></li>
-      <% end %>
-    </ul>
+    <div class="row bodies">
+      <div class="col-sm-5 col-sm-push-6">
+        <ul class="bodies-list">
+          <% @bodies.each do |body| %>
+          <li><a href="<%= body_path body %>" class="link-state-<%= body.state %>" data-state="<%= body.state %>"><%= body.name %></a></li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="col-sm-6 col-sm-pull-5">
+        <%= inline_svg 'hexmap.svg', class: 'hexmap' %>
+      </div>
+    </div>
   </div>
 
   <div class="col-sm-6">
