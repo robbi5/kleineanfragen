@@ -18,18 +18,18 @@ de:
   email:
     subject:
       body:
-        one: Eine neue kleine Anfrage aus %{body}
-        other: '%{count} neue kleine Anfragen aus %{body}'
+        one: Eine neue beantwortete Anfrage aus %{body}
+        other: '%{count} neue beantwortete Anfragen aus %{body}'
       search:
-        one: 'Eine neue kleine Anfrage für die Suche nach "%{query}"'
-        other: '%{count} neue kleine Anfragen für die Suche nach "%{query}"'
+        one: 'Eine neue beantwortete Anfrage für die Suche nach "%{query}"'
+        other: '%{count} neue beantwortete Anfragen für die Suche nach "%{query}"'
     new_interpellations:
       body:
-        one: Es ist eine neue kleine Anfrage aus %{body} eingegangen
-        other: Es sind %{count} neue kleine Anfragen aus %{body} eingegangen
+        one: Es ist eine neue beantwortete Anfrage aus %{body} eingegangen
+        other: Es sind %{count} neue beantwortete Anfragen aus %{body} eingegangen
       search:
-        one: 'Es ist eine neue kleine Anfrage für die Suche nach "%{query}" eingegangen'
-        other: 'Es sind %{count} neue kleine Anfragen für die Suche nach "%{query}" eingegangen'
+        one: 'Es ist eine neue beantwortete Anfrage für die Suche nach "%{query}" eingegangen'
+        other: 'Es sind %{count} neue beantwortete Anfragen für die Suche nach "%{query}" eingegangen'
   related_papers:
     one: Eine zusammenhängende Anfrage
     other: '%{count} zusammenhängende Anfragen'
