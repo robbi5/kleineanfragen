@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170123110640) do
+ActiveRecord::Schema.define(version: 20170416160058) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,18 +104,29 @@ ActiveRecord::Schema.define(version: 20170123110640) do
 
   create_table "paper_answerers", force: :cascade do |t|
     t.integer "paper_id"
-    t.integer "answerer_id"
     t.string  "answerer_type"
+    t.integer "answerer_id"
     t.index ["answerer_type", "answerer_id"], name: "index_paper_answerers_on_answerer_type_and_answerer_id", using: :btree
     t.index ["paper_id"], name: "index_paper_answerers_on_paper_id", using: :btree
   end
 
   create_table "paper_originators", force: :cascade do |t|
     t.integer "paper_id"
-    t.integer "originator_id"
     t.string  "originator_type"
+    t.integer "originator_id"
     t.index ["originator_type", "originator_id"], name: "index_paper_originators_on_originator_type_and_originator_id", using: :btree
     t.index ["paper_id"], name: "index_paper_originators_on_paper_id", using: :btree
+  end
+
+  create_table "paper_redirects", force: :cascade do |t|
+    t.integer  "body_id",          null: false
+    t.integer  "legislative_term"
+    t.text     "reference"
+    t.integer  "paper_id",         null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["body_id"], name: "index_paper_redirects_on_body_id", using: :btree
+    t.index ["paper_id"], name: "index_paper_redirects_on_paper_id", using: :btree
   end
 
   create_table "paper_relations", force: :cascade do |t|
@@ -194,6 +205,8 @@ ActiveRecord::Schema.define(version: 20170123110640) do
   add_foreign_key "legislative_terms", "bodies"
   add_foreign_key "ministries", "bodies"
   add_foreign_key "paper_answerers", "papers"
+  add_foreign_key "paper_redirects", "bodies"
+  add_foreign_key "paper_redirects", "papers"
   add_foreign_key "paper_relations", "papers"
   add_foreign_key "paper_relations", "papers", column: "other_paper_id"
 end

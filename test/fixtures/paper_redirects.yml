@@ -1,0 +1,7 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  body: hessen
+  legislative_term: 19
+  reference: "1874"
+  paper: paper_he_19_2933

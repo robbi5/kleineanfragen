@@ -24,3 +24,15 @@ paper_be_17_1000:
   url: http://berlin.example.org/pdf/17/1000.pdf
   is_answer: true
   downloaded_at: 2014-09-03 12:22:33
+
+paper_he_19_2933:
+  body: hessen
+  legislative_term: 19
+  reference: "2933"
+  title: "Unterrichtssituation und Lehrkräftebedarf in Hessen"
+  contents: MyText
+  page_count: 100
+  published_at: 2015-12-14
+  url: http://hessen.example.org/pdf/19/2933.pdf
+  is_answer: true
+  downloaded_at: 2015-12-16 12:22:33

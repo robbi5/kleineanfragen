@@ -100,7 +100,13 @@ class PaperController < ApplicationController
 
   def find_paper_by_reference(reference)
     @paper = Paper.where(body: @body, legislative_term: @legislative_term, reference: reference).first
-    fail ActiveRecord::RecordNotFound if @paper.nil?
+    if @paper.nil?
+      r = PaperRedirect.where(body: @body, legislative_term: @legislative_term, reference: reference).first
+      if r.nil?
+        fail ActiveRecord::RecordNotFound
+      end
+      return redirect_to paper_path(r.body, r.legislative_term, r.paper), status: :moved_permanently
+    end
   end
 
   def redirect_old_slugs

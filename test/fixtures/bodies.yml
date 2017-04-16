@@ -11,3 +11,9 @@ berlin:
   state: BE
   website: http://berlin.example.org
   slug: berlin
+
+hessen:
+  name: hessen
+  state: HE
+  website: http://hessen.example.org
+  slug: hessen
