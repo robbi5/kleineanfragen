@@ -8,7 +8,8 @@
   <%= render partial: 'paper/paper', collection: @papers, locals: {
     show_body: true,
     before_meta: lambda { |paper| -%>
-    <code class="paper-id"><%= paper.try(:id) %></code>
+    <code class="paper-id"><%= paper.try(:id) %></code> &nbsp;
+    <span class="circle circle--<%= paper.is_answer? ? 'public' : 'hidden' %>"></span>
   <% },
    after_meta: lambda { |paper| -%>
     <p class="meta">

@@ -515,7 +515,9 @@ span.twitter-typeahead {
   &.circle--type-instant,
   &.circle--type-instant:after { border-radius: 0; }
   &.circle--nothing-new { border-style: dotted; }
-  &.circle--success:after { background-color: #5cb85c; }
+  &.circle--public:after,
+  &.circle--success:after, { background-color: #5cb85c; }
+  &.circle--hidden:after,
   &.circle--failure:after { background-color: #9b0000; }
   &.circle--running:after { animation: circle-running 1.2s infinite alternate; }
 }
