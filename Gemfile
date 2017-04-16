@@ -29,7 +29,7 @@ gem 'newrelic_rpm', group: :production
 
 gem 'foreman', '~> 0.78.0', group: :development
 gem 'dotenv-rails', '~> 1.0.2'
-gem 'sentry-raven', '~> 2.2.0'
+gem 'sentry-raven', '~> 2.4.0'
 
 # Access an IRB console on exception pages or by using <%%= console %> in views
 gem 'web-console', '~> 3.0', group: :development
@@ -46,7 +46,7 @@ group :test do
   gem 'sqlite3'
   gem 'memory_test_fix', '~> 1.4.0'
   gem 'minitest-stub_any_instance'
-  gem 'rails-controller-testing', '~> 0.1.1'
+  gem 'rails-controller-testing', '~> 1.0.1'
 end
 
 # Get i18n files
@@ -68,6 +68,7 @@ gem 'addressable', '~> 2.4.0', require: 'addressable/uri'
 
 # styling
 gem 'bootstrap-sass', '~> 3.3.6'
+gem 'inline_svg', '~> 1.1.0'
 
 # pagination
 gem 'kaminari', '~> 0.17.0'
