@@ -6,22 +6,26 @@ class NotifyPuSHHubBodyFeedJob < ApplicationJob
   queue_as :subscription
 
   def perform(body)
-    return if Rails.configuration.x.push_hub.blank?
+    return if Rails.configuration.x.push_hubs.blank?
 
     feed_url = Rails.application.routes.url_helpers.body_feed_url(body: body, format: :atom)
     urls = [feed_url, "#{feed_url}?feedformat=twitter"]
 
+    hubs = Rails.configuration.x.push_hubs
+
     urls.each do |url|
-      success = self.class.notify(url)
-      fail "Couldn't notify push hub for url \"#{url}\"" unless success
+      hubs.each do |hub|
+        success = self.class.notify(hub, url)
+        fail "Couldn't notify push hub \"#{hub}\" for url \"#{url}\"" unless success
+      end
     end
   end
 
-  def self.notify(feed_url)
-    return false if Rails.configuration.x.push_hub.blank?
+  def self.notify(hub, feed_url)
+    return false if hub.blank?
 
     response = Excon.post(
-      Rails.configuration.x.push_hub,
+      hub,
       body: URI.encode_www_form(
         'hub.mode' => 'publish',
         'hub.url' => feed_url

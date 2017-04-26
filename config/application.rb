@@ -71,7 +71,7 @@ module Kleineanfragen
     # report slack webhook url
     config.x.report_slack_webhook = ENV['REPORT_SLACK_WEBHOOK']
     # pubsubhubbub hub url
-    config.x.push_hub = ENV['PUSH_HUB']
+    config.x.push_hubs = ENV['PUSH_HUB'].split(',').reject(&:blank?).map(&:strip) unless ENV['PUSH_HUB'].nil?
     # Push OCR token to update paper contents from remote
     config.x.push_ocr_token = ENV['PUSH_OCR_TOKEN']
     # Email token to enable incoming email parsing

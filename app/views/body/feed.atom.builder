@@ -4,7 +4,11 @@ atom_feed(
   url: feed_url_with_current_page(@papers)
 ) do |feed|
   paginated_feed(feed, @papers)
-  feed.link rel: 'hub', href: Rails.configuration.x.push_hub unless Rails.configuration.x.push_hub.blank?
+  if !Rails.configuration.x.push_hubs.blank?
+    Rails.configuration.x.push_hubs.each do |hub|
+      feed.link rel: 'hub', href: hub
+    end
+  end
   feed.title "kleineAnfragen: Anfragen aus #{@body.name}"
   feed.updated @papers.maximum(:updated_at)
   feed.author { |author| author.name 'kleineAnfragen' }
