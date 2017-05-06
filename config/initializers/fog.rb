@@ -28,12 +28,17 @@ module AppStorage
 
     @initialized = true
   end
+
+  def acl_support?
+    ActiveRecord::Type::Boolean.new.cast(ENV.fetch('S3_ACL_SUPPORT', 'false'))
+  end
+
   end
 end
 
 AppStorage.initialize! unless ENV['RACK_ENV'].nil?
 
-if Rails.env.development?
+if !AppStorage.acl_support?
   # Patch File, minio doesn't support acl queries
   Fog::Storage::AWS::File.class_eval do
     def public?

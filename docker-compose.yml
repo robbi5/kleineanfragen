@@ -28,6 +28,7 @@ services:
       REDIS_URL: redis://redis:6379
       DATABASE_URL: postgres://kleineanfragen:@database/kleineanfragen
       TIKA_SERVER_URL: http://tika:9998
+      S3_ACL_SUPPORT: "false"
   #   NOMENKLATURA_HOST: http://nomenklatura:8080
   #   NOMENKLATURA_APIKEY: change_me
   #   SENTRY_DSN: http://public:secret@sentry:9000/2
