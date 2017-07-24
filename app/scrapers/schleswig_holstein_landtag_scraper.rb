@@ -29,11 +29,15 @@ module SchleswigHolsteinLandtagScraper
 
   def self.extract_meta(block)
     line = block.child.next.child.next.next.next.content
-    match = line.match(/Kleine\s+Anfrage\s+(.*)\s*und\s+Antwort\s+(.+)\s+([\d\.]+)\s+Drucksache/)
-    return nil if match.nil?
-    published_at = Date.parse(match[3])
-    originators = match[1].strip
-    ministry = match[2].strip
+    match = line.match(/Kleine\s+Anfrage\s+(?<org>.*)\s*und\s+Antwort\s+(?<min>.+)\s+(?<date>[\d\.]+)\s+Drucksache/)
+    if match.nil?
+      match = line.match(/Kleine\s+Anfrage\s+(?<org>.*)\s*und\s+Antwort\s+(?<min>.+)\s+Drucksache/)
+      return nil if match.nil?
+    end
+    published_at = nil
+    published_at = Date.parse(match['date']) if match.names.include? 'date'
+    originators = match['org'].strip
+    ministry = match['min'].strip
     # special case for broken records
     if originators.blank? && !ministry.blank?
       originators = ministry

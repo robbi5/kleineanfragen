@@ -32,8 +32,12 @@ class SchleswigHolsteinLandtagScraperOverviewTest < ActiveSupport::TestCase
     assert_equal true, @scraper.answer?(@blocks[0])
   end
 
-  test 'get meta is nil if date is undefined' do
-    assert_nil @scraper.extract_meta(@blocks[0])
+  test 'get meta succeeds even if date is undefined' do
+    meta = @scraper.extract_meta(@blocks[0])
+    assert_not_nil meta
+    assert_equal ['Dr. Patrick Breyer', 'Wolfgang Dudda'], meta[:originators][:people]
+    assert_equal ['PIRATEN'], meta[:originators][:parties]
+    assert_equal ['Minister/in für Soziales, Gesundheit, Wissenschaft und Gleichstellung'], meta[:ministries]
   end
 
   test 'get ministries' do
