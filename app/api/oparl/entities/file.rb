@@ -27,7 +27,7 @@ module OParl
         expose(:accessUrl) { |paper| paper.public_url }
         expose(:downloadUrl) { |paper| paper.download_url }
 
-        expose(:web) { |paper| Rails.application.routes.url_helpers.paper_pdf_viewer_url(body: paper.body.key, legislative_term: paper.legislative_term, paper: paper) } # equivalent in html
+        expose(:web) { |paper| Rails.application.routes.url_helpers.paper_pdf_viewer_url(body: paper.body.slug, legislative_term: paper.legislative_term, paper: paper) } # equivalent in html
       end
 
       expose(:created) { |obj| [obj.created_at, obj.pdf_last_modified].min.iso8601 }
