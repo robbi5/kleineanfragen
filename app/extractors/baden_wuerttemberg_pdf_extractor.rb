@@ -38,6 +38,7 @@ class BadenWuerttembergPDFExtractor
 
   ANSWERERS = /und\s+Antwort\s+des\s+((?:Staats)?[mM]inisteriums.*?)(?:\s+\n)/m
   RELATED_MINISTRY = /im\s+Einvernehmen\s+mit\s+dem\s+(Ministerium.+?)\s+(?:für\s+die\s+Landesregierung\s+)?die\s+(?:[kK]leine|[gG]roße)?\s*An/m
+  MULTIPLE_RELATED_MINISTRIES = /(Ministerium.+?)(?:(?:,|sowie|und\s+mit|und)\s+dem\s+(Ministerium.+))+$/m
 
   def extract_answerers
     return nil if @contents.blank?
@@ -57,8 +58,7 @@ class BadenWuerttembergPDFExtractor
 
     related_ministry_match = @contents.match(RELATED_MINISTRY)
     unless related_ministry_match.nil?
-      related_ministry = normalize_ministry(related_ministry_match[1])
-      add_to(ministries, related_ministry)
+      add_to(ministries, related_ministry_match[1])
     end
 
     { ministries: ministries }
@@ -66,13 +66,17 @@ class BadenWuerttembergPDFExtractor
 
   def add_to(ministries, ministry)
     # multiple ministries
-    if !ministry.include?(', dem Ministerium') && !ministry.include?('und dem Ministerium')
-      ministries << ministry unless ministry.blank?
-    else
-      ministry.split(/und\s+dem\s+|,\s+dem\s+/).each do |splitted|
-        ministries << splitted.strip unless splitted.blank?
+    multiple_related = ministry.match(MULTIPLE_RELATED_MINISTRIES)
+    if multiple_related
+      multiple_related.captures.each do |related_ministry|
+        next if related_ministry.blank?
+        add_to(ministries, related_ministry)
       end
+      return
     end
+
+    ministry = normalize_ministry(ministry)
+    ministries << ministry unless ministry.blank?
   end
 
   def normalize_ministry(ministry)
@@ -87,5 +91,6 @@ class BadenWuerttembergPDFExtractor
       .gsub("\n", ' ')
       .gsub(/\s+/, ' ')
       .gsub(/inisteriums/, 'inisterium')
+      .strip
   end
 end

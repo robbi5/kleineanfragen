@@ -113,8 +113,13 @@ class BadenWuerttembergPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Ministerium für Wissenschaft , Forschung und Kunst', answerers[:ministries].second
   end
 
-  test 'get multiple related ministries' do
-    c = "und\n\nAntwort\n\ndes Staatsministeriums\n\nProjekt Übermorgenmacherinnen und Übermorgenmacher\n\nMit Schreiben vom 6. September 2012 Nr. III/ beantwortet das Staatsministerium\nim Einvernehmen mit dem \n\nMinisterium für Arbeit und Sozialordnung, Familie,\n\nFrauen und Senioren, dem Ministerium für Finanzen und Wirtschaft und dem Ministerium\n\nfür Wissenschaft, Forschung und Kunst die Kleine Anfrage wie"
+  test 'get three related ministries' do
+    c = "und\n\nAntwort\n\ndes Staatsministeriums\n\n" +
+        "Projekt Übermorgenmacherinnen und Übermorgenmacher\n\n" +
+        "Mit Schreiben vom 6. September 2012 Nr. III/ beantwortet das Staatsministerium\n" +
+        "im Einvernehmen mit dem \n\nMinisterium für Arbeit und Sozialordnung, Familie,\n\n" +
+        "Frauen und Senioren, dem Ministerium für Finanzen und Wirtschaft und dem Ministerium\n\n" +
+        "für Wissenschaft, Forschung und Kunst die Kleine Anfrage wie"
     paper = paper_with_title(Paper::DOCTYPE_MINOR_INTERPELLATION, c, 'Projekt Übermorgenmacherinnen und Übermorgenmacher')
 
     answerers = BadenWuerttembergPDFExtractor.new(paper).extract_answerers
@@ -125,6 +130,23 @@ class BadenWuerttembergPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Ministerium für Arbeit und Sozialordnung, Familie, Frauen und Senioren', answerers[:ministries].second
     assert_equal 'Ministerium für Finanzen und Wirtschaft', answerers[:ministries].third
     assert_equal 'Ministerium für Wissenschaft, Forschung und Kunst', answerers[:ministries].fourth
+  end
+
+  test 'get two related ministries' do
+    c = "und\n\nAntwort\n\ndes Ministeriums für Umwelt, Klima und Energiewirtschaft\n\n" +
+        "Mit Schreiben vom 18. Juli 2011 Nr. 5-0141.5/378/1 beantwortet das Ministerium\n" +
+        "für Umwelt, Klima und Energiewirtschaft im Einvernehmen mit dem Ministerium\n" +
+        "für Arbeit und Sozialordnung, Familie, Frauen und Senioren sowie dem Ministerium\n" +
+        " für Ländlichen Raum und Verbraucherschutz die Kleine Anfrage wie folgt:"
+    paper = paper(Paper::DOCTYPE_MINOR_INTERPELLATION, c)
+
+    answerers = BadenWuerttembergPDFExtractor.new(paper).extract_answerers
+
+    assert_not_nil answerers
+    assert_equal 3, answerers[:ministries].size
+    assert_equal 'Ministerium für Umwelt, Klima und Energiewirtschaft', answerers[:ministries].first
+    assert_equal 'Ministerium für Arbeit und Sozialordnung, Familie, Frauen und Senioren', answerers[:ministries].second
+    assert_equal 'Ministerium für Ländlichen Raum und Verbraucherschutz', answerers[:ministries].third
   end
 
   test 'get major ministry' do
