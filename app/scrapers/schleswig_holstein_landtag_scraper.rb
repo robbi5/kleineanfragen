@@ -2,7 +2,7 @@ module SchleswigHolsteinLandtagScraper
   BASE_URL = 'http://lissh.lvn.parlanet.de'
 
   def self.extract_table(page)
-    page.search('//center')[0].next.next.next
+    page.search('//center')[0].try(:next).try(:next).try(:next)
   end
 
   def self.extract_blocks(table)
@@ -176,18 +176,22 @@ module SchleswigHolsteinLandtagScraper
       mp = m.get search_url
 
       table = SchleswigHolsteinLandtagScraper.extract_table(mp)
-      SchleswigHolsteinLandtagScraper.extract_blocks(table).each do |block|
-        begin
-          paper = SchleswigHolsteinLandtagScraper.extract_minor_paper(block)
-        rescue => e
-          logger.warn e
-          next
-        end
-        next if paper.nil?
-        if streaming
-          yield paper
-        else
-          papers << paper
+      if table.nil?
+        logger.warn "table for small interpellations not found"
+      else
+        SchleswigHolsteinLandtagScraper.extract_blocks(table).each do |block|
+          begin
+            paper = SchleswigHolsteinLandtagScraper.extract_minor_paper(block)
+          rescue => e
+            logger.warn e
+            next
+          end
+          next if paper.nil?
+          if streaming
+            yield paper
+          else
+            papers << paper
+          end
         end
       end
       # major /cgi-bin/starfinder/0?path=lisshfl.txt&id=FASTLINK&pass=&search=(WP=17%20AND%20DTYPF,DTYP2F=(antwort))
@@ -195,18 +199,22 @@ module SchleswigHolsteinLandtagScraper
       mp = m.get search_url
 
       table = SchleswigHolsteinLandtagScraper.extract_table(mp)
-      SchleswigHolsteinLandtagScraper.extract_blocks(table).each do |block|
-        begin
-          paper = SchleswigHolsteinLandtagScraper.extract_major_paper(block)
-        rescue => e
-          logger.warn e
-          next
-        end
-        next if paper.nil?
-        if streaming
-          yield paper
-        else
-          papers << paper
+      if table.nil?
+        logger.warn "table for major interpellations not found"
+      else
+        SchleswigHolsteinLandtagScraper.extract_blocks(table).each do |block|
+          begin
+            paper = SchleswigHolsteinLandtagScraper.extract_major_paper(block)
+          rescue => e
+            logger.warn e
+            next
+          end
+          next if paper.nil?
+          if streaming
+            yield paper
+          else
+            papers << paper
+          end
         end
       end
       papers unless streaming
