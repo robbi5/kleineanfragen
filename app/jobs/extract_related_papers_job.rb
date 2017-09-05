@@ -93,7 +93,7 @@ class ExtractRelatedPapersJob < PaperJob
       references.concat ind.map(&:second).map { |m| m.strip.gsub(/\s*und\s+/, ',').split(',') }.flatten
     end
 
-    references.concat contents.scan(/Antwort \((?:Drucksache|Drs\.:?|Drs\.-Nr\.|DS|LT-DR?S)\s+(\d*\/?[\d\s]+)/).map(&:first)
+    references.concat contents.scan(/Antwort\s+(?:der\s+Landesregierung\s+)?\((?:Drucksache|Drs\.:?|Drs\.-Nr\.|DS|LT-DR?S)\s+(\d*\/?[\d\s]+)/).map(&:first)
 
     references.concat contents.scan(/[Ii]n der [Gg]roßen Anfrage \d+ der Fraktion.*? Drucksache (\d*\/?[\d\s]+)/).map(&:first)
 

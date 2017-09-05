@@ -325,6 +325,12 @@ class ExtractRelatedPapersJobTest < ActiveSupport::TestCase
     assert_equal ['6/8670'], references
   end
 
+  test 'Antwort der Landesregierung (Drs. 6/5489)' do
+    text = 'seit der Antwort der Landesregierung (Drs. 6/5489) auf die damalige Anfrage'
+    references = ExtractRelatedPapersJob.extract_contents(text)
+    assert_equal ['6/5489'], references
+  end
+
   #
   # major interpellations
   #
