@@ -8,7 +8,7 @@ module OParl
 
       with_options(unless: lambda { |obj, _| obj.deleted? }) do
         expose :name
-        expose(:organizationType) { |org| org.is_a?(::Ministry) ? 'Ministerium' : 'Fraktion' } # TODO: add type to model
+        expose(:classification) { |org| org.is_a?(::Ministry) ? 'Ministerium' : 'Fraktion' } # TODO: add type to model
 
         expose(:web) do |org, options| # equivalent in html
           if org.is_a?(::Ministry)
