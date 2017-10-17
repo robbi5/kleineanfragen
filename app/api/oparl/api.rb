@@ -4,6 +4,15 @@
 #
 module OParl
   class API < Grape::API
+
+    use GrapeLogging::Middleware::RequestLogger,
+      instrumentation_key: 'process_action.grape',
+      include: [
+        OParl::Loggers::RequestId.new,
+        OParl::Loggers::Format.new,
+        OParl::Loggers::Controller.new
+      ]
+
     version 'v1', using: :path, cascade: false
     prefix :oparl
     content_type :json, 'application/json; charset=utf-8'

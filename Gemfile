@@ -24,6 +24,10 @@ gem 'jbuilder', '~> 2.3'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
+# logging
+gem 'lograge', '~> 0.7.1'
+gem 'grape_logging', '~> 1.6'
+
 # Use newrelic
 gem 'newrelic_rpm', group: :production
 

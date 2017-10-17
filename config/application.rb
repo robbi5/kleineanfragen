@@ -47,6 +47,17 @@ module Kleineanfragen
       end
     end
 
+    # logging
+    config.lograge.enabled = true
+    config.lograge.custom_options = lambda do |event|
+      {
+        request_id: event.payload[:request_id]
+      }
+    end
+    config.after_initialize do
+      Lograge::RequestLogSubscriber.attach_to :grape
+    end
+
     # Ohai developers!
     config.action_dispatch.default_headers.merge!('X-Developer' => 'Looking for raw data? Try /data.')
 

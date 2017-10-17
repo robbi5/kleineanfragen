@@ -3,6 +3,13 @@ class ApplicationController < ActionController::Base
   # So the following line is commented out:
   # protect_from_forgery with: :null_session
 
+  # make request_id available to lograge
+  # see other part in config/application.rb
+  def append_info_to_payload(payload)
+    super
+    payload[:request_id] = request.uuid
+  end
+
   # FIXME: correct place?
   def mime_extension(mime_type)
     case mime_type
