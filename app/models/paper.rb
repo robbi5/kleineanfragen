@@ -105,6 +105,7 @@ class Paper < ApplicationRecord
       contents: contents,
       pages: page_count,
       contains_table: contains_table,
+      contains_classified_information: contains_classified_information,
       doctype: doctype,
       published_at: published_at,
       created_at: created_at,

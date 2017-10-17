@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170416160058) do
+ActiveRecord::Schema.define(version: 20170923094320) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -156,10 +156,11 @@ ActiveRecord::Schema.define(version: 20170416160058) do
     t.boolean  "contains_table"
     t.datetime "pdf_last_modified"
     t.string   "doctype"
-    t.boolean  "is_answer",         default: false, null: false
+    t.boolean  "is_answer",                       default: false, null: false
     t.datetime "frozen_at"
     t.string   "source_url"
     t.datetime "deleted_at"
+    t.boolean  "contains_classified_information"
     t.index ["body_id", "legislative_term", "reference"], name: "index_papers_on_body_id_and_legislative_term_and_reference", unique: true, using: :btree
     t.index ["body_id", "legislative_term", "slug"], name: "index_papers_on_body_id_and_legislative_term_and_slug", unique: true, using: :btree
     t.index ["body_id"], name: "index_papers_on_body_id", using: :btree

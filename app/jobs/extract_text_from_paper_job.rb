@@ -27,6 +27,7 @@ class ExtractTextFromPaperJob < PaperJob
     paper.save
 
     ContainsTableJob.perform_later(paper)
+    ContainsClassifiedInformationJob.perform_later(paper)
     ExtractOriginatorsJob.perform_later(paper)
     ExtractAnswerersJob.perform_later(paper)
     DeterminePaperTypeJob.perform_later(paper)
