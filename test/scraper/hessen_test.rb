@@ -173,4 +173,11 @@ class HessenTest < ActiveSupport::TestCase
         source_url: 'http://starweb.hessen.de/starweb/LIS/servlet.starweb?path=LIS/PdPi_FLMore19.web&search=WP%3D19+and+DRSNRU%2CANTW%3D%2219%2F3272%22'
      }, paper)
   end
+
+  test 'extract paper type from detail page like 19/18' do
+    html = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/he/detail_19_1616.html')))
+    block = @scraper.extract_detail_block(html)
+    type = @scraper.extract_detail_type(block)
+    assert_equal Paper::DOCTYPE_MINOR_INTERPELLATION, type
+  end
 end

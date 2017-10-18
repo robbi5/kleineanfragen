@@ -79,9 +79,9 @@ module HessenScraper
 
   def self.extract_detail_type(detail_block)
     textblock = detail_block.child.next.next.text.strip
-    if !textblock.match(/(^|\W)KlAnfr\W/).nil?
+    if !textblock.match(/(^|\W)(?:KlAnfr|Kleine\s+Anfrage)\W/).nil?
       return Paper::DOCTYPE_MINOR_INTERPELLATION
-    elsif !textblock.match(/(^|\W)GrAnfr\W/).nil?
+    elsif !textblock.match(/(^|\W)(?:GrAnfr|Große\s+Anfrage)\W/).nil?
       return Paper::DOCTYPE_MAJOR_INTERPELLATION
     end
     nil
@@ -94,11 +94,11 @@ module HessenScraper
 
   def self.extract_originator_text(detail_block)
     textblock = detail_block.child.next.next.text
-    textblock.match(/(?:GrAnfr|KlAnfr)(.+)\s+\d/m)[1]
+    textblock.match(/(?:GrAnfr|KlAnfr|Kleine\s+Anfrage|Große\s+Anfrage)(.+)\s+\d/m)[1]
   end
 
   def self.extract_originators(text)
-    text = text.sub('KlAnfr', '').sub('GrAnfr', '')
+    text = text.gsub(/GrAnfr|KlAnfr|Kleine\s+Anfrage|Große\s+Anfrage/, '')
     lines = text.split("\n")
     first_date_matched = false
     lines = lines.map do |line|
