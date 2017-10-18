@@ -49,6 +49,7 @@ end
 group :test do
   gem 'sqlite3'
   gem 'memory_test_fix', '~> 1.4.0'
+  gem 'minitest', '5.10.1'
   gem 'minitest-stub_any_instance'
   gem 'rails-controller-testing', '~> 1.0.1'
 end

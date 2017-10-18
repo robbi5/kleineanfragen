@@ -215,7 +215,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
     mini_portile2 (2.3.0)
-    minitest (5.10.3)
+    minitest (5.10.1)
     minitest-stub_any_instance (1.0.1)
     mono_logger (1.1.0)
     multi_json (1.12.2)
@@ -422,6 +422,7 @@ DEPENDENCIES
   lograge (~> 0.7.1)
   mechanize (~> 2.7.3)
   memory_test_fix (~> 1.4.0)
+  minitest (= 5.10.1)
   minitest-stub_any_instance
   newrelic_rpm
   nokogiri
