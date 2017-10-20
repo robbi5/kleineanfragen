@@ -72,13 +72,40 @@ module BundestagScraper
       detail_url = "#{OVERVIEW_URL}/WP#{@legislative_term}/#{folder}/#{id}.html"
       detail_page = m.get detail_url
 
-      BundestagScraper.scrape_vorgang(detail_page, detail_url)
+      v = nil
+      begin
+        v = BundestagScraper.scrape_vorgang(detail_page, detail_url)
+      rescue NoDetailUrl => err
+        fail err if err.full_url.nil?
+        detail_page = m.get err.full_url
+        vorgangsablauf_link = detail_page.at_css('.contentBox .tabReiter li a')
+        fail err if vorgangsablauf_link.nil?
+        detail_page = m.click(vorgangsablauf_link)
+        v = BundestagScraper.scrape_vorgang_alt(detail_page, detail_url, err.extract)
+      end
+      v
+    end
+  end
+
+  class NoDetailUrl < StandardError
+    attr_reader :extract, :full_url
+    def initialize(msg = "No paper found on detail page", extract = nil, full_url = nil)
+      @extract = extract
+      @full_url = full_url
+      super(msg)
     end
   end
 
   def self.scrape_vorgang(page, detail_url)
-    content = page.content
-    scrape_content(content, detail_url)
+    begin
+      scrape_content(page.content, detail_url)
+    rescue NoDetailUrl => err
+      full_link = extract_full_link(page)
+      fail "#{detail_url}: ignored, no paper found" if full_link.blank?
+      full_url = full_link.attributes['href'].value
+      full_url = Addressable::URI.parse(full_url).normalize.to_s
+      raise NoDetailUrl.new("#{detail_url}: no paper found", err.extract, full_url)
+    end
   end
 
   def self.scrape_content(content, detail_url)
@@ -93,44 +120,58 @@ module BundestagScraper
     title = extract_title(doc)
     legislative_term = doc.at_css('VORGANG WAHLPERIODE').text.to_i
 
-    url = nil
-    full_reference = ''
     found = false
     doc.css('WICHTIGE_DRUCKSACHE').each do |node|
       next unless node.at_css('DRS_TYP').text == 'Antwort'
+      next if node.at_css('DRS_LINK').nil?
       found = true
-      url = node.at_css('DRS_LINK').try(:text)
-      full_reference = node.at_css('DRS_NUMMER').text
     end
-    fail "#{detail_url}: ignored, no paper found" unless found && !url.blank?
-
-    reference = full_reference.split('/').last
-    normalized_url = Addressable::URI.parse(url).normalize.to_s
-    ado = extract_answerers_date_and_originators(doc)
-    fail "#{full_reference}: no date found" if ado[:date].nil?
-    published_at = Date.parse(ado[:date])
-
-    {
+    extract = {
       legislative_term: legislative_term,
-      full_reference: full_reference,
-      reference: reference,
       doctype: doctype,
       title: title,
-      url: normalized_url,
-      published_at: published_at,
-      originators: ado[:originators],
-      is_answer: true,
-      answerers: ado[:answerers],
       source_url: detail_url
     }
+    raise NoDetailUrl.new("#{detail_url}: no paper found", extract) unless found
+
+    pr = extract_procedure_xml(doc)
+    fail "#{pr[:full_reference]}: no date found" if pr[:date].nil?
+
+    pr = convert_extract(pr)
+    extract.merge(pr).merge({
+      is_answer: true
+    })
   end
 
-  def self.extract_answerers_date_and_originators(doc)
+  def self.scrape_vorgang_alt(page, detail_url, extract)
+    scrape_procedure(page.content, detail_url, extract)
+  end
+
+  def self.scrape_procedure(content, detail_url, extract)
+    doc = extract_doc(content)
+    pr = extract_procedure_xml(doc)
+    fail "#{detail_url}: not yet answered" if pr[:is_answer].nil? || pr[:is_answer] == false
+
+    pr = convert_extract(pr)
+    extract.merge(pr)
+  end
+
+  def self.extract_procedure_xml(doc)
     originators = { people: [], parties: [] }
     answerers = { ministries: [] }
     date = nil
+    full_reference = nil
+    url = nil
+    is_answer = false
+
     doc.css('VORGANGSABLAUF VORGANGSPOSITION').each do |node|
       urheber = node.at_css('URHEBER').text
+      if urheber.include?('Antwort') || urheber.include?('Bundesregierung')
+        is_answer = true
+        fundstelle = node.at_css('FUNDSTELLE').text
+        _, full_reference = fundstelle.match(/\s+(\d+\/\d+)/).to_a
+        url = node.at_css('FUNDSTELLE_LINK').text.strip
+      end
       # originator entry should always have a 'PERSOENLICHER_URHEBER'
       is_ministry = node.at_css('PERSOENLICHER_URHEBER').nil?
       if is_ministry
@@ -154,7 +195,26 @@ module BundestagScraper
         end
       end
     end
-    { answerers: answerers, date: date, originators: originators }
+
+    {
+      full_reference: full_reference,
+      answerers: answerers,
+      date: date,
+      originators: originators,
+      url: url,
+      is_answer: is_answer
+    }
+  end
+
+  def self.convert_extract(extract)
+    extract[:published_at] = Date.parse(extract.delete(:date))
+    extract[:reference] = extract[:full_reference].split('/').last
+    extract[:url] = Addressable::URI.parse(extract[:url]).normalize.to_s
+    extract
+  end
+
+  def self.extract_full_link(doc)
+    doc.css('.linkExtern').select { |x| x.text.include? 'Weitere Details' }.first
   end
 
   def self.extract_title(doc)
