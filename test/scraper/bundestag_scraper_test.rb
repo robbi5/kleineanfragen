@@ -13,7 +13,7 @@ class BundestagScraperTest < ActiveSupport::TestCase
     assert_equal('Einsatz von Flugzeugen, Hubschraubern und Drohnen beim G7-Gipfel in Bayern', @scraper.extract_title(@content_xml))
   end
 
-  test 'extract complete paper' do
+  test 'extract complete paper from export' do
     paper = @scraper.scrape_content(@content, 'http://dipbt.bundestag.de/extrakt/ba/WP18/677/67715.html')
     assert_equal(
       {
@@ -36,10 +36,10 @@ class BundestagScraperTest < ActiveSupport::TestCase
       }, paper)
   end
 
-  test 'extract incomplete paper - first half' do
+  test 'extract incomplete paper - export' do
     content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bt/detail_18_13660.html')).force_encoding('windows-1252')).to_s
     content_xml = @scraper.extract_doc(content)
-    err = assert_raises(BundestagScraper::NoDetailUrl) do
+    err = assert_raises(BundestagScraper::MissingPaperOnDetailError) do
       paper = @scraper.scrape_content(content, 'http://dipbt.bundestag.de/extrakt/ba/WP18/839/83903.html')
     end
 
@@ -52,7 +52,7 @@ class BundestagScraperTest < ActiveSupport::TestCase
       }, err.extract)
   end
 
-  test 'extract incomplete paper - other half' do
+  test 'extract incomplete paper - system' do
     content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bt/detail_18_13660_procedure.html')).force_encoding('windows-1252')).to_s
     content_xml = @scraper.extract_doc(content)
 
@@ -82,6 +82,56 @@ class BundestagScraperTest < ActiveSupport::TestCase
           ministries: ["Bundesministerium des Innern"]
         },
         source_url: 'http://dipbt.bundestag.de/extrakt/ba/WP18/839/83903.html'
+      }, paper)
+  end
+
+  test 'extract incomplete paper - system, linked on export list' do
+    content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bt/detail_18_9430.html')).force_encoding('windows-1252')).to_s
+    content_xml = @scraper.extract_doc(content)
+    err = assert_raises(BundestagScraper::MissingProcedureDataError) do
+      paper = @scraper.scrape_content(content, 'http://dipbt.bundestag.de/dip21.web/searchProcedures/simple_search_list.do?selId=75735&method=select&offset=0&anzahl=20&sort=3&direction=desc')
+    end
+
+    assert_equal(
+      {
+        legislative_term: 18,
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        title: 'Mögliche Verletzung unionsrechtlicher Verpflichtungen gegenüber Flüchtlingen durch die Deutsche Marine in der Ägäis',
+        source_url: 'http://dipbt.bundestag.de/dip21.web/searchProcedures/simple_search_list.do?selId=75735&method=select&offset=0&anzahl=20&sort=3&direction=desc'
+      }, err.extract)
+  end
+
+  test 'extract incomplete paper - system + procedure, linked on export list' do
+    content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bt/detail_18_9430_procedure.html')).force_encoding('windows-1252')).to_s
+    content_xml = @scraper.extract_doc(content)
+
+    extract = {
+      legislative_term: 18,
+      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+      title: 'Mögliche Verletzung unionsrechtlicher Verpflichtungen gegenüber Flüchtlingen durch die Deutsche Marine in der Ägäis',
+      source_url: 'http://dipbt.bundestag.de/dip21.web/searchProcedures/simple_search_list.do?selId=75735&method=select&offset=0&anzahl=20&sort=3&direction=desc'
+    }
+
+    paper = @scraper.scrape_procedure(content, 'http://dipbt.bundestag.de/dip21.web/searchProcedures/simple_search_list.do?selId=75735&method=select&offset=0&anzahl=20&sort=3&direction=desc', extract)
+
+    assert_equal(
+      {
+        legislative_term: 18,
+        full_reference: "18/9430",
+        reference: "9430",
+        doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
+        title: 'Mögliche Verletzung unionsrechtlicher Verpflichtungen gegenüber Flüchtlingen durch die Deutsche Marine in der Ägäis',
+        url: "http://dipbt.bundestag.de/dip21/btd/18/094/1809430.pdf",
+        published_at: Date.parse('2016-08-19'),
+        originators: {
+          people: ["Ulla Jelpke", "Christine Buchholz"],
+          parties: ["DIE LINKE"]
+        },
+        is_answer: true,
+        answerers: {
+          ministries: ["Bundesministerium der Verteidigung"]
+        },
+        source_url: 'http://dipbt.bundestag.de/dip21.web/searchProcedures/simple_search_list.do?selId=75735&method=select&offset=0&anzahl=20&sort=3&direction=desc'
       }, paper)
   end
 

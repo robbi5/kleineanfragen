@@ -3,6 +3,7 @@ require 'date'
 module BundestagScraper
   BASE_URL = 'http://dipbt.bundestag.de'
   OVERVIEW_URL = BASE_URL + '/extrakt/ba'
+  START_URL = BASE_URL + '/dip21.web/bt'
 
   class Overview < Scraper
     TYPES = ['Kleine Anfrage', 'Große Anfrage']
@@ -14,7 +15,15 @@ module BundestagScraper
     def scrape
       streaming = block_given?
       m = mechanize
-      mp = m.get "#{OVERVIEW_URL}/WP#{@legislative_term}/"
+      # increase read timeout for the large export page
+      m.read_timeout = (m.read_timeout || 60) * 2
+
+      # need to open start page first, it sets some required session cookies
+      m.get START_URL
+
+      # get export
+      term_url = "#{OVERVIEW_URL}/WP#{@legislative_term}/"
+      mp = m.get term_url
       table = mp.search "//table[contains(@summary, 'Beratungsabläufe')]"
 
       papers = []
@@ -26,11 +35,17 @@ module BundestagScraper
         next unless TYPES.include?(type)
 
         begin
-          detail_url = "#{OVERVIEW_URL}/WP#{@legislative_term}/#{detail_url}"
+          detail_url = Addressable::URI.join(term_url, detail_url).normalize.to_s
           detail_page = m.get detail_url
           paper = BundestagScraper.scrape_vorgang(detail_page, detail_url)
+        rescue BundestagScraper::MissingPaperOnDetailError => err
+          fail err if err.full_url.nil?
+          detail_page = m.get err.full_url
+          paper = BundestagScraper.go_and_scrape_procedure_page(m, err, detail_page, detail_url)
+        rescue BundestagScraper::MissingProcedureDataError => err
+          paper = BundestagScraper.go_and_scrape_procedure_page(m, err, err.page, detail_url)
         rescue => e
-          logger.warn e
+          logger.warn "url=#{detail_url} error=\"#{e}\" backtrace=#{Rails.backtrace_cleaner.clean(e.backtrace).to_json}"
           next
         end
         if streaming
@@ -45,7 +60,6 @@ module BundestagScraper
   end
 
   class Detail < DetailScraper
-    START_URL = BASE_URL + '/dip21.web/bt'
     SEARCH_URL = BASE_URL + '/dip21.web/searchDocuments.do'
 
     def scrape
@@ -75,19 +89,25 @@ module BundestagScraper
       v = nil
       begin
         v = BundestagScraper.scrape_vorgang(detail_page, detail_url)
-      rescue NoDetailUrl => err
+      rescue BundestagScraper::MissingPaperOnDetailError => err
         fail err if err.full_url.nil?
         detail_page = m.get err.full_url
-        vorgangsablauf_link = detail_page.at_css('.contentBox .tabReiter li a')
-        fail err if vorgangsablauf_link.nil?
-        detail_page = m.click(vorgangsablauf_link)
-        v = BundestagScraper.scrape_vorgang_alt(detail_page, detail_url, err.extract)
+        v = BundestagScraper.go_and_scrape_procedure_page(m, err, detail_page, detail_url)
+      rescue BundestagScraper::MissingProcedureDataError => err
+        v = BundestagScraper.go_and_scrape_procedure_page(m, err, err.page, detail_url)
       end
       v
     end
   end
 
-  class NoDetailUrl < StandardError
+  def self.go_and_scrape_procedure_page(m, err, page, url)
+    vorgangsablauf_link = page.at_css('.contentBox .tabReiter li a')
+    fail err if vorgangsablauf_link.nil?
+    page = m.click(vorgangsablauf_link)
+    scrape_procedure_page(page, url, err.extract)
+  end
+
+  class MissingPaperOnDetailError < StandardError
     attr_reader :extract, :full_url
     def initialize(msg = "No paper found on detail page", extract = nil, full_url = nil)
       @extract = extract
@@ -96,15 +116,26 @@ module BundestagScraper
     end
   end
 
+  class MissingProcedureDataError < StandardError
+    attr_reader :extract, :page
+    def initialize(msg = "No procedure data found on page", extract = nil, page = nil)
+      @extract = extract
+      @page = page
+      super(msg)
+    end
+  end
+
   def self.scrape_vorgang(page, detail_url)
     begin
       scrape_content(page.content, detail_url)
-    rescue NoDetailUrl => err
+    rescue MissingPaperOnDetailError => err
       full_link = extract_full_link(page)
       fail "#{detail_url}: ignored, no paper found" if full_link.blank?
       full_url = full_link.attributes['href'].value
-      full_url = Addressable::URI.parse(full_url).normalize.to_s
-      raise NoDetailUrl.new("#{detail_url}: no paper found", err.extract, full_url)
+      full_url = Addressable::URI.join(BASE_URL, full_url).normalize.to_s
+      raise MissingPaperOnDetailError.new("#{detail_url}: no paper found", err.extract, full_url)
+    rescue MissingProcedureDataError => err
+      raise MissingProcedureDataError.new("#{detail_url}: no procedure data found", err.extract, page)
     end
   end
 
@@ -132,10 +163,11 @@ module BundestagScraper
       title: title,
       source_url: detail_url
     }
-    raise NoDetailUrl.new("#{detail_url}: no paper found", extract) unless found
+    raise MissingPaperOnDetailError.new("#{detail_url}: no paper found", extract) unless found
 
     pr = extract_procedure_xml(doc)
-    fail "#{pr[:full_reference]}: no date found" if pr[:date].nil?
+    # this happens, if the export linked directly to the system. trigger procedure page scrape
+    raise MissingProcedureDataError.new("#{detail_url}: no date found", extract) if pr[:date].nil?
 
     pr = convert_extract(pr)
     extract.merge(pr).merge({
@@ -143,7 +175,7 @@ module BundestagScraper
     })
   end
 
-  def self.scrape_vorgang_alt(page, detail_url, extract)
+  def self.scrape_procedure_page(page, detail_url, extract)
     scrape_procedure(page.content, detail_url, extract)
   end
 
@@ -209,7 +241,7 @@ module BundestagScraper
   def self.convert_extract(extract)
     extract[:published_at] = Date.parse(extract.delete(:date))
     extract[:reference] = extract[:full_reference].split('/').last
-    extract[:url] = Addressable::URI.parse(extract[:url]).normalize.to_s
+    extract[:url] = Addressable::URI.join(BASE_URL, extract[:url]).normalize.to_s
     extract
   end
 
@@ -237,6 +269,7 @@ module BundestagScraper
 
   def self.extract_doc(content)
     comment_start = content.index '<?xml'
+    fail 'no embedded xml found' if comment_start.nil?
     comment_end = content.index('-->', comment_start)
     xml = content[comment_start...comment_end]
     xml = xml.strip.gsub(/<-.*->/, '') # remove nested "comments"
