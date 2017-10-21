@@ -135,6 +135,56 @@ class BundestagScraperTest < ActiveSupport::TestCase
       }, paper)
   end
 
+  test 'extract incomplete major paper - system, linked on export list' do
+    content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bt/detail_18_11403.html')).force_encoding('windows-1252')).to_s
+    content_xml = @scraper.extract_doc(content)
+    err = assert_raises(BundestagScraper::MissingProcedureDataError) do
+      paper = @scraper.scrape_content(content, 'http://dipbt.bundestag.de/dip21.web/searchProcedures/simple_search_list.do?selId=75048&method=select&offset=0&anzahl=20&sort=3&direction=desc')
+    end
+
+    assert_equal(
+      {
+        legislative_term: 18,
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Sozialer Wohnungsbau in Deutschland - Entwicklung, Bestand, Perspektive',
+        source_url: 'http://dipbt.bundestag.de/dip21.web/searchProcedures/simple_search_list.do?selId=75048&method=select&offset=0&anzahl=20&sort=3&direction=desc'
+      }, err.extract)
+  end
+
+  test 'extract incomplete major paper - system + procedure, linked on export list' do
+    content = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bt/detail_18_11403_procedure.html')).force_encoding('windows-1252')).to_s
+    content_xml = @scraper.extract_doc(content)
+
+    extract = {
+      legislative_term: 18,
+      doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+      title: 'Sozialer Wohnungsbau in Deutschland - Entwicklung, Bestand, Perspektive',
+      source_url: 'http://dipbt.bundestag.de/dip21.web/searchProcedures/simple_search_list.do?selId=75048&method=select&offset=0&anzahl=20&sort=3&direction=desc'
+    }
+
+    paper = @scraper.scrape_procedure(content, 'http://dipbt.bundestag.de/dip21.web/searchProcedures/simple_search_list.do?selId=75048&method=select&offset=0&anzahl=20&sort=3&direction=desc', extract)
+
+    assert_equal(
+      {
+        legislative_term: 18,
+        full_reference: "18/11403",
+        reference: "11403",
+        doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+        title: 'Sozialer Wohnungsbau in Deutschland - Entwicklung, Bestand, Perspektive',
+        url: "http://dipbt.bundestag.de/dip21/btd/18/114/1811403.pdf",
+        published_at: Date.parse('2017-03-08'),
+        originators: {
+          people: ["Caren Lay", "Herbert Behrens"],
+          parties: ["DIE LINKE"]
+        },
+        is_answer: true,
+        answerers: {
+          ministries: ["Bundesministerium für Umwelt, Naturschutz, Bau und Reaktorsicherheit"]
+        },
+        source_url: 'http://dipbt.bundestag.de/dip21.web/searchProcedures/simple_search_list.do?selId=75048&method=select&offset=0&anzahl=20&sort=3&direction=desc'
+      }, paper)
+  end
+
   def assert_answerer(paper_source, expected_ministry)
     content_xml = @scraper.extract_doc(Nokogiri::HTML(File.read(Rails.root.join(paper_source)).force_encoding('windows-1252')).to_s)
     answerers = @scraper.extract_procedure_xml(content_xml)[:answerers]

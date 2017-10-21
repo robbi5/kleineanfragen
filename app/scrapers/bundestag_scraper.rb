@@ -198,6 +198,7 @@ module BundestagScraper
 
     doc.css('VORGANGSABLAUF VORGANGSPOSITION').each do |node|
       urheber = node.at_css('URHEBER').text
+      next if urheber.include?('Beratung')
       if urheber.include?('Antwort') || urheber.include?('Bundesregierung')
         is_answer = true
         fundstelle = node.at_css('FUNDSTELLE').text
@@ -207,9 +208,9 @@ module BundestagScraper
       # originator entry should always have a 'PERSOENLICHER_URHEBER'
       is_ministry = node.at_css('PERSOENLICHER_URHEBER').nil?
       if is_ministry
-        _, ministry = urheber.match(/.*,(?:\s+Urheber :)?\s+([^(]*)/).to_a
+        _, ministry = urheber.match(/.*?,(?:\s+Urheber\s+:)?\s+([^(]*)/).to_a
         unless ministry.nil?
-          ministry = ministry.strip.sub(/^Bundesregierung, /, '')
+          ministry = ministry.strip.sub(/^Bundesregierung,\s+/, '')
           answerers[:ministries] << ministry
         end
         fundstelle = node.at_css('FUNDSTELLE').text
@@ -222,7 +223,7 @@ module BundestagScraper
             unode.at_css('NAMENSZUSATZ').try(:text),
             unode.at_css('NACHNAME').text
           ].reject(&:blank?).map(&:strip).join(' ')
-          party = unode.at_css('FRAKTION').text
+          party = unode.at_css('FRAKTION').try(:text)
           originators[:parties] << party unless originators[:parties].include? party
         end
       end
