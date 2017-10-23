@@ -16,6 +16,7 @@ json.interpellation_type @paper.doctype
 json.published_at @paper.published_at
 json.page_count @paper.page_count
 json.contains_table @paper.contains_table
+json.contains_classified_information @paper.contains_classified_information
 
 json.originators do
   json.people @paper.originator_people do |person|

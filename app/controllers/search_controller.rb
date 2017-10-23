@@ -1,5 +1,5 @@
 class SearchController < ApplicationController
-  PARAMS_TO_CONVERT = %w(table body doctype faction pages published_at)
+  PARAMS_TO_CONVERT = %w(table classified body doctype faction pages published_at)
   SUPPORTED_PARAMS = %w(q page sort) + PARAMS_TO_CONVERT
   ALLOWED_SORT_FIELDS = %w(published_at pages full_reference)
 
@@ -42,6 +42,7 @@ class SearchController < ApplicationController
 
     conditions = {}
     conditions[:contains_table] = true if terms['table']
+    conditions[:contains_classified_information] = true if terms['classified']
     if terms['body']
       bodyterms = Array.wrap(terms.body).reject(&:blank?).map(&:downcase)
       conditions[:body] = Body.all.select { |body| bodyterms.include? body.state.downcase }.map(&:state)
@@ -71,7 +72,7 @@ class SearchController < ApplicationController
         where: conditions,
         fields: ['title^10', :contents, :people],
         highlight: { tag: '<mark>' },
-        facets: [:contains_table, :body, :doctype, :faction, :pages, :published_at],
+        facets: [:contains_table, :contains_classified_information, :body, :doctype, :faction, :pages, :published_at],
         smart_facets: true,
         execute: false,
         misspellings: false,
@@ -162,6 +163,7 @@ class SearchController < ApplicationController
     q = []
     q << params[:q] if params[:q].present?
     q << 'table:true' if params[:table].present?
+    q << 'classified:true' if params[:classified].present?
     if params[:body].present?
       bodyparams = Array.wrap(params[:body]).reject(&:blank?).map(&:downcase)
       states = Body.all.map(&:state).select { |state| bodyparams.include? state.downcase }
@@ -188,6 +190,9 @@ class SearchController < ApplicationController
     terms = []
     if raw_terms['pages']
       terms << 'pages:' + raw_terms['pages'].to_s.strip
+    end
+    if raw_terms['classified']
+      terms << 'classified:' + raw_terms['classified'].to_s.strip
     end
     if raw_terms['published_at']
       terms << 'published_at:' + raw_terms['published_at'].to_s.strip
