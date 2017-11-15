@@ -169,7 +169,7 @@ module BrandenburgLandtagScraper
         fail 'Cannot get search form' if search_form.nil?
 
         # fill search form
-        search_form.field_with(name: '__action').value = 84 # -> a#SearchAndDisplayAction
+        search_form.field_with(name: '__action').value = 85 # -> a#SearchAndDisplayAction
         search_form.field_with(name: 'LISSH_WP_ADV').value = @legislative_term
         search_form.field_with(name: 'LISSH_DART_ADV').value = 'DRUCKSACHE'
         search_form.field_with(name: 'LISSH_DTYP').value = TYPE
@@ -190,7 +190,7 @@ module BrandenburgLandtagScraper
         end
 
         # get more items
-        search_form.field_with(name: '__action').value = 197 # -> a#DisplayCurrentPage
+        search_form.field_with(name: '__action').value = 198 # -> a#DisplayCurrentPage
         search_form.field_with(name: 'NumPerSegment').options.find { |opt| opt.text.include? 'alle' }.select
         mp = m.submit(search_form)
 
