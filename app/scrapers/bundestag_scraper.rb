@@ -35,15 +35,19 @@ module BundestagScraper
         next unless TYPES.include?(type)
 
         begin
-          detail_url = Addressable::URI.join(term_url, detail_url).normalize.to_s
-          detail_page = m.get detail_url
-          paper = BundestagScraper.scrape_vorgang(detail_page, detail_url)
-        rescue BundestagScraper::MissingPaperOnDetailError => err
-          fail err if err.full_url.nil?
-          detail_page = m.get err.full_url
-          paper = BundestagScraper.go_and_scrape_procedure_page(m, err, detail_page, detail_url)
-        rescue BundestagScraper::MissingProcedureDataError => err
-          paper = BundestagScraper.go_and_scrape_procedure_page(m, err, err.page, detail_url)
+          begin
+            detail_url = Addressable::URI.join(term_url, detail_url).normalize.to_s
+            detail_page = m.get detail_url
+            paper = BundestagScraper.scrape_vorgang(detail_page, detail_url)
+          rescue BundestagScraper::MissingPaperOnDetailError => err
+            fail err if err.full_url.nil?
+            detail_page = m.get err.full_url
+            begin
+              paper = BundestagScraper.go_and_scrape_procedure_page(m, err, detail_page, detail_url)
+            rescue BundestagScraper::MissingProcedureDataError => err
+              paper = BundestagScraper.go_and_scrape_procedure_page(m, err, err.page, detail_url)
+            end
+          end
         rescue => e
           logger.warn "url=#{detail_url} error=\"#{e}\" backtrace=#{Rails.backtrace_cleaner.clean(e.backtrace).to_json}"
           next
@@ -200,10 +204,10 @@ module BundestagScraper
       urheber = node.at_css('URHEBER').text
       next if urheber.include?('Beratung')
       if urheber.include?('Antwort') || urheber.include?('Bundesregierung')
-        is_answer = true
         fundstelle = node.at_css('FUNDSTELLE').text
         _, full_reference = fundstelle.match(/\s+(\d+\/\d+)/).to_a
-        url = node.at_css('FUNDSTELLE_LINK').text.strip
+        url = node.at_css('FUNDSTELLE_LINK').try(:text).try(:strip)
+        is_answer = !url.nil?
       end
       # originator entry should always have a 'PERSOENLICHER_URHEBER'
       is_ministry = node.at_css('PERSOENLICHER_URHEBER').nil?
