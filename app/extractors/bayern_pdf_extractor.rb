@@ -12,6 +12,7 @@ class BayernPDFExtractor
       /Abgeordneten ([\D\n]+?)\s(\p{Lu}[\p{Lu} \d\/]+)\b/m,
       /Abgeordneten ([\D\n]+?)\p{Zs}(\p{Lu}[\p{Lu} \d\/]+)\b/m,
       /Abgeordneten ([\D\n]+?)\n(\p{Lu}[\p{Ll}\p{Lu} \d\/]+)\b/m,
+      /Abgeordneten ([\D\n]+?)\s+\((\p{L}[\p{L} \d\/]+)\)/m,
       # /Abgeordneten ([\D\n]+?)\s([[:upper:] \d\/]+)/m
     ].each do |regex|
       m = @contents.match(regex)

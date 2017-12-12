@@ -206,4 +206,16 @@ class BayernPDFExtractorOriginatorsTest < ActiveSupport::TestCase
     assert_equal 'Kerstin Schreyer-Stäblein', originators[:people][1]
     assert_equal 'CSU', originators[:parties].first
   end
+
+  # Schriftliche Anfrage der Abgeordneten Horst Arnold und Martina Fehlner (SPD) vom 24.11.2015
+  test 'two people, newline before party name' do
+    paper = Struct.new(:contents).new("Schriftliche Anfrage\nder Abgeordneten Horst Arnold und Martina Fehlner \n(SPD) \nvom 24.11.2015")
+
+    originators = BayernPDFExtractor.new(paper).extract_originators
+
+    assert_equal 2, originators[:people].size
+    assert_equal 'Horst Arnold', originators[:people][0]
+    assert_equal 'Martina Fehlner', originators[:people][1]
+    assert_equal 'SPD', originators[:parties].first
+  end
 end
