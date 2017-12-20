@@ -29,7 +29,7 @@ module SachsenAnhaltLandtagScraper
       match = line.match(/Kleine\s+Anfrage\s+und\s+Antwort\s+(.+)\s+([\d\.]+)\s+Drucksache\s+([\d\/]+)/m)
       # FIXME: this is broken for DetailScraper, answerer is not seperated by "und Antwort"
       originators_and_answerers = match[1].strip.match(/(.+) und Antwort (.+)/)
-      return nil if originators_and_answerers.nil?
+      originators_and_answerers = [nil, nil, nil] if originators_and_answerers.nil?
     elsif line.match(/Große\s+Anfrage/)
       doctype = Paper::DOCTYPE_MAJOR_INTERPELLATION
       match = line.match(/Große\s+Anfrage\s+(.+)\s+([\d\.]+)\s+Drucksache\s+([\d\/]+)/m)
@@ -77,7 +77,8 @@ module SachsenAnhaltLandtagScraper
     originators = meta[:originators]
     originators = NamePartyExtractor.new(originators).extract unless originators.nil?
 
-    ministries = meta[:answerers].split(',').map(&:strip)
+    ministries = nil
+    ministries = meta[:answerers].split(',').map(&:strip) unless meta[:answerers].nil?
 
     published_at = Date.parse(meta[:published_at])
 
@@ -110,7 +111,7 @@ module SachsenAnhaltLandtagScraper
       search_form = mp.form '__form'
 
       # fill search form
-      search_form.field_with(name: '__action').value = 23
+      search_form.field_with(name: '__action').value = 26
       search_form.field_with(name: '02_LISSH_WP').value = @legislative_term
       search_form.field_with(name: '05_LISSH_DTYP').value = TYPES
       mp = m.submit(search_form)
@@ -120,7 +121,7 @@ module SachsenAnhaltLandtagScraper
 
       # switch to print view
       search_form = mp.form '__form'
-      search_form.field_with(name: '__action').value = 64
+      search_form.field_with(name: '__action').value = 67
       mp = m.submit(search_form)
 
       papers = []
@@ -177,11 +178,10 @@ module SachsenAnhaltLandtagScraper
       originators = { people: [], parties: [originators] } if doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
     end
 
-    ministries = meta[:answerers].split(',').map(&:strip)
+    ministries = nil
+    ministries = meta[:answerers].split(',').map(&:strip) unless meta[:answerers].nil?
 
     published_at = Date.parse(meta[:published_at])
-
-    logger.warn "ST [#{full_reference}] no originators" if originators.nil?
 
     {
       legislative_term: legislative_term,
@@ -205,7 +205,7 @@ module SachsenAnhaltLandtagScraper
 
       # submit hidden redirection form
       search_form = mp.form '__form'
-      search_form.field_with(name: '__action').value = 34
+      search_form.field_with(name: '__action').value = 37
       mp = m.submit(search_form)
 
       # Fail if no hits
@@ -213,7 +213,7 @@ module SachsenAnhaltLandtagScraper
 
       # switch to full view
       search_form = mp.form '__form'
-      search_form.field_with(name: '__action').value = 62
+      search_form.field_with(name: '__action').value = 65
       search_form.field_with(name: 'LISSH_Browse_ReportFormatList').value = 'LISSH_Vorgaenge_Report'
       mp = m.submit(search_form)
 
