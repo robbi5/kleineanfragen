@@ -23,12 +23,13 @@ module SachsenAnhaltLandtagScraper
   # Bezug: Antwort Landesregierung 09.02.2015 Drucksache 6/3801 (79 S.)
   # Große Anfrage SPD 07.11.2014 Drucksache 6/3591 (9 S.)
   def self.extract_meta(line)
-    is_answer = true
+    is_answer = nil
     if line.match(/Kleine\s+Anfrage/)
       doctype = Paper::DOCTYPE_MINOR_INTERPELLATION
       match = line.match(/Kleine\s+Anfrage\s+und\s+Antwort\s+(.+)\s+([\d\.]+)\s+Drucksache\s+([\d\/]+)/m)
       # FIXME: this is broken for DetailScraper, answerer is not seperated by "und Antwort"
       originators_and_answerers = match[1].strip.match(/(.+) und Antwort (.+)/)
+      is_answer = true unless originators_and_answerers.nil?
       originators_and_answerers = [nil, nil, nil] if originators_and_answerers.nil?
     elsif line.match(/Große\s+Anfrage/)
       doctype = Paper::DOCTYPE_MAJOR_INTERPELLATION
@@ -39,6 +40,7 @@ module SachsenAnhaltLandtagScraper
       doctype = Paper::DOCTYPE_MAJOR_INTERPELLATION
       match = line.match(/Antwort\s+(.+)\s+([\d\.]+)\s+Drucksache\s+([\d\/]+)/)
       originators_and_answerers = [nil, nil, match[1].strip]
+      is_answer = true
     else
       return nil
     end
@@ -91,7 +93,7 @@ module SachsenAnhaltLandtagScraper
       url: url,
       published_at: published_at,
       originators: originators,
-      is_answer: true,
+      is_answer: meta[:is_answer],
       answerers: { ministries: ministries },
       source_url: Detail.build_search_url(legislative_term, reference)
     }

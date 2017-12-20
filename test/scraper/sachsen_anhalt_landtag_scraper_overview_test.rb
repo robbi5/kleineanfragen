@@ -53,11 +53,10 @@ class SachsenAnhaltLandtagScraperOverviewTest < ActiveSupport::TestCase
       }, meta)
   end
 
-  test 'paper without answer throws exception' do
+  test 'paper without answer is correctly marked' do
     block = @scraper.extract_blocks(@html).first
-    assert_raises RuntimeError do
-      @scraper.extract_paper(block)
-    end
+    paper = @scraper.extract_paper(block)
+    assert_not_equal(true, paper[:is_answer])
   end
 
   test 'extract complete paper' do
