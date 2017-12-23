@@ -139,7 +139,7 @@ module NiedersachsenLandtagScraper
       fail 'Cannot get search form' if search_form.nil?
 
       # fill search form
-      search_form.field_with(name: '__action').value = 6
+      search_form.field_with(name: '__action').value = 5
       search_form.field_with(name: 'wplist').value = @legislative_term
       search_form.field_with(name: 'Suchzeile6').value = TYPE
       mp = m.submit(search_form)
@@ -151,7 +151,7 @@ module NiedersachsenLandtagScraper
       search_form = mp.form '__form'
       fail 'Cannot switch view' if search_form.nil?
 
-      search_form.field_with(name: '__action').value = 29
+      search_form.field_with(name: '__action').value = 28
       search_form.field_with(name: 'ReportFormatListDisplay').value = 'Vollanzeige'
       # remove all the hidden "SelectedItems" input fields because NI doesn't seem to like long post requests
       search_form.fields.each do |f|
