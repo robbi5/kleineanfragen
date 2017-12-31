@@ -33,7 +33,7 @@
           classes << 'circle--nothing-new' if !result.got_new_papers?
           classes << 'circle--type-instant' if result.instant?
       %>
-        <span class="<%= classes.join(' ') %>" title="<%= info %>"><%= result.success %></span>
+        <span class="<%= classes.join(' ') %>" title="<%= info %>"><%= result.new_papers %></span>
       <% end %>
     </td>
     <% end %>
