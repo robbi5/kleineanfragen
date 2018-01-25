@@ -115,7 +115,7 @@ class BayernPDFExtractorAnswerersTest < ActiveSupport::TestCase
 
   test 'die Leiterin der Bayerischen Staatskanzlei und Staatsministerin' do
     paper = paper_with_answerer <<-EOS
-      der Leiterin der Staatskanzlei und Staatsministerin für 
+      der Leiterin der Staatskanzlei und Staatsministerin für
       Bundesangelegenheiten und Sonderaufgaben
     EOS
     answerers = BayernPDFExtractor.new(paper).extract_answerers
@@ -187,5 +187,91 @@ class BayernPDFExtractorAnswerersTest < ActiveSupport::TestCase
 
     assert_equal 1, answerers[:ministries].size
     assert_equal 'Staatsministerium der Finanzen, für Landesentwicklung und Heimat', answerers[:ministries].first
+  end
+
+  # two
+  test 'two ministries, in Abstimmung' do
+    paper = paper_with_answerer("Antwort des Staatsministeriums für Ernährung, Landwirtschaft und Forsten vom 19.12.2016\n" +
+      "In Abstimmung mit dem Staatsministerium für Umwelt und Verbraucherschutz wird die o. g. Schriftliche Anfrage wie folgt beantwortet")
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 2, answerers[:ministries].size
+    assert_equal 'Staatsministerium für Ernährung, Landwirtschaft und Forsten', answerers[:ministries].first
+    assert_equal 'Staatsministerium für Umwelt und Verbraucherschutz', answerers[:ministries].second
+  end
+
+  test 'two ministries, im Einvernehmen, short' do
+    paper = paper_with_answerer("Antwort des Staatsministeriums für Gesundheit und Pflege vom 23.12.2016\n\n" +
+     "Die Schriftliche Anfrage wird im Einvernehmen mit dem Staatsministerium des Innern, für Bau und Verkehr wie folgt beantwortet", wrap: false)
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 2, answerers[:ministries].size
+    assert_equal 'Staatsministerium für Gesundheit und Pflege', answerers[:ministries].first
+    assert_equal 'Staatsministerium des Innern, für Bau und Verkehr', answerers[:ministries].second
+  end
+
+  test 'two ministries, im Einvernehmen, long' do
+    paper = paper_with_answerer("Antwort des Staatsministeriums der Finanzen, für Landesentwicklung und Heimat vom 03.02.2017\n" +
+      "Die Schriftliche Anfrage \n"+
+      "der Frau Abgeordneten Ruth Müller SPD vom 18. Januar 2017 betreffend „...“ \n" +
+      "wird im Einvernehmen mit dem Staatsministerium der Justiz wie folgt beantwortet", wrap: false)
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 2, answerers[:ministries].size
+    assert_equal 'Staatsministerium der Finanzen, für Landesentwicklung und Heimat', answerers[:ministries].first
+    assert_equal 'Staatsministerium der Justiz', answerers[:ministries].second
+  end
+
+  test 'three ministries, in Abstimmung' do
+    paper = paper_with_answerer("Antwort des Staatsministeriums des Innern, für Bau und Verkehr vom 15.02.2016\n" +
+      "Die Schriftliche Anfrage wird in Abstimmung mit dem Staatsministerium der Finanzen, für Landesentwicklung und Heimat sowie dem Staatsministerium für Bildung und Kultus, Wissenschaft und Kunst wie folgt beantwortet:", wrap: false)
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 3, answerers[:ministries].size
+    assert_equal 'Staatsministerium des Innern, für Bau und Verkehr', answerers[:ministries].first
+    assert_equal 'Staatsministerium der Finanzen, für Landesentwicklung und Heimat', answerers[:ministries].second
+    assert_equal 'Staatsministerium für Bildung und Kultus, Wissenschaft und Kunst', answerers[:ministries].third
+  end
+
+  test 'eigth ministries, im Einvernehmen' do
+    t = <<-EOS
+      Antwort
+      des Staatsministeriums der Finanzen, für Landesentwicklung
+      und Heimat vom 18.07.2017
+
+      Die Schriftliche Anfrage wird auf der Grundlage einer Abfrage
+      und im Einvernehmen mit dem Staatsministerium für
+      Umwelt und Verbraucherschutz (StMUV), dem Staatsministerium
+      für Bildung und Kultus, Wissenschaft und Kunst
+      (StMBW), dem Staatsministerium für Arbeit und Soziales,
+      Familie und Integration (StMAS), dem Staatsministerium für
+      Gesundheit und Pflege (StMGP), dem Staatsministerium
+      des Innern, für Bau und Verkehr (StMI), dem Staatsministerium
+      für Wirtschaft und Medien, Energie und Technologie
+      (StMWi) und dem Staatsministerium für Ernährung, Landwirtschaft
+      und Forsten (StMELF) wie folgt beantwortet
+    EOS
+
+    paper = paper_with_answerer(t, wrap: false)
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 8, answerers[:ministries].size
+    assert_equal 'Staatsministerium der Finanzen, für Landesentwicklung und Heimat', answerers[:ministries][0]
+    assert_equal 'Staatsministerium für Umwelt und Verbraucherschutz (StMUV)', answerers[:ministries][1]
+    assert_equal 'Staatsministerium für Bildung und Kultus, Wissenschaft und Kunst (StMBW)', answerers[:ministries][2]
+    assert_equal 'Staatsministerium für Arbeit und Soziales, Familie und Integration (StMAS)', answerers[:ministries][3]
+    assert_equal 'Staatsministerium für Gesundheit und Pflege (StMGP)', answerers[:ministries][4]
+    assert_equal 'Staatsministerium des Innern, für Bau und Verkehr (StMI)', answerers[:ministries][5]
+    assert_equal 'Staatsministerium für Wirtschaft und Medien, Energie und Technologie (StMWi)', answerers[:ministries][6]
+    assert_equal 'Staatsministerium für Ernährung, Landwirtschaft und Forsten (StMELF)', answerers[:ministries][7]
+  end
+
+  test 'one ministry, in Abstimmung' do
+    paper = paper_with_answerer("Antwort des Staatsministeriums des Innern, für Bau und Verkehr vom 19.10.2015\n" +
+      "Die Schriftliche Anfrage wird in Abstimmung mit allen Ressorts wie folgt beantwortet: ", wrap: false)
+    answerers = BayernPDFExtractor.new(paper).extract_answerers
+
+    assert_equal 1, answerers[:ministries].size
+    assert_equal 'Staatsministerium des Innern, für Bau und Verkehr', answerers[:ministries].first
   end
 end

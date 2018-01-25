@@ -1,4 +1,4 @@
-class BayernPDFExtractor
+class BayernPDFExtractor < PDFExtractor
   def initialize(paper)
     @contents = paper.contents
   end
@@ -64,18 +64,29 @@ class BayernPDFExtractor
     # Antwort\ndes Staatsministeriums des Innern, für Bau und Verkehr\nvom 10.10.2014
     m = @contents.match(/Antwort\s+d[ea]s (St?aatsministeriums?\s[\p{L}\s\,\-\u00AD]+)\s+(?:vom|vom\s+\d+|\d+)/m)
     if m
-      ministry = m[1]
-                 .gsub(/\u00AD/, '')
-                 .gsub(/(\p{L}+)\-\p{Zs}*\n(\p{L}+)/m, '\1\2')
-                 .gsub(/\n/, ' ')
-                 .gsub(/\s+/, ' ')
-                 .gsub(/Staatsministeriums?\s+(Staatsministerium.+)/, '\1') # dup
-                 .gsub(/\s+vom\z/, '')
-                 .strip
-      ministry.gsub!(/^St?aatsministeriums/, 'Staatsministerium') # remove typo, Genitiv
-      ministries << ministry
+      ministries << clean_ministry(m[1])
+    end
+
+    # Die Schriftliche Anfrage wird im Einvernehmen mit dem Staatsministerium des Innern, für Bau und Verkehr wie folgt beantwortet:
+    m = @contents.match(/[Ii][mn]\s+(?:Einvernehmen|Abstimmung)\s+mit\s+dem\s+(.+?)\s+(?:wird\s+die\s+.*?Schriftliche\s+Anfrage\s+)?wie\s+folgt\s+beantwortet/m)
+    if m
+      m = PDFExtractor.split_ministries(m[1])
+      m = m.map { |t| clean_ministry(t) }
+      ministries.concat m unless m.blank?
     end
 
     { ministries: ministries }
+  end
+
+  def clean_ministry(m)
+    m
+     .gsub(/\u00AD/, '')
+     .gsub(/(\p{L}+)\-\p{Zs}*\n(\p{L}+)/m, '\1\2')
+     .gsub(/\n/, ' ')
+     .gsub(/\s+/, ' ')
+     .gsub(/Staatsministeriums?\s+(Staatsministerium.+)/, '\1') # dup
+     .gsub(/\s+vom\z/, '')
+     .strip
+     .gsub(/^St?aatsministeriums/, 'Staatsministerium') # remove typo, Genitiv
   end
 end

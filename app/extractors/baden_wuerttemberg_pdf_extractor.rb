@@ -1,4 +1,4 @@
-class BadenWuerttembergPDFExtractor
+class BadenWuerttembergPDFExtractor < PDFExtractor
   def initialize(paper)
     @contents = paper.contents
     @doctype = paper.doctype
@@ -38,7 +38,6 @@ class BadenWuerttembergPDFExtractor
 
   ANSWERERS = /und\s+Antwort\s+des\s+((?:Staats)?[mM]inisteriums.*?)(?:\s+\n)/m
   RELATED_MINISTRY = /im\s+Einvernehmen\s+mit\s+dem\s+(Ministerium.+?)\s+(?:für\s+die\s+Landesregierung\s+)?die\s+(?:[kK]leine|[gG]roße)?\s*An/m
-  MULTIPLE_RELATED_MINISTRIES = /(Ministerium.+?)(?:(?:,|sowie|und\s+mit|und|mit)\s+dem\s+(Ministerium.+))+$/m
 
   def extract_answerers
     return nil if @contents.blank?
@@ -65,18 +64,9 @@ class BadenWuerttembergPDFExtractor
   end
 
   def add_to(ministries, ministry)
-    # multiple ministries
-    multiple_related = ministry.match(MULTIPLE_RELATED_MINISTRIES)
-    if multiple_related
-      multiple_related.captures.each do |related_ministry|
-        next if related_ministry.blank?
-        add_to(ministries, related_ministry)
-      end
-      return
-    end
-
-    ministry = normalize_ministry(ministry)
-    ministries << ministry unless ministry.blank?
+    m = PDFExtractor.split_ministries(ministry)
+    m = m.map { |t| normalize_ministry(t) }
+    ministries.concat m unless m.blank?
   end
 
   def normalize_ministry(ministry)
@@ -92,6 +82,6 @@ class BadenWuerttembergPDFExtractor
       .gsub(/\s+/, ' ')
       .gsub(/inisteriums/, 'inisterium')
       .strip
-      .gsub(/,$/, '')
+      .gsub(/,\z/, '')
   end
 end
