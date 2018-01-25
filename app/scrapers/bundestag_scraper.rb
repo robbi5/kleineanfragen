@@ -255,7 +255,12 @@ module BundestagScraper
   end
 
   def self.extract_title(doc)
-    doc.at_css('VORGANG TITEL').text.strip
+    t = doc.at_css('VORGANG TITEL').text.strip
+    if t.include?('auf die Kleine Anfrage')
+      m = t.match(/auf\s+die\s+Kleine\s+Anfrage\s+-\s+Drucksache\s+\d+\/\d+\s+-\s+(.+)/)
+      t = m[1] if m
+    end
+    t
   end
 
   def self.extract_status(doc)
