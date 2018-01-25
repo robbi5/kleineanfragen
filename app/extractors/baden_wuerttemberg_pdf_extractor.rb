@@ -38,7 +38,7 @@ class BadenWuerttembergPDFExtractor
 
   ANSWERERS = /und\s+Antwort\s+des\s+((?:Staats)?[mM]inisteriums.*?)(?:\s+\n)/m
   RELATED_MINISTRY = /im\s+Einvernehmen\s+mit\s+dem\s+(Ministerium.+?)\s+(?:für\s+die\s+Landesregierung\s+)?die\s+(?:[kK]leine|[gG]roße)?\s*An/m
-  MULTIPLE_RELATED_MINISTRIES = /(Ministerium.+?)(?:(?:,|sowie|und\s+mit|und)\s+dem\s+(Ministerium.+))+$/m
+  MULTIPLE_RELATED_MINISTRIES = /(Ministerium.+?)(?:(?:,|sowie|und\s+mit|und|mit)\s+dem\s+(Ministerium.+))+$/m
 
   def extract_answerers
     return nil if @contents.blank?
@@ -92,5 +92,6 @@ class BadenWuerttembergPDFExtractor
       .gsub(/\s+/, ' ')
       .gsub(/inisteriums/, 'inisterium')
       .strip
+      .gsub(/,$/, '')
   end
 end

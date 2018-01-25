@@ -132,6 +132,43 @@ class BadenWuerttembergPDFExtractorTest < ActiveSupport::TestCase
     assert_equal 'Ministerium für Wissenschaft, Forschung und Kunst', answerers[:ministries].fourth
   end
 
+  test 'get nine related ministries' do
+    c = <<-EOS
+      und
+      Antwort
+      des Ministeriums für Inneres, Digitalisierung und Migration
+
+      Leistungsbeurteilungen im öffentlichen Dienst: Chancengleichheit
+      von Männern und Frauen im öffentlichen Dienst
+
+      Mit Schreiben vom 10. November 2017 Nr. 1-0300.4/140 beantwortet das
+      Ministerium für Inneres, Digitalisierung und Migration im Einvernehmen mit dem Ministerium
+       für Finanzen, mit dem Ministerium für Kultus, Jugend und Sport, mit
+      dem Ministerium für Wissenschaft, Forschung und Kunst, mit dem Ministerium
+      für Umwelt, Klima und Energiewirtschaft, mit dem Ministerium für Wirtschaft,
+      Arbeit und Wohnungsbau, mit dem Ministerium für Soziales und Integration, mit
+      dem Ministerium für Ländlichen Raum und Verbraucherschutz, mit dem Ministerium
+       der Justiz und für Europa und mit dem Ministerium für Verkehr die Kleine
+      Anfrage wie folgt:
+    EOS
+    paper = paper(Paper::DOCTYPE_MINOR_INTERPELLATION, c)
+
+    answerers = BadenWuerttembergPDFExtractor.new(paper).extract_answerers
+
+    assert_not_nil answerers
+    assert_equal 10, answerers[:ministries].size
+    assert_equal 'Ministerium für Inneres, Digitalisierung und Migration', answerers[:ministries][0]
+    assert_equal 'Ministerium für Finanzen', answerers[:ministries][1]
+    assert_equal 'Ministerium für Kultus, Jugend und Sport', answerers[:ministries][2]
+    assert_equal 'Ministerium für Wissenschaft, Forschung und Kunst', answerers[:ministries][3]
+    assert_equal 'Ministerium für Umwelt, Klima und Energiewirtschaft', answerers[:ministries][4]
+    assert_equal 'Ministerium für Wirtschaft, Arbeit und Wohnungsbau', answerers[:ministries][5]
+    assert_equal 'Ministerium für Soziales und Integration', answerers[:ministries][6]
+    assert_equal 'Ministerium für Ländlichen Raum und Verbraucherschutz', answerers[:ministries][7]
+    assert_equal 'Ministerium der Justiz und für Europa', answerers[:ministries][8]
+    assert_equal 'Ministerium für Verkehr', answerers[:ministries][9]
+  end
+
   test 'get two related ministries' do
     c = "und\n\nAntwort\n\ndes Ministeriums für Umwelt, Klima und Energiewirtschaft\n\n" +
         "Mit Schreiben vom 18. Juli 2011 Nr. 5-0141.5/378/1 beantwortet das Ministerium\n" +
