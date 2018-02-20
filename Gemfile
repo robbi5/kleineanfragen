@@ -33,7 +33,7 @@ gem 'newrelic_rpm', group: :production
 
 gem 'foreman', '~> 0.78.0', group: :development
 gem 'dotenv-rails', '~> 1.0.2'
-gem 'sentry-raven', '~> 2.4.0'
+gem 'sentry-raven', '~> 2.7.2'
 
 # Access an IRB console on exception pages or by using <%%= console %> in views
 gem 'web-console', '~> 3.0', group: :development
@@ -99,6 +99,7 @@ gem 'fog-aws', '~> 1.3.0'
 gem 'fog-local', '~> 0.2.1'
 
 # jobs
+gem 'redis', '>= 3.0.0', '< 4'
 gem 'resque', '~> 1.26.0'
 gem 'resque-scheduler', '~> 4.3.0'
 gem 'activejob-retry', '~> 0.6.1'
