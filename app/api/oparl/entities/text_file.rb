@@ -25,8 +25,8 @@ module OParl
         expose(:web) { |paper| Rails.application.routes.url_helpers.paper_url(body: paper.body.slug, legislative_term: paper.legislative_term, paper: paper, format: :txt) } # equivalent in html
       end
 
-      expose(:created) { |obj| [obj.created_at, obj.pdf_last_modified].min.iso8601 }
-      expose(:modified) { |obj| (obj.deleted_at || obj.pdf_last_modified).iso8601 }
+      expose(:created) { |obj| [obj.created_at, obj.pdf_last_modified].reject(&:blank?).min.try(:iso8601) }
+      expose(:modified) { |obj| (obj.deleted_at || obj.pdf_last_modified).try(:iso8601) }
       expose(:deleted) { |obj| obj.deleted? }
     end
   end
