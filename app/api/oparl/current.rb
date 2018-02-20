@@ -35,7 +35,7 @@ module OParl
             rq = droute.required_helper_segments
             helper_params = params.select { |k,v| rq.include? k }
             query_params = params.reject do |k,v|
-              rq.include?(k) || v == route.params[k][:default]
+              rq.include?(k) || !route.params.key?(k) || v == route.params[k][:default]
             end
             helper_params.merge({ params: query_params }.deep_merge(options))
           end
