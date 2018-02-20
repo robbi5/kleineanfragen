@@ -9,7 +9,10 @@ class PaperController < ApplicationController
     if stale?(@paper, public: true)
       respond_to do |format|
         format.html
-        format.pdf { redirect_to @paper.download_url }
+        format.pdf do
+          raise ActionController::RoutingError.new('Download URL not found') if @paper.download_url.nil?
+          redirect_to @paper.download_url
+        end
         format.txt { render plain: @paper.contents }
         format.json
       end
