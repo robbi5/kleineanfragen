@@ -120,6 +120,8 @@ module BadenWuerttembergLandtagScraper
 
   def self.extract_detail_paper(page)
     link = get_detail_link(page)
+    fail "Can't extract detail link from Paper [BW ?]" if link.nil?
+
     title = extract_detail_title(page)
     url = link.attributes['href'].value
 
