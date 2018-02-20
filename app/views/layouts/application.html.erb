@@ -94,7 +94,12 @@
 </footer>
 
 <%= javascript_include_tag 'enhance', 'data-turbolinks-track' => true, 'data-turbolinks-eval' => false %>
-<%= javascript_include_tag 'application', debug: false, 'data-turbolinks-track' => true, 'data-turbolinks-eval' => false, 'async' => true %>
+<%= javascript_include_tag 'application',
+  debug: false,
+  'data-turbolinks-track' => true,
+  'data-turbolinks-eval' => false,
+  'data-turbolinks-suppress-warning' => false,
+  'async' => true %>
 <%= render partial: 'site/tracking' -%>
 </body>
 </html>
