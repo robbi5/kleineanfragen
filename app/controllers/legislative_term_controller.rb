@@ -20,6 +20,6 @@ class LegislativeTermController < ApplicationController
   end
 
   def find_legislative_term
-    @legislative_term = @body.legislative_terms.find_by_term(params[:legislative_term].to_i)
+    @legislative_term = @body.legislative_terms.find_by_term!(params[:legislative_term].to_i)
   end
 end
