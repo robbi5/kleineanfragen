@@ -27,8 +27,9 @@ module SachsenAnhaltLandtagScraper
     if line.match(/Kleine\s+Anfrage/)
       doctype = Paper::DOCTYPE_MINOR_INTERPELLATION
       match = line.match(/Kleine\s+Anfrage\s+und\s+Antwort\s+(.+)\s+([\d\.]+)\s+Drucksache\s+([\d\/]+)/m)
+      return nil if match.nil?
       # FIXME: this is broken for DetailScraper, answerer is not seperated by "und Antwort"
-      originators_and_answerers = match[1].strip.match(/(.+) und Antwort (.+)/)
+      originators_and_answerers = match[1].strip.match(/(.+)\s+und\s+Antwort\s+(.+)/)
       is_answer = true unless originators_and_answerers.nil?
       originators_and_answerers = [nil, nil, nil] if originators_and_answerers.nil?
     elsif line.match(/Große\s+Anfrage/)
