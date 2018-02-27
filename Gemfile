@@ -21,11 +21,9 @@ gem 'jquery-rails'
 gem 'turbolinks', '~> 5.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.3'
-# bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
 
 # logging
-gem 'lograge', '~> 0.7.1'
+gem 'lograge', '~> 0.9.0'
 gem 'grape_logging', '~> 1.6'
 
 # Use newrelic
@@ -63,17 +61,17 @@ gem 'rubyzip', '~> 1.2.1'
 gem 'saxerator', '~> 0.9.5'
 
 # slugs
-gem 'friendly_id', '~> 5.1.0'
+gem 'friendly_id', '~> 5.2.0'
 
 # don't delete everything
-gem 'paranoia', '~> 2.2.1'
+gem 'paranoia', '~> 2.4.0'
 
 # fix urls while scraping
 gem 'addressable', '~> 2.4.0', require: 'addressable/uri'
 
 # styling
 gem 'bootstrap-sass', '~> 3.3.6'
-gem 'inline_svg', '~> 1.1.0'
+gem 'inline_svg', '~> 1.3.1'
 
 # pagination
 gem 'kaminari', '~> 0.17.0'
@@ -83,14 +81,14 @@ gem 'docsplit', '~> 0.7.6'
 gem 'abbyy', '~> 0.2.1'
 
 # pdf thumbnailing
-gem 'image_optim', '~> 0.24.1'
-gem 'image_optim_pack', '~> 0.3.0.20161206'
+gem 'image_optim', '~> 0.26.1'
+gem 'image_optim_pack', '~> 0.5.0.20180124'
 
 # search!
 gem 'searchkick', '~> 0.9.1'
 gem 'elasticsearch', '>= 1.0.0', '< 2.0.0'
 gem 'patron', '~> 0.7.1'
-gem 'typhoeus', '~> 1.0.1'
+gem 'typhoeus', '~> 1.3.0'
 
 # storage
 # gem 'fog', '~> 1.29.0'
@@ -100,7 +98,7 @@ gem 'fog-local', '~> 0.2.1'
 
 # jobs
 gem 'redis', '>= 3.0.0', '< 4'
-gem 'resque', '~> 1.26.0'
+gem 'resque', '~> 1.27.4'
 gem 'resque-scheduler', '~> 4.3.0'
 gem 'activejob-retry', '~> 0.6.1'
 gem 'resque-sentry', '~> 1.2.0'
@@ -108,7 +106,7 @@ gem 'resque-sentry', '~> 1.2.0'
 gem 'sinatra', '~> 2.0.0.rc2', require: nil # needs sinatra 2.0, because rack 2
 
 # for nomenklatura
-gem 'httparty', '~> 0.13.7'
+gem 'httparty', '~> 0.16.0'
 
 # matching against known names in scrapers
 gem 'fuzzy_match', '~> 2.1.0'
@@ -124,14 +122,14 @@ gem 'nokogiri'
 gem 'premailer-rails', '~> 1.9.1'
 
 # simplify posting to slack channels
-gem 'slack-notifier', '~> 1.5.1'
+gem 'slack-notifier', '~> 2.3.2'
 
 # incoming email
-gem 'griddler', '~> 1.3.1'
-gem 'griddler-sendgrid', '~> 0.0.1'
+gem 'griddler', '~> 1.4.0'
+gem 'griddler-sendgrid', '~> 1.0.1'
 
 # api
-gem 'rack-cors', '~> 0.4.0', require: 'rack/cors'
+gem 'rack-cors', '~> 1.0.2', require: 'rack/cors'
 gem 'grape', '~> 0.17.0'
 gem 'grape-entity', '~> 0.6.1'
 gem 'grape-route-helpers', '~> 2.0.0'
