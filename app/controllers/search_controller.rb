@@ -7,7 +7,7 @@ class SearchController < ApplicationController
     @query = params[:q].presence
     redirect_to(root_url) && return if @query.blank?
 
-    if params.any? { |param, _v| PARAMS_TO_CONVERT.include? param }
+    if PARAMS_TO_CONVERT.map { |key| params.fetch(key, nil) }.reject(&:nil?).size > 0
       query = self.class.params_to_nice_query(params)
       clean_params = search_params.to_h.except(*PARAMS_TO_CONVERT).except(*ActionController::Parameters.always_permitted_parameters)
       redirect_to search_path(params: clean_params.symbolize_keys.merge!({ q: query }))
