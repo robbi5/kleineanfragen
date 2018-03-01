@@ -71,69 +71,67 @@ class SearchController < ApplicationController
       {
         where: conditions,
         fields: ['title^10', :contents, :people],
-        highlight: { tag: '<mark>' },
-        facets: [:contains_table, :contains_classified_information, :body, :doctype, :faction, :pages, :published_at],
-        smart_facets: true,
+        highlight: {
+          tag: '<mark>',
+          fields: {
+            title: { number_of_fragments: 0 },
+            contents: {
+              type: 'fvh',
+              fragment_size: 250,
+              number_of_fragments: 1,
+              no_match_size: 250
+            }
+          }
+        },
+        aggs: [:contains_table, :contains_classified_information, :body, :doctype, :faction, :pages, :published_at],
         execute: false,
         misspellings: false,
-        include: [:body, :paper_originators]
+        includes: [:body, :paper_originators, :originator_people, :originator_organizations]
       }.merge(options)
 
     query = Paper.search(
       term,
       options
     ) do |body|
-      # boost newer papers
+      ## use simple_query_string
+      ## NOT only works when WHITESPACE is enabled: https://github.com/elastic/elasticsearch/issues/9633
+      body[:query][:dis_max][:queries] = [
+        {
+          simple_query_string: {
+            query: term,
+            fields: ['title.analyzed^10', 'contents.analyzed', 'people.analyzed'],
+            flags: 'AND|OR|NOT|PHRASE|WHITESPACE',
+            default_operator: 'AND',
+            analyzer: 'searchkick_search'
+          }
+        },
+        {
+          simple_query_string: {
+            query: term,
+            fields: ['title.analyzed^10', 'contents.analyzed', 'people.analyzed'],
+            flags: 'AND|OR|NOT|PHRASE|WHITESPACE',
+            default_operator: 'AND',
+            analyzer: 'searchkick_search2'
+          }
+        }
+      ]
+
+      ## boost newer papers
       body[:query] = {
         function_score: {
           query: body[:query],
+          boost: 1,
           functions: [
-            { boost_factor: 1 },
             {
               gauss: {
                 published_at: {
-                  scale: '6w'
+                  scale: '42d'
                 }
               }
             }
           ],
-          score_mode: 'sum'
+          boost_mode: 'sum'
         }
-      }
-
-      # use simple_query_string
-      # NOT only works when WHITESPACE is enabled: https://github.com/elastic/elasticsearch/issues/9633
-      body[:query][:function_score][:query] = {
-        dis_max: {
-          queries: [
-            {
-              simple_query_string: {
-                fields: ['title.analyzed^10', 'contents.analyzed', 'people.analyzed'],
-                query: term,
-                flags: 'AND|OR|NOT|PHRASE|WHITESPACE',
-                default_operator: 'AND',
-                analyzer: 'searchkick_search'
-              }
-            },
-            {
-              simple_query_string: {
-                fields: ['title.analyzed^10', 'contents.analyzed', 'people.analyzed'],
-                query: term,
-                flags: 'AND|OR|NOT|PHRASE|WHITESPACE',
-                default_operator: 'AND',
-                analyzer: 'searchkick_search2'
-              }
-            }
-          ]
-        }
-      }
-
-      body[:highlight][:fields]['title.analyzed'][:number_of_fragments] = 0
-      body[:highlight][:fields]['contents.analyzed'] = {
-        type: 'fvh',
-        fragment_size: 250,
-        number_of_fragments: 1,
-        no_match_size: 250
       }
     end
 
@@ -142,7 +140,13 @@ class SearchController < ApplicationController
 
   def autocomplete
     q = self.class.simple_parse_query(params[:q])
-    render json: Paper.search(q[:term], fields: [{ 'title^1.5' => :text_start }, { title: :word_start }], limit: 5).map(&:autocomplete_data)
+    render json: Paper.search(q[:term], {
+      fields: [
+        { 'title^1.5' => :text_start },
+        { title: :word_start }
+      ],
+      limit: 5
+    }).map(&:autocomplete_data)
   end
 
   def advanced

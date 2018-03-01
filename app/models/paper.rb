@@ -18,22 +18,7 @@ class Paper < ApplicationRecord
              text_start: [:title],
              word_start: [:title],
              highlight: [:title, :contents],
-             index_prefix: 'kleineanfragen',
-             include: [:body, :paper_originators, :originator_people, :originator_organizations]
-
-  # Fix searchkick "immense term":
-  class << self
-    alias_method :old_searchkick_index_options, :searchkick_index_options
-
-    def searchkick_index_options
-      o = old_searchkick_index_options
-      # remove index: "not_analyzed"
-      o[:mappings][:_default_][:properties]['contents'][:fields].delete('contents')
-      # replace & by und - https://github.com/ankane/searchkick/commit/f8714d22778e450a5eacd0e4acbca000142b1812
-      o[:settings][:analysis][:char_filter][:ampersand][:mappings] = ['&=> und ']
-      o
-    end
-  end
+             index_prefix: 'kleineanfragen'
 
   belongs_to :body
   has_many :paper_originators, dependent: :destroy
