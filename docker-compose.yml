@@ -29,6 +29,7 @@ services:
       DATABASE_URL: postgres://kleineanfragen:@database/kleineanfragen
       TIKA_SERVER_URL: http://tika:9998
       S3_ACL_SUPPORT: "false"
+      PAPER_INDEX_BATCH_SIZE: 250
   #   NOMENKLATURA_HOST: http://nomenklatura:8080
   #   NOMENKLATURA_APIKEY: change_me
   #   SENTRY_DSN: http://public:secret@sentry:9000/2

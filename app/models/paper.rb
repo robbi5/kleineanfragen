@@ -40,7 +40,8 @@ class Paper < ApplicationRecord
                    }
                  }
                }
-             }
+             },
+             batch_size: Rails.application.config.x.paper_index_batch_size
 
   belongs_to :body
   has_many :paper_originators, dependent: :destroy

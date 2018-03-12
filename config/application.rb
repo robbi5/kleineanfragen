@@ -87,5 +87,7 @@ module Kleineanfragen
     config.x.push_ocr_token = ENV['PUSH_OCR_TOKEN']
     # Email token to enable incoming email parsing
     config.x.email_token = ENV['EMAIL_TOKEN']
+    # Searchkick Batch Size for Papers
+    config.x.paper_index_batch_size = (ENV['PAPER_INDEX_BATCH_SIZE'] || 1000).to_i
   end
 end
