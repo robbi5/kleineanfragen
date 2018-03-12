@@ -18,7 +18,29 @@ class Paper < ApplicationRecord
              text_start: [:title],
              word_start: [:title],
              highlight: [:title, :contents],
-             index_prefix: 'kleineanfragen'
+             index_prefix: 'kleineanfragen',
+             filterable: [
+               :body,
+               ## to prevent "contains at least one immense term":
+               # skip title
+               # skip contents
+               :doctype,
+               :faction
+             ],
+             merge_mappings: true,
+             mappings: {
+               paper: {
+                 properties: {
+                   contents: {
+                     fields: {
+                       analyzed: {
+                         index_options: 'offsets'
+                       }
+                     }
+                   }
+                 }
+               }
+             }
 
   belongs_to :body
   has_many :paper_originators, dependent: :destroy
