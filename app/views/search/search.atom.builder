@@ -13,7 +13,7 @@ atom_feed(
   feed.tag!('opensearch:totalResults', @papers.total_count)
   feed.tag!('opensearch:Query', role: 'request', searchTerms: @query)
 
-  @papers.with_details.each do |paper, details|
-    render(partial: 'searchresult', locals: { feed: feed, paper: paper, details: details })
+  @papers.with_highlights.each do |paper, highlights|
+    render(partial: 'searchresult', locals: { feed: feed, paper: paper, highlights: highlights })
   end
 end

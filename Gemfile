@@ -85,7 +85,7 @@ gem 'image_optim', '~> 0.26.1'
 gem 'image_optim_pack', '~> 0.5.0.20180124'
 
 # search!
-gem 'searchkick', '~> 2.5.0'
+gem 'searchkick', '~> 3.0.0'
 gem 'patron', '~> 0.7.1'
 gem 'typhoeus', '~> 1.3.0'
 
