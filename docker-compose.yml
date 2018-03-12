@@ -53,10 +53,21 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.2
     environment:
       discovery.type: single-node
-      xpack.monitoring.enabled: "false"
       xpack.security.enabled: "false"
+      cluster.routing.allocation.disk.threshold_enabled: "false"
+      bootstrap.memory_lock: "true"
+      ES_JAVA_OPTS: "-Xms1024m -Xmx1024m"
     ports:
       - "9200:9200"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.2.2
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+    ports:
+      - "5601:5601"
 
   #nomenklatura:
   # image: robbi5/nomenklatura
