@@ -11,3 +11,6 @@ Searchkick.client =
       }
     }
   )
+
+# for tracking async reindexing
+Searchkick.redis = Redis.new
