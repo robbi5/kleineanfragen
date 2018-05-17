@@ -12,7 +12,7 @@ class OptInMailerPreview < ActionMailer::Preview
   # Preview this email at http://localhost:5000/rails/mailers/opt_in_mailer/report
   def report
     opt_in = OptIn.new(email: 'test@example.org')
-    report = Report.new(Time.now, '127.0.0.1', 'Example/1.0 UserAgent')
+    report = Report.new(Time.now)
     OptInMailer.report(opt_in, report)
   end
 end

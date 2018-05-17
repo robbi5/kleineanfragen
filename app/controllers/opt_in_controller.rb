@@ -14,7 +14,6 @@ class OptInController < ApplicationController
     end
 
     @opt_in.confirmed_at = DateTime.now
-    @opt_in.confirmed_ip = request.remote_ip
     @opt_in.save!
 
     @subscription.active = true
@@ -32,7 +31,7 @@ class OptInController < ApplicationController
       sub.save!
     end
 
-    report = Report.new(Time.now, request.remote_ip, request.user_agent)
+    report = Report.new(Time.now)
     OptInMailer.report(@opt_in, report).deliver_later
   end
 
