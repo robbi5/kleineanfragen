@@ -75,11 +75,11 @@
 <% if @papers.size > 0 %>
 
 <ol class="paper-list paper-list--with-body">
-  <% @papers.with_highlights.each do |paper, highlights| %>
+  <% @papers.each do |paper, highlights| %>
   <li>
     <%
-      title = highlights.try(:fetch, :title, nil).try(:html_safe) || paper.title
-      snippet = highlights.try(:fetch, :contents, nil) || ''
+      title = paper.search_highlights.try(:fetch, :title, nil).try(:html_safe) || paper.title
+      snippet = paper.search_highlights.try(:fetch, :contents, nil) || ''
       snippet += '&hellip;' unless snippet.blank?
     %>
     <p class="source-and-title">

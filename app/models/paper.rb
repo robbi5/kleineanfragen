@@ -32,9 +32,14 @@ class Paper < ApplicationRecord
                paper: {
                  properties: {
                    contents: {
+                     type: 'text',
+                     index: false,
                      fields: {
                        analyzed: {
-                         index_options: 'offsets'
+                         type: 'text',
+                         index: true,
+                         index_options: 'offsets',
+                         term_vector: 'with_positions_offsets' # deep_merge doesn't work?
                        }
                      }
                    }
