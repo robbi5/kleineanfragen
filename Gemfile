@@ -26,9 +26,6 @@ gem 'jbuilder', '~> 2.3'
 gem 'lograge', '~> 0.9.0'
 gem 'grape_logging', '~> 1.6'
 
-# Use newrelic
-gem 'newrelic_rpm', group: :production
-
 gem 'foreman', '~> 0.78.0', group: :development
 gem 'dotenv-rails', '~> 1.0.2'
 gem 'sentry-raven', '~> 2.7.2'

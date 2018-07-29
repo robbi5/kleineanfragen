@@ -226,7 +226,6 @@ GEM
     net-http-digest_auth (1.4.1)
     net-http-persistent (2.9.4)
     netrc (0.11.0)
-    newrelic_rpm (4.8.0.341)
     nio4r (1.2.1)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
@@ -419,7 +418,6 @@ DEPENDENCIES
   memory_test_fix (~> 1.4.0)
   minitest (= 5.10.1)
   minitest-stub_any_instance
-  newrelic_rpm
   nokogiri
   paranoia (~> 2.4.0)
   patron (~> 0.7.1)
