@@ -39,7 +39,8 @@ class Paper < ApplicationRecord
                          type: 'text',
                          index: true,
                          index_options: 'offsets',
-                         term_vector: 'with_positions_offsets' # deep_merge doesn't work?
+                         term_vector: 'with_positions_offsets', # deep_merge doesn't work?
+                         analyzer: 'searchkick_index' # same
                        }
                      }
                    }
