@@ -50,7 +50,7 @@ services:
   #   - "9998:9998"
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
     environment:
       discovery.type: single-node
       xpack.security.enabled: "false"
@@ -61,7 +61,7 @@ services:
       - "9200:9200"
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.2.2
+    image: docker.elastic.co/kibana/kibana:6.3.2
     depends_on:
       - elasticsearch
     links:
