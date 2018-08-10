@@ -77,8 +77,10 @@ class TableRecognizer
 
   def match(regex, group, factor: 1)
     return if @skip.include?(group)
+
     m = text.scan(regex)
     return if m.blank?
+
     @probability += factor * m.size
     @groups << group
     @matches << m if debug?
@@ -86,15 +88,17 @@ class TableRecognizer
 
   def match_each(regex, group, factor: 1, &block)
     return if @skip.include?(group)
+
     m = text.scan(regex)
     return if m.blank?
+
     m.each do |match|
       ret = yield match
-      if ret
-        @probability += factor
-        @groups << group
-        @matches << match if debug?
-      end
+      next if !ret
+
+      @probability += factor
+      @groups << group
+      @matches << match if debug?
     end
   end
 end

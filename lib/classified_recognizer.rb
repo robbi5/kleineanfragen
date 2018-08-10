@@ -25,7 +25,7 @@ class ClassifiedRecognizer
 
     # ST: note in footer
     # SH: note in footer
-    match(/Einsichtnahme\s+des\s+vertraulichen\s+Teils\s+.+\s+Geheimschutzstelle/m, :st_geheimschutzstelle)
+    match(/Einsichtnahme\s+des\s+vertraulichen\s+Teils\s+.+?\s+Geheimschutzstelle/m, :st_geheimschutzstelle)
 
     # BT: note in text
     match(/Geheimschutzstelle\s+des\s+(Deutschen\s+)?Bundestages/m, :bt_geheimschutzstelle)
@@ -47,24 +47,33 @@ class ClassifiedRecognizer
 
   def match(regex, group, factor: 1)
     return if @skip.include?(group)
-    m = text.scan(regex)
+
+    m = nil
+    Timeout::timeout(5) do
+      m = text.scan(regex)
+    end
     return if m.blank?
+
     @probability += factor * m.size
     @groups << group
     @matches << m if debug?
+  rescue
+    # ignore
   end
 
   def match_each(regex, group, factor: 1, &block)
     return if @skip.include?(group)
+
     m = text.scan(regex)
     return if m.blank?
+
     m.each do |match|
       ret = yield match
-      if ret
-        @probability += factor
-        @groups << group
-        @matches << match if debug?
-      end
+      next if !ret
+
+      @probability += factor
+      @groups << group
+      @matches << match if debug?
     end
   end
 end
