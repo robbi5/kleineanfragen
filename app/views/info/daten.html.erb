@@ -32,7 +32,7 @@ einseh- und herunterladbar.</p>
 <p><%= link_to 'Zuletzt veröffentlichte Anfragen', recent_url(format: :atom) %> (Gesamt), aus den einzelnen Parlamenten und zu Suchbegriffen gibt es auch als Feeds.</p>
 <p>Diese sind auf den jeweiligen Seiten mittels <code>&lt;link rel="alternate" type="application/atom+xml" href="..." /&gt;</code>-Tags hinterlegt.</p>
 <% unless Rails.configuration.x.push_hubs.blank? %>
-<p>Die Gesamt- bzw. Parlamentsfeeds sind zudem mit <%= Rails.configuration.x.push_hubs.size == 1 ? 'einem ' : '' %><a href="http://en.wikipedia.org/wiki/PubSubHubbub">PubSubHubbub-Server<%= Rails.configuration.x.push_hubs.size > 1 ? 'n' : '' %></a> verknüpft. Dies ermöglicht eine Benachrichtigung über neue Anfragen, ohne den Feed regelmäßig abfragen zu müssen.</p>
+<p>Die Gesamt- bzw. Parlamentsfeeds sind zudem mit <%= Rails.configuration.x.push_hubs.size == 1 ? 'einem ' : '' %><a href="http://en.wikipedia.org/wiki/WebSub">WebSub-Server<%= Rails.configuration.x.push_hubs.size > 1 ? 'n' : '' %></a> verknüpft. Dies ermöglicht eine Benachrichtigung über neue Anfragen, ohne den Feed regelmäßig abfragen zu müssen.</p>
 <% end %>
 
 <h1>Datenexport</h1>
