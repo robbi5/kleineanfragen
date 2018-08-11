@@ -16,31 +16,47 @@ module NkSyncable
     "ka-#{model_name}-#{state.downcase}"
   end
 
-  def nomenklatura_sync!
+  def nomenklatura_sync!(case_insensitive: true)
     dataset = Nomenklatura::Dataset.new(nomenklatura_dataset)
     entity = dataset.entity_by_name(name).dereference
     if entity.invalid?
       # invalid: remove self
       papers.clear
-      destroy
-    elsif entity.name != name
-      new_name = entity.name
-      if self.class.exists?(name: new_name)
-        # new name and object exists? reassign papers, remove self
-        other = self.class.find_by_name(new_name)
-        papers.each do |paper|
-          other.papers << paper unless other.papers.include?(paper)
-        end
-        other.save!
-        papers.clear
-        destroy
-      else
-        # new name and object doesn't exist? rename self
-        self.name = new_name
-        save!
-      end
-    else
-      self
+      return destroy
     end
+
+    same = entity.name == name
+
+    if !same
+      new_name = entity.name
+      other = nil
+      if self.class.exists?(name: new_name)
+        # new name and object exists?
+        other = self.class.find_by_name(new_name)
+      elsif case_insensitive && self.class.exists?(["lower(name) = ?", new_name.downcase])
+        # same, but for lower
+        other = self.class.where("lower(name) = ?", new_name.downcase).first
+      end
+
+      # new name and object doesn't exist? rename self
+      if other.nil?
+        self.name = new_name
+        return save!
+      end
+
+      if other.id == id
+        return self
+      end
+
+      # reassign papers, remove self
+      papers.each do |paper|
+        other.papers << paper unless other.papers.include?(paper)
+      end
+      other.save!
+      papers.clear
+      return destroy
+    end
+
+    self
   end
 end

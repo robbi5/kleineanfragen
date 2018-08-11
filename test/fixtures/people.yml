@@ -25,3 +25,9 @@ middle_name_person:
 
 multi_body_person:
   name: "Has Papers in multiple bodies"
+
+case_person_a:
+  name: "Case Sensitive Person"
+
+case_person_b:
+  name: "case sensiTive PerSon"

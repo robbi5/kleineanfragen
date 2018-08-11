@@ -33,3 +33,7 @@ seven:
 eight:
   paper: paper_by_17_2000
   originator: multi_body_person (Person)
+
+nine:
+  paper: paper_be_17_1000
+  originator: case_person_a (Person)
