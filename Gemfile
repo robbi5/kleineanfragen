@@ -93,13 +93,8 @@ gem 'fog-aws', '~> 1.3.0'
 gem 'fog-local', '~> 0.2.1'
 
 # jobs
-gem 'redis', '>= 3.0.0', '< 4'
-gem 'resque', '~> 1.27.4'
-gem 'resque-scheduler', '~> 4.3.0'
-gem 'activejob-retry', '~> 0.6.1'
-gem 'resque-sentry', '~> 1.2.0'
-
-gem 'sinatra', '~> 2.0.0.rc2', require: nil # needs sinatra 2.0, because rack 2
+gem 'redis', '>= 3.3.5', '< 5'
+gem 'sidekiq', '~> 5.2.1'
 
 # for nomenklatura
 gem 'httparty', '~> 0.16.0'

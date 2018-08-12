@@ -4,6 +4,6 @@ logfile.binmode
 logfile.sync = true # if true make sure every write flushes
 
 ajlogger = ActiveSupport::Logger.new(logfile)
-ajlogger.formatter = Logger::Formatter.new
+ajlogger.formatter = Lograge.formatter # Logger::Formatter.new
 
 ActiveJob::Base.logger = ActiveSupport::TaggedLogging.new(ajlogger)

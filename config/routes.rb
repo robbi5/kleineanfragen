@@ -1,12 +1,11 @@
-require 'resque/server'
-
+require 'sidekiq/web'
 Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
-  resque_web_constraint = ->(_, request) { ['::1', '127.0.0.1'].include?(request.remote_ip) || ENV['RESQUE_SERVER_OPEN'].present? }
-  constraints resque_web_constraint do
-    mount Resque::Server.new, at: '/.resque'
+  sidekiq_web_constraint = ->(_, request) { ['::1', '127.0.0.1'].include?(request.remote_ip) || ENV['SIDEKIQ_SERVER_OPEN'].present? }
+  constraints sidekiq_web_constraint do
+    mount Sidekiq::Web => '/.sidekiq'
   end
 
   constraints subdomain: 'api' do

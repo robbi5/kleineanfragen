@@ -1,8 +1,4 @@
 class StorePaperPDFJob < PaperJob
-  include ActiveJob::Retry.new(strategy: :variable,
-                               delays: [5, 15, 30, 90],
-                               retryable_exceptions: [Patron::TimeoutError])
-
   queue_as :store
 
   def perform(paper, options = {})

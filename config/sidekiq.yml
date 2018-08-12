@@ -1,0 +1,9 @@
+---
+:concurrency: 5
+production:
+  :concurrency: 10
+:queues:
+  - store
+  - meta
+  - import
+  - subscription

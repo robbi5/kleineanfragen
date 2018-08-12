@@ -1,8 +1,4 @@
 class NotifyPuSHHubBodyFeedJob < ApplicationJob
-  include ActiveJob::Retry.new(strategy: :variable,
-                               delays: [5, 15, 30, 90],
-                               retryable_exceptions: [Excon::Errors::Timeout])
-
   queue_as :subscription
 
   def perform(body)

@@ -34,7 +34,7 @@ module Kleineanfragen
     config.i18n.default_locale = :de
 
     # active job
-    config.active_job.queue_adapter = :resque
+    config.active_job.queue_adapter = :sidekiq
 
     # enable cors for api
     config.middleware.insert_before 0, Rack::Cors do
