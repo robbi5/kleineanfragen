@@ -60,7 +60,7 @@ class PaperController < ApplicationController
     end
 
     notifier = Slack::Notifier.new Rails.configuration.x.report_slack_webhook
-    notifier.ping "#{notifier.escape msg} - #{view_context.paper_short_url(@paper)} [##{@paper.id}]"
+    notifier.ping "#{Slack::Notifier::Util::Escape.html msg} - #{view_context.paper_short_url(@paper)} [##{@paper.id}]"
 
     render :report_thanks
   end
