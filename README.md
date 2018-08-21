@@ -50,7 +50,7 @@ Dependencies
 * ruby 2.3.0
 * postgres
 * elasticsearch (for search)
-* redis (for resque)
+* redis (for sidekiq)
 * nodejs (for asset compiling)
 * [tika](http://tika.apache.org) (for extracting text from pdfs)
 * [Nomenklatura](https://github.com/pudo/nomenklatura) (for normalization of people names, ministries and parties)
@@ -86,7 +86,7 @@ Configuration
 
 Jobs
 ----
-Jobs are run by ActiveJob / Resque.
+Jobs are run by ActiveJob / Sidekiq.
 
 You may need to prefix them with `bundle exec`, so the correct gems are used.
 
