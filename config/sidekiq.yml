@@ -7,3 +7,4 @@ production:
   - meta
   - import
   - subscription
+  - mailers
