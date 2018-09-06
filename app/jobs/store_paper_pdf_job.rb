@@ -18,7 +18,7 @@ class StorePaperPDFJob < PaperJob
     file = AppStorage.bucket.files.new(key: paper.path, public: true, body: File.open(paper.local_path))
     file.save
 
-    ThumbnailFirstPageJob.perform_later(paper, force: options[:force]) if paper.thumbnail_url.blank? || options[:force]
+    ThumbnailFirstPageJob.perform_later(paper, force: options[:force]) if paper.thumbnail_url(options[:force]).blank? || options[:force]
     CountPageNumbersJob.perform_later(paper) if paper.page_count.blank? || options[:force]
     ExtractTextFromPaperJob.perform_later(paper) if paper.contents.blank? || options[:force]
     ExtractLastModifiedFromPaperJob.perform_later(paper) if paper.pdf_last_modified.blank? || options[:force]
