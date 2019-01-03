@@ -10,9 +10,9 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
   end
 
   test 'get legislative start and end date from url' do
-    legislative = @scraper::Overview.new(15)
+    legislative = @scraper::Overview.new(16)
     actual = legislative.extract_legislative_dates(@legislative_page)
-    expected = [Date.parse('01.05.2011'), Date.parse('30.04.2016')]
+    expected = [Date.parse('01.05.2016'), Date.parse('30.04.2021')]
     assert_equal(expected, actual)
   end
 
@@ -27,8 +27,8 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     actual = @scraper.extract_overview_meta(link.next_element)
     assert_equal(
       {
-        full_reference: '16/718',
-        published_at: Date.parse('2016-11-07'),
+        full_reference: '16/5196',
+        published_at: Date.parse('2018-12-21'),
         doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
         originator_party: 'FDP/DVP'
       }, actual)
@@ -39,23 +39,15 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     actual = @scraper.extract_overview_paper(link)
     assert_equal(
       {
-        full_reference: '16/718',
+        full_reference: '16/5196',
         legislative_term: '16',
-        reference: '718',
+        reference: '5196',
         doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-        title: 'Mögliche Abschaffung des Nachtangelverbots',
-        published_at: Date.parse('2016-11-07'),
+        title: 'Kennzeichnung von Streuobst und Streuobstprodukten aus Baden-Württemberg',
+        published_at: Date.parse('2018-12-21'),
         originators: { people: [], parties: ['FDP/DVP'] },
-        source_url: 'http://www.statistik-bw.de/OPAL/Ergebnis.asp?WP=16&DRSNR=718'
+        source_url: 'http://www.statistik-bw.de/OPAL/Ergebnis.asp?WP=16&DRSNR=5196'
       }, actual)
-  end
-
-  test 'build detail url for answer-chek from full reference' do
-    legislative_term = '15'
-    reference = '6432'
-    actual = @scraper.build_detail_url(legislative_term, reference)
-    expected = 'http://www.statistik-bw.de/OPAL/Ergebnis.asp?WP=15&DRSNR=6432'
-    assert_equal(expected, actual)
   end
 
   test 'get detail page' do
@@ -63,7 +55,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     reference = '5196'
     actual = @scraper.get_detail_url(legislative_term, reference)
     expected = 'https://parlis.landtag-bw.de/parlis/report.tt.html?report_id=MjAxOTAxMDMtMTkwNDU4LTc5NTktTEJXOnN1Y2hlcmdlYm5pcy1kb2t1bWVudG51bW1lcjpodG1sOjo6MTpzRE5SU08gc1JOUkRT'
-    assert_equal(expected[1,75], actual[1,75])
+    assert_equal(expected[0,70]+expected[93..-1], actual[0,70]+actual[93..-1])
   end
 
   test 'get detail link from detail page' do
