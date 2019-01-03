@@ -58,6 +58,14 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
+  test 'get detail page' do
+    legislative_term = '16'
+    reference = '5196'
+    actual = @scraper.get_detail_url(legislative_term, reference)
+    expected = 'https://parlis.landtag-bw.de/parlis/report.tt.html?report_id=MjAxOTAxMDMtMTkwNDU4LTc5NTktTEJXOnN1Y2hlcmdlYm5pcy1kb2t1bWVudG51bW1lcjpodG1sOjo6MTpzRE5SU08gc1JOUkRT'
+    assert_equal(expected[1,75], actual[1,75])
+  end
+
   test 'get detail link from detail page' do
     actual = @scraper.get_detail_link(@detail_page).text.lstrip
     expected = 'KlAnfr Peter Hofelich SPD 29.01.2015 und Antw MVI Drs 15/6432'
