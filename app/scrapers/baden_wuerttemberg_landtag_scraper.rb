@@ -3,6 +3,7 @@ require 'date'
 module BadenWuerttembergLandtagScraper
   BASE_URL = 'http://www.landtag-bw.de'
   DETAIL_URL = 'http://www.statistik-bw.de/OPAL'
+  SEARCH_URL = 'https://parlis.landtag-bw.de'
 
   def self.extract_result_links(page)
     page.search('//a[@class="doclist__item-link"]')
@@ -25,6 +26,14 @@ module BadenWuerttembergLandtagScraper
 
   def self.build_detail_url(legislative_term, reference)
     DETAIL_URL + "/Ergebnis.asp?WP=#{legislative_term}&DRSNR=#{reference}"
+  end
+
+  def self.get_detail_url(legislative_term, reference)
+    mechanize = Mechanize.new
+    hashbody = {"action" => "SearchAndDisplay","sources" => ["Star"],"report" => {"rhl" => "main","rhlmode" => "add","format" => "suchergebnis-dokumentnummer","mime" => "html","sort" => "sDNRSO sRNRDS"},"search" => {"lines" => {"l1" => "D","l2" => "#{legislative_term}/#{reference}"},"serverrecordname" => "dokument"}}
+    mp = mechanize.post(SEARCH_URL + '/parlis/browse.tt.json', hashbody.to_json, 'Content-Type' => 'application/json')
+    rep_id = JSON.parse(mp.body)["report_id"]
+    SEARCH_URL + "/parlis/report.tt.html?report_id=#{rep_id}"
   end
 
   def self.get_detail_link(page)
@@ -224,6 +233,7 @@ module BadenWuerttembergLandtagScraper
   end
 
   class Detail < DetailScraper
+
     def scrape
       m = mechanize
       page = m.get BadenWuerttembergLandtagScraper.build_detail_url(@legislative_term, @reference)
