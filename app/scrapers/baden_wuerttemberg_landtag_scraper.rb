@@ -24,10 +24,6 @@ module BadenWuerttembergLandtagScraper
     full_reference.split('/')
   end
 
-  def self.build_detail_url(legislative_term, reference)
-    DETAIL_URL + "/Ergebnis.asp?WP=#{legislative_term}&DRSNR=#{reference}"
-  end
-
   def self.get_detail_url(legislative_term, reference)
     mechanize = Mechanize.new
     hashbody = {"action" => "SearchAndDisplay","sources" => ["Star"],"report" => {"rhl" => "main","rhlmode" => "add","format" => "suchergebnis-dokumentnummer","mime" => "html","sort" => "sDNRSO sRNRDS"},"search" => {"lines" => {"l1" => "D","l2" => "#{legislative_term}/#{reference}"},"serverrecordname" => "dokument"}}
@@ -37,12 +33,15 @@ module BadenWuerttembergLandtagScraper
   end
 
   def self.get_detail_link(page)
-    table = page.search('//table/tr/td[2]')
-    table.at_css('a')
+    page.at('.fundstellenLinks')
   end
 
-  def self.link_is_answer?(link)
-    !link.text.strip.match(/und\s+Antw/).nil?
+  def self.get_detail_urheber(page)
+    page.at('.drucksache-liste-urheber')
+  end
+
+  def self.link_is_answer?(urheber)
+    !urheber.text.strip.match(/und\s+Antw/).nil?
   end
 
   def self.extract_doctype(match_result)
@@ -55,14 +54,7 @@ module BadenWuerttembergLandtagScraper
   end
 
   def self.extract_detail_title(page)
-    table = page.search('//table')
-    table_rows = table.css('tr')
-    table_rows.each do |row|
-      if row.at_css('td').text == 'Betreff:'
-        return row.element_children[1].text
-      end
-    end
-    nil
+    page.at('.drucksache-liste-betreff').text.strip
   end
 
   def self.extract_meta(meta_text)
@@ -123,12 +115,13 @@ module BadenWuerttembergLandtagScraper
       originators: { people: [], parties: [meta[:originator_party]] },
       # answerers is set in detail scraper
       # is_answer is set in detail scraper
-      source_url: build_detail_url(legislative_term, reference)
+      source_url: get_detail_url(legislative_term, reference)
     }
   end
 
   def self.extract_detail_paper(page)
     link = get_detail_link(page)
+    urheber = get_detail_urheber(page)
     fail "Can't extract detail link from Paper [BW ?]" if link.nil?
 
     title = extract_detail_title(page)
@@ -148,10 +141,10 @@ module BadenWuerttembergLandtagScraper
       title: title,
       url: url,
       published_at: meta[:published_at],
-      is_answer: link_is_answer?(link),
+      is_answer: link_is_answer?(urheber),
       originators: meta[:originators],
       answerers: meta[:answerers],
-      source_url: build_detail_url(legislative_term, reference)
+      source_url: get_detail_url(legislative_term, reference)
     }
   end
 
@@ -236,7 +229,7 @@ module BadenWuerttembergLandtagScraper
 
     def scrape
       m = mechanize
-      page = m.get BadenWuerttembergLandtagScraper.build_detail_url(@legislative_term, @reference)
+      page = m.get BadenWuerttembergLandtagScraper.get_detail_url(@legislative_term, @reference)
       BadenWuerttembergLandtagScraper.extract_detail_paper(page)
     end
   end
