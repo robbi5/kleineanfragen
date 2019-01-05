@@ -36,19 +36,19 @@ module BadenWuerttembergLandtagScraper
     page.at('.fundstellenLinks')
   end
 
-  def self.get_detail_urheber(page)
+  def self.get_detail_originators(page)
     page.at('.drucksache-liste-urheber')
   end
 
-  def self.link_is_answer?(urheber)
-    !urheber.text.strip.match(/und\s+Antw/).nil?
+  def self.link_is_answer?(originators)
+    !originators.text.strip.match(/und\s+Antw/).nil?
   end
 
   def self.extract_doctype(match_result)
     case match_result.downcase
     when 'klanfr', 'klanf', 'kleine anfrage'
       Paper::DOCTYPE_MINOR_INTERPELLATION
-    when 'granfr', 'granf', 'große anfrage'
+    when 'granfr', 'granf', 'große anfrage', 'GroÃŸe Anfrage'
       Paper::DOCTYPE_MAJOR_INTERPELLATION
     end
   end
@@ -57,33 +57,42 @@ module BadenWuerttembergLandtagScraper
     page.at('.drucksache-liste-betreff').text.strip
   end
 
-  def self.extract_meta(meta_text)
-    match_results = meta_text.lstrip.match(/(KlAnfr?|GrAnfr?)\s+(.+?)\s*([\d\.\s]+)?\s+(?:und\s+Antw\s+(?:(.+?)\s*([\d\.]+)?\s+)?)?Drs\s*(\d+\/\d+)/m)
-    return nil if match_results.nil?
-    doctype = extract_doctype(match_results[1])
-    # when multiple originators exist, remove "and others" - we extract the other names later
-    names = match_results[2].gsub(/\s+(?:u.a.|u.u.)/, '').strip
+  def self.extract_from_originators(originators_line)
+    match_result = originators_line.lstrip.match(/(Kleine Anfrage?|GroÃŸe Anfrage?)\s+(.+?)\s+?([\d\.\s]+)?\s+(?:und\s+Antwort)\s+(.+)/m)
+    return nil if match_result.nil?
+    doctype = extract_doctype(match_result[1])
+    names = match_result[2].gsub(/\s+(?:u.a.|u.u.)/, '').strip.tr('()', '')
     if doctype == Paper::DOCTYPE_MINOR_INTERPELLATION
       originators = NamePartyExtractor.new(names, NamePartyExtractor::NAME_PARTY_COMMA).extract
     elsif doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
       parties = names.gsub(' und', ', ').split(',').map(&:strip)
       originators = { people: [], parties: parties }
     end
-
-    full_reference = match_results[6]
-
-    ministries = []
-    ministries = clean_ministries(match_results[4]) unless match_results[4].blank?
+    ministries = [match_result[4].strip]
 
     answerers = nil
     answerers = { ministries: ministries } unless ministries.blank?
-
     {
-      full_reference: full_reference,
       doctype: doctype,
-      published_at: Date.parse(match_results[3] || match_results[5]),
+      published_at: Date.parse(match_result[3]),
       originators: originators,
       answerers: answerers
+    }
+  end
+
+  def self.extract_meta(page)
+    originators_text = get_detail_originators(page).text
+    ometa = extract_from_originators(originators_text)
+    # when multiple originators exist, remove "and others" - we extract the other names later
+    link_text = get_detail_link(page).text
+    full_reference = link_text.lstrip.match(/Drucksache\s+(\d+\/\d+).\s+([\d\.\s]+)/m)[1]
+    return nil if full_reference.nil?
+    {
+      full_reference: full_reference,
+      doctype: ometa[:doctype],
+      published_at: ometa[:published_at],
+      originators: ometa[:originators],
+      answerers: ometa[:answerers]
     }
   end
 
@@ -121,14 +130,14 @@ module BadenWuerttembergLandtagScraper
 
   def self.extract_detail_paper(page)
     link = get_detail_link(page)
-    urheber = get_detail_urheber(page)
     fail "Can't extract detail link from Paper [BW ?]" if link.nil?
 
     title = extract_detail_title(page)
     url = link.attributes['href'].value
 
-    meta = extract_meta(link.text)
-    fail "Can't extract detail meta data from Paper [BW ?] text: #{link.text}" if meta.nil?
+    originators = get_detail_originators(page)
+    meta = extract_meta(page)
+    fail "Can't extract detail meta data from Paper [BW ?] text: #{originators.text}" if meta.nil?
 
     full_reference = meta[:full_reference]
     legislative_term, reference = extract_reference(full_reference)
@@ -141,7 +150,7 @@ module BadenWuerttembergLandtagScraper
       title: title,
       url: url,
       published_at: meta[:published_at],
-      is_answer: link_is_answer?(urheber),
+      is_answer: link_is_answer?(originators),
       originators: meta[:originators],
       answerers: meta[:answerers],
       source_url: get_detail_url(legislative_term, reference)
