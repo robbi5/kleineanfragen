@@ -25,19 +25,41 @@ module BadenWuerttembergLandtagScraper
   end
 
   def self.get_detail_url(legislative_term, reference)
-    mechanize = Mechanize.new
-    hashbody = {"action" => "SearchAndDisplay","sources" => ["Star"],"report" => {"rhl" => "main","rhlmode" => "add","format" => "suchergebnis-dokumentnummer","mime" => "html","sort" => "sDNRSO sRNRDS"},"search" => {"lines" => {"l1" => "D","l2" => "#{legislative_term}/#{reference}"},"serverrecordname" => "dokument"}}
-    mp = mechanize.post(SEARCH_URL + '/parlis/browse.tt.json', hashbody.to_json, 'Content-Type' => 'application/json')
-    rep_id = JSON.parse(mp.body)["report_id"]
+    SEARCH_URL + "/parlis/browse.tt.html?type=&action=qlink&q=WP=#{legislative_term}%20AND%20DNRF=#{reference}"
+  end
+
+  def self.get_report_url(m, legislative_term, reference)
+    hashbody = {
+      "action" => "SearchAndDisplay",
+      "sources" => ["Star"],
+      "report" => {
+        "rhl" => "main",
+        "rhlmode" => "add",
+        "format" => "suchergebnis-dokumentnummer",
+        "mime" => "html",
+        "sort" => "sDNRSO sRNRDS"
+      },
+      "search" => {
+        "lines" => {
+          "l1" => "D",
+          "l2" => "#{legislative_term}/#{reference}"
+        },
+        "serverrecordname" => "dokument"
+      }
+    }
+    mp = m.post(SEARCH_URL + '/parlis/browse.tt.json', hashbody.to_json, 'Content-Type' => 'application/json')
+    data = JSON.parse(mp.body)
+    return nil if data['fetched_hits'] <= 0
+    rep_id = data["report_id"]
     SEARCH_URL + "/parlis/report.tt.html?report_id=#{rep_id}"
   end
 
   def self.get_detail_link(page)
-    page.at('.fundstellenLinks')
+    page.at_css('.fundstellenLinks')
   end
 
   def self.get_detail_originators(page)
-    page.at('.drucksache-liste-urheber')
+    page.at_css('.drucksache-liste-urheber')
   end
 
   def self.link_is_answer?(originators)
@@ -48,7 +70,7 @@ module BadenWuerttembergLandtagScraper
     case match_result.downcase
     when 'klanfr', 'klanf', 'kleine anfrage'
       Paper::DOCTYPE_MINOR_INTERPELLATION
-    when 'granfr', 'granf', 'große anfrage', 'GroÃŸe Anfrage'
+    when 'granfr', 'granf', 'große anfrage', 'Große Anfrage'
       Paper::DOCTYPE_MAJOR_INTERPELLATION
     end
   end
@@ -58,16 +80,11 @@ module BadenWuerttembergLandtagScraper
   end
 
   def self.extract_from_originators(originators_line)
-    match_result = originators_line.lstrip.match(/(Kleine Anfrage?|GroÃŸe Anfrage?)\s+(.+?)\s+?([\d\.\s]+)?\s+(?:und\s+Antwort)\s+(.+)/m)
+    match_result = originators_line.lstrip.match(/(Kleine Anfrage?|Große Anfrage?)\s+(.+?)\s+?([\d\.\s]+)?\s+(?:und\s+Antwort)\s+(.+)/m)
     return nil if match_result.nil?
     doctype = extract_doctype(match_result[1])
-    names = match_result[2].gsub(/\s+(?:u.a.|u.u.)/, '').strip.tr('()', '')
-    if doctype == Paper::DOCTYPE_MINOR_INTERPELLATION
-      originators = NamePartyExtractor.new(names, NamePartyExtractor::NAME_PARTY_COMMA).extract
-    elsif doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION
-      parties = names.gsub(' und', ', ').split(',').map(&:strip)
-      originators = { people: [], parties: parties }
-    end
+    names = match_result[2].gsub(/\s+(?:u.a.|u.u.)/, '').strip
+    originators = NamePartyExtractor.new(names, NamePartyExtractor::NAME_BRACKET_PARTY).extract
     ministries = [match_result[4].strip]
 
     answerers = nil
@@ -83,7 +100,6 @@ module BadenWuerttembergLandtagScraper
   def self.extract_meta(page)
     originators_text = get_detail_originators(page).text
     ometa = extract_from_originators(originators_text)
-    # when multiple originators exist, remove "and others" - we extract the other names later
     link_text = get_detail_link(page).text
     full_reference = link_text.lstrip.match(/Drucksache\s+(\d+\/\d+).\s+([\d\.\s]+)/m)[1]
     return nil if full_reference.nil?
@@ -238,7 +254,11 @@ module BadenWuerttembergLandtagScraper
 
     def scrape
       m = mechanize
-      page = m.get BadenWuerttembergLandtagScraper.get_detail_url(@legislative_term, @reference)
+      report_url = BadenWuerttembergLandtagScraper.get_report_url(m, @legislative_term, @reference)
+      fail 'Report not found' if report_url.nil?
+      page = m.get report_url
+      # fix missing encoding on report pages:
+      page.encoding = 'utf-8'
       BadenWuerttembergLandtagScraper.extract_detail_paper(page)
     end
   end

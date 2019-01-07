@@ -52,8 +52,8 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     legislative_term = '16'
     reference = '5196'
     actual = @scraper.get_detail_url(legislative_term, reference)
-    expected = 'https://parlis.landtag-bw.de/parlis/report.tt.html?report_id=MjAxOTAxMDMtMTkwNDU4LTc5NTktTEJXOnN1Y2hlcmdlYm5pcy1kb2t1bWVudG51bW1lcjpodG1sOjo6MTpzRE5SU08gc1JOUkRT'
-    assert_equal(expected[0,70]+expected[93..-1], actual[0,70]+actual[93..-1])
+    expected = 'https://parlis.landtag-bw.de/parlis/browse.tt.html?type=&action=qlink&q=WP=16%20AND%20DNRF=5196'
+    assert_equal(expected, actual)
   end
 
   test 'get detail link from detail page' do
@@ -75,26 +75,26 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       published_at: Date.parse('2018-11-15'),
       originators: { people: ['Klaus Hoher'], parties: ['FDP/DVP'] },
-      answerers: { ministries: ['Ministerium fÃ¼r LÃ¤ndlichen Raum und Verbraucherschutz'] }
+      answerers: { ministries: ['Ministerium für Ländlichen Raum und Verbraucherschutz'] }
     }
     assert_equal(expected, actual)
   end
 
   test 'extract meta information from long detail link' do
-    text = 'Kleine Anfrage Helmut Walter RÃ¼eck (CDU), Nikolaos Sakellariou (SPD), Dr. Friedrich Bullinger (FDP/DVP) 24.07.2014 und Antwort Ministerium fÃ¼r LÃ¤ndlichen Raum und Verbraucherschutz'
+    text = 'Kleine Anfrage Helmut Walter Rüeck (CDU), Nikolaos Sakellariou (SPD), Dr. Friedrich Bullinger (FDP/DVP) 24.07.2014 und Antwort Ministerium für Ländlichen Raum und Verbraucherschutz'
     actual = @scraper.extract_from_originators(text)
     expected = {
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
       published_at: Date.parse('2014-07-24'),
-      originators: { people: ['Helmut Walter RÃ¼eck', 'Nikolaos Sakellariou', 'Dr. Friedrich Bullinger'], parties: ['CDU', 'SPD', 'FDP/DVP'] },
-      answerers: { ministries: ['Ministerium fÃ¼r LÃ¤ndlichen Raum und Verbraucherschutz'] }
+      originators: { people: ['Helmut Walter Rüeck', 'Nikolaos Sakellariou', 'Dr. Friedrich Bullinger'], parties: ['CDU', 'SPD', 'FDP/DVP'] },
+      answerers: { ministries: ['Ministerium für Ländlichen Raum und Verbraucherschutz'] }
     }
     assert_equal(expected, actual)
   end
 
   test 'extract meta information from long detail link with newline' do
     skip "No such case known yet in new Detail Pages"
-    text = "Kleine Anfrage Helmut Walter RÃ¼eck (CDU), Nikolaos Sakellariou (SPD), Dr. Friedrich Bullinger (FDP/DVP) 24.07.2014 und Antwort Ministerium fÃ¼r LÃ¤ndlichen Raum und Verbraucherschutz "
+    text = "Kleine Anfrage Helmut Walter Räeck (CDU), Nikolaos Sakellariou (SPD), Dr. Friedrich Bullinger (FDP/DVP) 24.07.2014 und Antwort Ministerium für Ländlichen Raum und Verbraucherschutz "
     actual = @scraper.extract_from_originators(text)
     expected = {
       full_reference: '15/5544',
@@ -178,7 +178,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
 
   test 'extract meta information from detail with multiple originator parties' do
     skip "Fix Grosse Anfragen later"
-    text = 'GroÃŸe Anfrage Fraktion der CDU, Fraktion der SPD, Fraktion der FDP/DVP, Fraktion GRÃœNE 13.02.2013 und Antwort Landesregierung '
+    text = 'Große Anfrage Fraktion der CDU, Fraktion der SPD, Fraktion der FDP/DVP, Fraktion GRÜNE 13.02.2013 und Antwort Landesregierung '
     actual = @scraper.extract_from_originators(text)
     expected = {
       full_reference: '15/3038',
@@ -221,7 +221,7 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
 
   test 'extract title from Detail' do
     actual = @scraper.extract_detail_title(@detail_page)
-    expected = 'Kennzeichnung von Streuobst und Streuobstprodukten aus Baden-WÃ¼rttemberg'
+    expected = 'Kennzeichnung von Streuobst und Streuobstprodukten aus Baden-Württemberg'
     assert_equal(expected, actual)
   end
 
@@ -232,12 +232,12 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
       legislative_term: '16',
       reference: '5196',
       doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-      title: 'Kennzeichnung von Streuobst und Streuobstprodukten aus Baden-WÃ¼rttemberg',
+      title: 'Kennzeichnung von Streuobst und Streuobstprodukten aus Baden-Württemberg',
       url: 'https://www.landtag-bw.de/files/live/sites/LTBW/files/dokumente/WP16/Drucksachen/5000/16%5F5196%5FD.pdf',
       published_at: Date.parse('2018-11-15'),
       is_answer: true,
       originators: { people: ['Klaus Hoher'], parties: ['FDP/DVP'] },
-      answerers: { ministries: ['Ministerium fÃ¼r LÃ¤ndlichen Raum und Verbraucherschutz'] },
+      answerers: { ministries: ['Ministerium für Ländlichen Raum und Verbraucherschutz'] },
     }
     assert(expected <= actual)
   end
