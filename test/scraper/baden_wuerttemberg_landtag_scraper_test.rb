@@ -92,129 +92,53 @@ class BadenWuerttembergLandtagScraperTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
-  test 'extract meta information from long detail link with newline' do
-    skip "No such case known yet in new Detail Pages"
-    text = "Kleine Anfrage Helmut Walter Räeck (CDU), Nikolaos Sakellariou (SPD), Dr. Friedrich Bullinger (FDP/DVP) 24.07.2014 und Antwort Ministerium für Ländlichen Raum und Verbraucherschutz "
-    actual = @scraper.extract_from_originators(text)
-    expected = {
-      full_reference: '15/5544',
-      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-      published_at: Date.parse('2014-07-24'),
-      originators: { people: ['Dr. Friedrich Bullinger', 'Helmut Walter Rüeck', 'Nikolaos Sakkelariou'], parties: ['FDP/DVP', 'CDU', 'SPD'] },
-      answerers: { ministries: ['MLR'] }
-    }
-    assert_equal(expected, actual)
-  end
-
-  test 'extract meta information from detail with duplicate date' do
-    skip "No such case known yet in new Detail Pages"
-    text = 'KlAnfr Katrin Schütz CDU 26.08.2014 26.08.2014 und Antw IM Drs 15/5659'
-    actual = @scraper.extract_from_originators(text)
-    expected = {
-      full_reference: '15/5659',
-      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-      published_at: Date.parse('2014-08-26'),
-      originators: { people: ['Katrin Schütz'], parties: ['CDU'] },
-      answerers: { ministries: ['IM'] }
-    }
-    assert_equal(expected, actual)
-  end
-
-  test 'extract meta information from detail with multiple ministries' do
-    skip "No such case known yet in new Detail Pages"
-    text = 'KlAnfr Rainer Hinderer SPD 01.01.2015 und Antw MVI, ABC und DEF Drs 01/1234'
-    actual = @scraper.extract_from_originators(text)
-    expected = {
-      full_reference: '01/1234',
-      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-      published_at: Date.parse('2015-01-01'),
-      originators: { people: ['Rainer Hinderer'], parties: ['SPD'] },
-      answerers: { ministries: ['MVI', 'ABC', 'DEF'] }
-    }
-    assert_equal(expected, actual)
-  end
-
-  test 'extract meta information from detail with missing ministry' do
-    skip "No such case known yet in new Detail Pages"
-    text = 'KlAnfr Rainer Hinderer SPD 01.01.2015 und Antw Drs 01/1234'
-    actual = @scraper.extract_from_originators(text)
-    expected = {
-      full_reference: '01/1234',
-      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-      published_at: Date.parse('2015-01-01'),
-      originators: { people: ['Rainer Hinderer'], parties: ['SPD'] },
-      answerers: nil
-    }
-    assert_equal(expected, actual)
-  end
-
-  test 'extract meta information from detail with wrong published_at position' do
-    skip "No such case known yet in new Detail Pages"
-    text = 'KlAnfr Dr. Friedrich Bullinger FDP/DVP und Antw IM 20.06.2014 Drs 15/5345'
-    actual = @scraper.extract_from_originators(text)
-    expected = {
-      full_reference: '15/5345',
-      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-      published_at: Date.parse('2014-06-20'),
-      originators: { people: ['Dr. Friedrich Bullinger'], parties: ['FDP/DVP'] },
-      answerers: { ministries: ['IM'] }
-    }
-    assert_equal(expected, actual)
-  end
-
-  test 'extract meta information from detail with wrong Klanf instead of Klanfr' do
-    skip "No such case known yet in new Detail Pages"
-    text = 'KlAnf Dr. Hans-Ulrich Rülke FDP/DVP 01.07.2013 und Antw MVI Drs 15/3704'
-    actual = @scraper.extract_from_originators(text)
-    expected = {
-      full_reference: '15/3704',
-      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-      published_at: Date.parse('2013-07-01'),
-      originators: { people: ['Dr. Hans-Ulrich Rülke'], parties: ['FDP/DVP'] },
-      answerers: { ministries: ['MVI'] }
-    }
-    assert_equal(expected, actual)
-  end
-
   test 'extract meta information from detail with multiple originator parties' do
-    skip "Fix Grosse Anfragen later"
     text = 'Große Anfrage Fraktion der CDU, Fraktion der SPD, Fraktion der FDP/DVP, Fraktion GRÜNE 13.02.2013 und Antwort Landesregierung '
     actual = @scraper.extract_from_originators(text)
     expected = {
-      full_reference: '15/3038',
       doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
       published_at: Date.parse('2013-02-13'),
-      originators: { people: [], parties: ['CDU','GRÜNE','SPD','FDP/DVP'] },
-      answerers: { ministries: ['LReg'] }
+      originators: { people: [], parties: ['CDU','SPD','FDP/DVP','GRÜNE'] },
+      answerers: { ministries: ['Landesregierung'] }
     }
     assert_equal(expected, actual)
   end
 
-  test 'extract meta information from detail for an unanswered paper' do
-    skip "Find such a case for new Detail Page"
-    text = 'KlAnfr Gabi Rolland SPD 09.11.2016 Drs 16/941'
-    actual = @scraper.extract_from_originators(text)
-    expected = {
-      full_reference: '16/941',
-      doctype: Paper::DOCTYPE_MINOR_INTERPELLATION,
-      published_at: Date.parse('2016-11-09'),
-      originators: { people: ['Gabi Rolland'], parties: ['SPD'] },
-      answerers: nil
-    }
-    assert_equal(expected, actual)
+  test 'extract meta information from unanswered detail originators' do
+    detail_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bw/detail_page_unanswered.html')))
+    org = @scraper.get_detail_originators(detail_page)
+    is_answer = @scraper.link_is_answer?(org)
+    assert_not is_answer, 'should not be an answer'
   end
 
-  test 'extract meta information from major detail link' do
-    skip "Fix Grosse Anfragen later"
+  test 'extract meta information from major detail originators' do
     detail_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bw/detail_page_major.html')))
-    link = @scraper.get_detail_link(detail_page)
-    actual = @scraper.extract_from_originators(link.text)
+    org = @scraper.get_detail_originators(detail_page)
+    actual = @scraper.extract_from_originators(org.text)
     expected = {
-      full_reference: '15/1608',
       doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
-      published_at: Date.parse('2012-04-25'),
-      originators: { people: [], parties: ['FDP/DVP'] },
-      answerers: { ministries: ['LReg'] }
+      published_at: Date.parse('2018-08-09'),
+      originators: { people: [], parties: ['GRÜNE'] },
+      answerers: { ministries: ['Landesregierung'] }
+    }
+    assert_equal(expected, actual)
+  end
+
+  test 'extract complete paper from major detail page' do
+    detail_page = Nokogiri::HTML(File.read(Rails.root.join('test/fixtures/bw/detail_page_major.html')))
+    actual = @scraper.extract_detail_paper(detail_page)
+    expected = {
+      full_reference: '16/4581',
+      legislative_term: '16',
+      reference: '4581',
+      doctype: Paper::DOCTYPE_MAJOR_INTERPELLATION,
+      title: 'Nachhaltiger Tourismus in Baden-Württemberg',
+      url: 'https://www.landtag-bw.de/files/live/sites/LTBW/files/dokumente/WP16/Drucksachen/4000/16%5F4581%5FD.pdf',
+      published_at: Date.parse('2018-08-09'),
+      is_answer: true,
+      originators: { people: [], parties: ['GRÜNE'] },
+      answerers: { ministries: ['Landesregierung'] },
+      source_url: "https://parlis.landtag-bw.de/parlis/browse.tt.html?type=&action=qlink&q=WP=16%20AND%20DNRF=4581"
     }
     assert_equal(expected, actual)
   end
