@@ -84,7 +84,11 @@ module BadenWuerttembergLandtagScraper
     return nil if match_result.nil?
     doctype = extract_doctype(match_result[1])
     names = match_result[2].gsub(/\s+(?:u.a.|u.u.)/, '').strip
-    originators = NamePartyExtractor.new(names, NamePartyExtractor::NAME_BRACKET_PARTY).extract
+    if doctype == Paper::DOCTYPE_MAJOR_INTERPELLATION and names.include? 'Fraktion'
+      originators = NamePartyExtractor.new(names, NamePartyExtractor::FRACTION).extract
+    else
+      originators = NamePartyExtractor.new(names, NamePartyExtractor::NAME_BRACKET_PARTY).extract
+    end
     ministries = [match_result[4].strip]
 
     answerers = nil
