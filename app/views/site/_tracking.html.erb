@@ -7,15 +7,15 @@
 <% if !Rails.env.development? -%>
   (function() {
     var u="https://traffic.okfn.de/";
-    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
     _paq.push(['setSiteId', 9]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
   })();
 <% else -%>
-  // development - don't run piwik
+  // development - don't run matomo
 <% end -%>
 </script>
 <% if !Rails.env.development? -%>
-<noscript><p><img src="https://traffic.okfn.de/piwik.php?idsite=9" style="border:0;" alt="" /></p></noscript>
+<noscript><p><img src="https://traffic.okfn.de/matomo.php?idsite=9&amp;rec=1" style="border:0;" alt="" /></p></noscript>
 <%- end -%>
