@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180517064443) do
+ActiveRecord::Schema.define(version: 20190127195351) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20180517064443) do
     t.string   "slug"
     t.boolean  "use_mirror_for_download",           default: false
     t.string   "wikidataq"
+    t.text     "site_message"
     t.index ["name"], name: "index_bodies_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_bodies_on_slug", unique: true, using: :btree
     t.index ["state"], name: "index_bodies_on_state", unique: true, using: :btree

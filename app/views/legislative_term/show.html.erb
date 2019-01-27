@@ -8,6 +8,10 @@
   <% end %>
 </div>
 
+<%- if @body.site_message -%>
+<div class="alert alert-warning"><%= raw @body.site_message %></div>
+<%- end -%>
+
 <ol class="paper-list">
   <%= render partial: 'paper/paper', collection: @papers %>
 </ol>

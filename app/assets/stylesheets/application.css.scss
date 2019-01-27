@@ -169,6 +169,11 @@ $brand-primary: #2980b9;
   height: 24px;
 }
 
+.page-header + .alert {
+  border-radius: 0;
+  border: 0;
+}
+
 .jumbotron {
   background: linear-gradient(20deg, #757F9A 10%, #D7DDE8 90%);
 

@@ -4,6 +4,10 @@
   <h1><%= link_to @body.name, @body %> per E-Mail abonnieren</h1>
 </div>
 
+<%- if @body.site_message -%>
+<div class="alert alert-warning"><%= raw @body.site_message %></div>
+<%- end -%>
+
 <div class="row">
   <div class="col-sm-8">
     <%= form_for @subscription, url: subscription_create_path, html: { class: 'form-horizontal' } do |f| %>

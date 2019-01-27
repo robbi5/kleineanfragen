@@ -16,6 +16,10 @@
   <h1>Problem melden: <%= link_to_paper @paper.title, @paper %></h1>
 </div>
 
+<%- if @body.site_message -%>
+<div class="alert alert-warning"><%= raw @body.site_message %></div>
+<%- end -%>
+
 <div class="row">
   <div class="col-sm-4 col-sm-push-8">
     <p>
