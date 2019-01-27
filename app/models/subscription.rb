@@ -11,10 +11,18 @@ class Subscription < ApplicationRecord
     self.class.hashids.encode(id)
   end
 
-  def self.find_by_hash(hash)
+  def self.find_by_hash!(hash)
     id = hashids.decode(hash).first
     fail 'Invalid id' if id.nil?
     find(id)
+  end
+
+  def self.find_by_hash(hash)
+    id = hashids.decode(hash).first
+    return nil if id.nil?
+    find(id)
+  rescue
+    nil
   end
 
   def self.hashids
