@@ -662,24 +662,38 @@ span.twitter-typeahead {
 }
 
 // force through increased specificity
-.facetbar-group .btn-group.bootstrap-select.bootstrap-select {
+.facetbar-group .bootstrap-select.bootstrap-select {
   width: auto;
   max-width: 200px
 }
 
-.facetbar-group .btn-group.bootstrap-select .filter-option {
-  text-overflow: ellipsis;
+.facetbar-group .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+  width: auto;
+  max-width: 200px
 }
 
-.selectpicker > li.selected > a {
+.facetbar-group .bootstrap-select .filter-option {
+  text-overflow: ellipsis;
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+}
+
+.facetbar-group .bootstrap-select .dropdown-toggle:before {
+  content: '';
+  display: none;
+}
+
+.selectpicker + button + .dropdown-menu li.selected a {
   color: #757F9A;
 }
-.selectpicker + .bootstrap-select li.selected a:before {
+.selectpicker + button + .dropdown-menu li.selected a:before {
   content: '\25CF';
   margin-left: -13px;
   position: absolute;
 }
-.selectpicker[multiple] + .bootstrap-select li.selected a:before {
+.selectpicker[multiple] + button + .dropdown-menu li.selected a:before {
   content: '\2714';
 }
 
