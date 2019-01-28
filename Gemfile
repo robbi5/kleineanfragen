@@ -54,7 +54,7 @@ gem 'rails-i18n', '~> 5.0.0'
 
 # scraping
 gem 'mechanize', '~> 2.7.3'
-gem 'rubyzip', '~> 1.2.1'
+gem 'rubyzip', '~> 1.2.2'
 gem 'saxerator', '~> 0.9.5'
 
 # slugs
