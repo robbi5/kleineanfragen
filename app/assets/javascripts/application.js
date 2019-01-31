@@ -6,6 +6,7 @@
 //= require handlebars-v2.0.0
 //= require bootstrap/dropdown
 //= require bootstrap-select.min
+//= require polyfills
 //= require search
 //= require site-index
 //= require paper

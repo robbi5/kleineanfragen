@@ -39,9 +39,9 @@ document.addEventListener("turbolinks:load", function() {
       showTick: true
   }).on('show.bs.select', function (el) {
     if (submitTimeout) clearTimeout(submitTimeout);
-    previousValue = Array.from(this.selectedOptions).map(function(opt){ return opt.value; }).join(',');
+    previousValue = Array.from(this.selectedOptions || []).map(function(opt){ return opt.value; }).join(',');
   }).on('hide.bs.select', function (el) {
-    currentValue = Array.from(this.selectedOptions).map(function(opt){ return opt.value; }).join(',');
+    currentValue = Array.from(this.selectedOptions || []).map(function(opt){ return opt.value; }).join(',');
     if (previousValue != currentValue) {
       submitTimeout = setTimeout(selectSubmit, 500);
     }
