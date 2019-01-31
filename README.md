@@ -47,7 +47,7 @@ You just `git pull`ed and now kleineanfragen doesn't start anymore? Try `docker-
 Dependencies
 ------------
 
-* ruby 2.3.0
+* ruby 2.5.3
 * postgres
 * elasticsearch (for search)
 * redis (for sidekiq)
