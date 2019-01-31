@@ -95,6 +95,7 @@ class SearchController < ApplicationController
     ) do |body|
       ## use simple_query_string
       ## NOT only works when WHITESPACE is enabled: https://github.com/elastic/elasticsearch/issues/9633
+      body[:query] = { dis_max: {} }
       body[:query][:dis_max][:queries] = [
         {
           simple_query_string: {
