@@ -680,6 +680,10 @@ span.twitter-typeahead {
   padding: 0;
 }
 
+.facetbar-group .bootstrap-select .dropdown-toggle .filter-option-inner-inner {
+  text-overflow: ellipsis;
+}
+
 .facetbar-group .bootstrap-select .dropdown-toggle:before {
   content: '';
   display: none;
