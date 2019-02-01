@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby '2.5.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.0.0.1'
+gem 'rails', '5.1.6'
 # Use postgresql as the database for Active Record
 gem 'pg', '0.20.0'
 # Use Puma as the app server
@@ -39,6 +39,7 @@ group :development, :test do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   ## removed, because its not useful in a docker container
   # gem 'spring'
+  gem 'listen'
   gem 'rubocop'
 end
 
@@ -51,7 +52,7 @@ group :test do
 end
 
 # Get i18n files
-gem 'rails-i18n', '~> 5.0.0'
+gem 'rails-i18n', '~> 5.1.3'
 
 # scraping
 gem 'mechanize', '~> 2.7.3'

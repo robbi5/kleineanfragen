@@ -1,3 +1,6 @@
+require 'fog/aws'
+require 'fog/aws/models/storage/file'
+
 module AppStorage
   class << self
   attr_accessor :storage, :bucket, :initialized
