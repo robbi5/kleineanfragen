@@ -39,6 +39,7 @@ group :development, :test do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   ## removed, because its not useful in a docker container
   # gem 'spring'
+  gem 'rubocop'
 end
 
 group :test do
