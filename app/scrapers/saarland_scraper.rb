@@ -1,21 +1,5 @@
 require 'date'
 
-#
-# Saarland is based on SharePoint. (No idea why anyone thinks thats a sane idea)
-#
-# Get Version: https://www.landtag-saar.de/_vti_pvt/service.cnf
-# # vti_extenderversion:SR|15.0.0.4797
-#
-# An request to https://www.landtag-saar.de/_vti_bin/ brings us the following header:
-# # MicrosoftSharePointTeamServices:15.0.0.4569
-#
-# So it is an SharePoint 2013.
-# But all the interesting endpoints (/_api, /_vti_bin/listdata.svc/) are locked down.
-# Sad :(
-#
-# Update 2017-01-10: They had the clever idea to pack the data as json into one big
-# hidden input field.
-#
 module SaarlandScraper
   BASE_URL = 'https://www.landtag-saar.de'
   OVERVIEW_URL = BASE_URL + '/umbraco/aawSearchSurfaceController/SearchSurface/GetSearchResults/'
