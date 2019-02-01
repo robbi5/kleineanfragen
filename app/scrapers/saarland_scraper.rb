@@ -1,24 +1,8 @@
 require 'date'
 
-#
-# Saarland is based on SharePoint. (No idea why anyone thinks thats a sane idea)
-#
-# Get Version: https://www.landtag-saar.de/_vti_pvt/service.cnf
-# # vti_extenderversion:SR|15.0.0.4797
-#
-# An request to https://www.landtag-saar.de/_vti_bin/ brings us the following header:
-# # MicrosoftSharePointTeamServices:15.0.0.4569
-#
-# So it is an SharePoint 2013.
-# But all the interesting endpoints (/_api, /_vti_bin/listdata.svc/) are locked down.
-# Sad :(
-#
-# Update 2017-01-10: They had the clever idea to pack the data as json into one big
-# hidden input field.
-#
 module SaarlandScraper
   BASE_URL = 'https://www.landtag-saar.de'
-  OVERVIEW_URL = BASE_URL + '/dokumente/drucksachen'
+  OVERVIEW_URL = BASE_URL + '/umbraco/aawSearchSurfaceController/SearchSurface/GetSearchResults/'
 
   class Detail < DetailScraper
     def scrape
@@ -38,7 +22,7 @@ module SaarlandScraper
       @m ||= mechanize
       papers = []
       streaming = block_given?
-      mp = @m.get OVERVIEW_URL
+      mp = load_overview_page(@m)
       SaarlandScraper.extract_entries(mp).each do |entry|
         begin
           paper = SaarlandScraper.extract_paper(entry)
@@ -55,32 +39,62 @@ module SaarlandScraper
       end
       papers unless streaming
     end
+
+    private
+
+    def load_overview_page(mechanize_agent)
+      headers = {"Accept" => "application/json, text/javascript, */*; q=0.01"}
+      body = {
+        "Filter" => {
+          "Periods" => []
+        },
+        "Pageination" => {
+          "Skip" => 0,
+          "Take" => 100
+        },
+        "Sections" => {
+          "Print" => true,
+          "PlenaryProtocol" => false,
+          "Law" => false,
+          "PublicConsultation" => false
+        },
+        "Sort" => {
+          "SortType" => 0,
+          "SortValue" => 0
+        },
+        "OnlyTitle" => false,
+        "Value" => "",
+        "CurrentSearchTab" => 1,
+        "KendoFilter" => nil
+      }.to_json
+
+      mechanize_agent.post(OVERVIEW_URL, body, headers).body
+    end
   end
 
   def self.extract_entries(mp)
-    v = mp.search('//input[@type="hidden"]')
-      .find { |i| i.attributes['name'].to_s.ends_with? '$documentListInput' }
-      .attributes['value']
-    v = v.to_s.gsub(/\&qu?o?t?quot;/, '"')
-    JSON.parse(v)
+    JSON.parse(mp)["FilteredResult"]
   end
 
   def self.extract_doc_link(entry)
-    Addressable::URI.parse(BASE_URL).join(entry['URL']).normalize.to_s
+    Addressable::URI.parse(BASE_URL).join(entry['FilePath']).normalize.to_s
   end
 
   def self.extract_date(entry)
-    Date.parse(entry['Dokumentdatum'])
+    dotnet_serialized_date = entry['PublicDate']
+    seconds_since_epoch = dotnet_serialized_date.scan(/[0-9]+/)[0].to_i / 1000.0
+
+    Time.at(seconds_since_epoch).to_date
   end
 
   def self.extract_title(entry)
-    entry['Titel'].strip
+    entry['Title'].strip
   end
 
   def self.extract_paper(entry)
     return nil if entry.nil? || !extract_is_answer(entry)
     url = extract_doc_link(entry)
-    full_reference = entry['Dokumentnummer']
+    full_reference = entry['DocumentNumber']
     reference = full_reference.split('/').last
     legislative_term = full_reference.split('/').first
     title = extract_title(entry)
@@ -101,6 +115,6 @@ module SaarlandScraper
   end
 
   def self.extract_is_answer(entry)
-    entry['Dokumentname'].starts_with? 'Aw'
+    entry['FileName'].starts_with? 'Aw'
   end
 end

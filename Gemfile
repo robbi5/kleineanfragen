@@ -48,6 +48,7 @@ group :test do
   gem 'minitest', '5.10.1'
   gem 'minitest-stub_any_instance'
   gem 'rails-controller-testing', '~> 1.0.1'
+  gem 'webmock'
 end
 
 # Get i18n files
