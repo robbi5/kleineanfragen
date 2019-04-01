@@ -1,14 +1,7 @@
-sudo: false
 language: ruby
 rvm:
-- 2.3.0
+- 2.5.3
 cache: bundler
-addons:
-  apt:
-    sources:
-      - travis-ci/sqlite3
-    packages:
-      - sqlite3
 notifications:
   slack:
     secure: JjGRvxBm3BQ1a3ScyIwi1cvDWFP6hKSYNqwzzxZgfhuZbEv0WftS/09T/dU+Mp5TO0ERBvgNqZCAliNfdBKB3ON8P/xYlegACdPNC+5gha3GXSyp5VN8ePaXXhju0q0MKMU1mr+6gIHgRqUEbXsfoEbP8BHos2NvFi4rZSe7ACg=
