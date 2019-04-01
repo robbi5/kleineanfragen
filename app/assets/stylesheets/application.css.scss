@@ -48,6 +48,37 @@ $brand-primary: #2980b9;
 @import "bootstrap";
 @import "bootstrap-select";
 
+.site-closing header.navbar,
+.site-closing main,
+.site-closing footer {
+  filter: grayscale(100%);
+}
+
+.alert-obituary {
+  border-top: 5px solid red;
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+  margin-bottom: 0;
+
+  padding-left: 0;
+  padding-right: 0;
+
+  @media (min-width: $screen-lg-min) {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+.alert-obituary a {
+  color: darkred;
+  text-decoration: underline;
+}
+
+.alert-obituary p {
+  margin-bottom: 0;
+}
+
 .fonts-loaded body {
   font-family: $webfont-family-sans-serif;
 }
