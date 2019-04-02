@@ -1,16 +1,16 @@
 <% title 'Stilllegung' %>
 
-<h1>kleineAnfragen.de wird abgeschalten</h1>
-<p>
-In den letzten Monaten haben immer mehr Parlamente ihre Parlamentsdokumentation überarbeitet. Leider passierte dies, ohne an stabile URLs oder sogar an offene Daten zu denken. Das hat nun zur Folge, dass für jedes einzelne Parlament umfangreiche Änderungen an den Scrapern von kleineAnfragen notwendig werden, die bislang automatisiert die Parlamentswebseiten abgrasten und veröffentlichte Anfragen importierten. Würden die Parlamente ihre Dokumentensammlung auch maschinenlesbar als offene Daten veröffentlichen, wäre dies nicht notwendig. Leider ist das aktuell bei keinem Parlament (vollständig) der Fall, sodass kleineAnfragen keine weiteren und neuen Anfragen und Antworten der Parlamente verarbeiten kann, bis die Software angepasst werden würde.
+<h1>kleineAnfragen.de wird abgeschaltet</h1>
+<p>Im Sommer 2014 entstand kleineAnfragen.de - als Reaktion auf einen <a href="http://www.zeit.de/mobilitaet/2014-09/deutsche-bahn-bruecken-zustand">Artikel über den Zustand von Bahnbrücken</a> und den dortigen Hinweis auf die Quelle der Daten: Parlamentarische Anfragen. Diese waren zu diesem Zeitpunkt über viele Dokumentationssystemen von Parlamenten verstreut und nicht besonders zugänglich. So gab es selten Suchfunktionen, und bei manchen ließen sich die gefundenen PDF-Dokumente nicht einmal verlinken.</p>
+<p>Jedoch stehen in diesen Anfragen und ihren Antworten darauf immer wieder wertvolle und interessante Informationen, die mehr Menschen zugänglich sein sollten. <br/>
+kleineAnfragen versuchte dies nicht nur recht erfolgreich, es machte die Antworten teilweise auch zum ersten Mal im Volltext durchsuchbar - es war auch die Idee mit einem positiven Beispiel voranzugehen, und zu zeigen, was trotz fehlender Daten der Parlamente möglich ist: Saubere, stabile und verlinkbare URLs, eine Volltextsuche (nicht nur von redaktionell vergebenen Stichwörtern), maschinenlesbare Metadaten, E-Mail-Abonnement für neue Antworten zu eigenen Suchanfragen und Feeds um selbst auf den neuesten Stand bleiben zu können und z.B. daraus automatisiert Twitter-Bots zu betreiben.
 </p>
 <p>
-Zum Start des Projektes bestand die Hoffnung, nicht nur die Anfragen und Antworten mehr Menschen zugänglich zu machen und sie teilweise auch zum ersten Mal im Volltext durchsuchbar zu machen - es war auch die Idee mit einem positiven Beispiel voranzugehen, und zu zeigen, was trotz der fehlenden Daten der Parlamente möglich ist: Eine Volltextsuche (nicht nur von redaktionell vergebenen Stichwörtern), maschinenlesbare Metadaten, E-Mail-Abonnement für neue Antworten zu eigenen Suchanfragen und Feeds um selbst auf den neuesten Stand bleiben zu können und z.B. daraus automatisiert Twitter-Bots zu betreiben. All dies sind Eigenschaften, die heutzutage mittels moderner Softwareentwicklung relativ zügig umgesetzt werden konnten - und die von den Angeboten der Parlamente, aber insbesondere dem <a href="https://www.parlamentsspiegel.de">Parlamentsspiegel</a> so auch immer noch erwartet werden.<br/>
-Bei den Überarbeitungen der Parlamentswebseiten in den letzten Monaten ließ sich davon aber leider wenig erkennen.
+In den letzten Monaten haben immer mehr Parlamente ihre Parlamentsdokumentation überarbeitet. Leider passierte dies, ohne an stabile URLs oder sogar an offene Daten zu denken. Das hat nun zur Folge, dass für jedes einzelne Parlament umfangreiche Änderungen an den Scrapern von kleineAnfragen notwendig werden, die bislang automatisiert die Parlamentswebseiten abgrasten und veröffentlichte Anfragen importierten.<br/>
+Würden die Parlamente ihre Dokumentensammlung auch maschinenlesbar als offene Daten veröffentlichen, wäre dies nicht notwendig. Leider ist das aktuell bei keinem Parlament (vollständig) der Fall, sodass kleineAnfragen keine weiteren und neuen Anfragen und Antworten der Parlamente verarbeiten kann, bis die Software angepasst werden würde.
 </p>
-<p>
-Rückblickend betrachtet wäre es klug gewesen, bereits von Anfang an diese Erwartungen an die Parlamente und den Parlamentsspiegel zu kommunizieren. Auch wäre eine statischere Methode, die Seiten auf kleineAnfragen.de zu generieren, sinnvoll gewesen, sodass temporäre Ausfälle nicht die komplette Seite mit der gesamten Funktionalität mitreißen.
-</p>
+
+<h3>Was nun passiert</h3>
 <p>
 Im Gegensatz zu anderen Projekten wird kleineAnfragen.de komplett ehrenamtlich betrieben. Dahergehend und durch den immer größer werdenen Aufwand, diese Anpassungen bei leider knapper werdenden Ressourcen auch vorzunehmen, <strong>wird kleineAnfragen bis zum 31.12.2020 nun immer weiter einschlafen</strong>.
 <br/>
@@ -19,4 +19,18 @@ Im Gegensatz zu anderen Projekten wird kleineAnfragen.de komplett ehrenamtlich b
 <p>
 Wir kümmern uns um eine rechtzeitige, vollständige Aufnahme ins <a href="https://web.archive.org">Internet Archive</a>. Es wird versucht, statische Dumps unter den URLs zu hinterlassen, denn <a href="https://www.w3.org/Provider/Style/URI">Cool URIs don't change</a>.
 </p>
+
+<h3>Was tun?</h3>
+<p>
+Es ist nun bis zum 31.12.2020 Zeit, von <%= link_to 'Seiten der Parlamenten', info_path %> zu überdenken, wie eine moderne, stabile und offene Möglichkeit geschaffen werden kann, Anfragen und Antworten, aber auch alle anderen parlamentarische Dokumente besser für Menschen zugänglich und für Maschinen auch lesbar zu machen.
+</p>
+<p>
+All dies sind Eigenschaften, die heutzutage mittels moderner Softwareentwicklung relativ zügig umgesetzt werden können - kleineAnfragen.de zeigte nur einen recht kleinen Teil, was möglich ist.
+<strong>Nun ist es wieder die Aufgabe der Parlamente und insbesondere die des <a href="https://www.parlamentsspiegel.de">Parlamentsspiegel</a>s,</strong> der die Dokumente aller Parlamente aggegieren soll, <strong>die Situation zu verbessern.</strong><br/>
+Bei den Überarbeitungen der Parlamentswebseiten in den letzten Monaten ließ sich bislang leider wenig erkennen. Dies ist besonders bezeichnend, da kleineAnfragen.de auch insbesondere von Abgeordneten, aber um so mehr von den Mitarbeiter*innen in den Parlamentsverwaltungen selbst benutzt wird.
+</p>
+<p>
+Damit auch die Quintessenz: Wer <%= link_to 'für kleineanfragen.de spenden', info_spenden_path %> will: Darum geht es nicht. Das Problem lässt sich nicht weiter beheben, indem Spenden an eine NGO eingeworben werden. Das Problem sind die Landesverwaltungen, die auch nach all den Jahren nicht aus ihren eigenen Erfahrungen gelernt zu haben scheinen, und die mit jedem großen Website-Relaunch wieder Links auf Dokumente kaputt machen, URLs brechen. Das hat auch damit zu tun, dass IT-Kompetenzen in der öffentlichen Verwaltung eher ab- denn aufgebaut werden. Falls Sie spenden möchten, <em>[hier Links zu Projekten, die es verdient haben]</em>. Aber das grundlegende Problem bleibt.
+</p>
+
 <!-- Sorry. ._. -->

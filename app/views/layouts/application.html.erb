@@ -17,7 +17,7 @@
 <% if display_obituary? %>
 <header class="alert alert-danger alert-obituary">
   <div class="container">
-    <p>kleineAnfragen wird zum <strong>31.12.2020 abgeschaltet</strong>. <a href="/info/stilllegung">Mehr erfahren</a></p>
+    <p>kleineAnfragen wird zum <strong>31.12.2020 abgeschaltet</strong>. <a href="/info/stilllegung">Mehr Informationen und Hintergründe</a></p>
   </div>
 </header>
 <% end %>
@@ -62,11 +62,11 @@
     <div class="col-md-10 footer-project-line">
       <p>
         <% if display_obituary? %>
-        kleineAnfragen war ein ehrenamtliches Projekt der <a href="https://okfn.de">Open Knowledge Foundation Deutschland e.V.</a>.
+        kleineAnfragen war ein ehrenamtliches Projekt der <a href="https://okfn.de">Open Knowledge Foundation Deutschland e.V.</a>. <%= link_to 'Weitere Informationen und Hintergründe zur Abschaltung', info_stilllegung_path %>.
         <% else %>
         kleineAnfragen ist ein ehrenamtliches Projekt der <a href="https://okfn.de">Open Knowledge Foundation Deutschland e.V.</a>.
-        <% end %>
         Wenn Sie kleineAnfragen unterstützen möchten, <%= link_to 'freuen wir uns über Ihre Spende', info_spenden_path %> oder um <%= link_to 'Mithilfe bei der Weiterentwicklung', info_mitmachen_path %>!
+        <% end %>
       </p>
     </div>
     <div class="col-md-2 col-xs-6 footer-support-logo">
