@@ -23,9 +23,10 @@
   }
 }
 
-@include font-face("Source Sans Pro", 'source-sans-pro/sourcesanspro-regular');
-@include font-face("Source Sans Pro", 'source-sans-pro/sourcesanspro-semibold', 600);
-@include font-face("Source Sans Pro", 'source-sans-pro/sourcesanspro-it', normal, italic);
+@include font-face("Source Sans Pro", 'source-sans-pro-v12-latin/source-sans-pro-v12-latin-regular');
+@include font-face("Source Sans Pro", 'source-sans-pro-v12-latin/source-sans-pro-v12-latin-600', 600);
+@include font-face("Source Sans Pro", 'source-sans-pro-v12-latin/source-sans-pro-v12-latin-700', bold);
+@include font-face("Source Sans Pro", 'source-sans-pro-v12-latin/source-sans-pro-v12-latin-italic', normal, italic);
 
 // https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_variables.scss
 $font-size-base: 14px;
