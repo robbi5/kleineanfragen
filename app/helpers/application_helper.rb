@@ -16,7 +16,7 @@ module ApplicationHelper
   end
 
   def display_obituary?
-    Rails.application.config.x.display_obituary || params.key?(:obituary)
+    Rails.application.config.x.display_obituary || (!params.nil? && params.key?(:obituary))
   end
 
   def display_header_search?
