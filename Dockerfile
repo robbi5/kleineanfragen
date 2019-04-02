@@ -5,7 +5,7 @@ RUN apt-get update -qq && apt-get install -y build-essential libpq-dev postgresq
 # enable utf8 in irb
 ENV LANG C.UTF-8
 
-RUN gem install bundler --version 1.16.4
+RUN gem install bundler --version 2.0.1
 
 RUN mkdir /app
 WORKDIR /app
