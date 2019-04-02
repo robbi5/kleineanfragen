@@ -1,6 +1,7 @@
 /*! Based on https://github.com/InterNations/antwort (MIT) */
 .header,
 .content,
+.obituary,
 .footer {
   font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-size: 14px;
@@ -48,6 +49,18 @@
 
 .content a {
   color: #337AB7;
+}
+
+.obituary {
+  background-color: #f2dede;
+  color: #a94442;
+  text-align: left;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.obituary a {
+  color: #8b0000;
 }
 
 .btn-primary {
