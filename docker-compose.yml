@@ -84,7 +84,7 @@ services:
   #   - "8080:8080"
 
   s3:
-    image: minio/minio:RELEASE.2017-01-25T03-14-52Z
+    image: minio/minio:RELEASE.2019-03-27T22-35-21Z
     command: server /data
     environment:
       MINIO_ACCESS_KEY: "AKIAIOSFODNN7EXAMPLE"
