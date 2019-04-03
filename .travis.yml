@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-- 2.5.4
+- 2.5.5
 cache: bundler
 notifications:
   slack:
