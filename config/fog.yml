@@ -1,19 +1,18 @@
 credentials: &credentials
   provider: AWS
+  region: us-east-1
   aws_access_key_id: <%= ENV['S3_ACCESS_KEY'] %>
   aws_secret_access_key: <%= ENV['S3_SECRET_KEY'] %>
   path_style: true
-  aws_signature_version: 2
+  aws_signature_version: 4
 
 development:
   <<: *credentials
-  endpoint: http://s3:9000
-  region: us-east-1
+  endpoint: <%= ENV['S3_ENDPOINT'] || 'http://s3:9000' %>
   bucket: ka-dev
-  # don't panic, these are fake (see s3ninja/app/application.conf)
+  # don't panic, these are fake (see docker-compose.yml)
   aws_access_key_id: AKIAIOSFODNN7EXAMPLE
   aws_secret_access_key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-  aws_signature_version: 4
 
 test:
   provider: Local
