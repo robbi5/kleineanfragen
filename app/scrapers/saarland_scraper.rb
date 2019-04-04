@@ -84,7 +84,7 @@ module SaarlandScraper
     dotnet_serialized_date = entry['PublicDate']
     seconds_since_epoch = dotnet_serialized_date.scan(/[0-9]+/)[0].to_i / 1000.0
 
-    Time.at(seconds_since_epoch).to_date
+    Time.at(seconds_since_epoch).utc.to_date
   end
 
   def self.extract_title(entry)
