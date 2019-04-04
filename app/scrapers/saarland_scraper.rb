@@ -6,43 +6,13 @@ module SaarlandScraper
 
   class Detail < DetailScraper
     def scrape
-      mp = mechanize.get OVERVIEW_URL
-      entry = SaarlandScraper.extract_entries(mp).find { |e| e['Dokumentnummer'].strip == full_reference }
+      mp = load_detail_page(mechanize, full_reference)
+      entry = SaarlandScraper.extract_entries(mp).find { |e| e['DocumentNumber'].strip == full_reference }
       return nil if entry.nil?
       SaarlandScraper.extract_paper(entry)
     end
-  end
 
-  class Overview < Scraper
-    def supports_streaming?
-      true
-    end
-
-    def scrape(&block)
-      @m ||= mechanize
-      papers = []
-      streaming = block_given?
-      mp = load_overview_page(@m)
-      SaarlandScraper.extract_entries(mp).each do |entry|
-        begin
-          paper = SaarlandScraper.extract_paper(entry)
-        rescue => e
-          logger.warn e
-          next
-        end
-        next if paper.nil?
-        if streaming
-          yield paper
-        else
-          papers << paper
-        end
-      end
-      papers unless streaming
-    end
-
-    private
-
-    def load_overview_page(mechanize_agent)
+    def load_detail_page(mechanize_agent, full_reference)
       headers = {"Accept" => "application/json, text/javascript, */*; q=0.01"}
       body = {
         "Filter" => {
@@ -65,7 +35,88 @@ module SaarlandScraper
         "OnlyTitle" => false,
         "Value" => "",
         "CurrentSearchTab" => 1,
-        "KendoFilter" => nil
+        "KendoFilter" => {
+          "filters" => [
+            {
+              "field" => "DocumentNumber",
+              "operator" => "startswith",
+              "value" => full_reference
+            }
+          ],
+          "logic" => "and"
+        }
+      }.to_json
+
+      mechanize_agent.post(OVERVIEW_URL, body, headers).body
+    end
+  end
+
+  class Overview < Scraper
+    def supports_streaming?
+      true
+    end
+
+    def scrape(&block)
+      @m ||= mechanize
+      papers = []
+      streaming = block_given?
+      mp = load_overview_page(@m, @legislative_term)
+      SaarlandScraper.extract_entries(mp).each do |entry|
+        begin
+          paper = SaarlandScraper.extract_paper(entry)
+        rescue => e
+          logger.warn e
+          next
+        end
+        next if paper.nil?
+        if streaming
+          yield paper
+        else
+          papers << paper
+        end
+      end
+      papers unless streaming
+    end
+
+    private
+
+    def load_overview_page(mechanize_agent, term)
+      headers = {"Accept" => "application/json, text/javascript, */*; q=0.01"}
+      body = {
+        "Filter" => {
+          "Periods" => []
+        },
+        "Pageination" => {
+          "Skip" => 0,
+          "Take" => 100
+        },
+        "Sections" => {
+          "Print" => true,
+          "PlenaryProtocol" => false,
+          "Law" => false,
+          "PublicConsultation" => false
+        },
+        "Sort" => {
+          "SortType" => 0,
+          "SortValue" => 0
+        },
+        "OnlyTitle" => false,
+        "Value" => "",
+        "CurrentSearchTab" => 1,
+        "KendoFilter" => {
+          "filters" => [
+            {
+              "logic" => "or",
+              "filters" => [
+                { "field" => "Legislative", "operator" => "eq", "value" => term.to_s }
+              ]
+            }
+          ],
+          "logic" => "and"
+        },
+        "KendoSort" => [
+          {"field" => "PublicDate", "dir" => "desc"}
+        ]
       }.to_json
 
       mechanize_agent.post(OVERVIEW_URL, body, headers).body

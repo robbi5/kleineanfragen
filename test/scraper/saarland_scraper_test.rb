@@ -4,10 +4,11 @@ class SaarlandScraperTest < ActiveSupport::TestCase
   def setup
     @scraper = SaarlandScraper
     @overview = File.read(Rails.root.join('test/fixtures/sl/get_search_results.json'))
+    @detail = File.read(Rails.root.join('test/fixtures/sl/get_detail_result.json'))
 
     stub_request(:post, "https://www.landtag-saar.de/umbraco/aawSearchSurfaceController/SearchSurface/GetSearchResults/")
       .with(
-        body: "{\"Filter\":{\"Periods\":[]},\"Pageination\":{\"Skip\":0,\"Take\":100},\"Sections\":{\"Print\":true,\"PlenaryProtocol\":false,\"Law\":false,\"PublicConsultation\":false},\"Sort\":{\"SortType\":0,\"SortValue\":0},\"OnlyTitle\":false,\"Value\":\"\",\"CurrentSearchTab\":1,\"KendoFilter\":null}"
+        body: "{\"Filter\":{\"Periods\":[]},\"Pageination\":{\"Skip\":0,\"Take\":100},\"Sections\":{\"Print\":true,\"PlenaryProtocol\":false,\"Law\":false,\"PublicConsultation\":false},\"Sort\":{\"SortType\":0,\"SortValue\":0},\"OnlyTitle\":false,\"Value\":\"\",\"CurrentSearchTab\":1,\"KendoFilter\":{\"filters\":[{\"logic\":\"or\",\"filters\":[{\"field\":\"Legislative\",\"operator\":\"eq\",\"value\":\"16\"}]}],\"logic\":\"and\"},\"KendoSort\":[{\"field\":\"PublicDate\",\"dir\":\"desc\"}]}"
       )
       .to_return(
         status: 200,
@@ -16,16 +17,28 @@ class SaarlandScraperTest < ActiveSupport::TestCase
           "Content-Type": "application/json; charset=utf-8"
         }
       )
+
+    stub_request(:post, "https://www.landtag-saar.de/umbraco/aawSearchSurfaceController/SearchSurface/GetSearchResults/")
+      .with(
+        body: "{\"Filter\":{\"Periods\":[]},\"Pageination\":{\"Skip\":0,\"Take\":100},\"Sections\":{\"Print\":true,\"PlenaryProtocol\":false,\"Law\":false,\"PublicConsultation\":false},\"Sort\":{\"SortType\":0,\"SortValue\":0},\"OnlyTitle\":false,\"Value\":\"\",\"CurrentSearchTab\":1,\"KendoFilter\":{\"filters\":[{\"field\":\"DocumentNumber\",\"operator\":\"startswith\",\"value\":\"16/517\"}],\"logic\":\"and\"}}"
+      )
+      .to_return(
+        status: 200,
+        body: @detail,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      )
   end
 
   test '#scrape retrieves all results from saarland server url' do
-    entries = @scraper::Overview.new('SOME_LEGISLATIVE_TERM').scrape
+    entries = @scraper::Overview.new(16).scrape
 
     assert_equal 22, entries.count
   end
 
   test '#scrape extracts title' do
-    entry = @scraper::Overview.new('SOME_LEGISLATIVE_TERM').scrape[6]
+    entry = @scraper::Overview.new(16).scrape[6]
 
     assert_equal(
       "Geldauflagen in Strafverfahren zugunsten gemeinnütziger Organisationen",
@@ -34,7 +47,7 @@ class SaarlandScraperTest < ActiveSupport::TestCase
   end
 
   test '#scrape extracts legislative_term' do
-    entry = @scraper::Overview.new('SOME_LEGISLATIVE_TERM').scrape[6]
+    entry = @scraper::Overview.new(16).scrape[6]
 
     assert_equal(
       "16",
@@ -43,7 +56,7 @@ class SaarlandScraperTest < ActiveSupport::TestCase
   end
 
   test '#scrape extracts reference' do
-    entry = @scraper::Overview.new('SOME_LEGISLATIVE_TERM').scrape[6]
+    entry = @scraper::Overview.new(16).scrape[6]
 
     assert_equal(
       "684",
@@ -52,7 +65,7 @@ class SaarlandScraperTest < ActiveSupport::TestCase
   end
 
   test '#scrape extracts full_reference' do
-    entry = @scraper::Overview.new('SOME_LEGISLATIVE_TERM').scrape[6]
+    entry = @scraper::Overview.new(16).scrape[6]
 
     assert_equal(
       "16/684",
@@ -61,7 +74,7 @@ class SaarlandScraperTest < ActiveSupport::TestCase
   end
 
   test '#scrape extracts doctype' do
-    entry = @scraper::Overview.new('SOME_LEGISLATIVE_TERM').scrape[6]
+    entry = @scraper::Overview.new(16).scrape[6]
 
     assert_equal(
       "written",
@@ -70,7 +83,7 @@ class SaarlandScraperTest < ActiveSupport::TestCase
   end
 
   test '#scrape extracts url' do
-    entry = @scraper::Overview.new('SOME_LEGISLATIVE_TERM').scrape[6]
+    entry = @scraper::Overview.new(16).scrape[6]
 
     assert_equal(
       "https://www.landtag-saar.de/file.ashx?FileId=12216&FileName=Aw16_0684.pdf",
@@ -79,7 +92,7 @@ class SaarlandScraperTest < ActiveSupport::TestCase
   end
 
   test '#scrape extracts published_at' do
-    entry = @scraper::Overview.new('SOME_LEGISLATIVE_TERM').scrape[6]
+    entry = @scraper::Overview.new(16).scrape[6]
 
     assert_equal(
       "Thu, 13 Dec 2018".to_date,
@@ -88,7 +101,7 @@ class SaarlandScraperTest < ActiveSupport::TestCase
   end
 
   test '#scrape extracts is_answer' do
-    entry = @scraper::Overview.new('SOME_LEGISLATIVE_TERM').scrape[6]
+    entry = @scraper::Overview.new(16).scrape[6]
 
     assert_equal(
       true,
@@ -97,7 +110,7 @@ class SaarlandScraperTest < ActiveSupport::TestCase
   end
 
   test '#scrape assigns answerers' do
-    entry = @scraper::Overview.new('SOME_LEGISLATIVE_TERM').scrape[6]
+    entry = @scraper::Overview.new(16).scrape[6]
 
     assert_equal(
       {ministries: ["Landesregierung"]},
@@ -163,5 +176,22 @@ class SaarlandScraperTest < ActiveSupport::TestCase
 
     assert_nil @scraper.extract_paper(invalid_entry)
     assert_not_equal nil, @scraper.extract_paper(entry)
+  end
+
+  test 'scrape one detail page' do
+    entry = @scraper::Detail.new(16, 517).scrape
+
+    assert_equal(
+      {
+        legislative_term: "16",
+        full_reference: "16/517",
+        reference: "517",
+        doctype: "written",
+        title: "Pavianhaltung im Neunkircher Zoo",
+        url: "https://www.landtag-saar.de/file.ashx?FileId=11994&FileName=Aw16_0517.pdf",
+        published_at: Date.parse('2018-08-19'),
+        is_answer: true,
+        answerers: { ministries: ["Landesregierung"] }
+      }, entry)
   end
 end
