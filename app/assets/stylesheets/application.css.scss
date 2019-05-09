@@ -55,6 +55,10 @@ $brand-primary: #2980b9;
   filter: grayscale(100%);
 }
 
+.site-closing main.page-closing {
+  filter: none;
+}
+
 .alert-obituary {
   border-top: 5px solid red;
   border-left: 0;
@@ -1101,4 +1105,74 @@ mark.known {
   a {
     color: #999;
   }
+}
+
+i.icon {
+  font-style: normal;
+}
+
+.page-closing h3 {
+  margin-top: 2.5em;
+  margin-bottom: 1em;
+  font-weight: bold;
+}
+
+.closing-title {
+  font-weight: bold;
+  margin-bottom: 1em;
+  line-height: 1.2;
+}
+
+.closing-title span {
+  display: block;
+}
+
+.closing-timeline {
+  font-size: 0.9em;
+}
+
+.closing-timeline ol {
+  padding: 0;
+  list-style-type: none;
+
+  columns: 15em 4;
+}
+
+.closing-timeline li {
+  position: relative;
+  border-left: 1px solid #BABABA;
+  padding:0.5em 1em 1em 1em;
+}
+
+.closing-timeline i {
+  position: absolute;
+  margin-left: -1.75em;
+  padding: 0.25em;
+  background-color: #fff;
+}
+
+.closing-timeline time {
+  display: block;
+  font-family: monospace;
+  color: #777;
+}
+
+.closing-timeline span {
+  font-weight: bold;
+} 
+
+.closing-timeline small {
+  display: block;
+  float: right;
+}
+
+.closing-lead {
+  margin: 2em 0 3em;
+  width: 85%;
+}
+
+.closing-focus {
+  font-size: 1.25em;
+  margin: 3.5em 0;
+  width: 85%;
 }
