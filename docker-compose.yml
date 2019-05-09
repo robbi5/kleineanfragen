@@ -31,6 +31,7 @@ services:
       S3_ENDPOINT: http://s3:9000
       S3_ACL_SUPPORT: "false"
       PAPER_INDEX_BATCH_SIZE: 250
+      SHOW_OBITUARY: "true"
   #   NOMENKLATURA_HOST: http://nomenklatura:8080
   #   NOMENKLATURA_APIKEY: change_me
   #   SENTRY_DSN: http://public:secret@sentry:9000/2
