@@ -2,6 +2,7 @@ class MetricsController < ApplicationController
   METRIC = Struct.new(:key, :value)
 
   def show
+    stats = Sidekiq::Stats.new
     metrics = []
 
     # papers_all_count
@@ -22,6 +23,13 @@ class MetricsController < ApplicationController
 
     # papers_late_count
     metrics << m('papers_late_count', Paper.unscoped.where(is_answer: false, deleted_at: nil).where(['created_at <= ?', Date.today - 4.weeks]).count)
+
+    # worker_processes_active
+    # worker_threads_active
+    # queue_size
+    metrics << m('worker_processes_active', stats.processes_size)
+    metrics << m('worker_threads_active', stats.workers_size)
+    metrics << m('queue_size', stats.enqueued)
 
     response.headers['Content-Type'] = 'text/plain; version=0.0.4'
     render plain: render_metrics(metrics)
