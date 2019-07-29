@@ -22,6 +22,21 @@ To get a rails console, run:
 
     docker-compose run web rails c
 
+### Importing papers from the public database dump
+
+If you want to develop with already scraped data, you can use the public available data dumps from the [kleineAnfragen.de data page](https://kleineanfragen.de/info/daten). Download the latest `kleineanfragen-....sql.bz2` from there and put it into `tmp/dump/`.
+
+To begin importing the data, you have to first enter a docker container:
+
+    docker run -v $(pwd)/tmp/dump:/tmp/dump --rm --network kleineanfragen_default -it kleineanfragen_database bash
+
+Inside this one-off throwaway container, import the data with following commands
+
+    bzcat /tmp/dump/kleineanfragen-*.sql.bz2 | psql -h database -U kleineanfragen import
+    pg_dump -h database -U kleineanfragen -d import --data-only | psql -h database -U kleineanfragen -d kleineanfragen
+    psql -h database -U kleineanfragen import -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO postgres; GRANT ALL ON SCHEMA public TO public;"
+    exit
+
 ### Normalizing Names with Nomenklatura
 
 For normalizing names of people, parties and ministries, we use [Nomenklatura](https://github.com/pudo/nomenklatura).
@@ -47,7 +62,7 @@ You just `git pull`ed and now kleineanfragen doesn't start anymore? Try `docker-
 Dependencies
 ------------
 
-* ruby 2.5.3
+* ruby 2.5.5
 * postgres
 * elasticsearch (for search)
 * redis (for sidekiq)
