@@ -104,6 +104,9 @@ gem 'httparty', '~> 0.16.0'
 # matching against known names in scrapers
 gem 'fuzzy_match', '~> 2.1.0'
 
+# handle long running regexps
+gem 'safe_regexp', '~> 0.3.0'
+
 # simple title and opengraph/twitter cards view helpers
 gem 'tophat', '~> 2.3.0'
 

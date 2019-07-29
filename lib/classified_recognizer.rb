@@ -49,8 +49,10 @@ class ClassifiedRecognizer
     return if @skip.include?(group)
 
     m = nil
-    Timeout::timeout(5) do
-      m = text.scan(regex)
+    begin
+      m = SafeRegexp.execute(text, :scan, regex, timeout: 5)
+    rescue SafeRegexp::RegexpTimeout
+      m = nil
     end
     return if m.blank?
 
@@ -64,7 +66,11 @@ class ClassifiedRecognizer
   def match_each(regex, group, factor: 1, &block)
     return if @skip.include?(group)
 
-    m = text.scan(regex)
+    begin
+      m = SafeRegexp.execute(text, :scan, regex, timeout: 5)
+    rescue SafeRegexp::RegexpTimeout
+      m = nil
+    end
     return if m.blank?
 
     m.each do |match|

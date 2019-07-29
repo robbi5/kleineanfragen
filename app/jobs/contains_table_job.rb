@@ -1,5 +1,3 @@
-require 'timeout'
-
 class ContainsTableJob < PaperJob
   queue_as :meta
 

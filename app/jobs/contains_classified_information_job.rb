@@ -1,5 +1,3 @@
-require 'timeout'
-
 class ContainsClassifiedInformationJob < PaperJob
   queue_as :meta
 
