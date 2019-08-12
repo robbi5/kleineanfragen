@@ -44,7 +44,7 @@ $font-family-base:        $font-family-sans-serif !default;
 $grid-float-breakpoint: 320px;
 
 // Colors:
-$brand-primary: #2980b9;
+$brand-primary: #767676;
 
 @import "bootstrap";
 @import "bootstrap-select";
@@ -55,7 +55,8 @@ $brand-primary: #2980b9;
   filter: grayscale(100%);
 }
 
-.site-closing main.page-closing {
+.site-closing main.page-closing,
+.site-closing main.page-paper {
   filter: none;
 }
 
