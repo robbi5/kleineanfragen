@@ -73,7 +73,7 @@ gem 'bootstrap-sass', '~> 3.4.0'
 gem 'inline_svg', '~> 1.3.1'
 
 # pagination
-gem 'kaminari', '~> 0.17.0'
+gem 'kaminari', '~> 1.2.1'
 
 # pdf text extraction
 gem 'docsplit', '~> 0.7.6'
