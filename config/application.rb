@@ -97,5 +97,6 @@ module Kleineanfragen
     config.x.paper_index_batch_size = (ENV['PAPER_INDEX_BATCH_SIZE'] || 1000).to_i
     # bye.
     config.x.display_obituary = ActiveRecord::Type::Boolean.new.cast(ENV.fetch('SHOW_OBITUARY', 'false'))
+    config.x.enable_email_subscription = ActiveRecord::Type::Boolean.new.cast(ENV.fetch('ENABLE_EMAIL_SUBSCRIPTION', 'false'))
   end
 end

@@ -94,6 +94,7 @@ Configuration
       export TIKA_SERVER_URL="http://localhost:9998"
       export NOMENKLATURA_HOST="http://localhost:9000"
       export NOMENKLATURA_APIKEY="FIXME"
+      export ENABLE_EMAIL_SUBSCRIPTION=true
 
 * `config/fog.yml`
 

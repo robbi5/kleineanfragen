@@ -3,7 +3,9 @@
   <div class="container">
     <h3>Lass dich bei neuen Anfragen aus <%= body_with_prefix(@body) %> benachrichtigen.</h3>
     <ul>
+      <% if display_email_subscription? %>
       <li><%= link_to 'per E-Mail abonnieren', body_subscribe_path(body: @body), class: 'btn btn-default btn-icon-email btn-icon-email-dark' %></li>
+      <% end %>
       <li><%= link_to 'als Feed abonnieren', body_feed_url(body: @body, format: :atom), class: 'btn btn-default btn-icon-feed btn-icon-feed-dark' %></li>
       <li><%= link_to "@#{@body.twitter_handle} folgen", twitter_url(@body.twitter_handle), class: 'btn btn-default btn-icon-twitter btn-icon-twitter-dark' %></li>
     </ul>

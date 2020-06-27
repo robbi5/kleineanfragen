@@ -9,6 +9,11 @@ class SubscriptionController < ApplicationController
       return
     end
 
+    if !Rails.application.config.x.enable_email_subscription
+      render :'subscription/disabled', status: :not_implemented
+      return
+    end
+
     if EmailBlacklist.active_and_email(@subscription.email).exists?
       render :error_blacklist, status: :unauthorized
       return
