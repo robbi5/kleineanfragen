@@ -1,6 +1,17 @@
 require 'test_helper'
 
 class SubscriptionControllerTest < ActionController::TestCase
+  setup do
+    Rails.application.config.x.enable_email_subscription = true
+  end
+
+  test 'should fail if email subscription is disabled' do
+    Rails.application.config.x.enable_email_subscription = false
+
+    post :subscribe, params: { subscription: { email: 'fresh@example.org', subtype: :body, query: 'BE' } }
+    assert_response :not_implemented
+  end
+
   test 'should create inactive subscription and optin when email is unknown' do
     post :subscribe, params: { subscription: { email: 'fresh@example.org', subtype: :body, query: 'BE' } }
     assert_response :success
