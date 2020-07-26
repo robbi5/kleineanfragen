@@ -1,11 +1,11 @@
-FROM ruby:2.5.5
+FROM ruby:2.5.8
 
 RUN apt-get update -qq && apt-get install -y build-essential libpq-dev postgresql-client nodejs poppler-utils advancecomp gifsicle jhead jpegoptim libjpeg-progs optipng pngcrush pngquant
 
 # enable utf8 in irb
 ENV LANG C.UTF-8
 
-RUN gem install bundler --version 2.0.2
+RUN gem install bundler --version 2.1.4
 
 RUN mkdir /app
 WORKDIR /app

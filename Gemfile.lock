@@ -445,7 +445,7 @@ DEPENDENCIES
   wikidata-client (~> 0.0.10)
 
 RUBY VERSION
-   ruby 2.5.5p157
+   ruby 2.5.8p224
 
 BUNDLED WITH
-   2.0.2
+   2.1.4
