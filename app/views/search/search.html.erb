@@ -114,9 +114,6 @@
   <div class="container">
     <h3>Lass dich bei neuen Anfragen für diese Suche benachrichtigen.</h3>
     <ul>
-      <% if display_email_subscription? %>
-      <li><%= link_to 'per E-Mail abonnieren', search_subscribe_path(q: @query), class: 'btn btn-primary btn-icon-email' %></li>
-      <% end %>
       <li><%= link_to 'als Feed abonnieren', search_url(q: @query, format: :atom), class: 'btn btn-primary btn-icon-feed' %></li>
     </ul>
     <% if @conditions[:contains_table] %>

@@ -155,14 +155,7 @@ class SearchController < ApplicationController
   end
 
   def subscribe
-    @subscription = Subscription.new
-    @subscription.subtype = :search
-    @subscription.query = params[:q].presence
-
-    if !Rails.application.config.x.enable_email_subscription
-      render :'subscription/disabled', status: :not_implemented
-      return
-    end
+    render(status: 410)
   end
 
   def opensearch

@@ -108,9 +108,4 @@ namespace :papers do
     ReimportMissingPDFJob.perform_later
   end
 
-  desc 'Send Search Subscription Emails'
-  task :send_search_subscriptions, :environment do
-    Rails.logger.info 'Adding job for sending search subscription emails'
-    SendSearchSubscriptionsJob.perform_later
-  end
 end

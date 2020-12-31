@@ -46,11 +46,11 @@ Rails.application.routes.draw do
   get '.scraper/:scraper_result' => 'scraper_results#show', as: :scraper_result
 
   get 'abo', to: redirect('/')
-  post 'abo' => 'subscription#subscribe', as: :subscription_create
+  post 'abo', to: proc { [410, {}, ['']] }, as: :subscription_create
 
-  get 'm/:subscription/confirm/:confirmation_token' => 'opt_in#confirm', as: :opt_in_confirm
-  get 'm/:subscription/report/:confirmation_token' => 'opt_in#report', as: :opt_in_report
-  get 'm/:subscription/unsubscribe' => 'subscription#unsubscribe', as: :unsubscribe
+  get 'm/:subscription/confirm/:confirmation_token', to: proc { [410, {}, ['']] }, as: :opt_in_confirm
+  get 'm/:subscription/report/:confirmation_token', to: proc { [410, {}, ['']] }, as: :opt_in_report
+  get 'm/:subscription/unsubscribe', to: proc { [410, {}, ['']] }, as: :unsubscribe
 
   # really short paper url used for debugging jobs
   get 'p:paper' => 'paper#redirect_by_id', constraints: { paper: /[0-9]+/ }

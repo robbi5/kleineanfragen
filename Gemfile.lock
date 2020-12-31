@@ -412,7 +412,6 @@ DEPENDENCIES
   paranoia (~> 2.4.0)
   patron (~> 0.7.1)
   pg (= 0.20.0)
-  premailer-rails (~> 1.9.1)
   puma
   rack-cors (~> 1.0.2)
   rails (= 5.1.7)

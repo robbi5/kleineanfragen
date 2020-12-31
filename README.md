@@ -87,14 +87,12 @@ Configuration
       export DATABASE_URL="postgres://user:pass@localhost/kleineanfragen"
       export ELASTICSEARCH_URL="http://127.0.0.1:9200/"
       export SECRET_KEY_BASE="FIXME"
-      export SECRET_SUBSCRIPTION_SALT="FIXME"
       export S3_ACCESS_KEY="FIXME"
       export S3_SECRET_KEY="FIXME"
       export REDIS_URL="redis://localhost:6379"
       export TIKA_SERVER_URL="http://localhost:9998"
       export NOMENKLATURA_HOST="http://localhost:9000"
       export NOMENKLATURA_APIKEY="FIXME"
-      export ENABLE_EMAIL_SUBSCRIPTION=true
 
 * `config/fog.yml`
 

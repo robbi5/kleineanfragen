@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  # kleineAnfragen is sessionless. only "risky" form is for email subscription, and thats requiring double-opt-in.
+  # kleineAnfragen is sessionless.
   # So the following line is commented out:
   # protect_from_forgery with: :null_session
 

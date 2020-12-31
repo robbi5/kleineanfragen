@@ -46,11 +46,11 @@ class PaperController < ApplicationController
   end
 
   def report
-    render(status: :not_found)
+    render(status: 410)
   end
 
   def send_report
-    render(status: :not_found)
+    render(status: 410)
   end
 
   def update

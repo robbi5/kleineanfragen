@@ -17,14 +17,7 @@ class BodyController < ApplicationController
   end
 
   def subscribe
-    @subscription = Subscription.new
-    @subscription.subtype = :body
-    @subscription.query = @body.state
-
-    if !Rails.application.config.x.enable_email_subscription
-      render :'subscription/disabled', status: :not_implemented
-      return
-    end
+    render(status: 410)
   end
 
   private

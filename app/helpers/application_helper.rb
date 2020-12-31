@@ -19,10 +19,6 @@ module ApplicationHelper
     Rails.application.config.x.display_obituary || (!params.nil? && params.key?(:obituary))
   end
 
-  def display_email_subscription?
-    Rails.application.config.x.enable_email_subscription
-  end
-
   def display_header_search?
     !current_page?(root_path) && !current_page?(search_path) && !current_page?(search_advanced_path)
   end
