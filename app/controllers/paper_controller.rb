@@ -45,14 +45,6 @@ class PaperController < ApplicationController
     redirect_to paper_path(@paper.body, @paper.legislative_term, @paper, format: mime_extension(request.format))
   end
 
-  def report
-    render(status: 410)
-  end
-
-  def send_report
-    render(status: 410)
-  end
-
   def update
     if request.body.blank? || request.body.size < 1
       head(400)

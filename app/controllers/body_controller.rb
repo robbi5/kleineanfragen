@@ -16,10 +16,6 @@ class BodyController < ApplicationController
     respond_to :atom # the only supported format
   end
 
-  def subscribe
-    render(status: 410)
-  end
-
   private
 
   def find_body

@@ -154,10 +154,6 @@ class SearchController < ApplicationController
     @bodies = Body.all.order(state: :asc)
   end
 
-  def subscribe
-    render(status: 410)
-  end
-
   def opensearch
     response.headers['Content-Type'] = 'application/opensearchdescription+xml; charset=utf-8'
   end

@@ -57,12 +57,12 @@ Rails.application.routes.draw do
 
   get 'status' => 'site#status'
 
-  get ':body/abo' => 'body#subscribe', as: :body_subscribe
+  get ':body/abo', to: proc { [410, {}, ['']] }, as: :body_subscribe
   get ':body/behoerde/:ministry' => 'ministry#show', as: :ministry
   get ':body/fraktion/:organization' => 'organization#show', as: :organization
 
-  post ':body/:legislative_term/:paper/report' => 'paper#send_report', as: :paper_send_report, constraints: { legislative_term: /[0-9]+/ }
-  get ':body/:legislative_term/:paper/report' => 'paper#report', as: :paper_report, constraints: { legislative_term: /[0-9]+/ }
+  post ':body/:legislative_term/:paper/report', to: proc { [410, {}, ['']] }, as: :paper_send_report, constraints: { legislative_term: /[0-9]+/ }
+  get ':body/:legislative_term/:paper/report', to: proc { [410, {}, ['']] }, as: :paper_report, constraints: { legislative_term: /[0-9]+/ }
   get ':body/:legislative_term/:paper/viewer' => 'paper#viewer', as: :paper_pdf_viewer, constraints: { legislative_term: /[0-9]+/ }
   put ':body/:legislative_term/:paper' => 'paper#update', format: :txt
   get ':body/:legislative_term/:paper' => 'paper#show', as: :paper, constraints: { legislative_term: /[0-9]+/ }
