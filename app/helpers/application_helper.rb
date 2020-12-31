@@ -15,10 +15,6 @@ module ApplicationHelper
     time_ago_in_words(time, scope: :'datetime.distance_in_words_dativ')
   end
 
-  def display_obituary?
-    Rails.application.config.x.display_obituary || (!params.nil? && params.key?(:obituary))
-  end
-
   def display_header_search?
     !current_page?(root_path) && !current_page?(search_path) && !current_page?(search_advanced_path)
   end

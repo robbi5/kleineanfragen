@@ -22,7 +22,6 @@
             <%= yield %>
           </td>
         </tr>
-        <% if display_obituary? %>
         <tr>
           <td>
             <table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0" bgcolor="#f2dede">
@@ -31,13 +30,12 @@
               </tr>
               <tr>
                 <td align="center" valign="top" class="obituary" bgcolor="#f2dede" style="background-color: #f2dede;">
-                  <p>kleineAnfragen wird zum <strong>31.12.2020 abgeschaltet</strong>. <%= link_to 'Mehr Informationen und Hintergründe', info_stilllegung_url %></p>
+                  <p>kleineAnfragen wurde zum <strong>31.12.2020 abgeschaltet</strong>. <%= link_to 'Mehr Informationen und Hintergründe', info_stilllegung_url %></p>
                 </td>
               </tr>
             </table>
           </td>
         </tr>
-        <% end %>
         <tr>
           <td class="container-padding footer" align="center">
             <p>
