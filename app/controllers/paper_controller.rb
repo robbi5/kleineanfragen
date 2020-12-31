@@ -46,23 +46,11 @@ class PaperController < ApplicationController
   end
 
   def report
-    render(status: :not_found) and return unless view_context.report_enabled?
+    render(status: :not_found)
   end
 
   def send_report
-    render(status: :not_found) and return unless view_context.report_enabled?
-
-    msg = params[:message] || '(no message)'
-
-    if params[:check] != '10'
-      redirect_to paper_report_path(@body, @legislative_term, @paper)
-      return
-    end
-
-    notifier = Slack::Notifier.new Rails.configuration.x.report_slack_webhook
-    notifier.ping "#{Slack::Notifier::Util::Escape.html msg} - #{view_context.paper_short_url(@paper)} [##{@paper.id}]"
-
-    render :report_thanks
+    render(status: :not_found)
   end
 
   def update

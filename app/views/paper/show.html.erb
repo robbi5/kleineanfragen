@@ -90,10 +90,8 @@
   </div>
 </div>
 
-<% pos = @paper.part_of_series? %>
-<% if pos || report_enabled? %>
+<% if @paper.part_of_series? %>
 <div class="row">
-  <% if pos %>
   <div class="col-md-9">
     <p>
       Diese Anfrage scheint Teil einer Serie zu sein.
@@ -103,12 +101,6 @@
         })%>
     </p>
   </div>
-  <% end %>
-  <% if report_enabled? %>
-  <div class="col-md-3 <% if !pos %>col-md-push-9<% end %>">
-    <p class="report"><%= link_to 'Problem melden', paper_report_path(@body, @legislative_term, @paper) %></p>
-  </div>
-  <% end %>
 </div>
 <% end %>
 

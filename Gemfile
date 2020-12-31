@@ -117,8 +117,6 @@ gem 'hashids', '~> 1.0.2'
 gem 'nokogiri'
 gem 'premailer-rails', '~> 1.9.1'
 
-# simplify posting to slack channels
-gem 'slack-notifier', '~> 2.3.2'
 
 # api
 gem 'rack-cors', '~> 1.0.2', require: 'rack/cors'
