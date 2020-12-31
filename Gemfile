@@ -120,10 +120,6 @@ gem 'premailer-rails', '~> 1.9.1'
 # simplify posting to slack channels
 gem 'slack-notifier', '~> 2.3.2'
 
-# incoming email
-gem 'griddler', '~> 1.4.0'
-gem 'griddler-sendgrid', '~> 1.0.1'
-
 # api
 gem 'rack-cors', '~> 1.0.2', require: 'rack/cors'
 gem 'grape', '~> 0.17.0'

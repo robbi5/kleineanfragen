@@ -45,8 +45,6 @@ Rails.application.routes.draw do
   get 'review/scraper' => 'scraper_results#index', as: :scraper_results
   get '.scraper/:scraper_result' => 'scraper_results#show', as: :scraper_result
 
-  post 'webhook/incoming_email' => 'griddler/emails#create', constraints: EmailTokenConstraint
-
   get 'abo', to: redirect('/')
   post 'abo' => 'subscription#subscribe', as: :subscription_create
 

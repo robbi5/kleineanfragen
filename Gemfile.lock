@@ -144,11 +144,6 @@ GEM
     grape_logging (1.8.1)
       grape
       rack
-    griddler (1.4.0)
-      htmlentities
-      rails (>= 3.2.0)
-    griddler-sendgrid (1.0.1)
-      griddler
     hashids (1.0.5)
     hashie (3.6.0)
     htmlentities (4.3.4)
@@ -400,8 +395,6 @@ DEPENDENCIES
   grape-entity (~> 0.6.1)
   grape-route-helpers (~> 2.0.0)
   grape_logging (~> 1.6)
-  griddler (~> 1.4.0)
-  griddler-sendgrid (~> 1.0.1)
   hashids (~> 1.0.2)
   httparty (~> 0.16.0)
   image_optim (~> 0.26.1)
