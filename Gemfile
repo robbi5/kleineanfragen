@@ -118,7 +118,7 @@ gem 'nokogiri'
 
 
 # api
-gem 'rack-cors', '~> 1.0.2', require: 'rack/cors'
+gem 'rack-cors', '~> 1.0.5', require: 'rack/cors'
 gem 'grape', '~> 0.17.0'
 gem 'grape-entity', '~> 0.6.1'
 gem 'grape-route-helpers', '~> 2.0.0'
