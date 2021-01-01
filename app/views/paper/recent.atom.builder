@@ -1,6 +1,6 @@
 atom_feed(language:  'de-DE', root_url: recent_url) do |feed|
   down_date = Date.new(2020, 12, 31)
-  url = Rails.application.routes.url_helpers.obiturary_url
+  url = Rails.application.routes.url_helpers.obituary_url
 
   feed.title "kleineAnfragen: Anfragen der letzten Tage"
   feed.updated down_date
