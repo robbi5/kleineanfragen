@@ -1,10 +1,16 @@
-atom_feed(language:  'de-DE', root_url: recent_url, url: feed_url_with_current_page(@papers)) do |feed|
-  paginated_feed(feed, @papers)
-  feed.title "kleineAnfragen: Anfragen der letzten #{@days} Tage"
-  feed.updated @papers.maximum(:updated_at)
+atom_feed(language:  'de-DE', root_url: recent_url) do |feed|
+  down_date = Date.new(2020, 12, 31)
+  url = Rails.application.routes.url_helpers.obiturary_url
+
+  feed.title "kleineAnfragen: Anfragen der letzten Tage"
+  feed.updated down_date
   feed.author { |author| author.name 'kleineAnfragen' }
 
-  @papers.each do |paper|
-    render(partial: 'paper', locals: { feed: feed, paper: paper })
+  feed.entry Paper.new, published: down_date, updated: down_date, url: url do |entry|
+    entry.title 'kleineAnfragen wurde abgeschaltet'
+    entry.author do |author|
+      author.name 'kleineAnfragen'
+    end
+    entry.summary ''
   end
 end

@@ -31,13 +31,10 @@ class PaperController < ApplicationController
   end
 
   def recent
-    @days = 14
-    @papers = Paper.where('published_at >= ?', Date.today - @days.days)
-              .includes(:body, :paper_originators)
-              .order(published_at: :desc, reference: :desc)
-              .page(params[:page])
-    @recent = @papers.to_a.group_by(&:published_at)
-    fresh_when last_modified: @papers.maximum(:updated_at), public: true
+    respond_to do |format|
+      format.atom
+      format.html { return render status: 410, body: nil }
+    end
   end
 
   def redirect_by_id

@@ -30,7 +30,7 @@ Rails.application.routes.draw do
   get 'info/datenschutz'
   get 'info/mitmachen'
   get 'info/spenden'
-  get 'info/stilllegung'
+  get 'info/stilllegung', as: :obiturary
 
   get 'static/kleineanfragen.svg', to: redirect { ActionController::Base.helpers.asset_path('kleineanfragen.svg') }
 
