@@ -108,17 +108,3 @@
   <p>Möglicherweise gibt es aber eine <%= link_to 'IFG-Anfrage bei FragDenStaat.de', "https://fragdenstaat.de/suche/?#{fdsquery.to_query}" %> zu deiner Suche.</p>
 </div>
 <% end %>
-
-<% content_for :main_fullwidth_append do %>
-<div class="subscribe-block subscribe-block--light">
-  <div class="container">
-    <h3>Lass dich bei neuen Anfragen für diese Suche benachrichtigen.</h3>
-    <ul>
-      <li><%= link_to 'als Feed abonnieren', search_url(q: @query, format: :atom), class: 'btn btn-primary btn-icon-feed' %></li>
-    </ul>
-    <% if @conditions[:contains_table] %>
-    <p class="subscribe-tabletwitter">Neue Anfragen mit Tabellen findest du auch auf Twitter: <a href="https://twitter.com/anfragen_daten">@anfragen_daten</a></p>
-    <% end %>
-  </div>
-</div>
-<% end %>
