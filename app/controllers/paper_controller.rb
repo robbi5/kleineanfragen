@@ -32,7 +32,7 @@ class PaperController < ApplicationController
 
   def recent
     respond_to do |format|
-      format.atom
+      format.atom { return render status: 410 }
       format.html { return render status: 410, body: nil }
     end
   end

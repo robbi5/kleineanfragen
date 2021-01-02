@@ -11,6 +11,6 @@ atom_feed(language:  'de-DE', root_url: recent_url) do |feed|
     entry.author do |author|
       author.name 'kleineAnfragen'
     end
-    entry.summary ''
+    entry.summary 'kleineAnfragen wurde nach 5 Jahren Stillstand bei den Parlamenten zum 31.12.2020 abgeschaltet'
   end
 end
