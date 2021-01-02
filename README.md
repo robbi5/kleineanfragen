@@ -3,6 +3,10 @@ kleineAnfragen.
 
 Collecting *kleine Anfragen* from *Parlamentsdokumentationssystemen* for easy search- and linkability.
 
+**Update 2020-12-31:** This project is dead now, the repository is only meant as an archive.
+Please refrain from forking and redeploying, the Parliaments need to do the next step now.
+[More Information in German](https://kleineanfragen.de/info/stilllegung).
+
 Development
 -----------
 
