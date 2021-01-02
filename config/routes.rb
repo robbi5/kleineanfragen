@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   get 'search' => 'search#search', as: :search
   get 'search/advanced' => 'search#advanced', as: :search_advanced
   get 'search/autocomplete' => 'search#autocomplete'
-  get 'search/abo' => 'search#subscribe', as: :search_subscribe
+  get 'search/abo', to: proc { [410, {}, ['']] }, as: :search_subscribe
   get 'opensearch.xml' => 'search#opensearch', as: :opensearch, defaults: { format: 'xml' }
 
   get 'recent' => 'paper#recent'
