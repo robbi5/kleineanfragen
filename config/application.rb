@@ -85,8 +85,6 @@ module Kleineanfragen
     config.x.email_support = 'kleineAnfragen support <hallo@kleineanfragen.de>'
     # set from address
     config.action_mailer.default_options = { from: config.x.email_from }
-    # report slack webhook url
-    config.x.report_slack_webhook = ENV['REPORT_SLACK_WEBHOOK']
     # pubsubhubbub hub url
     config.x.push_hubs = ENV['PUSH_HUB'].split(',').reject(&:blank?).map(&:strip) unless ENV['PUSH_HUB'].nil?
     # Searchkick Batch Size for Papers
