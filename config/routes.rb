@@ -64,7 +64,6 @@ Rails.application.routes.draw do
   post ':body/:legislative_term/:paper/report', to: proc { [410, {}, ['']] }, as: :paper_send_report, constraints: { legislative_term: /[0-9]+/ }
   get ':body/:legislative_term/:paper/report', to: proc { [410, {}, ['']] }, as: :paper_report, constraints: { legislative_term: /[0-9]+/ }
   get ':body/:legislative_term/:paper/viewer' => 'paper#viewer', as: :paper_pdf_viewer, constraints: { legislative_term: /[0-9]+/ }
-  put ':body/:legislative_term/:paper' => 'paper#update', format: :txt
   get ':body/:legislative_term/:paper' => 'paper#show', as: :paper, constraints: { legislative_term: /[0-9]+/ }
   get ':body/:legislative_term' => 'legislative_term#show', as: :legislative_term, constraints: { legislative_term: /[0-9]+/ }
   get ':body' => 'body#feed', as: :body_feed, body: /[^0-9\/\.]+/, format: true
