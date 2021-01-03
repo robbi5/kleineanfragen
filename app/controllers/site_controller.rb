@@ -12,6 +12,6 @@ class SiteController < ApplicationController
 
   def status
     expires_now
-    render plain: "OK - #{Time.now}"
+    render plain: "OK - #{Time.now} - #{Socket.gethostname}"
   end
 end
