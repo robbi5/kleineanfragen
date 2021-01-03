@@ -98,11 +98,6 @@ services:
     ports:
       - "9000:9000"
 
-  mailcatcher:
-    image: schickling/mailcatcher
-    ports:
-      - "1080:1080"
-
   ## local sentry to test exceptions notifications
   #sentry:
   #  image: slafs/sentry:7.4
